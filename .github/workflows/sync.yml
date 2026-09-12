@@ -28,6 +28,7 @@ jobs:
               run: node sync-static.js
 
 
+
       - name: Guardar cambios en el catálogo
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
