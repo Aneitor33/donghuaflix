@@ -2,12 +2,82 @@ let DB={series:[],seasons:[],episodes:[],movies:[],genres:[],meta:{}};const app=
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const sortTitle=(a,b)=>String(a.title||'').localeCompare(String(b.title||''),'es');
 const bySeries=id=>DB.series.find(s=>s.id===id);const qs=s=>encodeURIComponent(s||'');
-async function load(){app.innerHTML='<section class="section"><div class="grid">'+Array(8).fill('<div class="skeleton"></div>').join('')+'</div></section>';const r=await fetch('./public/data/catalog.json?ts='+Date.now());DB=await r.json();document.getElementById('footerStatus').textContent=DB.meta.syncedAt?`Última sincronización: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}`:'Catálogo aún no sincronizado';route()}
-function card(s){return `<article class="card" onclick="location.hash='#/series/${qs(s.slug||s.id)}'"><div class="poster">${s.image?`<img loading="lazy" src="${esc(s.image)}" alt="${esc(s.title)}">`:''}<span class="badge">${esc(s.status||'DONGHUA')}</span></div><h3>${esc(s.title)}</h3><div class="meta">${esc(s.originalTitle||s.releaseDate||'')}${s.duration?' · '+esc(s.duration):''}</div></article>`}
+
+async function load(){
+  app.innerHTML='<section class="section"><div class="grid">'+Array(8).fill('<div class="skeleton"></div>').join('')+'</div></section>';
+  const r=await fetch('./public/data/catalog.json?ts='+Date.now());
+  DB=await r.json();
+  document.getElementById('footerStatus').textContent=DB.meta.syncedAt?`Última sincronización: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}`:'Catálogo aún no sincronizado';
+  route();
+}
+
+function card(s){
+  const displayTitle = (!s.title || s.title.toLowerCase() === 'temporadas') 
+    ? (s.originalTitle || s.name || 'Donghua') 
+    : s.title;
+
+  return `<article class="card" onclick="location.hash='#/series/${qs(s.slug||s.id)}'">
+    <div class="poster">
+      ${s.image ? `<img loading="lazy" src="${esc(s.image)}" alt="${esc(displayTitle)}">` : ''}
+      <span class="badge">${esc(s.status||'DONGHUA')}</span>
+    </div>
+    <h3 style="color:#ffffff; font-weight:600; font-size:14px; margin-top:8px;">${esc(displayTitle)}</h3>
+    <div class="meta" style="color:#a0a0a0; font-size:12px;">${esc(s.originalTitle || s.releaseDate || '')}${s.duration ? ' · ' + esc(s.duration) : ''}</div>
+  </article>`;
+}
+
 function rail(title,list){if(!list.length)return '';return `<section class="section"><div class="section-head"><h2>${esc(title)}</h2><span class="muted">${list.length}</span></div><div class="rail">${list.map(card).join('')}</div></section>`}
-function home(){const recent=DB.series.slice().sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));const hero=recent.find(x=>/emisión/i.test(x.status||''))||recent[0];app.innerHTML=`<section class="hero" style="--hero:url('${esc(hero?.image||'')}')"><div class="hero-content"><div class="eyebrow">DONGHUAFLIX ORIGINAL CATALOG</div><h1>${esc(hero?.title||'DonghuaFlix')}</h1><p>${esc(hero?.synopsis||'Descubre series, temporadas y episodios en una experiencia moderna, rápida y pensada para móvil.')}</p><div class="buttons"><button class="btn primary" onclick="location.hash='#/series/${qs(hero?.slug||hero?.id)}'">▶ Ver ficha</button><button class="btn dark" onclick="location.hash='#/series'">Explorar catálogo</button></div></div></section>${rail('Tendencias',recent.slice(0,12))}${rail('En emisión',DB.series.filter(s=>/emisión/i.test(s.status||'')).slice(0,12))}${rail('Finalizadas',DB.series.filter(s=>/finalizado/i.test(s.status||'')).slice(0,12))}`}
+
+function home(){
+  const recent=DB.series.slice().sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
+  const hero=recent.find(x=>/emisión/i.test(x.status||''))||recent[0];
+  const heroTitle = (!hero?.title || hero?.title.toLowerCase() === 'temporadas') ? (hero?.originalTitle || 'DonghuaFlix') : hero.title;
+
+  app.innerHTML=`<section class="hero" style="--hero:url('${esc(hero?.image||'')}')">
+    <div class="hero-content">
+      <div class="eyebrow">DONGHUAFLIX ORIGINAL CATALOG</div>
+      <h1>${esc(heroTitle)}</h1>
+      <p>${esc(hero?.synopsis||'Descubre series, temporadas y episodios en una experiencia moderna, rápida y pensada para móvil.')}</p>
+      <div class="buttons">
+        <button class="btn primary" onclick="location.hash='#/series/${qs(hero?.slug||hero?.id)}'">▶ Ver ficha</button>
+        <button class="btn dark" onclick="location.hash='#/series'">Explorar catálogo</button>
+      </div>
+    </div>
+  </section>
+  ${rail('Tendencias',recent.slice(0,12))}
+  ${rail('En emisión',DB.series.filter(s=>/emisión/i.test(s.status||'')).slice(0,12))}
+  ${rail('Finalizadas',DB.series.filter(s=>/finalizado/i.test(s.status||'')).slice(0,12))}`;
+}
+
 function seriesPage(list=DB.series,title='Series'){const arr=list.slice().sort(sortTitle);app.innerHTML=`<section class="section"><div class="section-head"><h2>${esc(title)}</h2><span class="muted">${arr.length} títulos</span></div><div class="grid">${arr.map(card).join('')}</div></section>`}
-function detail(slug){const s=DB.series.find(x=>(x.slug||x.id)===slug);if(!s)return notfound();const seasons=DB.seasons.filter(x=>x.seriesId===s.id).sort((a,b)=>a.title.localeCompare(b.title));app.innerHTML=`<section class="detail"><div class="detail-top"><div class="detail-poster">${s.image?`<img src="${esc(s.image)}" alt="${esc(s.title)}">`:''}</div><div><div class="eyebrow">${esc(s.status||'')}</div><h1>${esc(s.title)}</h1><div class="muted">${esc(s.originalTitle||'')}${s.duration?' · '+esc(s.duration):''}${s.releaseDate?' · '+esc(s.releaseDate):''}</div><div class="chips" style="margin:17px 0">${(s.genres||[]).map(g=>`<span class="chip" onclick="location.hash='#/genre/${qs(g)}'">${esc(g)}</span>`).join('')}</div><p>${esc(s.synopsis||'Sinopsis no disponible.')}</p></div></div><div style="margin-top:45px"><h2>Temporadas</h2>${seasons.length?seasons.map(season=>{const eps=DB.episodes.filter(e=>e.seasonId===season.id).sort((a,b)=>(b.number||0)-(a.number||0));return `<div class="season"><div class="section-head"><h3>${esc(season.title)}</h3><span class="muted">${eps.length} episodios</span></div><div class="episode-list">${eps.map(e=>`<a class="episode" href="#/episode/${qs(e.slug||e.id)}"><span>${esc(e.title)}</span><span>${e.number??''}</span></a>`).join('')}</div></div>`}).join(''):'<div class="empty">Todavía no hay temporadas sincronizadas.</div>'}</div></section>`}
+
+function detail(slug){
+  const s=DB.series.find(x=>(x.slug||x.id)===slug);
+  if(!s)return notfound();
+  const displayTitle = (!s.title || s.title.toLowerCase() === 'temporadas') ? (s.originalTitle || 'Serie') : s.title;
+  const seasons=DB.seasons.filter(x=>x.seriesId===s.id).sort((a,b)=>a.title.localeCompare(b.title));
+  
+  app.innerHTML=`<section class="detail">
+    <div class="detail-top">
+      <div class="detail-poster">${s.image?`<img src="${esc(s.image)}" alt="${esc(displayTitle)}">`:''}</div>
+      <div>
+        <div class="eyebrow">${esc(s.status||'')}</div>
+        <h1>${esc(displayTitle)}</h1>
+        <div class="muted">${esc(s.originalTitle||'')}${s.duration?' · '+esc(s.duration):''}${s.releaseDate?' · '+esc(s.releaseDate):''}</div>
+        <div class="chips" style="margin:17px 0">${(s.genres||[]).map(g=>`<span class="chip" onclick="location.hash='#/genre/${qs(g)}'">${esc(g)}</span>`).join('')}</div>
+        <p>${esc(s.synopsis||'Sinopsis no disponible.')}</p>
+      </div>
+    </div>
+    <div style="margin-top:45px">
+      <h2>Temporadas</h2>
+      ${seasons.length?seasons.map(season=>{
+        const eps=DB.episodes.filter(e=>e.seasonId===season.id).sort((a,b)=>(b.number||0)-(a.number||0));
+        return `<div class="season"><div class="section-head"><h3>${esc(season.title)}</h3><span class="muted">${eps.length} episodios</span></div><div class="episode-list">${eps.map(e=>`<a class="episode" href="#/episode/${qs(e.slug||e.id)}"><span>${esc(e.title)}</span><span>${e.number??''}</span></a>`).join('')}</div></div>`
+      }).join(''):'<div class="empty">Todavía no hay temporadas sincronizadas.</div>'}
+    </div>
+  </section>`;
+}
+
 function episode(slug){const e=DB.episodes.find(x=>(x.slug||x.id)===slug);if(!e)return notfound();let current=e.servers?.[0];const render=()=>{document.getElementById('player').innerHTML=current?.url?`<iframe src="${esc(current.url)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`:'<div class="empty">No hay un reproductor público disponible para este episodio.</div>'};app.innerHTML=`<section class="detail"><div class="eyebrow">EPISODIO</div><h1 style="font-size:36px">${esc(e.title)}</h1><div class="player" id="player"></div><div class="server-tabs">${(e.servers||[]).map((s,i)=>`<button class="${i===0?'active':''}" data-i="${i}">${esc(s.name)}</button>`).join('')||'<span class="muted">Sin servidores detectados</span>'}</div><div class="muted" style="margin-top:18px">${esc(e.releaseDate||'')} · <a href="#/series/${qs(e.seriesId)}" style="color:#fff">Volver a la serie</a></div></section>`;render();document.querySelectorAll('.server-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.server-tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');current=e.servers[Number(b.dataset.i)];render()})}
 function genres(){const gs=[...DB.genres].sort((a,b)=>a.localeCompare(b));app.innerHTML=`<section class="section"><h2>Géneros</h2><div class="chips" style="margin-top:25px">${gs.map(g=>`<button class="chip" onclick="location.hash='#/genre/${qs(g)}'">${esc(g)}</button>`).join('')}</div></section>`}
 function genre(g){seriesPage(DB.series.filter(s=>(s.genres||[]).some(x=>x.toLowerCase()===g.toLowerCase())),g)}
@@ -16,4 +86,5 @@ function movies(){const ms=DB.movies.slice().sort(sortTitle);app.innerHTML=`<sec
 function notfound(){app.innerHTML='<section class="empty"><h2>No encontrado</h2><p>Esta ficha todavía no existe en el catálogo local.</p></section>'}
 function route(){const p=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean).map(decodeURIComponent);const type=p[0],arg=p[1];if(!type)return home();if(type==='series'&&!arg)return seriesPage();if(type==='series'&&arg)return detail(arg);if(type==='episode')return episode(arg);if(type==='genres')return genres();if(type==='genre')return genre(arg);if(type==='movies')return movies();if(type==='airing')return seriesPage(DB.series.filter(s=>/emisión/i.test(s.status||'')),'En emisión');if(type==='finished')return seriesPage(DB.series.filter(s=>/finalizado/i.test(s.status||'')),'Finalizadas');if(type==='search')return search(arg||'');return home()}
 function toast(t){const x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',3500)}
+
 document.getElementById('syncBtn').onclick=()=>{toast('La sincronización automática se ejecuta en segundo plano. Vuelve a cargar en unos segundos si acabas de actualizar el catálogo.');load()};document.getElementById('searchBtn').onclick=()=>location.hash='#/search';window.addEventListener('hashchange',route);load();
