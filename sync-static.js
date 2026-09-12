@@ -65,8 +65,8 @@ async function sync() {
   db.series.sort((a,b) => String(a.title).localeCompare(String(b.title), 'es'));
   db.meta.syncedAt = new Date().toISOString();
   db.meta.counts = { series: db.series.length, seasons: db.seasons.length, episodes: db.episodes.length, movies: db.movies.length, genres: db.genres.length };
-  await fs.mkdir(new URL('../public/data/', import.meta.url), { recursive: true });
-  await fs.writeFile(new URL('../public/data/catalog.json', import.meta.url), JSON.stringify(db, null, 2));
+    await fs.mkdir(new URL('./data/', import.meta.url), { recursive: true });
+  await fs.writeFile(new URL('./data/catalog.json', import.meta.url), JSON.stringify(db, null, 2));
   log(`terminado: ${JSON.stringify(db.meta.counts)}`);
 }
 
