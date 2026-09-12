@@ -5,22 +5,18 @@ import * as cheerio from 'cheerio';
 const BASE_URL = 'https://donghualife.com';
 const OUT_FILE = path.join(process.cwd(), 'public', 'data', 'catalog.json');
 
-// Usamos un proxy público para evitar que Cloudflare bloquee la IP de GitHub Actions
 async function fetchHTML(url) {
   try {
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-    const res = await fetch(proxyUrl, {
+    const res = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9'
       }
     });
-    if (!res.ok) {
-      console.log(`⚠️ Error HTTP ${res.status} en URL: ${url}`);
-      return null;
-    }
+    if (!res.ok) return null;
     return await res.text();
-  } catch (err) {
-    console.log(`⚠️ Error de red:`, err.message);
+  } catch {
     return null;
   }
 }
@@ -31,6 +27,7 @@ function absoluteUrl(relative, base = BASE_URL) {
   return new URL(relative, base).href;
 }
 
+// Transforma slugs como "spirit-realm-walker" en títulos limpios "Spirit Realm Walker"
 function formatTitle(slug) {
   if (!slug) return 'Donghua';
   return slug
@@ -40,7 +37,7 @@ function formatTitle(slug) {
 }
 
 async function scrapeDonghuaFlix() {
-  console.log('🚀 Iniciando sincronización mediante Proxy...');
+  console.log('🚀 Iniciando sincronización del catálogo...');
 
   const seriesMap = new Map();
   const seasonsMap = new Map();
@@ -49,7 +46,7 @@ async function scrapeDonghuaFlix() {
 
   const mainHtml = await fetchHTML(`${BASE_URL}/series`);
   if (!mainHtml) {
-    console.error('❌ El proxy no pudo conectar a la web principal.');
+    console.error('❌ No se pudo conectar a la web principal.');
     return;
   }
 
@@ -67,7 +64,7 @@ async function scrapeDonghuaFlix() {
     }
   });
 
-  console.log(`🔍 Series encontradas: ${seriesSlugs.size}`);
+  console.log(`Encontradas ${seriesSlugs.size} series únicas.`);
 
   for (const seriesSlug of seriesSlugs) {
     const sUrl = `${BASE_URL}/series/${seriesSlug}`;
@@ -76,10 +73,16 @@ async function scrapeDonghuaFlix() {
 
     const $s = cheerio.load(sHtml);
 
-    // Título limpio garantizado por el slug de la URL
+    // Título limpio garantizado basado en el slug (adiós al error de "Temporadas")
     const title = formatTitle(seriesSlug);
 
-    // Imagen limpia sin la basura de IcoPrueba
+    // Título original en chino por si se requiere internamente
+    let chineseTitle = $s('h1').first().text().trim();
+    if (!chineseTitle || chineseTitle.toLowerCase() === 'temporadas') {
+      chineseTitle = $s('meta[property="og:title"]').attr('content')?.split('|')[0].trim() || title;
+    }
+
+    // Imagen limpia evitando la basura de IcoPrueba.png
     let poster = '';
     const ogImage = $s('meta[property="og:image"]').attr('content');
     if (ogImage && !ogImage.includes('IcoPrueba.png')) {
@@ -94,23 +97,23 @@ async function scrapeDonghuaFlix() {
         }
       });
     }
+    poster = poster ? absoluteUrl(poster).split('?')[0] : '';
 
-    poster = poster ? absoluteUrl(poster).split('?')[0] : 'https://donghualife.com/sites/default/files/styles/medium/public/default_images/default.jpg';
-
-    const synopsis = $s('.field--name-field-synopsis, .synopsis, article p').first().text().trim() || 'Sin sinopsis disponible.';
+    const synopsis = $s('.field--name-field-synopsis, .synopsis, article p').first().text().trim();
     const status = sHtml.includes('EN EMISIÓN') ? 'En emisión' : 'Finalizado';
 
     seriesMap.set(seriesSlug, {
       id: seriesSlug,
       slug: seriesSlug,
       title: title,
+      originalTitle: chineseTitle,
       image: poster,
       synopsis: synopsis,
       status: status,
       updatedAt: new Date().toISOString()
     });
 
-    // Temporadas y Episodios
+    // Procesar Temporadas
     const seasonLinks = new Set();
     $s('a[href*="/season/"]').each((_, el) => {
       const href = $s(el).attr('href');
@@ -140,10 +143,11 @@ async function scrapeDonghuaFlix() {
         image: seasonPoster
       });
 
+      // Procesar Episodios
       const seasonEpisodesMap = new Map();
 
       $se('a[href*="/episode/"]').each((_, epEl) => {
-        const epHref = $s(epEl).attr('href') || $se(epEl).attr('href');
+        const epHref = $s(epEl).attr('href');
         if (!epHref) return;
 
         const epSlug = epHref.split('/').filter(Boolean).pop();
@@ -184,7 +188,7 @@ async function scrapeDonghuaFlix() {
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(catalog, null, 2), 'utf-8');
-  console.log('✅ Catálogo sincronizado exitosamente mediante Proxy.');
+  console.log('✅ Catálogo sincronizado correctamente.');
 }
 
 scrapeDonghuaFlix();
