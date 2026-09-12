@@ -25,9 +25,7 @@ jobs:
         run: npm install
 
       - name: Ejecutar sincronización
-              run: node sync-static.js
-
-
+        run: node sync-static.js
 
       - name: Guardar cambios en el catálogo
         run: |
@@ -36,4 +34,3 @@ jobs:
           git add .
           git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo [skip ci]"
           git push
-
