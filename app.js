@@ -123,7 +123,12 @@ function detail(slug) {
     </div>
     <div style="margin-top:30px">
       ${seasons.length ? seasons.map(season => {
-        const eps = DB.episodes.filter(e => e.seasonId === season.id).sort((a, b) => (a.number || 0) - (b.number || 0));
+        // Filtrar y eliminar episodios duplicados por número
+        const rawEps = DB.episodes.filter(e => e.seasonId === season.id);
+        const uniqueEpsMap = new Map();
+        rawEps.forEach(e => uniqueEpsMap.set(e.number, e));
+        const eps = Array.from(uniqueEpsMap.values()).sort((a, b) => (a.number || 0) - (b.number || 0));
+
         return `<div class="season" style="margin-bottom:30px; background:#121212; padding:20px; border-radius:8px;">
           <h3 style="color:#00ffcc; margin-bottom:15px; font-size:18px;">${esc(season.title)} <span style="font-size:12px; color:#888;">(${eps.length} episodios)</span></h3>
           <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap:10px;">
