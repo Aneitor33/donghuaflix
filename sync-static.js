@@ -15,7 +15,6 @@ async function fetchHTML(url) {
     if (!res.ok) return null;
     return await res.text();
   } catch (err) {
-    console.error(`[ERR] Error al obtener ${url}:`, err.message);
     return null;
   }
 }
@@ -26,14 +25,25 @@ function absoluteUrl(relative, base = BASE_URL) {
   return new URL(relative, base).href;
 }
 
-function cleanImageUrl(src) {
-  if (!src) return '';
-  let full = absoluteUrl(src);
-  return full.split('?')[0];
+function extractCleanPoster($) {
+  let posterSrc = '';
+  // Buscar imágenes excluyendo portadas genéricas/default o logos
+  $('img').each((_, el) => {
+    const src = $(el).attr('src') || '';
+    if (src && !src.includes('default_images') && !src.includes('logo') && (src.includes('/poster/') || src.includes('/public/'))) {
+      if (!posterSrc) posterSrc = src;
+    }
+  });
+  
+  if (!posterSrc) {
+    posterSrc = $('.poster img, .field--name-field-poster img').first().attr('src') || '';
+  }
+  
+  return posterSrc ? absoluteUrl(posterSrc).split('?')[0] : '';
 }
 
 async function scrapeDonghuaFlix() {
-  console.log('🚀 Sincronizando catálogo completo de DonghuaFlix...');
+  console.log('🚀 Iniciando sincronización limpia...');
 
   const seriesMap = new Map();
   const seasonsMap = new Map();
@@ -41,10 +51,7 @@ async function scrapeDonghuaFlix() {
   const genresSet = new Set();
 
   const mainHtml = await fetchHTML(`${BASE_URL}/series`);
-  if (!mainHtml) {
-    console.error('❌ No se pudo obtener la lista de series.');
-    return;
-  }
+  if (!mainHtml) return;
 
   const $main = cheerio.load(mainHtml);
   const seriesLinks = [];
@@ -56,8 +63,6 @@ async function scrapeDonghuaFlix() {
     }
   });
 
-  console.log(`📌 Se procesarán ${seriesLinks.length} series...`);
-
   for (const sLink of seriesLinks) {
     const sUrl = absoluteUrl(sLink);
     const sHtml = await fetchHTML(sUrl);
@@ -67,19 +72,15 @@ async function scrapeDonghuaFlix() {
     const seriesSlug = sLink.split('/').filter(Boolean).pop();
 
     const rawTitle = $s('h1').first().text().trim();
-    const title = (!rawTitle || rawTitle.toLowerCase() === 'temporadas') ? seriesSlug : rawTitle;
+    const title = (!rawTitle || rawTitle.toLowerCase() === 'temporadas') ? seriesSlug.replace(/-/g, ' ').toUpperCase() : rawTitle;
     
-    let poster = cleanImageUrl($s('.poster img, img[src*="/sites/default/files/"]').first().attr('src'));
+    const poster = extractCleanPoster($s);
     const synopsis = $s('p, div[class*="synopsis"]').text().trim();
     const status = sHtml.includes('EN EMISIÓN') ? 'En emisión' : 'Finalizado';
 
-    const genres = [];
     $s('a[href*="/genre/"]').each((_, g) => {
       const gText = $s(g).text().trim();
-      if (gText) {
-        genres.push(gText);
-        genresSet.add(gText);
-      }
+      if (gText) genresSet.add(gText);
     });
 
     seriesMap.set(seriesSlug, {
@@ -89,19 +90,17 @@ async function scrapeDonghuaFlix() {
       image: poster,
       synopsis: synopsis,
       status: status,
-      genres: [...new Set(genres)],
       updatedAt: new Date().toISOString()
     });
 
+    // Procesar Temporadas
     const seasonLinks = [];
     $s('a[href*="/season/"]').each((_, el) => {
       const href = $s(el).attr('href');
       if (href && !seasonLinks.includes(href)) seasonLinks.push(href);
     });
 
-    if (seasonLinks.length === 0) {
-      seasonLinks.push(`/season/${seriesSlug}-1`);
-    }
+    if (seasonLinks.length === 0) seasonLinks.push(`/season/${seriesSlug}-1`);
 
     for (const seasonLink of seasonLinks) {
       const seasonSlug = seasonLink.split('/').filter(Boolean).pop();
@@ -117,13 +116,14 @@ async function scrapeDonghuaFlix() {
         const $se = cheerio.load(seasonHtml);
 
         if (page === 1) {
-          const seasonTitle = $se('h1').first().text().trim() || seasonSlug;
-          const seasonPoster = cleanImageUrl($se('.poster img, img[src*="/sites/default/files/"]').first().attr('src')) || poster;
+          const seasonPoster = extractCleanPoster($se) || poster;
+          const sTitleMatch = seasonSlug.match(/\d+$/);
+          const seasonNum = sTitleMatch ? sTitleMatch[0] : '1';
 
           seasonsMap.set(seasonSlug, {
             id: seasonSlug,
             seriesId: seriesSlug,
-            title: seasonTitle,
+            title: `Temporada ${seasonNum}`,
             image: seasonPoster
           });
         }
@@ -136,9 +136,11 @@ async function scrapeDonghuaFlix() {
           if (!epHref) return;
 
           const epSlug = epHref.split('/').filter(Boolean).pop();
-          const epTitle = $se(epEl).text().trim() || epSlug;
-          const epNumMatch = epTitle.match(/\d+/);
-          const epNumber = epNumMatch ? parseInt(epNumMatch[0], 10) : 1;
+          const rawEpText = $se(epEl).text().trim();
+          
+          // Extraer número de episodio limpio (ej: x3 -> 3, Episodio 5 -> 5)
+          const epNumMatch = rawEpText.match(/(?:x|episodio\s*|ep\s*)(\d+)/i) || epSlug.match(/\d+/);
+          const epNumber = epNumMatch ? parseInt(epNumMatch[1] || epNumMatch[0], 10) : 1;
 
           if (!episodesMap.has(epSlug)) {
             episodesMap.set(epSlug, {
@@ -146,7 +148,7 @@ async function scrapeDonghuaFlix() {
               slug: epSlug,
               seasonId: seasonSlug,
               seriesId: seriesSlug,
-              title: epTitle,
+              title: `Episodio ${epNumber}`,
               number: epNumber,
               servers: [
                 { name: 'Rumble', url: `${BASE_URL}/embed/${epSlug}?server=rumble` },
@@ -158,11 +160,8 @@ async function scrapeDonghuaFlix() {
         });
 
         const hasNextBtn = $se('a:contains("SIGUIENTE"), a:contains(">"), .pagination a[rel="next"]').length > 0;
-        if (hasNextBtn && foundEpsInPage > 0) {
-          page++;
-        } else {
-          hasMorePages = false;
-        }
+        if (hasNextBtn && foundEpsInPage > 0) page++;
+        else hasMorePages = false;
       }
     }
   }
@@ -171,17 +170,13 @@ async function scrapeDonghuaFlix() {
     series: Array.from(seriesMap.values()),
     seasons: Array.from(seasonsMap.values()),
     episodes: Array.from(episodesMap.values()),
-    movies: [],
     genres: Array.from(genresSet),
-    meta: {
-      syncedAt: new Date().toISOString()
-    }
+    meta: { syncedAt: new Date().toISOString() }
   };
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(catalog, null, 2), 'utf-8');
-
-  console.log(`✅ ¡Proceso finalizado con éxito! Total de series: ${catalog.series.length} | Episodios: ${catalog.episodes.length}`);
+  console.log('✅ Catálogo reestructurado y limpio guardado.');
 }
 
 scrapeDonghuaFlix();
