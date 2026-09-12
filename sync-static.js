@@ -10,19 +10,13 @@ async function fetchHTML(url) {
     const res = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9'
       }
     });
-    if (!res.ok) {
-      console.log(`⚠️ Error HTTP ${res.status} al conectar a: ${url}`);
-      return null;
-    }
+    if (!res.ok) return null;
     return await res.text();
-  } catch (err) {
-    console.log(`⚠️ Error de red en ${url}:`, err.message);
+  } catch {
     return null;
   }
 }
@@ -33,7 +27,6 @@ function absoluteUrl(relative, base = BASE_URL) {
   return new URL(relative, base).href;
 }
 
-// Convierte un slug como "perfect-world" en un título limpio "Perfect World"
 function formatTitle(slug) {
   if (!slug) return 'Donghua';
   return slug
@@ -43,7 +36,7 @@ function formatTitle(slug) {
 }
 
 async function scrapeDonghuaFlix() {
-  console.log('🚀 Iniciando sincronización limpia...');
+  console.log('🚀 Iniciando sincronización forzada y limpia...');
 
   const seriesMap = new Map();
   const seasonsMap = new Map();
@@ -52,39 +45,48 @@ async function scrapeDonghuaFlix() {
 
   const mainHtml = await fetchHTML(`${BASE_URL}/series`);
   if (!mainHtml) {
-    console.error('❌ No se pudo conectar a donghualife.com');
+    console.error('❌ No se pudo conectar a la web principal.');
     return;
   }
 
   const $main = cheerio.load(mainHtml);
-  const seriesLinks = new Set();
+  const seriesSlugs = new Set();
 
-  // Buscar todos los enlaces únicos de series
   $main('a[href*="/series/"]').each((_, el) => {
     const href = $main(el).attr('href');
-    if (href && href !== '/series') {
-      seriesLinks.add(href);
+    if (href) {
+      const parts = href.split('/').filter(Boolean);
+      const idx = parts.indexOf('series');
+      if (idx !== -1 && parts[idx + 1]) {
+        seriesSlugs.add(parts[idx + 1]);
+      }
     }
   });
 
-  for (const sLink of seriesLinks) {
-    const sUrl = absoluteUrl(sLink);
+  console.log(`Encontradas ${seriesSlugs.size} series únicas.`);
+
+  for (const seriesSlug of seriesSlugs) {
+    const sUrl = `${BASE_URL}/series/${seriesSlug}`;
     const sHtml = await fetchHTML(sUrl);
     if (!sHtml) continue;
 
     const $s = cheerio.load(sHtml);
-    const seriesSlug = sLink.split('/').filter(Boolean).pop();
 
-    // SOLUCIÓN TÍTULO: Usar siempre el Slug formateado profesionalmente para evitar "Temporadas"
+    // SOLUCIÓN DEFINITIVA TÍTULO: Ignoramos cualquier título basura de la web y usamos el Slug formateado
     const title = formatTitle(seriesSlug);
 
-    // SOLUCIÓN IMAGEN: Usar la etiqueta og:image de la página individual (la imagen real del donghua)
-    let poster = $s('meta[property="og:image"]').attr('content') || '';
+    // SOLUCIÓN DEFINITIVA IMAGEN: Buscar og:image pero descartando "IcoPrueba.png" y logos genéricos
+    let poster = '';
+    const ogImage = $s('meta[property="og:image"]').attr('content');
+    if (ogImage && !ogImage.includes('IcoPrueba.png') && !ogImage.includes('logo')) {
+      poster = ogImage;
+    }
+
     if (!poster) {
-      // Búsqueda alternativa si no hay og:image
+      // Buscar otra imagen válida en la página que no sea la basura genérica
       $s('img').each((_, img) => {
         const src = $s(img).attr('src') || '';
-        if (src && !src.includes('logo') && !src.includes('default') && !poster) {
+        if (src && !src.includes('IcoPrueba.png') && !src.includes('logo') && !src.includes('default') && !poster) {
           poster = src;
         }
       });
@@ -94,15 +96,10 @@ async function scrapeDonghuaFlix() {
     const synopsis = $s('.field--name-field-synopsis, .synopsis, article p').first().text().trim();
     const status = sHtml.includes('EN EMISIÓN') ? 'En emisión' : 'Finalizado';
 
-    $s('a[href*="/genre/"]').each((_, g) => {
-      const gText = $s(g).text().trim();
-      if (gText) genresSet.add(gText);
-    });
-
     seriesMap.set(seriesSlug, {
       id: seriesSlug,
       slug: seriesSlug,
-      title: title,
+      title: title, // Título limpio garantizado (Ej: "Spirit Realm Walker")
       image: poster,
       synopsis: synopsis,
       status: status,
@@ -139,21 +136,19 @@ async function scrapeDonghuaFlix() {
         image: seasonPoster
       });
 
-      // Procesar Episodios (Evitando duplicados por número exacto)
+      // Procesar Episodios limpios sin duplicados
       const seasonEpisodesMap = new Map();
 
       $se('a[href*="/episode/"]').each((_, epEl) => {
-        const epHref = $se(epEl).attr('href');
+        const epHref = $s(epEl).attr('href') || $se(epEl).attr('href');
         if (!epHref) return;
 
         const epSlug = epHref.split('/').filter(Boolean).pop();
         const rawText = $se(epEl).text().trim();
 
-        // Extraer número de episodio con expresión regular limpia
         const match = rawText.match(/(?:x|episodio\s*|ep\s*|-|\s)(\d+)(?:\s*\||$)/i) || epSlug.match(/\d+$/) || epSlug.match(/\d+/);
         const epNumber = match ? parseInt(match[1] || match[0], 10) : 1;
 
-        // Solo guardamos un episodio por cada número exacto para evitar duplicados
         if (!seasonEpisodesMap.has(epNumber)) {
           seasonEpisodesMap.set(epNumber, {
             id: epSlug,
@@ -170,7 +165,6 @@ async function scrapeDonghuaFlix() {
         }
       });
 
-      // Volcar episodios limpios al mapa global
       for (const ep of seasonEpisodesMap.values()) {
         episodesMap.set(ep.id, ep);
       }
@@ -187,7 +181,7 @@ async function scrapeDonghuaFlix() {
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(catalog, null, 2), 'utf-8');
-  console.log('✅ Catálogo sincronizado limpiamente sin títulos genéricos.');
+  console.log('✅ Catálogo sincronizado: Títulos limpios e imágenes de IcoPrueba bloqueadas.');
 }
 
 scrapeDonghuaFlix();
