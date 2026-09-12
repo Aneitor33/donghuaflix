@@ -67,10 +67,7 @@ function search(q = '') {
     `;
 
     const input = document.getElementById('q');
-    
-    input.addEventListener('input', (e) => {
-      updateSearchResults(e.target.value);
-    });
+    input.addEventListener('input', (e) => updateSearchResults(e.target.value));
 
     setTimeout(() => {
       input.focus();
@@ -123,11 +120,13 @@ function detail(slug) {
     </div>
     <div style="margin-top:30px">
       ${seasons.length ? seasons.map(season => {
-        // Filtrar y eliminar episodios duplicados por número
+        // Desduplicación estricta por número de episodio
         const rawEps = DB.episodes.filter(e => e.seasonId === season.id);
-        const uniqueEpsMap = new Map();
-        rawEps.forEach(e => uniqueEpsMap.set(e.number, e));
-        const eps = Array.from(uniqueEpsMap.values()).sort((a, b) => (a.number || 0) - (b.number || 0));
+        const epMap = new Map();
+        rawEps.forEach(e => {
+          if (!epMap.has(e.number)) epMap.set(e.number, e);
+        });
+        const eps = Array.from(epMap.values()).sort((a, b) => a.number - b.number);
 
         return `<div class="season" style="margin-bottom:30px; background:#121212; padding:20px; border-radius:8px;">
           <h3 style="color:#00ffcc; margin-bottom:15px; font-size:18px;">${esc(season.title)} <span style="font-size:12px; color:#888;">(${eps.length} episodios)</span></h3>
@@ -135,7 +134,7 @@ function detail(slug) {
             ${eps.map(e => `<a class="btn dark" style="padding:10px 5px; text-align:center; font-size:13px;" href="#/episode/${qs(e.slug || e.id)}">Ep. ${e.number}</a>`).join('')}
           </div>
         </div>`;
-      }).join('') : '<div class="empty">No hay episodios.</div>'}
+      }).join('') : '<div class="empty">No hay episodios disponibles.</div>'}
     </div>
   </section>`;
 }
@@ -144,7 +143,7 @@ function episode(slug) {
   const e = DB.episodes.find(x => (x.slug || x.id) === slug);
   if (!e) return notfound();
 
-  const seasonEps = DB.episodes.filter(x => x.seasonId === e.seasonId).sort((a, b) => (a.number || 0) - (b.number || 0));
+  const seasonEps = DB.episodes.filter(x => x.seasonId === e.seasonId).sort((a, b) => a.number - b.number);
   const currentIndex = seasonEps.findIndex(x => x.id === e.id);
   const prevEp = currentIndex > 0 ? seasonEps[currentIndex - 1] : null;
   const nextEp = currentIndex < seasonEps.length - 1 ? seasonEps[currentIndex + 1] : null;
