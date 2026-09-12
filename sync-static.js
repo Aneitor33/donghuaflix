@@ -25,31 +25,33 @@ function absoluteUrl(relative, base = BASE_URL) {
   return new URL(relative, base).href;
 }
 
-// Convierte "perfect-world" -> "Perfect World"
-function cleanTitleFromSlug(slug) {
+// Convierte un slug como "perfect-world" en un título limpio "Perfect World"
+function formatTitle(slug) {
   if (!slug) return 'Donghua';
   return slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase())
-    .trim();
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 async function scrapeDonghuaFlix() {
-  console.log('🚀 Iniciando extracción blindada...');
+  console.log('🚀 Iniciando sincronización limpia...');
 
   const seriesMap = new Map();
   const seasonsMap = new Map();
   const episodesMap = new Map();
+  const genresSet = new Set();
 
   const mainHtml = await fetchHTML(`${BASE_URL}/series`);
   if (!mainHtml) {
-    console.error('❌ No se pudo conectar a la web fuente.');
+    console.error('❌ No se pudo conectar a donghualife.com');
     return;
   }
 
   const $main = cheerio.load(mainHtml);
   const seriesLinks = new Set();
 
+  // Buscar todos los enlaces únicos de series
   $main('a[href*="/series/"]').each((_, el) => {
     const href = $main(el).attr('href');
     if (href && href !== '/series') {
@@ -65,28 +67,29 @@ async function scrapeDonghuaFlix() {
     const $s = cheerio.load(sHtml);
     const seriesSlug = sLink.split('/').filter(Boolean).pop();
 
-    // 1. TÍTULO: Forzar limpieza desde el slug o desde og:title si existe
-    const ogTitle = $s('meta[property="og:title"]').attr('content') || '';
-    let title = cleanTitleFromSlug(seriesSlug);
-    
-    if (ogTitle && !ogTitle.toLowerCase().includes('temporada') && !ogTitle.toLowerCase().includes('donghualife')) {
-      title = ogTitle.split('|')[0].trim();
-    }
+    // SOLUCIÓN TÍTULO: Usar siempre el Slug formateado profesionalmente para evitar "Temporadas"
+    const title = formatTitle(seriesSlug);
 
-    // 2. IMAGEN: Buscar la imagen dentro del contenedor principal
+    // SOLUCIÓN IMAGEN: Usar la etiqueta og:image de la página individual (la imagen real del donghua)
     let poster = $s('meta[property="og:image"]').attr('content') || '';
-    if (!poster || poster.includes('logo') || poster.includes('default')) {
+    if (!poster) {
+      // Búsqueda alternativa si no hay og:image
       $s('img').each((_, img) => {
         const src = $s(img).attr('src') || '';
-        if (src.includes('/files/') || src.includes('/styles/') || src.includes('/poster/')) {
-          if (!poster) poster = src;
+        if (src && !src.includes('logo') && !src.includes('default') && !poster) {
+          poster = src;
         }
       });
     }
-
     poster = poster ? absoluteUrl(poster).split('?')[0] : '';
 
     const synopsis = $s('.field--name-field-synopsis, .synopsis, article p').first().text().trim();
+    const status = sHtml.includes('EN EMISIÓN') ? 'En emisión' : 'Finalizado';
+
+    $s('a[href*="/genre/"]').each((_, g) => {
+      const gText = $s(g).text().trim();
+      if (gText) genresSet.add(gText);
+    });
 
     seriesMap.set(seriesSlug, {
       id: seriesSlug,
@@ -94,18 +97,20 @@ async function scrapeDonghuaFlix() {
       title: title,
       image: poster,
       synopsis: synopsis,
-      status: sHtml.includes('EN EMISIÓN') ? 'En emisión' : 'Finalizado',
+      status: status,
       updatedAt: new Date().toISOString()
     });
 
-    // 3. TEMPORADAS Y EPISODIOS
+    // Procesar Temporadas
     const seasonLinks = new Set();
     $s('a[href*="/season/"]').each((_, el) => {
       const href = $s(el).attr('href');
       if (href) seasonLinks.add(href);
     });
 
-    if (seasonLinks.size === 0) seasonLinks.add(`/season/${seriesSlug}-1`);
+    if (seasonLinks.size === 0) {
+      seasonLinks.add(`/season/${seriesSlug}-1`);
+    }
 
     for (const seasonLink of seasonLinks) {
       const seasonSlug = seasonLink.split('/').filter(Boolean).pop();
@@ -114,28 +119,35 @@ async function scrapeDonghuaFlix() {
       if (!seasonHtml) continue;
 
       const $se = cheerio.load(seasonHtml);
-      const seasonNum = (seasonSlug.match(/\d+$/) || ['1'])[0];
+      const seasonPoster = absoluteUrl($se('meta[property="og:image"]').attr('content') || '') || poster;
+      
+      const sNumMatch = seasonSlug.match(/\d+$/);
+      const seasonNum = sNumMatch ? sNumMatch[0] : '1';
 
       seasonsMap.set(seasonSlug, {
         id: seasonSlug,
         seriesId: seriesSlug,
         title: `Temporada ${seasonNum}`,
-        image: poster
+        image: seasonPoster
       });
 
-      // Extraer episodios sin duplicados
+      // Procesar Episodios (Evitando duplicados por número exacto)
+      const seasonEpisodesMap = new Map();
+
       $se('a[href*="/episode/"]').each((_, epEl) => {
         const epHref = $se(epEl).attr('href');
         if (!epHref) return;
 
         const epSlug = epHref.split('/').filter(Boolean).pop();
-        
-        // Extraer número estricto
-        const numMatch = epSlug.match(/-(\d+)$/) || epSlug.match(/\d+/);
-        const epNumber = numMatch ? parseInt(numMatch[1] || numMatch[0], 10) : 1;
+        const rawText = $se(epEl).text().trim();
 
-        if (!episodesMap.has(epSlug)) {
-          episodesMap.set(epSlug, {
+        // Extraer número de episodio con expresión regular limpia
+        const match = rawText.match(/(?:x|episodio\s*|ep\s*|-|\s)(\d+)(?:\s*\||$)/i) || epSlug.match(/\d+$/) || epSlug.match(/\d+/);
+        const epNumber = match ? parseInt(match[1] || match[0], 10) : 1;
+
+        // Solo guardamos un episodio por cada número exacto para evitar duplicados
+        if (!seasonEpisodesMap.has(epNumber)) {
+          seasonEpisodesMap.set(epNumber, {
             id: epSlug,
             slug: epSlug,
             seasonId: seasonSlug,
@@ -149,6 +161,11 @@ async function scrapeDonghuaFlix() {
           });
         }
       });
+
+      // Volcar episodios limpios al mapa global
+      for (const ep of seasonEpisodesMap.values()) {
+        episodesMap.set(ep.id, ep);
+      }
     }
   }
 
@@ -156,12 +173,13 @@ async function scrapeDonghuaFlix() {
     series: Array.from(seriesMap.values()),
     seasons: Array.from(seasonsMap.values()),
     episodes: Array.from(episodesMap.values()),
+    genres: Array.from(genresSet),
     meta: { syncedAt: new Date().toISOString() }
   };
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(catalog, null, 2), 'utf-8');
-  console.log('✅ Catálogo generado correctamente.');
+  console.log('✅ Catálogo sincronizado limpiamente sin títulos genéricos.');
 }
 
 scrapeDonghuaFlix();
