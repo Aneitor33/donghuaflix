@@ -18,6 +18,57 @@ const cleanTitle = (s) => {
   return title;
 };
 
+// ✅ Nombre de temporada a partir del slug real del catálogo
+// El slug SIEMPRE es la última parte de la URL: donghualife.com/season/doupo-cangqiong-5
+const slugFromUrl = u => (u || '').split('?')[0].split('/').filter(Boolean).pop() || '';
+const prettySlug = slug => slug.split('-').filter(Boolean)
+  .map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+const seasonTitle = (season, index) => {
+  // 1) Si el catálogo trae el número explícito, usarlo
+  if (Number.isFinite(season.number)) return `Temporada ${season.number}`;
+
+  // 2) Título real (ej: "Temporada 2: El Pilar de la Eternidad")
+  const t = (season.title || '').trim();
+  if (t && t.toLowerCase() !== 'temporadas') {
+    const m = t.match(/(?:temporada|season)\s*(\d{1,3})/i) ||
+              t.match(/^(\d{1,3})[ª°.]/);
+    if (m) return `Temporada ${parseInt(m[1], 10)}`;
+    return t;
+  }
+
+  // 3) Slug del catálogo (del campo slug/id o de la URL de origen)
+  const slug = (season.slug || season.id || slugFromUrl(season.url || season.sourceUrl) || '').toLowerCase();
+
+  // "serie-1-0" → Temporada 1 (formato temporada-cour, ej: stay-low-profile-sect-chief-1-0)
+  let m = slug.match(/-(\d{1,3})-\d{1,3}$/);
+  if (m) return `Temporada ${parseInt(m[1], 10)}`;
+
+  // "serie-5" → Temporada 5 (ej: doupo-cangqiong-5)
+  m = slug.match(/-(\d{1,3})$/);
+  if (m) return `Temporada ${parseInt(m[1], 10)}`;
+
+  // Sin número = especial/OVA/película → nombre legible del slug
+  // (ej: "especial" → "Especial", "el-acuerdo-de-3-anos" → "El Acuerdo De 3 Años")
+  if (slug) return prettySlug(slug);
+
+  return `Temporada ${index + 1}`;
+};
+
+// ✅ Ordena las temporadas según el orden oficial del catálogo (series.seasonUrls)
+// Evita que "Especial" aparezca antes que la Temporada 1, etc.
+function orderSeasons(s, seasons) {
+  const urls = s.seasonUrls || [];
+  if (!urls.length) return seasons;
+  const rank = seas => {
+    const key = (seas.slug || seas.id || slugFromUrl(seas.url || seas.sourceUrl) || '').toLowerCase();
+    const i = urls.findIndex(u =>
+      slugFromUrl(u).toLowerCase() === key || u === (seas.url || seas.sourceUrl));
+    return i === -1 ? 999 : i;
+  };
+  return seasons.slice().sort((a, b) => rank(a) - rank(b));
+}
+
 const getSeriesImage = (s) => {
   if (s?.image && !s.image.includes('IcoPrueba.png')) return s.image;
   const seasons = DB.seasons.filter(seas => seas.seriesId === s.id);
@@ -27,11 +78,9 @@ const getSeriesImage = (s) => {
   return '';
 };
 
-// Búsqueda robusta: funciona tanto con slug como con id
 const findSeries = ref => DB.series.find(x => (x.slug || x.id) === ref || x.id === ref);
 const findEpisode = ref => DB.episodes.find(x => (x.slug || x.id) === ref || x.id === ref);
 
-// Elimina episodios duplicados por número y los ordena
 const dedupeEps = eps => {
   const map = new Map();
   eps.forEach(e => { if (!map.has(e.number)) map.set(e.number, e); });
@@ -43,6 +92,34 @@ const seriesGenres = s => {
   if (s.genre) return [s.genre];
   return [];
 };
+
+// ---------- TOAST (notificaciones) ----------
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ---------- FAVORITOS (Mi lista) ----------
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem('donghuaflix_favs') || '[]'); }
+  catch (e) { return []; }
+}
+
+function toggleFav(seriesId) {
+  let favs = getFavs();
+  const isFav = favs.includes(seriesId);
+  favs = isFav ? favs.filter(id => id !== seriesId) : [...favs, seriesId];
+  localStorage.setItem('donghuaflix_favs', JSON.stringify(favs));
+  showToast(isFav ? 'Quitado de Mi lista' : 'Añadido a Mi lista ❤️');
+  return !isFav;
+}
+
+const isFav = id => getFavs().includes(id);
 
 // ---------- HISTORIAL (Continuar viendo) ----------
 function getHistory() {
@@ -90,18 +167,27 @@ async function load() {
 function card(s) {
   const imgUrl = getSeriesImage(s);
   const title = cleanTitle(s);
+  const fav = isFav(s.id);
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
       ${imgUrl
         ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}">`
         : '<div class="no-img">DONGHUAFLIX</div>'}
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
+      <button class="fav-heart ${fav ? 'on' : ''}" title="Mi lista"
+        onclick="event.stopPropagation();toggleFav('${esc(s.id)}');refreshFavUI(this,'${esc(s.id)}')">${fav ? '❤️' : '🤍'}</button>
     </div>
     <h3>${esc(title)}</h3>
   </article>`;
 }
 
-// Rail horizontal reutilizable (con etiqueta de historial opcional)
+// Actualiza el corazón sin recargar toda la vista
+function refreshFavUI(btn, seriesId) {
+  const fav = isFav(seriesId);
+  btn.classList.toggle('on', fav);
+  btn.textContent = fav ? '❤️' : '🤍';
+}
+
 function rail(items, historyData = null) {
   return `<div class="rail">${items.map(s => {
     const hist = historyData?.[s.id];
@@ -149,6 +235,7 @@ function home() {
     .filter(s => historyData[s.id])
     .sort((a, b) => historyData[b.id].timestamp - historyData[a.id].timestamp);
 
+  const favList = DB.series.filter(s => isFav(s.id));
   const trendingList = recent.slice(0, 15);
   const airingList = DB.series.filter(s => (s.status || '').toLowerCase().includes('emisión'));
   const moviesList = DB.series.filter(s =>
@@ -173,6 +260,12 @@ function home() {
   <section class="section">
     <div class="section-head"><h2>Continuar viendo</h2><span class="muted">${historyList.length}</span></div>
     ${rail(historyList, historyData)}
+  </section>` : ''}
+
+  ${favList.length ? `
+  <section class="section">
+    <div class="section-head"><h2>Mi lista</h2><span class="muted">${favList.length}</span></div>
+    ${rail(favList)}
   </section>` : ''}
 
   ${trendingList.length ? `
@@ -252,6 +345,16 @@ function listByGenre(name) {
     </section>`;
 }
 
+function listMyList() {
+  const favs = getFavs();
+  const filtered = DB.series.filter(s => favs.includes(s.id));
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><h2>❤️ Mi lista</h2><span class="muted">${filtered.length}</span></div>
+      <div class="grid">${filtered.length ? filtered.map(card).join('') : '<p class="muted">Aún no tienes favoritos. Toca el 🤍 de cualquier serie para añadirla.</p>'}</div>
+    </section>`;
+}
+
 // ---------- BUSCADOR ----------
 function search(q = '') {
   if (!document.getElementById('q')) {
@@ -301,10 +404,11 @@ function detail(slug) {
   const s = findSeries(slug);
   if (!s) return notfound();
 
-  const seasons = DB.seasons.filter(x => x.seriesId === s.id);
+  const seasons = orderSeasons(s, DB.seasons.filter(x => x.seriesId === s.id));
   const imgUrl = getSeriesImage(s);
   const title = cleanTitle(s);
   const genres = seriesGenres(s);
+  const fav = isFav(s.id);
 
   app.innerHTML = `<section class="detail">
     <div class="detail-top">
@@ -315,13 +419,18 @@ function detail(slug) {
         ${genres.length ? `<div class="chips" style="margin:10px 0">${genres.map(g =>
           `<a class="chip" href="#/genre/${qs(g)}">${esc(g)}</a>`).join('')}</div>` : ''}
         <p>${esc(s.synopsis || 'Sinopsis no disponible.')}</p>
+        <button class="btn ${fav ? 'primary' : 'dark'} fav-btn" id="favBtn"
+          onclick="const f=toggleFav('${esc(s.id)}');const b=document.getElementById('favBtn');
+          b.className='btn '+(f?'primary':'dark')+' fav-btn';b.textContent=f?'❤️ En Mi lista':'🤍 Añadir a Mi lista'">
+          ${fav ? '❤️ En Mi lista' : '🤍 Añadir a Mi lista'}
+        </button>
       </div>
     </div>
     <div style="margin-top:34px">
-      ${seasons.length ? seasons.map(season => {
+      ${seasons.length ? seasons.map((season, i) => {
         const eps = dedupeEps(DB.episodes.filter(e => e.seasonId === season.id));
         return `<div class="season">
-          <h3>${esc(season.title)} <span class="muted">(${eps.length} episodios)</span></h3>
+          <h3>${esc(seasonTitle(season, i))} <span class="muted">(${eps.length} episodios)</span></h3>
           <div class="episode-list">
             ${eps.map(e => `<a class="episode" href="#/episode/${qs(e.slug || e.id)}">
               <strong>Ep. ${e.number}</strong>
@@ -346,7 +455,6 @@ function episode(slug) {
   const prevEp = idx > 0 ? seasonEps[idx - 1] : null;
   const nextEp = idx < seasonEps.length - 1 ? seasonEps[idx + 1] : null;
 
-  // ✅ CORREGIDO: se busca la serie para usar su slug (antes usaba el id y podía fallar)
   const serie = findSeries(e.seriesId);
   const serieRef = serie ? (serie.slug || serie.id) : e.seriesId;
 
@@ -406,7 +514,7 @@ function highlightNav() {
 }
 
 function route() {
-  clearInterval(heroTimer); // detiene el carrusel al cambiar de vista
+  clearInterval(heroTimer);
   const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const type = p[0], arg = p[1];
 
@@ -419,6 +527,7 @@ function route() {
   else if (type === 'movies') listMovies();
   else if (type === 'genres') listGenres();
   else if (type === 'genre' && arg) listByGenre(arg);
+  else if (type === 'mylist') listMyList();
   else if (type === 'episode') episode(arg);
   else home();
 
@@ -432,6 +541,7 @@ window.addEventListener('hashchange', route);
 // Sombra sólida en la navbar al hacer scroll
 window.addEventListener('scroll', () => {
   document.querySelector('.nav')?.classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('toTop')?.classList.toggle('show', window.scrollY > 500);
 }, { passive: true });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -443,6 +553,15 @@ document.addEventListener('DOMContentLoaded', () => {
       await load();
       setTimeout(() => { reloadBtn.style.transform = 'none'; }, 500);
     });
+  }
+
+  // Botón volver arriba
+  document.getElementById('toTop')?.addEventListener('click', () =>
+    window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Registrar Service Worker (PWA)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 });
 
