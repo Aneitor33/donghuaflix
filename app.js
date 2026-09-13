@@ -5,16 +5,45 @@ const app = document.getElementById('app');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 const qs = s => encodeURIComponent(s || '');
 
-// Función auxiliar para validar y limpiar imágenes defectuosas o placeholders
-const cleanImg = (url) => {
-  if (!url || url.includes('IcoPrueba.png')) return '';
-  return esc(url);
+// Función inteligente para limpiar el título si viene como "Temporadas" usando el slug
+const cleanTitle = (s) => {
+  const title = s?.title;
+  if (!title || title.toLowerCase() === 'temporadas') {
+    const rawSlug = s?.slug || s?.id || '';
+    if (rawSlug) {
+      // Transforma un slug como "zhen-dao-ge" en "Zhen Dao Ge"
+      return rawSlug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+    return 'Donghua';
+  }
+  return title;
+};
+
+// Función auxiliar para validar, limpiar y buscar imágenes alternativas en las temporadas si falta en la serie
+const getSeriesImage = (s) => {
+  // 1. Validar si la imagen principal es válida y no es un marcador de posición
+  if (s?.image && !s.image.includes('IcoPrueba.png')) {
+    return s.image;
+  }
+  
+  // 2. Si no tiene, buscar la imagen en las temporadas asociadas a esta serie
+  const associatedSeasons = DB.seasons.filter(seas => seas.seriesId === s.id);
+  for (const seas of associatedSeasons) {
+    if (seas.image && !seas.image.includes('IcoPrueba.png')) {
+      return seas.image;
+    }
+  }
+
+  // 3. Si de plano no hay ninguna, retornar vacío para mostrar el diseño por defecto
+  return '';
 };
 
 async function load() {
   app.innerHTML = '<section class="section"><div class="grid">' + Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
   try {
-    // Añadimos cache: 'no-store' y timestamp para evitar que Cloudflare o el navegador sirvan datos viejos
     const r = await fetch('./public/data/catalog.json?ts=' + Date.now(), { cache: 'no-store' });
     DB = await r.json();
     document.getElementById('footerStatus').innerHTML = `
@@ -30,26 +59,28 @@ async function load() {
 }
 
 function card(s) {
-  const validImg = cleanImg(s.image);
+  const imgUrl = getSeriesImage(s);
+  const title = cleanTitle(s);
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
-      ${validImg ? `<img loading="lazy" src="${validImg}" alt="${esc(s.title)}">` : '<div class="no-img" style="display:flex;align-items:center;justify-content:center;height:100%;background:#1a1a1a;color:#666;font-weight:bold;">DONGHUA</div>'}
+      ${imgUrl ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}">` : '<div class="no-img" style="display:flex;align-items:center;justify-content:center;height:100%;background:#1a1a1a;color:#666;font-weight:bold;font-size:12px;text-align:center;padding:5px;">DONGHUAFLIX</div>'}
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
     </div>
-    <h3 style="color:#ffffff; font-weight:600; font-size:14px; margin-top:8px;">${esc(s.title)}</h3>
+    <h3 style="color:#ffffff; font-weight:600; font-size:14px; margin-top:8px;">${esc(title)}</h3>
   </article>`;
 }
 
 function home() {
   const recent = DB.series.slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const hero = recent[0];
-  const heroImg = cleanImg(hero?.image);
+  const heroImg = hero ? getSeriesImage(hero) : '';
+  const heroTitle = hero ? cleanTitle(hero) : 'DonghuaFlix';
 
   app.innerHTML = `
-  <section class="hero" style="--hero:url('${heroImg}')">
+  <section class="hero" style="--hero:url('${esc(heroImg)}')">
     <div class="hero-content">
       <div class="eyebrow">DONGHUAFLIX EXCLUSIVE</div>
-      <h1>${esc(hero?.title || 'DonghuaFlix')}</h1>
+      <h1>${esc(heroTitle)}</h1>
       <p>${esc(hero?.synopsis || 'Catálogo de animación china en alta calidad.')}</p>
       <div class="buttons">
         ${hero ? `<button class="btn primary" onclick="location.hash='#/series/${qs(hero.slug || hero.id)}'">▶ Ver serie</button>` : ''}
@@ -99,7 +130,7 @@ function updateSearchResults(q = '') {
   }
 
   const list = DB.series.filter(s => {
-    const title = (s.title || '').toLowerCase();
+    const title = cleanTitle(s).toLowerCase();
     const words = title.split(' ');
     return title.startsWith(queryClean) || words.some(w => w.startsWith(queryClean)) || title.includes(queryClean);
   });
@@ -117,20 +148,20 @@ function detail(slug) {
   if (!s) return notfound();
 
   const seasons = DB.seasons.filter(x => x.seriesId === s.id);
-  const validImg = cleanImg(s.image);
+  const imgUrl = getSeriesImage(s);
+  const title = cleanTitle(s);
 
   app.innerHTML = `<section class="detail">
     <div class="detail-top">
-      <div class="detail-poster">${validImg ? `<img src="${validImg}" alt="${esc(s.title)}">` : ''}</div>
+      <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}">` : ''}</div>
       <div>
         <div class="eyebrow">${esc(s.status || '')}</div>
-        <h1>${esc(s.title)}</h1>
+        <h1>${esc(title)}</h1>
         <p style="margin-top:10px;">${esc(s.synopsis || 'Sinopsis no disponible.')}</p>
       </div>
     </div>
     <div style="margin-top:30px">
       ${seasons.length ? seasons.map(season => {
-        // Desduplicación estricta por número de episodio
         const rawEps = DB.episodes.filter(e => e.seasonId === season.id);
         const epMap = new Map();
         rawEps.forEach(e => {
