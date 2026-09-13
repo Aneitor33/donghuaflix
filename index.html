@@ -1,1 +1,44 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#08090d"><meta name="description" content="DonghuaFlix — catálogo independiente de donghuas"><title>DonghuaFlix</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css"></head><body><header class="nav"><a class="brand" href="#/"><span class="brand-mark">D</span><span>DONGHUA<span>FLIX</span></span></a><nav><a href="#/">Inicio</a><a href="#/series">Series</a><a href="#/genres">Géneros</a><a href="#/movies">Películas</a><a href="#/airing">En emisión</a><a href="#/finished">Finalizadas</a></nav><div class="nav-actions"><button id="searchBtn" class="icon-btn" aria-label="Buscar">⌕</button><button id="syncBtn" class="sync">↻</button></div></header><main id="app"></main><footer><div><b>DONGHUA<span>FLIX</span></b><p>Una experiencia independiente para descubrir y seguir tus donghuas.</p></div><small id="footerStatus">Catálogo local</small></footer><div id="toast"></div><script src="/app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DonghuaFlix</title>
+  <!-- Aquí van tus estilos CSS (asegúrate de mantener tu enlace al CSS si usas uno externo) -->
+  <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+  <header class="header">
+    <div class="logo">
+      <a href="#/">DONGHUAFLIX</a>
+    </div>
+    <nav class="nav-links">
+      <a href="#/">Inicio</a>
+      <a href="#/series">Series</a>
+      <a href="#/genres">Géneros</a>
+      <a href="#/movies">Películas</a>
+      <a href="#/airing">En emisión</a>
+      <a href="#/completed">Finalizadas</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#/search" class="icon-btn" title="Buscar">🔍</a>
+      <button id="reloadBtn" class="icon-btn" title="Actualizar catálogo" style="background:none; border:none; cursor:pointer; font-size:18px; color:inherit;">🔄</button>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR DINÁMICO DE LA SPA -->
+  <main id="app">
+    <!-- El contenido se renderiza dinámicamente mediante app.js -->
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="footer">
+    <div id="footerStatus">Cargando catálogo...</div>
+  </footer>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script src="app.js"></script>
+</body>
+</html>
