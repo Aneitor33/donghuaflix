@@ -36,6 +36,9 @@ const MIN_SEASON_PAGE_PROBES = 5;
 */
 const MAX_INFERRED_EPISODE_ATTEMPTS = 20;
 
+// Bloqueo global para evitar ejecuciones simultáneas (Mejora 16)
+let isSyncRunning = false;
+
 
 /* =========================================================
    UTILIDADES
@@ -846,7 +849,7 @@ function parseSeries(
         $(element).attr('href');
 
 
-      const seasonUrl =
+      const candidateUrl =
         canonical(
           absolute(
             href,
@@ -856,8 +859,8 @@ function parseSeries(
 
 
       if (
-        !seasonUrl ||
-        !sameOrigin(seasonUrl)
+        !candidateUrl ||
+        !sameOrigin(candidateUrl)
       ) {
         return;
       }
@@ -865,22 +868,19 @@ function parseSeries(
 
       try {
 
-        const pathname =
-          new URL(
-            seasonUrl
-          ).pathname;
+        const u = new URL(candidateUrl);
+        const pathname = u.pathname;
 
+        // Mejora 1 y 2: Detección inteligente de temporadas basada en contenido real y evitando paginación
+        if (u.searchParams.has('page')) {
+          return; // La paginación nunca es una temporada (Mejora 2)
+        }
 
-        if (
-          /\/season\//i.test(
-            pathname
-          )
-        ) {
+        const isSeasonPath = /\/season\//i.test(pathname);
+        const hasSeasonKeyword = /(?:season|temporada)/i.test(pathname) || seasonNumber(candidateUrl) !== null;
 
-          seasonUrls.push(
-            seasonUrl
-          );
-
+        if (isSeasonPath || hasSeasonKeyword) {
+          seasonUrls.push(candidateUrl);
         }
 
       } catch {}
@@ -5049,85 +5049,96 @@ async function runIncrementalSync() {
 ========================================================= */
 
 async function main() {
+  // Mejora 16: Control de bloqueo para evitar ejecuciones simultáneas
+  if (isSyncRunning) {
+    console.log('⚠️ Ya hay una sincronización en proceso. Saltando esta ejecución.');
+    return;
+  }
 
-  console.log(
-    '\n=============================================='
-  );
+  isSyncRunning = true;
 
-
-  console.log(
-    '🚀 DONGHUAFLIX SYNC'
-  );
-
-
-  console.log(
-    '==============================================\n'
-  );
-
-
-  const existing =
-    await loadCatalog();
-
-
-  /*
-     Si no existe catálogo o todavía hay
-     temporadas incompletas:
-
-     → hacemos histórico completo.
-  */
-
-  const needsFullSync =
-    !existing.seasons.length ||
-    catalogHasIncompleteSeasons(
-      existing
-    );
-
-
-  if (
-    needsFullSync
-  ) {
-
+  try {
     console.log(
-      '📚 El catálogo todavía no está completamente construido.'
+      '\n=============================================='
     );
 
 
     console.log(
-      '🧭 Ejecutando sincronización histórica completa...\n'
+      '🚀 DONGHUAFLIX SYNC'
     );
 
 
-    await runFullSync();
+    console.log(
+      '==============================================\n'
+    );
+
+
+    const existing =
+      await loadCatalog();
 
 
     /*
-       IMPORTANTE:
+       Si no existe catálogo o todavía hay
+       temporadas incompletas:
 
-       No arrancamos inmediatamente
-       un incremental aquí.
-
-       Primero dejamos que esta ejecución
-       termine y que el catálogo quede
-       completamente guardado.
-
-       La siguiente ejecución podrá decidir
-       si ya corresponde incremental.
+       → hacemos histórico completo.
     */
 
-    return;
+    const needsFullSync =
+      !existing.seasons.length ||
+      catalogHasIncompleteSeasons(
+        existing
+      );
 
+
+    if (
+      needsFullSync
+    ) {
+
+      console.log(
+        '📚 El catálogo todavía no está completamente construido.'
+      );
+
+
+      console.log(
+        '🧭 Ejecutando sincronización histórica completa...\n'
+      );
+
+
+      await runFullSync();
+
+
+      /*
+         IMPORTANTE:
+
+         No arrancamos inmediatamente
+         un incremental aquí.
+
+         Primero dejamos que esta ejecución
+         termine y que el catálogo quede
+         completamente guardado.
+
+         La siguiente ejecución podrá decidir
+         si ya corresponde incremental.
+      */
+
+      return;
+
+    }
+
+
+    /*
+       Si llegamos aquí significa que
+       TODAS las temporadas están marcadas
+       como completas.
+
+       Entonces podemos hacer incremental.
+    */
+
+    await runIncrementalSync();
+  } finally {
+    isSyncRunning = false;
   }
-
-
-  /*
-     Si llegamos aquí significa que
-     TODAS las temporadas están marcadas
-     como completas.
-
-     Entonces podemos hacer incremental.
-  */
-
-  await runIncrementalSync();
 
 }
 
@@ -5138,6 +5149,8 @@ async function main() {
 
 main().catch(
   async error => {
+
+    isSyncRunning = false; // Asegurar liberar el bloqueo en caso de error fatal
 
     console.error(
       '\n💥 ERROR FATAL:',
