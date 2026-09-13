@@ -1988,6 +1988,10 @@ async function collectAllSeasonEpisodeUrls(
          también intentamos reconocerlo.
       */
 
+      const $ =
+        cheerio.load(html);
+
+
       $('a[href]').each(
         (_, el) => {
 
@@ -5008,6 +5012,31 @@ async function runFullSync() {
       );
 
 
+      /*
+         CHECKPOINT:
+
+         Guardamos el catálogo cada 10 series
+         para no perder horas de trabajo si
+         GitHub cancela el workflow (límite
+         de 6 horas) o hay un error fatal.
+      */
+
+      if (
+        (i + 1) % 10 === 0
+      ) {
+
+        await saveCatalog(
+          db
+        );
+
+
+        console.log(
+          `💾 Checkpoint: ${i + 1}/${discovered.length} series guardadas`
+        );
+
+      }
+
+
       detail.genres?.forEach(
         genre =>
           allGenres.add(
@@ -5060,6 +5089,38 @@ async function runFullSync() {
 
 
         try {
+
+
+          /*
+             OPTIMIZACIÓN DE REINTENTOS:
+
+             Si la temporada ya se completó en
+             una ejecución anterior, NO la
+             recorremos entera otra vez.
+
+             → solo buscamos episodios nuevos
+               (modo incremental).
+
+             Así, si GitHub corta el workflow
+             (límite de 6h), la siguiente
+             ejecución retoma rápido.
+          */
+
+          if (
+            oldSeason &&
+            oldSeason.initialSyncComplete === true
+          ) {
+
+            await incrementalSeasonSync(
+              db,
+              oldSeason
+            );
+
+
+            continue;
+
+          }
+
 
           await processFullSeason(
 
