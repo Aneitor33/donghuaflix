@@ -3,90 +3,38 @@ import path from 'node:path';
 import * as cheerio from 'cheerio';
 
 const BASE_URL = 'https://donghualife.com';
-const OUT_FILE = path.join(process.cwd(), 'public', 'data', 'catalog.json');
+const OUT_FILE = path.resolve('public/data/catalog.json');
 
-const USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-  '(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+const SEEDS = [
+  '/series',
+  '/donghuas',
+  '/en-emision',
+  '/finalizado',
+  '/en-pausa',
+  '/'
+];
 
-const MIN_DELAY_MS = Number(process.env.SCRAPE_DELAY_MIN_MS) || 500;
-const MAX_DELAY_MS = Number(process.env.SCRAPE_DELAY_MAX_MS) || 1200;
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const MAX_RETRIES = 3;
+const clean = value =>
+  String(value || '').replace(/\s+/g, ' ').trim();
 
-// IMPORTANTE:
-// Esto NO es un límite de episodios.
-// Es solamente una protección contra un enlace de paginación roto
-// que podría provocar un bucle infinito.
-const MAX_PAGINATION_PAGES = 100000;
-
-const RESERVED_SLUGS = new Set([
-  'temporadas',
-  'temporada',
-  'episodios',
-  'episodio',
-  'genero',
-  'generos',
-  'genre',
-  'genres',
-  'page',
-  'pagina',
-  'buscar',
-  'search',
-  'categoria',
-  'categorias',
-  'inicio'
-]);
-
-const GENERIC_HEADINGS = new Set([
-  'temporadas',
-  'temporada',
-  'episodios',
-  'episodio',
-  'series',
-  'inicio'
-]);
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function randomDelay() {
-  const min = Math.min(MIN_DELAY_MS, MAX_DELAY_MS);
-  const max = Math.max(MIN_DELAY_MS, MAX_DELAY_MS);
-  return Math.floor(min + Math.random() * (max - min + 1));
-}
-
-function clean(value) {
-  return String(value ?? '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function absoluteUrl(relative, base = BASE_URL) {
+function absolute(href, base = BASE_URL) {
   try {
-    if (!relative) return null;
+    if (!href) return null;
+    if (/^(javascript:|mailto:|tel:|#)/i.test(href)) return null;
 
-    if (/^(javascript:|mailto:|tel:|#)/i.test(relative)) {
-      return null;
-    }
-
-    const url = new URL(relative, base);
-
-    if (!/^https?:$/i.test(url.protocol)) {
-      return null;
-    }
-
-    return url.href;
+    return new URL(href, base).href;
   } catch {
     return null;
   }
 }
 
-function sourceUrl(url) {
+function canonical(url) {
   try {
     const u = new URL(url);
-    return `${u.origin}${u.pathname}`;
+    u.hash = '';
+    return u.href.replace(/\/+$/, '');
   } catch {
     return url;
   }
@@ -94,1069 +42,589 @@ function sourceUrl(url) {
 
 function slugFromUrl(url) {
   try {
-    const pathname = new URL(url).pathname
+    return new URL(url)
+      .pathname
       .split('/')
-      .filter(Boolean);
-
-    return pathname[pathname.length - 1] || '';
+      .filter(Boolean)
+      .pop() || '';
   } catch {
     return '';
   }
 }
 
-function isSameHost(url) {
-  try {
-    const hostname = new URL(url).hostname.replace(/^www\./, '');
-    return hostname === 'donghualife.com';
-  } catch {
-    return false;
+/*
+ * Detecta el número REAL del episodio desde su URL.
+ *
+ * Ejemplos:
+ * big-brother-1-x1             -> 1
+ * big-brother-1-x10            -> 10
+ * big-brother-1-episodio-x10   -> 10
+ */
+function episodeNumber(url) {
+  const value = decodeURIComponent(url || '');
+
+  let match = value.match(/[-_]x(\d+)\/?$/i);
+
+  if (match) {
+    return Number(match[1]);
   }
-}
 
-function unique(values) {
-  return [...new Set(values.filter(Boolean))];
-}
+  match = value.match(/episodio[-_ ]*x?(\d+)\/?$/i);
 
-function isGenericHeading(text) {
-  return GENERIC_HEADINGS.has(
-    clean(text).toLowerCase()
-  );
-}
-
-function formatTitle(slug) {
-  if (!slug) return 'Sin título';
-
-  return slug
-    .replace(/[-_]+/g, ' ')
-    .replace(/\b\w/g, char => char.toUpperCase())
-    .trim();
-}
-
-function extractCleanImage($ctx, base = BASE_URL) {
-  const candidates = [
-    $ctx('meta[property="og:image"]').attr('content'),
-    $ctx('meta[name="twitter:image"]').attr('content'),
-    $ctx('img').first().attr('src'),
-    $ctx('img').first().attr('data-src'),
-    $ctx('img').first().attr('data-lazy-src')
-  ];
-
-  for (const candidate of candidates) {
-    const url = absoluteUrl(candidate, base);
-    if (url) return url;
+  if (match) {
+    return Number(match[1]);
   }
 
   return null;
 }
 
-function extractImageFromElement($, element, base) {
-  const candidates = [
-    $(element).find('img').first().attr('src'),
-    $(element).find('img').first().attr('data-src'),
-    $(element).find('img').first().attr('data-lazy-src')
-  ];
+/*
+ * Detecta la temporada desde:
+ *
+ * /season/big-brother-2
+ * /episode/big-brother-2-x1
+ * /episode/big-brother-2-episodio-x1
+ */
+function seasonNumber(url) {
+  const value = decodeURIComponent(url || '');
 
-  for (const candidate of candidates) {
-    const url = absoluteUrl(candidate, base);
-    if (url) return url;
-  }
+  let match = value.match(
+    /\/season\/[^/]*?[-_](\d+)\/?$/i
+  );
+
+  if (match) return Number(match[1]);
+
+  match = value.match(
+    /[-_](\d+)[-_](?:episodio[-_ ]*)?x\d+\/?$/i
+  );
+
+  if (match) return Number(match[1]);
 
   return null;
 }
 
-function extractNumber(text) {
-  const match = clean(text).match(/\b(\d+)\b/);
-  return match ? Number(match[1]) : null;
-}
+async function fetchHtml(url, attempts = 3) {
+  let lastError;
 
-function hostName(url) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return 'Servidor';
-  }
-}
-
-function addServer(servers, name, url, embed = false) {
-  if (!url) return;
-
-  const cleanUrl = sourceUrl(url);
-  const serverName = clean(name) || hostName(cleanUrl);
-
-  const exists = servers.some(
-    server =>
-      server.url === cleanUrl ||
-      (
-        server.name.toLowerCase() === serverName.toLowerCase() &&
-        server.url === cleanUrl
-      )
-  );
-
-  if (!exists) {
-    servers.push({
-      name: serverName,
-      url: cleanUrl,
-      embed
-    });
-  }
-}
-
-async function fetchHTML(
-  url,
-  {
-    referer = BASE_URL,
-    retries = MAX_RETRIES
-  } = {}
-) {
-  let lastError = null;
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
-      await sleep(randomDelay());
-
       const response = await fetch(url, {
         headers: {
-          'User-Agent': USER_AGENT,
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36',
           'Accept':
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language':
-            'es-ES,es;q=0.9,en;q=0.7',
-          'Referer': referer,
-          'Cache-Control': 'no-cache'
+            'es-ES,es;q=0.9,en;q=0.8'
         },
         redirect: 'follow'
       });
 
-      if (response.ok) {
-        return await response.text();
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
 
-      const error = new Error(
-        `HTTP ${response.status} en ${url}`
-      );
+      return await response.text();
 
-      lastError = error;
-
-      const retryable =
-        response.status === 403 ||
-        response.status === 408 ||
-        response.status === 429 ||
-        response.status >= 500;
-
-      if (!retryable) {
-        throw error;
-      }
-
-      if (attempt < retries) {
-        await sleep(1000 * attempt);
-      }
     } catch (error) {
       lastError = error;
 
-      if (attempt < retries) {
-        await sleep(1000 * attempt);
+      if (attempt < attempts) {
+        const wait =
+          1000 * attempt +
+          Math.floor(Math.random() * 1000);
+
+        console.log(
+          `   ↻ Reintento ${attempt + 1}/${attempts} en ${wait} ms`
+        );
+
+        await sleep(wait);
       }
     }
   }
 
-  throw lastError || new Error(`No se pudo obtener ${url}`);
+  throw lastError;
 }
 
-function getLinks($, selector, base) {
-  const result = [];
-
-  $(selector).each((_, element) => {
-    const href = $(element).attr('href');
-    const url = absoluteUrl(href, base);
-
-    if (!url || !isSameHost(url)) return;
-
-    result.push(sourceUrl(url));
-  });
-
-  return unique(result);
+function uniqueUrls(values) {
+  return [
+    ...new Set(
+      values
+        .filter(Boolean)
+        .map(canonical)
+    )
+  ];
 }
 
-/*
- * Busca enlaces de series desde una página.
- */
-function extractSeriesLinks($, base) {
+/* =========================================================
+   SERIES
+   ========================================================= */
+
+function parseSeriesLinks(html, pageUrl) {
+  const $ = cheerio.load(html);
   const result = [];
 
-  $('a[href]').each((_, element) => {
-    const href = $(element).attr('href');
-    const url = absoluteUrl(href, base);
-
-    if (!url || !isSameHost(url)) return;
-
-    const pathname = new URL(url).pathname;
-
-    if (/\/series\//i.test(pathname)) {
-      const slug = slugFromUrl(url);
-
-      if (
-        slug &&
-        !RESERVED_SLUGS.has(slug.toLowerCase())
-      ) {
-        result.push(sourceUrl(url));
-      }
-    }
-  });
-
-  return unique(result);
-}
-
-/*
- * Busca temporadas dentro de una página de serie.
- */
-function extractSeasonLinks($, base, seriesSlug) {
-  const result = [];
-
-  $('a[href]').each((_, element) => {
-    const href = $(element).attr('href');
-    const url = absoluteUrl(href, base);
-
-    if (!url || !isSameHost(url)) return;
-
-    const pathname = new URL(url).pathname;
-
-    if (/\/season\//i.test(pathname)) {
-      result.push(sourceUrl(url));
-    }
-  });
-
-  /*
-   * Si la serie no contiene el enlace directamente,
-   * intentamos el formato habitual de la web.
-   */
-  if (!result.length && seriesSlug) {
-    result.push(
-      `${BASE_URL}/season/${seriesSlug}-1`
+  $('a[href*="/series/"]').each((_, element) => {
+    const href = absolute(
+      $(element).attr('href'),
+      pageUrl
     );
-  }
 
-  return unique(result);
+    if (!href) return;
+
+    const url = canonical(href);
+
+    if (!new URL(url).pathname.startsWith('/series/')) {
+      return;
+    }
+
+    const slug = slugFromUrl(url);
+
+    if (!slug) return;
+
+    const title =
+      clean($(element).attr('title')) ||
+      clean($(element).find('img').attr('alt')) ||
+      clean($(element).text()) ||
+      slug.replace(/-/g, ' ');
+
+    const image =
+      absolute(
+        $(element).find('img').attr('src'),
+        pageUrl
+      ) ||
+      absolute(
+        $(element).find('img').attr('data-src'),
+        pageUrl
+      ) ||
+      '';
+
+    result.push({
+      url,
+      slug,
+      title,
+      image
+    });
+  });
+
+  return result;
 }
 
-/*
- * Extrae la información básica de una serie.
- */
-function parseSeriesPage(html, url) {
+function textFrom($, selectors) {
+  for (const selector of selectors) {
+    const element = $(selector).first();
+
+    if (!element.length) continue;
+
+    const text = clean(
+      element.attr('content') ||
+      element.text()
+    );
+
+    if (text) return text;
+  }
+
+  return '';
+}
+
+function parseSeries(html, seriesUrl, fallback = {}) {
   const $ = cheerio.load(html);
 
-  const seriesSlug = slugFromUrl(url);
-
-  const rawTitle = clean(
-    $('h1').first().text() ||
-    $('h2').first().text() ||
-    $('title').first().text()
-  );
-
   const title =
-    isGenericHeading(rawTitle)
-      ? formatTitle(seriesSlug)
-      : rawTitle.replace(/\s*\|.*$/, '').trim();
+    textFrom($, [
+      'h1',
+      '.page-title',
+      '.field--name-title',
+      'meta[property="og:title"]'
+    ]) ||
+    fallback.title ||
+    slugFromUrl(seriesUrl).replace(/-/g, ' ');
 
-  const body = clean($('body').text());
+  const image =
+    absolute(
+      $('meta[property="og:image"]').attr('content'),
+      seriesUrl
+    ) ||
+    absolute(
+      $('img').first().attr('src'),
+      seriesUrl
+    ) ||
+    fallback.image ||
+    '';
 
-  let synopsis = null;
+  const synopsis = textFrom($, [
+    '.field--name-body',
+    '.field--name-field-sinopsis',
+    '.synopsis',
+    '.description',
+    '.resumen'
+  ]);
 
-  const synopsisMatch = body.match(
-    /(?:Synopsis|Sinopsis)\s*:?\s*(.*?)(?=\s+(?:Temporadas|Temporada|Autor|Studio|Estudio|Género|Generos|Géneros|Estado|Fecha de emisión)\s*:?\s*)/i
-  );
+  const originalTitle = textFrom($, [
+    '.field--name-field-titulo-original',
+    '.original-title',
+    '.titulo-original'
+  ]);
 
-  if (synopsisMatch) {
-    synopsis = clean(synopsisMatch[1]);
-  }
+  const duration = textFrom($, [
+    '.field--name-field-duracion',
+    '.duration',
+    '.duracion'
+  ]);
 
-  let originalTitle = null;
+  const releaseDate = textFrom($, [
+    '.field--name-field-fecha',
+    '.release-date',
+    '.fecha'
+  ]);
 
-  const originalMatch = body.match(
-    /(?:Título original|Titulo original)\s*:?\s*(.*?)(?=\s+(?:Duración|Duracion|Estado|Fecha de emisión|Género|Generos|Géneros)\s*:?\s*)/i
-  );
+  const status = textFrom($, [
+    '.field--name-field-estado',
+    '.status',
+    '.estado'
+  ]) || fallback.status || '';
 
-  if (originalMatch) {
-    originalTitle = clean(originalMatch[1]);
-  }
-
-  let duration = null;
-
-  const durationMatch = body.match(
-    /(?:Duración|Duracion)\s*:?\s*(.*?)(?=\s+(?:Estado|Fecha de emisión|Género|Generos|Géneros)\s*:?\s*)/i
-  );
-
-  if (durationMatch) {
-    duration = clean(durationMatch[1]);
-  }
-
-  let status = null;
-
-  const statusElement = $('a').filter((_, element) => {
-    return /en emisión|finalizado|en pausa/i.test(
-      clean($(element).text())
-    );
-  }).first();
-
-  if (statusElement.length) {
-    status = clean(statusElement.text());
-  }
-
-  if (!status) {
-    const statusMatch = body.match(
-      /Estado\s*:?\s*(.*?)(?=\s+(?:Fecha de emisión|Género|Generos|Géneros|Synopsis|Sinopsis)\s*:?\s*)/i
-    );
-
-    if (statusMatch) {
-      status = clean(statusMatch[1]);
-    }
-  }
-
-  let releaseDate = null;
-
-  const releaseMatch = body.match(
-    /Fecha de emisión\s*:?\s*(.*?)(?=\s+(?:Género|Generos|Géneros|Synopsis|Sinopsis|Temporadas|Temporada)\s*:?\s*)/i
-  );
-
-  if (releaseMatch) {
-    releaseDate = clean(releaseMatch[1]);
-  }
-
-  const knownGenres = [
-    'Animación',
-    'Cultivo',
-    'Acción',
-    'Aventura',
-    'Artes marciales',
-    'Comedia',
-    'Drama',
-    'Romance',
-    'Reencarnación',
-    'Isekai',
-    'Estrategia',
-    'Fantasía',
-    'Misterio',
-    'Horror',
-    'Historia',
-    'Ciencia ficción',
-    'Venganza',
-    'Sistema de cultivo',
-    'Superpoderes',
-    'Escolar',
-    'Sobrenatural'
-  ];
-
-  const genres = [];
-
-  $('a').each((_, element) => {
-    const text = clean($(element).text());
-
-    for (const genre of knownGenres) {
-      if (
-        text.toLowerCase() ===
-        genre.toLowerCase()
-      ) {
-        genres.push(genre);
-      }
-    }
-  });
-
-  const seasonUrls = extractSeasonLinks(
-    $,
-    url,
-    seriesSlug
+  const seasonUrls = uniqueUrls(
+    $('a[href*="/season/"]')
+      .map((_, element) =>
+        absolute(
+          $(element).attr('href'),
+          seriesUrl
+        )
+      )
+      .get()
   );
 
   return {
-    id: seriesSlug,
-    slug: seriesSlug,
-
-    /*
-     * IMPORTANTE:
-     * El título se mantiene basado en el slug.
-     * Así no volvemos a tener "Temporadas".
-     */
-    title:
-      seriesSlug
-        ? formatTitle(seriesSlug)
-        : title || 'Sin título',
-
-    originalTitle:
-      originalTitle || null,
-
-    duration:
-      duration || null,
-
-    status:
-      status || null,
-
-    releaseDate:
-      releaseDate || null,
-
-    synopsis:
-      synopsis || null,
-
-    image:
-      extractCleanImage($, url),
-
-    sourceUrl:
-      sourceUrl(url),
-
-    genres:
-      unique(genres),
-
-    seasonUrls,
-
-    updatedAt:
-      new Date().toISOString()
+    title: clean(
+      title.replace(
+        /\s*\|\s*Donghualife.*$/i,
+        ''
+      )
+    ),
+    originalTitle,
+    duration,
+    status,
+    releaseDate,
+    synopsis,
+    image,
+    seasonUrls
   };
 }
 
-/*
- * Extrae episodios de UNA página de temporada.
- */
-function parseEpisodePage(html, url) {
+/* =========================================================
+   TEMPORADAS
+   ========================================================= */
+
+function parseSeason(html, seasonUrl) {
   const $ = cheerio.load(html);
 
   const episodes = [];
 
+  /*
+   * IMPORTANTE:
+   * Estos enlaces SOLO sirven para localizar el primer episodio.
+   *
+   * NO usamos la tabla para descubrir toda la temporada.
+   */
   $('a[href*="/episode/"]').each((_, element) => {
-    const href = $(element).attr('href');
-    const episodeUrl = absoluteUrl(href, url);
+    const href = absolute(
+      $(element).attr('href'),
+      seasonUrl
+    );
 
-    if (!episodeUrl || !isSameHost(episodeUrl)) {
-      return;
-    }
+    if (!href) return;
 
-    const cleanEpisodeUrl =
-      sourceUrl(episodeUrl);
+    const number = episodeNumber(href);
 
-    const row = $(element).closest('tr');
-
-    const cells = row.length
-      ? row.find('td')
-          .map((_, cell) => clean($(cell).text()))
-          .get()
-      : [];
-
-    const linkText =
-      clean($(element).text());
-
-    const parentText =
-      clean($(element).parent().text());
-
-    const combinedText =
-      clean(
-        [
-          cells.join(' '),
-          linkText,
-          parentText
-        ].join(' ')
-      );
-
-    const number =
-      extractNumber(
-        cells[0] ||
-        linkText ||
-        combinedText
-      );
-
-    const releaseDate =
-      cells.find(value =>
-        /\d{4}|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre/i
-          .test(value)
-      ) || null;
+    if (number == null) return;
 
     episodes.push({
-      url: cleanEpisodeUrl,
-
-      number,
-
-      title:
-        linkText ||
-        (
-          number !== null
-            ? `Episodio ${number}`
-            : 'Episodio'
-        ),
-
-      releaseDate
+      url: canonical(href),
+      number
     });
   });
 
-  const map = new Map();
+  episodes.sort(
+    (a, b) => a.number - b.number
+  );
 
-  for (const episode of episodes) {
-    map.set(episode.url, episode);
-  }
+  const seasonTitle =
+    textFrom($, [
+      'h1',
+      '.page-title',
+      '.field--name-title'
+    ]) ||
+    `Temporada ${seasonNumber(seasonUrl) || 1}`;
 
-  return [...map.values()];
+  return {
+    title: seasonTitle,
+    firstEpisode: episodes[0] || null
+  };
 }
 
-/*
- * Detecta enlaces de paginación.
- *
- * No asumimos que la web usa únicamente ?page=2.
- * Revisamos:
- * - rel=next
- * - enlaces con "Siguiente"
- * - enlaces con "Next"
- * - enlaces numerados
- * - parámetros page/paged/pagina
- */
-function extractPaginationLinks($, base, currentEpisodeUrls) {
-  const candidates = [];
+/* =========================================================
+   EPISODIOS
+   ========================================================= */
 
-  $('a[href]').each((_, element) => {
-    const href = $(element).attr('href');
-    const text = clean($(element).text());
-    const rel = clean($(element).attr('rel'));
+function addServer(list, name, url, embed = true) {
+  if (!url) return;
 
-    const url = absoluteUrl(href, base);
+  const cleanUrl = canonical(url);
 
-    if (!url || !isSameHost(url)) return;
-
-    const parsed = new URL(url);
-    const pathname = parsed.pathname;
-    const lowerText = text.toLowerCase();
-    const lowerRel = rel.toLowerCase();
-
-    let score = 0;
-
-    if (
-      lowerRel.includes('next') ||
-      lowerRel.includes('siguiente')
-    ) {
-      score += 100;
-    }
-
-    if (
-      /^(siguiente|next|›|»|>|→)$/i.test(text)
-    ) {
-      score += 90;
-    }
-
-    if (
-      /[?&](page|paged|pagina|p)=\d+/i.test(
-        parsed.search
-      )
-    ) {
-      score += 50;
-    }
-
-    if (
-      /\/page\/\d+/i.test(pathname)
-    ) {
-      score += 50;
-    }
-
-    /*
-     * Los enlaces numéricos de la paginación
-     * también son válidos.
-     */
-    if (/^\d+$/.test(text)) {
-      score += 30;
-    }
-
-    if (score > 0) {
-      candidates.push({
-        url: sourceUrl(url),
-        score,
-        text
-      });
-    }
-  });
-
-  /*
-   * Eliminamos la página actual y duplicados.
-   */
-  const currentUrl = sourceUrl(base);
-
-  const uniqueCandidates = new Map();
-
-  for (const candidate of candidates) {
-    if (candidate.url === currentUrl) continue;
-
-    if (!uniqueCandidates.has(candidate.url)) {
-      uniqueCandidates.set(
-        candidate.url,
-        candidate
-      );
-    } else {
-      const old =
-        uniqueCandidates.get(candidate.url);
-
-      if (candidate.score > old.score) {
-        uniqueCandidates.set(
-          candidate.url,
-          candidate
-        );
-      }
-    }
-  }
-
-  /*
-   * Priorizamos "Siguiente".
-   */
-  return [...uniqueCandidates.values()]
-    .sort((a, b) => b.score - a.score)
-    .map(x => x.url);
-}
-
-/*
- * Recorre TODAS las páginas de una temporada.
- *
- * IMPORTANTE:
- * No existe un límite de episodios.
- * MAX_PAGINATION_PAGES solo evita bucles infinitos
- * causados por una web mal formada.
- */
-async function scrapeSeasonPages(
-  firstSeasonUrl,
-  onProgress
-) {
-  const visited = new Set();
-  const pending = [sourceUrl(firstSeasonUrl)];
-
-  const allEpisodes = new Map();
-
-  let pagesRead = 0;
-
-  while (
-    pending.length > 0 &&
-    pagesRead < MAX_PAGINATION_PAGES
-  ) {
-    const seasonPageUrl =
-      pending.shift();
-
-    if (visited.has(seasonPageUrl)) {
-      continue;
-    }
-
-    visited.add(seasonPageUrl);
-    pagesRead++;
-
-    let html;
-
-    try {
-      html = await fetchHTML(
-        seasonPageUrl,
-        {
-          referer: firstSeasonUrl
-        }
-      );
-    } catch (error) {
-      onProgress(
-        `⚠️ Página de temporada omitida: ${error.message}`
-      );
-      continue;
-    }
-
-    const $ = cheerio.load(html);
-
-    const pageEpisodes =
-      parseEpisodePage(
-        html,
-        seasonPageUrl
-      );
-
-    let added = 0;
-
-    for (const episode of pageEpisodes) {
-      const key =
-        episode.number !== null
-          ? `number:${episode.number}`
-          : `url:${episode.url}`;
-
-      if (!allEpisodes.has(key)) {
-        allEpisodes.set(
-          key,
-          episode
-        );
-        added++;
-      }
-    }
-
-    onProgress(
-      `      📄 Página ${pagesRead}: +${added} episodios (total: ${allEpisodes.size})`
-    );
-
-    /*
-     * Buscamos más páginas.
-     */
-    const nextPages =
-      extractPaginationLinks(
-        $,
-        seasonPageUrl,
-        pageEpisodes.map(x => x.url)
-      );
-
-    for (const nextPage of nextPages) {
-      if (!visited.has(nextPage)) {
-        pending.push(nextPage);
-      }
-    }
+  if (!/^https?:\/\//i.test(cleanUrl)) {
+    return;
   }
 
   if (
-    pagesRead >= MAX_PAGINATION_PAGES
+    list.some(
+      server => server.url === cleanUrl
+    )
   ) {
-    onProgress(
-      `⚠️ Se alcanzó la protección de ${MAX_PAGINATION_PAGES} páginas de paginación.`
-    );
+    return;
   }
 
-  return [...allEpisodes.values()]
-    .sort((a, b) => {
-      if (
-        a.number === null &&
-        b.number === null
-      ) {
-        return a.url.localeCompare(b.url);
-      }
-
-      if (a.number === null) return 1;
-      if (b.number === null) return -1;
-
-      return a.number - b.number;
-    });
+  list.push({
+    name: clean(name || 'Servidor'),
+    url: cleanUrl,
+    embed
+  });
 }
 
-/*
- * Obtiene los servidores REALES desde la página
- * individual del episodio.
- *
- * No fabricamos URLs /embed/...
- */
-async function parseEpisodeDetails(
-  episode,
-  referer
-) {
-  try {
-    const html =
-      await fetchHTML(
-        episode.url,
-        { referer }
-      );
+function serverName(host) {
+  const h = host.toLowerCase();
 
-    const $ = cheerio.load(html);
+  if (h.includes('dailymotion')) {
+    return 'Dailymotion';
+  }
 
-    const title =
-      clean(
-        $('h1').first().text() ||
-        $('h2').first().text() ||
-        $('title').first().text()
-      ) ||
-      episode.title;
+  if (h.includes('ok.ru')) {
+    return 'OK.ru';
+  }
 
-    const servers = [];
+  if (
+    h.includes('streamwish') ||
+    h.includes('swdyu')
+  ) {
+    return 'StreamWish';
+  }
 
-    /*
-     * Enlaces directos a servidores.
-     */
-    $('a[href]').each((_, element) => {
-      const name =
-        clean($(element).text());
+  if (h.includes('filemoon')) {
+    return 'FileMoon';
+  }
+
+  if (h.includes('voe')) {
+    return 'VOE';
+  }
+
+  if (h.includes('mega')) {
+    return 'Mega';
+  }
+
+  if (h.includes('mp4upload')) {
+    return 'MP4Upload';
+  }
+
+  return host;
+}
+
+function parseEpisode(html, episodeUrl) {
+  const $ = cheerio.load(html);
+
+  const title =
+    textFrom($, [
+      'h1',
+      '.page-title',
+      '.field--name-title',
+      'meta[property="og:title"]'
+    ]) ||
+    slugFromUrl(episodeUrl).replace(
+      /-/g,
+      ' '
+    );
+
+  const servers = [];
+
+  /*
+   * Buscamos enlaces e iframes reales.
+   */
+  $('a[href], iframe[src], video source[src], [data-src], [data-video], [data-embed]')
+    .each((_, element) => {
 
       const href =
-        absoluteUrl(
-          $(element).attr('href'),
-          episode.url
-        );
+        $(element).attr('href') ||
+        $(element).attr('src') ||
+        $(element).attr('data-src') ||
+        $(element).attr('data-video') ||
+        $(element).attr('data-embed');
 
-      if (!href || !name) return;
-
-      const combined =
-        `${name} ${href}`;
-
-      if (
-        /rumble|dailymotion|youtube|ok\.ru|stream|vidoza|filemoon|voe|mixdrop|mega|mp4upload|vidmoly|sibnet|streamtape|streamwish|vidhide|myvi|sendvid/i.test(
-          combined
-        )
-      ) {
-        addServer(
-          servers,
-          name,
-          href,
-          false
-        );
-      }
-    });
-
-    /*
-     * Iframes y fuentes de vídeo.
-     */
-    $('iframe, video source').each(
-      (_, element) => {
-        const src =
-          absoluteUrl(
-            $(element).attr('src') ||
-            $(element).attr('data-src'),
-            episode.url
-          );
-
-        if (src) {
-          addServer(
-            servers,
-            hostName(src),
-            src,
-            true
-          );
-        }
-      }
-    );
-
-    /*
-     * Algunos reproductores esconden la URL
-     * dentro de atributos/data-*.
-     */
-    $('*[data-src], *[data-url], *[data-video]').each(
-      (_, element) => {
-        const candidates = [
-          $(element).attr('data-src'),
-          $(element).attr('data-url'),
-          $(element).attr('data-video')
-        ];
-
-        for (const candidate of candidates) {
-          const src =
-            absoluteUrl(
-              candidate,
-              episode.url
-            );
-
-          if (!src) continue;
-
-          if (
-            /rumble|dailymotion|youtube|ok\.ru|stream|vidoza|filemoon|voe|mixdrop|mega|mp4upload|vidmoly|sibnet|streamtape|streamwish|vidhide|myvi|sendvid/i.test(
-              src
-            )
-          ) {
-            addServer(
-              servers,
-              hostName(src),
-              src,
-              true
-            );
-          }
-        }
-      }
-    );
-
-    const previousUrl =
-      absoluteUrl(
-        $('a')
-          .filter((_, element) =>
-            /Anterior|Previous/i.test(
-              clean($(element).text())
-            )
-          )
-          .first()
-          .attr('href'),
-        episode.url
+      const url = absolute(
+        href,
+        episodeUrl
       );
 
-    const nextUrl =
-      absoluteUrl(
-        $('a')
-          .filter((_, element) =>
-            /Siguiente|Next/i.test(
-              clean($(element).text())
-            )
-          )
-          .first()
-          .attr('href'),
-        episode.url
-      );
+      if (!url) return;
 
-    return {
-      id: slugFromUrl(episode.url),
-      slug: slugFromUrl(episode.url),
+      let hostname = '';
 
-      title,
-
-      sourceUrl:
-        sourceUrl(episode.url),
-
-      number:
-        episode.number,
-
-      releaseDate:
-        episode.releaseDate || null,
-
-      servers,
-
-      previousUrl:
-        previousUrl
-          ? sourceUrl(previousUrl)
-          : null,
-
-      nextUrl:
-        nextUrl
-          ? sourceUrl(nextUrl)
-          : null,
-
-      updatedAt:
-        new Date().toISOString()
-    };
-  } catch (error) {
-    return {
-      id: slugFromUrl(episode.url),
-      slug: slugFromUrl(episode.url),
-
-      title:
-        episode.title ||
-        `Episodio ${episode.number ?? ''}`.trim(),
-
-      sourceUrl:
-        sourceUrl(episode.url),
-
-      number:
-        episode.number,
-
-      releaseDate:
-        episode.releaseDate || null,
-
-      servers: [],
-
-      previousUrl: null,
-      nextUrl: null,
-
-      updatedAt:
-        new Date().toISOString(),
-
-      scrapeError:
-        error.message
-    };
-  }
-}
-
-/*
- * Busca páginas de catálogo de series.
- *
- * Esto permite que no dependamos exclusivamente
- * de /series.
- */
-async function discoverSeriesUrls(
-  onProgress
-) {
-  const seeds = [
-    `${BASE_URL}/series`,
-    `${BASE_URL}/donghuas`,
-    `${BASE_URL}/en-emision`,
-    `${BASE_URL}/finalizado`,
-    `${BASE_URL}/en-pausa`,
-    BASE_URL
-  ];
-
-  const seriesUrls = new Set();
-
-  for (const seed of seeds) {
-    try {
-      const html =
-        await fetchHTML(seed);
-
-      const $ =
-        cheerio.load(html);
-
-      const links =
-        extractSeriesLinks(
-          $,
-          seed
-        );
-
-      for (const link of links) {
-        seriesUrls.add(link);
+      try {
+        hostname = new URL(url).hostname;
+      } catch {
+        return;
       }
-
-      onProgress(
-        `📚 Fuente: ${seed} → ${links.length} series encontradas`
-      );
 
       /*
-       * También buscamos paginación del catálogo.
+       * Ignoramos enlaces internos de DonghuaLife
+       * que no sean servidores de vídeo.
        */
-      const pagination =
-        extractPaginationLinks(
-          $,
-          seed,
-          []
-        );
-
-      for (
-        const pageUrl of pagination
+      if (
+        hostname.includes('donghualife.com') &&
+        !/embed|player/i.test(url)
       ) {
-        try {
-          const pageHtml =
-            await fetchHTML(
-              pageUrl,
-              { referer: seed }
-            );
-
-          const $page =
-            cheerio.load(pageHtml);
-
-          const pageLinks =
-            extractSeriesLinks(
-              $page,
-              pageUrl
-            );
-
-          for (
-            const link of pageLinks
-          ) {
-            seriesUrls.add(link);
-          }
-        } catch (error) {
-          onProgress(
-            `⚠️ Página de catálogo omitida: ${error.message}`
-          );
-        }
+        return;
       }
-    } catch (error) {
-      onProgress(
-        `⚠️ Fuente omitida: ${error.message}`
+
+      const isEmbed =
+        element.tagName?.toLowerCase() === 'iframe' ||
+        /embed|player|video/i.test(url);
+
+      addServer(
+        servers,
+        serverName(hostname),
+        url,
+        isEmbed
       );
+    });
+
+  let previousUrl = null;
+  let nextUrl = null;
+  let seriesUrl = null;
+
+  /*
+   * ESTA ES LA PARTE CLAVE.
+   *
+   * No calculamos x+1 nosotros.
+   * Seguimos exactamente el botón "Siguiente"
+   * que pone DonghuaLife.
+   */
+  $('a[href]').each((_, element) => {
+    const text = clean(
+      $(element).text()
+    ).toLowerCase();
+
+    const href = absolute(
+      $(element).attr('href'),
+      episodeUrl
+    );
+
+    if (!href) return;
+
+    if (
+      !previousUrl &&
+      /^(anterior|previous|prev)\b/i.test(text)
+    ) {
+      previousUrl = canonical(href);
     }
+
+    if (
+      !nextUrl &&
+      /^(siguiente|next)\b/i.test(text)
+    ) {
+      nextUrl = canonical(href);
+    }
+
+    if (
+      !seriesUrl &&
+      /^(serie|series)\b/i.test(text)
+    ) {
+      seriesUrl = canonical(href);
+    }
+  });
+
+  /*
+   * Fallback por rel=prev / rel=next.
+   */
+  if (!previousUrl) {
+    previousUrl = absolute(
+      $('a[rel="prev"]').first().attr('href'),
+      episodeUrl
+    );
   }
 
-  return [...seriesUrls];
+  if (!nextUrl) {
+    nextUrl = absolute(
+      $('a[rel="next"]').first().attr('href'),
+      episodeUrl
+    );
+  }
+
+  return {
+    title: clean(
+      title.replace(
+        /\s*\|\s*Donghualife.*$/i,
+        ''
+      )
+    ),
+    servers,
+    previousUrl: previousUrl
+      ? canonical(previousUrl)
+      : null,
+    nextUrl: nextUrl
+      ? canonical(nextUrl)
+      : null,
+    seriesUrl: seriesUrl
+      ? canonical(seriesUrl)
+      : null
+  };
 }
 
-/*
- * Carga el catálogo anterior.
- *
- * Si la web tiene un fallo temporal, no destruimos
- * el catálogo que ya funciona en Cloudflare Pages.
- */
-async function loadExistingCatalog() {
-  try {
-    const text =
-      await fs.readFile(
-        OUT_FILE,
-        'utf8'
-      );
+/* =========================================================
+   CATÁLOGO
+   ========================================================= */
 
-    const catalog =
-      JSON.parse(text);
+function upsert(array, item, key = 'id') {
+  const index = array.findIndex(
+    x => x[key] === item[key]
+  );
+
+  if (index === -1) {
+    array.push(item);
+  } else {
+    array[index] = {
+      ...array[index],
+      ...item
+    };
+  }
+}
+
+async function loadCatalog() {
+  try {
+    const raw = await fs.readFile(
+      OUT_FILE,
+      'utf8'
+    );
+
+    const db = JSON.parse(raw);
 
     return {
-      meta: catalog.meta || {},
-      series: Array.isArray(catalog.series)
-        ? catalog.series
+      meta: db.meta || {},
+      series: Array.isArray(db.series)
+        ? db.series
         : [],
-      seasons: Array.isArray(catalog.seasons)
-        ? catalog.seasons
+      seasons: Array.isArray(db.seasons)
+        ? db.seasons
         : [],
-      episodes: Array.isArray(catalog.episodes)
-        ? catalog.episodes
+      episodes: Array.isArray(db.episodes)
+        ? db.episodes
         : [],
-      movies: Array.isArray(catalog.movies)
-        ? catalog.movies
+      movies: Array.isArray(db.movies)
+        ? db.movies
         : [],
-      genres: Array.isArray(catalog.genres)
-        ? catalog.genres
+      genres: Array.isArray(db.genres)
+        ? db.genres
         : []
     };
+
   } catch {
     return {
       meta: {},
@@ -1169,7 +637,602 @@ async function loadExistingCatalog() {
   }
 }
 
-async function saveCatalog(catalog) {
+/* =========================================================
+   DESCUBRIR SERIES
+   ========================================================= */
+
+async function discoverSeries() {
+  const map = new Map();
+
+  for (const seed of SEEDS) {
+    const url = canonical(
+      absolute(seed)
+    );
+
+    try {
+      console.log(
+        `🔎 Buscando series: ${url}`
+      );
+
+      const html =
+        await fetchHtml(url);
+
+      const found =
+        parseSeriesLinks(
+          html,
+          url
+        );
+
+      for (const item of found) {
+        if (!map.has(item.slug)) {
+          map.set(
+            item.slug,
+            item
+          );
+        }
+      }
+
+      console.log(
+        `   + ${found.length} enlaces`
+      );
+
+      await sleep(
+        500 +
+        Math.floor(Math.random() * 700)
+      );
+
+    } catch (error) {
+      console.log(
+        `   ⚠️ ${error.message}`
+      );
+    }
+  }
+
+  return [...map.values()];
+}
+
+/* =========================================================
+   RECORRER EPISODIOS CON "SIGUIENTE"
+   ========================================================= */
+
+async function crawlEpisodes(
+  firstEpisodeUrl,
+  seasonUrl,
+  seriesId,
+  seasonId,
+  episodes
+) {
+  const visited = new Set();
+
+  let current =
+    canonical(firstEpisodeUrl);
+
+  let lastNumber = 0;
+  let count = 0;
+
+  while (
+    current &&
+    !visited.has(current)
+  ) {
+
+    visited.add(current);
+
+    /*
+     * Esto NO es un límite de episodios.
+     * Es solamente protección contra un bucle infinito
+     * accidental del sitio.
+     */
+    if (count >= 100000) {
+      console.log(
+        '      ⚠️ Posible bucle. Se detiene.'
+      );
+      break;
+    }
+
+    /*
+     * Evitar que una temporada entre en la siguiente.
+     */
+    const seasonOfCurrent =
+      seasonNumber(current);
+
+    const currentSeason =
+      seasonNumber(seasonUrl);
+
+    if (
+      seasonOfCurrent !== null &&
+      currentSeason !== null &&
+      seasonOfCurrent !== currentSeason
+    ) {
+      console.log(
+        '      ✓ Fin de temporada.'
+      );
+      break;
+    }
+
+    const number =
+      episodeNumber(current);
+
+    if (number === null) {
+      console.log(
+        `      ⚠️ No se pudo obtener número: ${current}`
+      );
+      break;
+    }
+
+    /*
+     * Si la navegación vuelve atrás o entra
+     * en un episodio menor, paramos.
+     */
+    if (
+      lastNumber > 0 &&
+      number <= lastNumber
+    ) {
+      console.log(
+        `      ⚠️ Navegación incorrecta: ${lastNumber} → ${number}`
+      );
+      break;
+    }
+
+    try {
+      console.log(
+        `      📄 Analizando Ep. ${number}`
+      );
+
+      const html =
+        await fetchHtml(current);
+
+      const data =
+        parseEpisode(
+          html,
+          current
+        );
+
+      const id =
+        `${seriesId}-${seasonId}-x${number}`;
+
+      const oldEpisode =
+        episodes.find(
+          e => e.id === id
+        );
+
+      const episode = {
+        id,
+        slug: id,
+        title:
+          data.title ||
+          `Episodio ${number}`,
+        sourceUrl: current,
+        servers: data.servers,
+        previousUrl:
+          data.previousUrl,
+        nextUrl:
+          data.nextUrl,
+        updatedAt:
+          new Date().toISOString(),
+        seriesId,
+        seasonId,
+        number
+      };
+
+      /*
+       * Conservamos datos antiguos útiles.
+       */
+      if (
+        oldEpisode?.releaseDate
+      ) {
+        episode.releaseDate =
+          oldEpisode.releaseDate;
+      }
+
+      upsert(
+        episodes,
+        episode
+      );
+
+      console.log(
+        `         ✓ Ep. ${number}` +
+        (
+          data.servers.length
+            ? ` — ${data.servers.length} servidor(es)`
+            : ' — ⚠️ SIN SERVIDOR'
+        )
+      );
+
+      count++;
+      lastNumber = number;
+
+      const next =
+        data.nextUrl
+          ? canonical(data.nextUrl)
+          : null;
+
+      if (!next) {
+        console.log(
+          `      🏁 Último episodio: ${number}`
+        );
+        break;
+      }
+
+      if (visited.has(next)) {
+        console.log(
+          '      ⚠️ El siguiente ya fue visitado.'
+        );
+        break;
+      }
+
+      /*
+       * Comprobamos que "Siguiente" no
+       * nos haya mandado a otra temporada.
+       */
+      const nextSeason =
+        seasonNumber(next);
+
+      if (
+        currentSeason !== null &&
+        nextSeason !== null &&
+        nextSeason !== currentSeason
+      ) {
+        console.log(
+          `      🏁 Temporada ${currentSeason} termina en Ep. ${number}`
+        );
+        break;
+      }
+
+      current = next;
+
+      await sleep(
+        500 +
+        Math.floor(Math.random() * 700)
+      );
+
+    } catch (error) {
+      console.log(
+        `      ❌ Error Ep. ${number}: ${error.message}`
+      );
+      break;
+    }
+  }
+
+  return count;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+async function main() {
+
+  console.log(
+    '🚀 Iniciando sincronización del catálogo...'
+  );
+
+  console.log(
+    '🧭 Modo: navegación por "Siguiente".'
+  );
+
+  console.log(
+    '🚫 No se usa límite de 50 episodios.'
+  );
+
+  console.log(
+    '🚫 No se usa la paginación de la tabla como fuente de episodios.'
+  );
+
+  const old =
+    await loadCatalog();
+
+  console.log(
+    `📦 Catálogo anterior: ` +
+    `${old.series.length} series, ` +
+    `${old.episodes.length} episodios`
+  );
+
+  const db = {
+    meta: old.meta,
+    series: [],
+    seasons: [],
+    episodes: [...old.episodes],
+    movies: old.movies,
+    genres: old.genres
+  };
+
+  const discovered =
+    await discoverSeries();
+
+  if (!discovered.length) {
+    throw new Error(
+      'No se encontraron series.'
+    );
+  }
+
+  console.log(
+    `\n📚 Series descubiertas: ${discovered.length}\n`
+  );
+
+  for (
+    let i = 0;
+    i < discovered.length;
+    i++
+  ) {
+
+    const item =
+      discovered[i];
+
+    console.log(
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+    );
+
+    console.log(
+      `📺 ${i + 1}/${discovered.length} — ${item.title}`
+    );
+
+    try {
+
+      const html =
+        await fetchHtml(item.url);
+
+      const detail =
+        parseSeries(
+          html,
+          item.url,
+          item
+        );
+
+      const seriesId =
+        item.slug;
+
+      const previous =
+        old.series.find(
+          s => s.id === seriesId
+        );
+
+      const series = {
+        id: seriesId,
+        slug: seriesId,
+        title:
+          detail.title ||
+          previous?.title ||
+          item.title,
+        originalTitle:
+          detail.originalTitle ||
+          previous?.originalTitle ||
+          '',
+        duration:
+          detail.duration ||
+          previous?.duration ||
+          '',
+        status:
+          detail.status ||
+          previous?.status ||
+          '',
+        releaseDate:
+          detail.releaseDate ||
+          previous?.releaseDate ||
+          '',
+        synopsis:
+          detail.synopsis ||
+          previous?.synopsis ||
+          '',
+        image:
+          detail.image ||
+          previous?.image ||
+          item.image ||
+          '',
+        sourceUrl:
+          canonical(item.url),
+        genres:
+          detail.genres.length
+            ? detail.genres
+            : (previous?.genres || []),
+        seasonUrls:
+          detail.seasonUrls,
+        updatedAt:
+          new Date().toISOString()
+      };
+
+      upsert(
+        db.series,
+        series
+      );
+
+      console.log(
+        `   Temporadas encontradas: ${detail.seasonUrls.length}`
+      );
+
+      for (
+        let s = 0;
+        s < detail.seasonUrls.length;
+        s++
+      ) {
+
+        const seasonUrl =
+          canonical(
+            detail.seasonUrls[s]
+          );
+
+        const number =
+          seasonNumber(seasonUrl) ||
+          (s + 1);
+
+        const seasonId =
+          `${seriesId}-${number}`;
+
+        console.log(
+          `   📂 Temporada ${number}/${detail.seasonUrls.length}`
+        );
+
+        try {
+
+          const seasonHtml =
+            await fetchHtml(
+              seasonUrl
+            );
+
+          const seasonData =
+            parseSeason(
+              seasonHtml,
+              seasonUrl
+            );
+
+          const season = {
+            id: seasonId,
+            seriesId,
+            number,
+            title:
+              seasonData.title ||
+              `Temporada ${number}`,
+            sourceUrl:
+              seasonUrl,
+            updatedAt:
+              new Date().toISOString()
+          };
+
+          upsert(
+            db.seasons,
+            season
+          );
+
+          if (
+            !seasonData.firstEpisode
+          ) {
+            console.log(
+              '      ⚠️ No se encontró el primer episodio.'
+            );
+            continue;
+          }
+
+          console.log(
+            `      🎬 Primer episodio: Ep. ${seasonData.firstEpisode.number}`
+          );
+
+          /*
+           * AQUÍ ESTÁ EL CAMBIO PRINCIPAL.
+           *
+           * Desde el primer episodio:
+           *
+           * x1 → Siguiente → x2
+           * x2 → Siguiente → x3
+           * x3 → Siguiente → x4
+           * ...
+           */
+          await crawlEpisodes(
+            seasonData.firstEpisode.url,
+            seasonUrl,
+            seriesId,
+            seasonId,
+            db.episodes
+          );
+
+          await sleep(
+            700 +
+            Math.floor(Math.random() * 800)
+          );
+
+        } catch (error) {
+
+          console.log(
+            `      ❌ Error temporada: ${error.message}`
+          );
+        }
+      }
+
+    } catch (error) {
+
+      console.log(
+        `   ❌ Error serie: ${error.message}`
+      );
+    }
+
+    await sleep(
+      800 +
+      Math.floor(Math.random() * 1000)
+    );
+  }
+
+  /* =======================================================
+     ORDENAR
+     ======================================================= */
+
+  db.series.sort(
+    (a, b) =>
+      clean(a.title).localeCompare(
+        clean(b.title),
+        'es'
+      )
+  );
+
+  db.seasons.sort(
+    (a, b) =>
+      String(a.seriesId).localeCompare(
+        String(b.seriesId)
+      ) ||
+      Number(a.number || 0) -
+      Number(b.number || 0)
+  );
+
+  db.episodes.sort(
+    (a, b) =>
+      String(a.seriesId).localeCompare(
+        String(b.seriesId)
+      ) ||
+      String(a.seasonId).localeCompare(
+        String(b.seasonId)
+      ) ||
+      Number(a.number || 0) -
+      Number(b.number || 0)
+  );
+
+  /* =======================================================
+     GÉNEROS
+     ======================================================= */
+
+  const genres =
+    new Set(db.genres || []);
+
+  for (const series of db.series) {
+    for (const genre of series.genres || []) {
+
+      const value =
+        clean(genre);
+
+      if (value) {
+        genres.add(value);
+      }
+    }
+  }
+
+  db.genres =
+    [...genres].sort(
+      (a, b) =>
+        a.localeCompare(b, 'es')
+    );
+
+  /* =======================================================
+     META
+     ======================================================= */
+
+  const finishedAt =
+    new Date().toISOString();
+
+  db.meta = {
+    ...(old.meta || {}),
+    version: 2,
+    source: `${BASE_URL}/`,
+    syncedAt: finishedAt,
+    lastSync: {
+      status: 'success',
+      startedAt:
+        old.meta?.lastSync?.startedAt ||
+        null,
+      finishedAt,
+      error: null
+    }
+  };
+
+  /* =======================================================
+     GUARDAR
+     ======================================================= */
+
   await fs.mkdir(
     path.dirname(OUT_FILE),
     { recursive: true }
@@ -1181,7 +1244,7 @@ async function saveCatalog(catalog) {
   await fs.writeFile(
     tempFile,
     JSON.stringify(
-      catalog,
+      db,
       null,
       2
     ),
@@ -1192,452 +1255,50 @@ async function saveCatalog(catalog) {
     tempFile,
     OUT_FILE
   );
-}
-
-/*
- * Sincronización principal.
- */
-async function scrapeDonghuaFlix() {
-  console.log(
-    '🚀 Iniciando sincronización del catálogo...'
-  );
-
-  const startedAt =
-    new Date().toISOString();
-
-  const oldCatalog =
-    await loadExistingCatalog();
-
-  let seriesUrls = [];
-
-  try {
-    seriesUrls =
-      await discoverSeriesUrls(
-        message => console.log(message)
-      );
-  } catch (error) {
-    console.error(
-      `❌ Error descubriendo series: ${error.message}`
-    );
-  }
-
-  /*
-   * Si no podemos encontrar ninguna serie,
-   * conservamos el catálogo anterior.
-   */
-  if (!seriesUrls.length) {
-    console.error(
-      '❌ No se encontraron series en la web principal.'
-    );
-
-    console.error(
-      '🛡️ Se conserva el catalog.json existente.'
-    );
-
-    return;
-  }
 
   console.log(
-    `📊 Series descubiertas: ${seriesUrls.length}`
-  );
-
-  /*
-   * Empezamos desde el catálogo anterior.
-   *
-   * Esto hace que un fallo puntual de una serie
-   * no destruya su información anterior.
-   */
-  const seriesMap =
-    new Map(
-      oldCatalog.series.map(
-        item => [item.id, item]
-      )
-    );
-
-  const seasonsMap =
-    new Map(
-      oldCatalog.seasons.map(
-        item => [item.id, item]
-      )
-    );
-
-  const episodesMap =
-    new Map(
-      oldCatalog.episodes.map(
-        item => [item.id, item]
-      )
-    );
-
-  const genresSet =
-    new Set(
-      oldCatalog.genres
-        .filter(Boolean)
-    );
-
-  let successfulSeries = 0;
-
-  for (
-    let seriesIndex = 0;
-    seriesIndex < seriesUrls.length;
-    seriesIndex++
-  ) {
-    const seriesUrl =
-      seriesUrls[seriesIndex];
-
-    try {
-      console.log(
-        `\n[${seriesIndex + 1}/${seriesUrls.length}] 🔎 ${seriesUrl}`
-      );
-
-      const html =
-        await fetchHTML(
-          seriesUrl
-        );
-
-      const series =
-        parseSeriesPage(
-          html,
-          seriesUrl
-        );
-
-      if (!series.id) {
-        throw new Error(
-          'No se pudo determinar el slug de la serie.'
-        );
-      }
-
-      seriesMap.set(
-        series.id,
-        series
-      );
-
-      for (
-        const genre of series.genres
-      ) {
-        genresSet.add(genre);
-      }
-
-      successfulSeries++;
-
-      console.log(
-        `   ✅ ${series.title}`
-      );
-
-      console.log(
-        `   📚 Temporadas encontradas: ${series.seasonUrls.length}`
-      );
-
-      /*
-       * Procesamos todas las temporadas.
-       */
-      for (
-        let seasonIndex = 0;
-        seasonIndex < series.seasonUrls.length;
-        seasonIndex++
-      ) {
-        const seasonUrl =
-          series.seasonUrls[seasonIndex];
-
-        try {
-          console.log(
-            `   📖 Temporada ${seasonIndex + 1}/${series.seasonUrls.length}: ${seasonUrl}`
-          );
-
-          /*
-           * Obtenemos la primera página para
-           * sacar título e imagen.
-           */
-          const seasonHtml =
-            await fetchHTML(
-              seasonUrl,
-              {
-                referer: seriesUrl
-              }
-            );
-
-          const $season =
-            cheerio.load(
-              seasonHtml
-            );
-
-          const seasonSlug =
-            slugFromUrl(
-              seasonUrl
-            );
-
-          const seasonTitle =
-            clean(
-              $season('h1').first().text() ||
-              $season('h2').first().text() ||
-              $season('title').first().text()
-            ) ||
-            formatTitle(
-              seasonSlug
-            );
-
-          const season = {
-            id: seasonSlug,
-            slug: seasonSlug,
-
-            title:
-              isGenericHeading(
-                seasonTitle
-              )
-                ? formatTitle(
-                    seasonSlug
-                  )
-                : seasonTitle,
-
-            seriesId:
-              series.id,
-
-            sourceUrl:
-              sourceUrl(
-                seasonUrl
-              ),
-
-            image:
-              extractCleanImage(
-                $season,
-                seasonUrl
-              ),
-
-            updatedAt:
-              new Date().toISOString()
-          };
-
-          seasonsMap.set(
-            season.id,
-            season
-          );
-
-          /*
-           * AQUÍ está la corrección principal:
-           *
-           * recorremos TODAS las páginas de episodios.
-           */
-          const episodeLinks =
-            await scrapeSeasonPages(
-              seasonUrl,
-              message =>
-                console.log(
-                  message
-                )
-            );
-
-          console.log(
-            `   🎬 Total episodios encontrados: ${episodeLinks.length}`
-          );
-
-          /*
-           * Ahora visitamos cada episodio para
-           * obtener los servidores reales.
-           */
-          for (
-            let episodeIndex = 0;
-            episodeIndex < episodeLinks.length;
-            episodeIndex++
-          ) {
-            const episode =
-              episodeLinks[
-                episodeIndex
-              ];
-
-            try {
-              const details =
-                await parseEpisodeDetails(
-                  episode,
-                  seasonUrl
-                );
-
-              details.seriesId =
-                series.id;
-
-              details.seasonId =
-                season.id;
-
-              /*
-               * El número obtenido de la lista
-               * de episodios tiene prioridad.
-               */
-              details.number =
-                episode.number;
-
-              details.releaseDate =
-                episode.releaseDate ||
-                details.releaseDate ||
-                null;
-
-              episodesMap.set(
-                details.id,
-                details
-              );
-
-              console.log(
-                `      🎬 Ep. ${details.number ?? '?'}`
-                +
-                (
-                  details.servers.length
-                    ? ` → ${details.servers.length} servidor(es)`
-                    : ' → sin servidor detectado'
-                )
-              );
-            } catch (error) {
-              console.log(
-                `      ⚠️ Ep. ${episode.number ?? '?'} omitido: ${error.message}`
-              );
-            }
-          }
-        } catch (error) {
-          console.log(
-            `   ⚠️ Temporada omitida: ${error.message}`
-          );
-        }
-      }
-    } catch (error) {
-      console.log(
-        `⚠️ Serie omitida: ${error.message}`
-      );
-    }
-  }
-
-  /*
-   * Si no hemos podido procesar ninguna serie,
-   * no reemplazamos el catálogo.
-   */
-  if (successfulSeries === 0) {
-    console.error(
-      '❌ Ninguna serie pudo sincronizarse correctamente.'
-    );
-
-    console.error(
-      '🛡️ Se conserva el catalog.json existente.'
-    );
-
-    return;
-  }
-
-  const finishedAt =
-    new Date().toISOString();
-
-  const catalog = {
-    meta: {
-      version: 2,
-
-      source:
-        BASE_URL + '/',
-
-      syncedAt:
-        finishedAt,
-
-      lastSync: {
-        status: 'success',
-
-        startedAt,
-
-        finishedAt,
-
-        error: null
-      }
-    },
-
-    series:
-      [...seriesMap.values()]
-        .sort((a, b) =>
-          String(a.title)
-            .localeCompare(
-              String(b.title),
-              'es'
-            )
-        ),
-
-    seasons:
-      [...seasonsMap.values()],
-
-    episodes:
-      [...episodesMap.values()]
-        .sort((a, b) => {
-          const seriesCompare =
-            String(a.seriesId)
-              .localeCompare(
-                String(b.seriesId)
-              );
-
-          if (seriesCompare !== 0) {
-            return seriesCompare;
-          }
-
-          const seasonCompare =
-            String(a.seasonId)
-              .localeCompare(
-                String(b.seasonId)
-              );
-
-          if (seasonCompare !== 0) {
-            return seasonCompare;
-          }
-
-          const na =
-            Number.isFinite(a.number)
-              ? a.number
-              : Number.MAX_SAFE_INTEGER;
-
-          const nb =
-            Number.isFinite(b.number)
-              ? b.number
-              : Number.MAX_SAFE_INTEGER;
-
-          return na - nb;
-        }),
-
-    movies:
-      oldCatalog.movies,
-
-    genres:
-      [...genresSet]
-        .sort((a, b) =>
-          a.localeCompare(
-            b,
-            'es'
-          )
-        )
-  };
-
-  await saveCatalog(
-    catalog
+    '\n════════════════════════════════════════'
   );
 
   console.log(
-    '\n✅ Sincronización terminada.'
+    '✅ SINCRONIZACIÓN TERMINADA'
   );
 
   console.log(
-    `📚 Series: ${catalog.series.length}`
+    `📺 Series:     ${db.series.length}`
   );
 
   console.log(
-    `📖 Temporadas: ${catalog.seasons.length}`
+    `📂 Temporadas: ${db.seasons.length}`
   );
 
   console.log(
-    `🎬 Episodios: ${catalog.episodes.length}`
+    `🎬 Episodios:  ${db.episodes.length}`
   );
 
   console.log(
-    `🎭 Géneros: ${catalog.genres.length}`
+    `🎞️ Películas:  ${db.movies.length}`
   );
 
   console.log(
-    `💾 Guardado en: ${OUT_FILE}`
+    `🏷️ Géneros:    ${db.genres.length}`
+  );
+
+  console.log(
+    `💾 Archivo:    ${OUT_FILE}`
+  );
+
+  console.log(
+    '════════════════════════════════════════'
   );
 }
 
-scrapeDonghuaFlix()
-  .catch(error => {
-    console.error(
-      '\n❌ Error fatal:',
-      error
-    );
+main().catch(error => {
 
-    process.exitCode = 1;
-  });
+  console.error(
+    '\n❌ ERROR FATAL:',
+    error
+  );
+
+  process.exit(1);
+});
