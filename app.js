@@ -47,12 +47,15 @@ async function load() {
       }
     });
     DB = await r.json();
-    document.getElementById('footerStatus').innerHTML = `
-      ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}<br>
-      <span style="opacity: 0.85; font-size: 12px; margin-top: 4px; display: inline-block;">
-        Desarrollado con ❤️ por <a href="https://instagram.com/bledark__" target="_blank" rel="noopener" style="color: #00ffcc; text-decoration: none; font-weight: 600;">@bledark__</a>
-      </span>
-    `;
+    const footerStatus = document.getElementById('footerStatus');
+    if (footerStatus) {
+      footerStatus.innerHTML = `
+        ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}<br>
+        <span style="opacity: 0.85; font-size: 12px; margin-top: 4px; display: inline-block;">
+          Desarrollado con ❤️ por <a href="https://instagram.com/bledark__" target="_blank" rel="noopener" style="color: #00ffcc; text-decoration: none; font-weight: 600;">@bledark__</a>
+        </span>
+      `;
+    }
     route();
   } catch (err) {
     app.innerHTML = '<section class="empty"><h2>Error al cargar el catálogo</h2></section>';
@@ -71,11 +74,14 @@ function card(s) {
   </article>`;
 }
 
+// --- VISTA HOME OPTIMIZADA (Estilo Netflix con filas y carrusel) ---
 function home() {
   const recent = DB.series.slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const hero = recent[0];
   const heroImg = hero ? getSeriesImage(hero) : '';
   const heroTitle = hero ? cleanTitle(hero) : 'DonghuaFlix';
+
+  const airingList = DB.series.filter(s => (s.status || '').toLowerCase().includes('emisión'));
 
   app.innerHTML = `
   <section class="hero" style="--hero:url('${esc(heroImg)}')">
@@ -88,9 +94,24 @@ function home() {
       </div>
     </div>
   </section>
-  <section class="section">
+
+  ${airingList.length ? `
+  <section class="section" style="padding: 20px 4%;">
+    <div class="section-head"><h2>En Emisión</h2><span class="muted">${airingList.length}</span></div>
+    <div class="horizontal-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+      ${airingList.map(s => `<div style="flex: 0 0 150px; min-width: 150px;">${card(s)}</div>`).join('')}
+    </div>
+  </section>` : ''}
+
+  <section class="section" style="padding: 20px 4%;">
     <div class="section-head"><h2>Catálogo de Series</h2><span class="muted">${DB.series.length}</span></div>
-    <div class="grid">${DB.series.map(card).join('')}</div>
+    <div class="grid">${DB.series.slice(0, 24).map(card).join('')}</div>
+    ${DB.series.length > 24 ? `
+      <div style="text-align:center; margin: 30px 0;">
+        <button class="btn dark" onclick="location.hash='#/series'" style="padding: 12px 25px; background: rgba(255,255,255,0.1); color:#fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor:pointer; font-weight: 500; font-size: 14px;">
+          Ver todas las series (${DB.series.length})
+        </button>
+      </div>` : ''}
   </section>`;
 }
 
@@ -98,7 +119,7 @@ function home() {
 
 function listAllSeries() {
   app.innerHTML = `
-    <section class="section">
+    <section class="section" style="padding: 20px 4%;">
       <div class="section-head"><h2>Todas las Series</h2><span class="muted">${DB.series.length}</span></div>
       <div class="grid">${DB.series.map(card).join('')}</div>
     </section>
@@ -108,7 +129,7 @@ function listAllSeries() {
 function listByStatus(statusKeyword, titleText) {
   const filtered = DB.series.filter(s => (s.status || '').toLowerCase().includes(statusKeyword.toLowerCase()));
   app.innerHTML = `
-    <section class="section">
+    <section class="section" style="padding: 20px 4%;">
       <div class="section-head"><h2>${titleText}</h2><span class="muted">${filtered.length}</span></div>
       <div class="grid">${filtered.length ? filtered.map(card).join('') : '<p style="color:#888;">No hay elementos en esta categoría.</p>'}</div>
     </section>
@@ -118,7 +139,7 @@ function listByStatus(statusKeyword, titleText) {
 function listMovies() {
   const movies = DB.series.filter(s => (s.type || '').toLowerCase() === 'movie' || (s.title || '').toLowerCase().includes('película'));
   app.innerHTML = `
-    <section class="section">
+    <section class="section" style="padding: 20px 4%;">
       <div class="section-head"><h2>Películas</h2><span class="muted">${movies.length}</span></div>
       <div class="grid">${movies.length ? movies.map(card).join('') : '<p style="color:#888;">No hay películas disponibles por el momento.</p>'}</div>
     </section>
@@ -127,7 +148,7 @@ function listMovies() {
 
 function listGenres() {
   app.innerHTML = `
-    <section class="section">
+    <section class="section" style="padding: 20px 4%;">
       <div class="section-head"><h2>Géneros</h2></div>
       <p style="color: #888;">Sección en desarrollo para explorar por categorías.</p>
     </section>
@@ -137,7 +158,7 @@ function listGenres() {
 function search(q = '') {
   if (!document.getElementById('q')) {
     app.innerHTML = `
-      <section class="search" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+      <section class="search" style="max-width: 800px; margin: 0 auto; padding: 30px 4%;">
         <h1 style="margin-bottom: 15px; font-size: 24px;">Buscar Donghua</h1>
         <div class="searchbar" style="position: relative; margin-bottom: 25px;">
           <input id="q" type="text" value="${esc(q)}" autocomplete="off" placeholder="Escribe el nombre del donghua..." 
@@ -192,7 +213,7 @@ function detail(slug) {
   const imgUrl = getSeriesImage(s);
   const title = cleanTitle(s);
 
-  app.innerHTML = `<section class="detail">
+  app.innerHTML = `<section class="detail" style="padding: 20px 4%;">
     <div class="detail-top">
       <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}">` : ''}</div>
       <div>
@@ -232,12 +253,15 @@ function episode(slug) {
 
   let current = e.servers?.[0];
   const render = () => {
-    document.getElementById('player').innerHTML = current?.url
-      ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`
-      : '<div class="empty">Servidor no disponible.</div>';
+    const playerEl = document.getElementById('player');
+    if (playerEl) {
+      playerEl.innerHTML = current?.url
+        ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`
+        : '<div class="empty">Servidor no disponible.</div>';
+    }
   };
 
-  app.innerHTML = `<section class="detail">
+  app.innerHTML = `<section class="detail" style="padding: 20px 4%;">
     <div class="eyebrow">EPISODIO ${e.number}</div>
     <h1 style="font-size:22px; margin-bottom:15px;">${esc(e.title)}</h1>
     <div class="player" id="player"></div>
