@@ -702,6 +702,208 @@ async function discoverSeries() {
 }
 
 
+
+/* =========================================================
+   PORTADA REAL
+   El primer <img> de la página suele ser IcoPrueba.png
+   (placeholder de lazy-load). Buscamos entre TODAS las
+   imágenes y descartamos placeholders, logos e iconos.
+========================================================= */
+
+function extractPosterImage(
+  $,
+  pageUrl
+) {
+
+  const candidates =
+    [];
+
+
+  /*
+     1) Open Graph suele ser lo más fiable.
+  */
+
+  candidates.push(
+
+    $('meta[property="og:image"]')
+      .attr('content'),
+
+    $('meta[name="twitter:image"]')
+      .attr('content')
+
+  );
+
+
+  /*
+     2) Todas las imágenes de la página.
+
+     Las imágenes reales suelen venir en
+     data-src / data-original (lazy-load)
+     y el src visible es el placeholder.
+  */
+
+  $('img')
+    .each(
+      (_, el) => {
+
+        const node =
+          $(el);
+
+
+        const klass =
+          String(
+            node.attr('class') ||
+            ''
+          ).toLowerCase();
+
+
+        const alt =
+          String(
+            node.attr('alt') ||
+            ''
+          ).toLowerCase();
+
+
+        const weight =
+          (
+            /poster|portada|cover|thumb|image|img/.test(klass) ||
+            /poster|portada|cover/.test(alt)
+          )
+            ? 0
+            : 1;
+
+
+        candidates.push({
+
+          weight,
+
+          raw:
+
+            node.attr('data-src') ||
+
+            node.attr('data-original') ||
+
+            node.attr('data-lazy-src') ||
+
+            node.attr('src')
+
+        });
+
+      }
+    );
+
+
+  /*
+     Ordenamos: og:image y coincidencias
+     de clase/alt primero.
+  */
+
+  const flattened =
+    [];
+
+
+  for (
+    const item
+    of candidates
+  ) {
+
+    if (
+      typeof item ===
+      'string' ||
+      item == null
+    ) {
+
+      flattened.push({
+
+        weight: 0,
+
+        raw: item
+
+      });
+
+    } else {
+
+      flattened.push(
+        item
+      );
+
+    }
+
+  }
+
+
+  flattened.sort(
+    (a, b) =>
+      a.weight -
+      b.weight
+  );
+
+
+  /*
+     3) Validamos cada candidato.
+  */
+
+  for (
+    const { raw }
+    of flattened
+  ) {
+
+    const url =
+      absolute(
+        raw,
+        pageUrl
+      );
+
+
+    if (
+      !url ||
+      !sameOrigin(url)
+    ) {
+      continue;
+    }
+
+
+    const lower =
+      url.toLowerCase();
+
+
+    /*
+       Descartamos el placeholder y
+       elementos gráficos que no son
+       portadas.
+    */
+
+    if (
+      /icoprueba/.test(lower)
+    ) {
+      continue;
+    }
+
+
+    if (
+      /\/logo|icon|favicon|banner|avatar|sprite|flag|search/.test(lower)
+    ) {
+      continue;
+    }
+
+
+    if (
+      !/\.(jpg|jpeg|png|webp|gif)(\?|$)/i.test(lower)
+    ) {
+      continue;
+    }
+
+
+    return url;
+
+  }
+
+
+  return null;
+
+}
+
+
 /* =========================================================
    GÉNEROS
 ========================================================= */
@@ -795,21 +997,9 @@ function parseSeries(
 
 
   const image =
-    absolute(
-
-      $('meta[property="og:image"]')
-        .attr('content') ||
-
-      $('img')
-        .first()
-        .attr('src') ||
-
-      $('img')
-        .first()
-        .attr('data-src'),
-
+    extractPosterImage(
+      $,
       url
-
     );
 
 
@@ -1209,15 +1399,48 @@ function episodeBelongsToSeason(
 
 
   if (
-    episodeSlug.startsWith(
-      `${seasonSlug}-episodio-`
-    )
+    !episodeSlug ||
+    !seasonSlug
+  ) {
+    return false;
+  }
+
+
+  /*
+     FORMATO MODERNO:
+
+     Quitamos el número final con CUALQUIER
+     variante y comparamos el "base":
+
+     slug-1-x18             → slug-1
+     slug-1-episodio-x142   → slug-1
+     slug-1-18              → slug-1
+     slug-especial-x2       → slug-especial
+  */
+
+  const base =
+    episodeSlug.replace(
+      /-?(?:episodio-|episode-)?x?(\d+)$/i,
+      ''
+    );
+
+
+  if (
+    base === seasonSlug
   ) {
     return true;
   }
 
 
+  /*
+     Compatibilidad con el comportamiento
+     anterior (algunos slugs antiguos).
+  */
+
   if (
+    episodeSlug.startsWith(
+      `${seasonSlug}-episodio-`
+    ) ||
     episodeSlug.startsWith(
       `${seasonSlug}-episode-`
     )
@@ -1232,7 +1455,9 @@ function episodeBelongsToSeason(
     );
 
 
-  if (sn != null) {
+  if (
+    sn != null
+  ) {
 
     const prefix =
       seasonSlug.replace(
@@ -1246,13 +1471,7 @@ function episodeBelongsToSeason(
     if (
       episodeSlug.startsWith(
         `${prefix}-${sn}-episodio-`
-      )
-    ) {
-      return true;
-    }
-
-
-    if (
+      ) ||
       episodeSlug.startsWith(
         `${prefix}-${sn}-episode-`
       )
@@ -1553,6 +1772,10 @@ async function collectAllSeasonEpisodeUrls(
     new Set();
 
 
+  let seasonImage =
+    null;
+
+
   let discoveredNewEpisodes =
     0;
 
@@ -1649,6 +1872,30 @@ async function collectAllSeasonEpisodeUrls(
       successful.add(
         normalizedPage
       );
+
+
+      /*
+         La portada de la temporada suele
+         estar en la primera página que
+         responde correctamente.
+      */
+
+      if (
+        !seasonImage
+      ) {
+
+        seasonImage =
+          extractPosterImage(
+            cheerio.load(html),
+            base
+          );
+
+
+        if (seasonImage) {
+          console.log(`      🖼️  Portada: ${seasonImage}`);
+        }
+
+      }
 
 
       const before =
@@ -1972,6 +2219,9 @@ async function collectAllSeasonEpisodeUrls(
     episodeUrls:
       sortedEpisodes,
 
+    image:
+      seasonImage,
+
     pagesChecked:
       visited.size,
 
@@ -2016,98 +2266,104 @@ async function collectAllSeasonEpisodeUrls(
 
    /episode/donghua-episodio-{NUMBER}
 */
-function learnEpisodeUrlPattern(
-  episodeUrl
+/*
+   No imponemos un patrón universal.
+
+   APRENDEMOS TODOS los prefijos reales
+   de la temporada. Ejemplo real de la web:
+
+     /episode/el-inmortal-renegado-1-x18
+     /episode/el-inmortal-renegado-1-episodio-x142
+
+   conviven en la MISMA temporada, así que
+   necesitamos ambos patrones candidatos:
+
+     prefix1 + numero  →  .../slug-1-x{n}
+     prefix2 + numero  →  .../slug-1-episodio-x{n}
+*/
+function learnEpisodeUrlPatterns(
+  episodeUrls
 ) {
 
-  const url =
-    canonical(
-      episodeUrl
-    );
+  const prefixes =
+    new Set();
 
 
-  if (!url) {
-    return null;
-  }
+  for (
+    const raw
+    of episodeUrls
+  ) {
+
+    const url =
+      canonical(
+        raw
+      );
 
 
-  try {
-
-    const u =
-      new URL(url);
-
-
-    const pathname =
-      u.pathname;
-
-
-    /*
-       Preferimos la parte "episodio-680"
-       o "episode-680".
-    */
-
-    const regex =
-      /((?:episodio|episode)[-_ ]?)(\d+)/i;
-
-
-    const match =
-      pathname.match(regex);
-
-
-    if (!match) {
-      return null;
+    if (!url) {
+      continue;
     }
 
 
-    const prefix =
-      pathname.slice(
-        0,
-        match.index
+    try {
+
+      const u =
+        new URL(url);
+
+
+      /*
+         El número de episodio SIEMPRE va
+         al final del path.
+      */
+
+      const match =
+        u.pathname.match(
+          /^(.*?)(\d+)$/
+        );
+
+
+      if (!match) {
+        continue;
+      }
+
+
+      const prefix =
+        `${u.origin}${match[1]}`;
+
+
+      prefixes.add(
+        prefix
       );
 
+    } catch {}
 
-    const suffix =
-      pathname.slice(
-        match.index +
-        match[0].length
-      );
+  }
 
 
-    const separator =
-      match[1];
-
-
-    return {
+  return [
+    ...prefixes
+  ].map(
+    prefix => ({
 
       build(number) {
 
-        const nextPath =
-          `${prefix}${separator}${number}${suffix}`;
+        try {
 
-
-        const copy =
-          new URL(
-            u.origin
+          return canonical(
+            `${prefix}${number}`
           );
 
+        } catch {
 
-        copy.pathname =
-          nextPath;
+          return null;
 
-
-        return canonical(
-          copy.href
-        );
+        }
 
       }
 
-    };
+    })
+  );
 
-  } catch {
-
-    return null;
-
-  }
 }
 
 
@@ -2171,34 +2427,23 @@ async function fillEpisodeGapsWithPattern(
     );
 
 
-  let pattern =
-    null;
-
-
   /*
-     Probamos varias URLs reales
-     hasta encontrar un patrón.
+     Aprendemos TODOS los patrones de URL
+     de esta temporada (corto, largo, etc.).
   */
 
-  for (
-    const url
-    of sorted.slice(0, 10)
+  const patterns =
+    learnEpisodeUrlPatterns(
+      sorted.slice(
+        0,
+        20
+      )
+    );
+
+
+  if (
+    !patterns.length
   ) {
-
-    pattern =
-      learnEpisodeUrlPattern(
-        url
-      );
-
-
-    if (pattern) {
-      break;
-    }
-
-  }
-
-
-  if (!pattern) {
 
     console.log(
       '      ℹ️ No se pudo aprender un patrón de URL.'
@@ -2217,6 +2462,11 @@ async function fillEpisodeGapsWithPattern(
   }
 
 
+  console.log(
+    `      🧠 Patrones aprendidos: ${patterns.length}`
+  );
+
+
   const result =
     new Set(
       episodeUrls
@@ -2232,7 +2482,8 @@ async function fillEpisodeGapsWithPattern(
 
 
   /*
-     Primero intentamos los huecos reales.
+     Para cada hueco probamos TODOS los
+     patrones hasta encontrar el episodio.
   */
 
   for (
@@ -2245,111 +2496,199 @@ async function fillEpisodeGapsWithPattern(
         MAX_INFERRED_EPISODE_ATTEMPTS
     ) {
 
+      console.log(
+        `      🛑 Límite de intentos alcanzado (${MAX_INFERRED_EPISODE_ATTEMPTS}).`
+      );
+
+
       break;
 
     }
 
 
-    attempts++;
+    let found =
+      false;
 
 
-    const candidate =
-      pattern.build(
-        number
-      );
-
-
-    if (
-      !candidate ||
-      !sameOrigin(candidate)
+    for (
+      const pattern
+      of patterns
     ) {
-      continue;
-    }
+
+      if (
+        attempts >=
+          MAX_INFERRED_EPISODE_ATTEMPTS
+      ) {
+        break;
+      }
 
 
-    if (
-      !episodeBelongsToSeason(
-        candidate,
-        seasonUrl
-      )
-    ) {
-      continue;
-    }
-
-
-    try {
-
-      const html =
-        await fetchHtml(
-          candidate
-        );
-
-
-      /*
-         No basta con que la URL responda.
-
-         También debe parecer realmente
-         un episodio.
-      */
-
-      const $ =
-        cheerio.load(html);
-
-
-      const title =
-        clean(
-          $('h1')
-            .first()
-            .text() ||
-
-          $('title')
-            .text()
-        );
-
-
-      const detectedNumber =
-        episodeNumber(
-          candidate
-        ) ??
-        episodeNumber(
-          title
+      const candidate =
+        pattern.build(
+          number
         );
 
 
       if (
-        detectedNumber !==
-        number
+        !candidate ||
+        !sameOrigin(candidate)
       ) {
+        continue;
+      }
 
-        console.log(
-          `      ⚠️ Candidato rechazado: esperaba ${number}, encontró ${detectedNumber ?? '?'}`
+
+      attempts++;
+
+
+      try {
+
+        const html =
+          await fetchHtml(
+            candidate
+          );
+
+
+        /*
+           Verificación 1:
+           el número de la URL debe coincidir.
+        */
+
+        const urlNumber =
+          episodeNumber(
+            candidate
+          );
+
+
+        if (
+          urlNumber !==
+          number
+        ) {
+
+          console.log(
+            `      ⚠️ Candidato rechazado por URL: esperaba ${number}, URL dice ${urlNumber ?? '?'} (${candidate})`
+          );
+
+
+          continue;
+
+        }
+
+
+        /*
+           Verificación 2:
+           el número en el título de la página
+           debe coincidir.
+        */
+
+        const $ =
+          cheerio.load(html);
+
+
+        const title =
+          clean(
+            $('h1')
+              .first()
+              .text() ||
+
+            $('title')
+              .text()
+          );
+
+
+        const titleNumber =
+          episodeNumber(
+            candidate
+          ) ??
+          episodeNumber(
+            title
+          );
+
+
+        if (
+          titleNumber !==
+          number
+        ) {
+
+          console.log(
+            `      ⚠️ Candidato rechazado por título: esperaba ${number}, página dice ${titleNumber ?? '?'}`
+          );
+
+
+          continue;
+
+        }
+
+
+        /*
+           Verificación 3:
+           debe pertenecer a esta temporada.
+        */
+
+        if (
+          !episodeBelongsToSeason(
+            candidate,
+            seasonUrl
+          )
+        ) {
+
+          console.log(
+            `      ⚠️ Candidato rechazado por pertenencia: ${candidate}`
+          );
+
+
+          continue;
+
+        }
+
+
+        result.add(
+          candidate
         );
 
+
+        validated++;
+
+
+        found =
+          true;
+
+
+        console.log(
+          `      🔧 Episodio ${number} recuperado: ${candidate}`
+        );
+
+
+        /*
+           Con un patrón que funciona para
+           este número pasamos al siguiente
+           hueco (pero el siguiente número
+           volverá a probar todos).
+        */
+
+        break;
+
+
+      } catch {
+
+        /*
+           404 u otro error:
+           probamos el siguiente patrón.
+        */
 
         continue;
 
       }
 
-
-      result.add(
-        candidate
-      );
+    }
 
 
-      validated++;
-
+    if (
+      !found
+    ) {
 
       console.log(
-        `      🔧 Episodio ${number} recuperado mediante patrón`
+        `      ⚪ Episodio ${number}: no existe en ningún patrón conocido.`
       );
-
-
-    } catch {
-
-      /*
-         Es normal que una URL inferida
-         no exista.
-      */
 
     }
 
@@ -3767,6 +4106,11 @@ async function processFullSeason(
         seasonUrl
       ),
 
+    image:
+      discovery.image ||
+      (oldSeason && oldSeason.image) ||
+      null,
+
     number:
       seasonNumber(
         seasonUrl
@@ -4158,56 +4502,50 @@ async function incrementalSeasonSync(
      más reciente disponible.
   */
 
-  let pattern =
-    null;
+  /*
+     Aprendemos TODOS los patrones de las
+     URLs reales más recientes de la temporada.
+  */
 
-
-  const latestKnown =
+  const recentUrls =
     oldEpisodes
       .filter(
         item =>
           Number.isFinite(
             Number(item.number)
-          )
+          ) &&
+          item.sourceUrl
       )
       .sort(
         (a, b) =>
           Number(b.number) -
           Number(a.number)
-      )[0];
-
-
-  if (
-    latestKnown?.sourceUrl
-  ) {
-
-    pattern =
-      learnEpisodeUrlPattern(
-        latestKnown.sourceUrl
+      )
+      .slice(
+        0,
+        15
+      )
+      .map(
+        item =>
+          item.sourceUrl
       );
 
-  }
+
+  const patterns =
+    learnEpisodeUrlPatterns(
+      recentUrls
+    );
 
 
   /*
-     Si tenemos patrón, comprobamos
-     1 a 1 los siguientes episodios.
-
-     Ejemplo:
-
-     último = 680
-
-     probamos:
-
-     681
-     682
-     683
-     ...
-
-     hasta encontrar uno que no exista.
+     Comprobamos los siguientes episodios
+     probando TODOS los patrones hasta dar
+     con el que exista. El primer número
+     que no exista en NINGÚN patrón corta
+     la cadena (es el final de temporada).
   */
 
-  if (pattern) {
+  if (patterns.length) {
 
     let nextNumber =
       lastEpisode + 1;
@@ -4219,94 +4557,151 @@ async function incrementalSeasonSync(
         MAX_INFERRED_EPISODE_ATTEMPTS
     ) {
 
-      const candidate =
-        pattern.build(
-          nextNumber
-        );
+      let foundNumber =
+        false;
 
 
       if (
-        !candidate
-      ) {
-        break;
-      }
-
-
-      if (
-        newUrls.includes(candidate)
+        newUrls.includes(
+          patterns[0].build(nextNumber)
+        )
       ) {
 
-        nextNumber++;
+        foundNumber =
+          true;
 
-        continue;
+      } else {
 
-      }
-
-
-      try {
-
-        const html =
-          await fetchHtml(
-            candidate
-          );
-
-
-        const $
-          = cheerio.load(html);
-
-
-        const title =
-          clean(
-            $('h1')
-              .first()
-              .text() ||
-
-            $('title')
-              .text()
-          );
-
-
-        const detectedNumber =
-          episodeNumber(candidate) ??
-          episodeNumber(title);
-
-
-        if (
-          detectedNumber !==
-          nextNumber
+        for (
+          const pattern
+          of patterns
         ) {
 
-          break;
+          const candidate =
+            pattern.build(
+              nextNumber
+            );
+
+
+          if (
+            !candidate ||
+            newUrls.includes(candidate)
+          ) {
+
+            if (
+              candidate &&
+              newUrls.includes(candidate)
+            ) {
+
+              foundNumber =
+                true;
+
+            }
+
+
+            continue;
+
+          }
+
+
+          try {
+
+            const html =
+              await fetchHtml(
+                candidate
+              );
+
+
+            const $ =
+              cheerio.load(html);
+
+
+            const title =
+              clean(
+                $('h1')
+                  .first()
+                  .text() ||
+
+                $('title')
+                  .text()
+              );
+
+
+            const detectedNumber =
+              episodeNumber(candidate) ??
+              episodeNumber(title);
+
+
+            if (
+              detectedNumber !==
+              nextNumber
+            ) {
+
+              continue;
+
+            }
+
+
+            if (
+              !episodeBelongsToSeason(
+                candidate,
+                season.sourceUrl
+              )
+            ) {
+
+              continue;
+
+            }
+
+
+            newUrls.push(
+              candidate
+            );
+
+
+            console.log(
+              `      🆕 Nuevo episodio ${nextNumber}: ${candidate}`
+            );
+
+
+            foundNumber =
+              true;
+
+
+            break;
+
+
+          } catch {
+
+            /*
+               Este patrón no existe:
+               probamos el siguiente.
+            */
+
+            continue;
+
+          }
 
         }
 
-
-        newUrls.push(
-          candidate
-        );
+      }
 
 
-        console.log(
-          `      🆕 Nuevo episodio ${nextNumber}`
-        );
-
-
-        nextNumber++;
-
-
-      } catch {
+      if (
+        !foundNumber
+      ) {
 
         /*
-           El primer episodio que no existe
-           corta la cadena.
-
-           Esto es justo lo que queremos
-           para una actualización incremental.
+           Ningún patrón devolvió este número:
+           es el final de los episodios actuales.
         */
 
         break;
 
       }
+
+
+      nextNumber++;
 
     }
 
