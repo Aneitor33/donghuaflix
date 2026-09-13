@@ -3,130 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07080b">
+  <meta name="description" content="DonghuaFlix — Catálogo de donghuas y animación china en alta calidad.">
   <title>DonghuaFlix</title>
-  <link rel="stylesheet" href="styles.css"> 
-  <style>
-    /* Estilos globales inspirados en la interfaz de Netflix */
-    body {
-      background-color: #141414;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-    }
-    
-    /* Barra de navegación superior estilo Netflix */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 4%;
-      height: 68px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo a {
-      color: #E50914; /* Rojo característico estilo Netflix */
-      font-weight: 800;
-      font-size: 22px;
-      letter-spacing: 1px;
-      text-decoration: none;
-    }
-
-    .header nav {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .header nav a {
-      color: #e5e5e5;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 400;
-      transition: color 0.3s ease;
-    }
-
-    .header nav a:hover, .header nav a.active {
-      color: #b3b3b3;
-      font-weight: 500;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    /* Botones de acción minimalistas estilo Netflix (redondos/semitransparentes) */
-    .icon-btn {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      cursor: pointer;
-      font-size: 15px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: scale(1.05);
-    }
-
-    /* Footer sutil */
-    .footer {
-      padding: 30px 4%;
-      text-align: center;
-      color: #737373;
-      font-size: 13px;
-      background: #141414;
-      border-top: 1px solid #222;
-      margin-top: 40px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- BARRA DE NAVEGACIÓN SUPERIOR ESTILO NETFLIX -->
-  <header class="header">
-    <div class="logo">
-      <a href="#/">DONGHUAFLIX</a>
-    </div>
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+  <header class="nav">
+    <a class="brand" href="#/">
+      <span class="brand-mark">▶</span>
+      <span>Donghua<span style="color:var(--red)">Flix</span></span>
+    </a>
     <nav>
-      <a href="#/">Inicio</a>
-      <a href="#/series">Series</a>
-      <a href="#/genres">Géneros</a>
-      <a href="#/movies">Películas</a>
-      <a href="#/airing">En emisión</a>
-      <a href="#/completed">Finalizadas</a>
+      <a href="#/" data-nav>Inicio</a>
+      <a href="#/series" data-nav>Series</a>
+      <a href="#/movies" data-nav>Películas</a>
+      <a href="#/airing" data-nav>En emisión</a>
+      <a href="#/completed" data-nav>Finalizadas</a>
+      <a href="#/genres" data-nav>Géneros</a>
     </nav>
     <div class="nav-actions">
-      <a href="#/search" class="icon-btn" title="Buscar">🔍</a>
-      <button id="reloadBtn" class="icon-btn" title="Actualizar catálogo">🔄</button>
+      <a href="#/search" class="icon-btn" title="Buscar" aria-label="Buscar">🔍</a>
+      <button id="reloadBtn" class="icon-btn" title="Actualizar catálogo" aria-label="Actualizar catálogo">⟳</button>
     </div>
   </header>
 
   <!-- CONTENEDOR DINÁMICO DE LA SPA -->
-  <main id="app">
-    <!-- El contenido se renderiza dinámicamente mediante app.js -->
-  </main>
+  <main id="app"></main>
 
   <!-- PIE DE PÁGINA -->
-  <footer class="footer">
-    <div id="footerStatus">Cargando catálogo...</div>
+  <footer>
+    <p id="footerStatus">Cargando catálogo...</p>
   </footer>
 
-  <!-- SCRIPT PRINCIPAL -->
   <script src="app.js"></script>
 </body>
 </html>
