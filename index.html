@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#07080b">
   <meta name="description" content="DonghuaFlix — Catálogo de donghuas y animación china en alta calidad.">
   <title>DonghuaFlix</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,6 +28,7 @@
       <a href="#/airing" data-nav>En emisión</a>
       <a href="#/completed" data-nav>Finalizadas</a>
       <a href="#/genres" data-nav>Géneros</a>
+      <a href="#/mylist" data-nav>Mi lista</a>
     </nav>
     <div class="nav-actions">
       <a href="#/search" class="icon-btn" title="Buscar" aria-label="Buscar">🔍</a>
@@ -37,6 +43,12 @@
   <footer>
     <p id="footerStatus">Cargando catálogo...</p>
   </footer>
+
+  <!-- BOTÓN VOLVER ARRIBA -->
+  <button id="toTop" class="to-top" title="Volver arriba" aria-label="Volver arriba">▲</button>
+
+  <!-- NOTIFICACIONES -->
+  <div id="toast" role="status"></div>
 
   <script src="app.js"></script>
 </body>
