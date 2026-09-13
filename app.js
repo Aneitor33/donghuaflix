@@ -35,6 +35,28 @@ const getSeriesImage = (s) => {
   return '';
 };
 
+// --- GESTIÓN DE HISTORIAL (Continuar viendo) ---
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('donghuaflix_history') || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveHistory(seriesId, episodeData) {
+  try {
+    const history = getHistory();
+    history[seriesId] = {
+      episodeId: episodeData.id,
+      episodeNumber: episodeData.number,
+      episodeTitle: episodeData.title,
+      timestamp: Date.now()
+    };
+    localStorage.setItem('donghuaflix_history', JSON.stringify(history));
+  } catch (e) {}
+}
+
 async function load() {
   app.innerHTML = '<section class="section"><div class="grid">' + Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
   try {
@@ -74,14 +96,21 @@ function card(s) {
   </article>`;
 }
 
-// --- VISTA HOME OPTIMIZADA (Estilo Netflix con filas y carrusel) ---
+// --- VISTA HOME OPTIMIZADA (Estilo Netflix por Secciones) ---
 function home() {
   const recent = DB.series.slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const hero = recent[0];
   const heroImg = hero ? getSeriesImage(hero) : '';
   const heroTitle = hero ? cleanTitle(hero) : 'DonghuaFlix';
 
+  // Listas para las filas horizontales
+  const historyData = getHistory();
+  const historySeriesIds = Object.keys(historyData);
+  const historyList = DB.series.filter(s => historySeriesIds.includes(s.id)).sort((a, b) => historyData[b.id].timestamp - historyData[a.id].timestamp);
+
+  const trendingList = recent.slice(0, 15);
   const airingList = DB.series.filter(s => (s.status || '').toLowerCase().includes('emisión'));
+  const moviesList = DB.series.filter(s => (s.type || '').toLowerCase() === 'movie' || (s.title || '').toLowerCase().includes('película'));
 
   app.innerHTML = `
   <section class="hero" style="--hero:url('${esc(heroImg)}')">
@@ -95,6 +124,28 @@ function home() {
     </div>
   </section>
 
+  ${historyList.length ? `
+  <section class="section" style="padding: 20px 4%;">
+    <div class="section-head"><h2>Continuar viendo</h2><span class="muted">${historyList.length}</span></div>
+    <div class="horizontal-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+      ${historyList.map(s => {
+        const hist = historyData[s.id];
+        return `<div style="flex: 0 0 150px; min-width: 150px; position: relative;">
+          ${card(s)}
+          <div style="font-size: 11px; color: #00ffcc; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ep. ${hist.episodeNumber}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </section>` : ''}
+
+  ${trendingList.length ? `
+  <section class="section" style="padding: 20px 4%;">
+    <div class="section-head"><h2>En Tendencia</h2><span class="muted">${trendingList.length}</span></div>
+    <div class="horizontal-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+      ${trendingList.map(s => `<div style="flex: 0 0 150px; min-width: 150px;">${card(s)}</div>`).join('')}
+    </div>
+  </section>` : ''}
+
   ${airingList.length ? `
   <section class="section" style="padding: 20px 4%;">
     <div class="section-head"><h2>En Emisión</h2><span class="muted">${airingList.length}</span></div>
@@ -103,15 +154,18 @@ function home() {
     </div>
   </section>` : ''}
 
+  ${moviesList.length ? `
   <section class="section" style="padding: 20px 4%;">
-    <div class="section-head"><h2>Catálogo de Series</h2><span class="muted">${DB.series.length}</span></div>
-    <div class="grid">${DB.series.slice(0, 24).map(card).join('')}</div>
-    ${DB.series.length > 24 ? `
-      <div style="text-align:center; margin: 30px 0;">
-        <button class="btn dark" onclick="location.hash='#/series'" style="padding: 12px 25px; background: rgba(255,255,255,0.1); color:#fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor:pointer; font-weight: 500; font-size: 14px;">
-          Ver todas las series (${DB.series.length})
-        </button>
-      </div>` : ''}
+    <div class="section-head"><h2>Películas y Especiales</h2><span class="muted">${moviesList.length}</span></div>
+    <div class="horizontal-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+      ${moviesList.map(s => `<div style="flex: 0 0 150px; min-width: 150px;">${card(s)}</div>`).join('')}
+    </div>
+  </section>` : ''}
+
+  <section class="section" style="padding: 30px 4%; text-align: center;">
+    <button class="btn dark" onclick="location.hash='#/series'" style="padding: 12px 25px; background: rgba(255,255,255,0.1); color:#fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor:pointer; font-weight: 500; font-size: 14px;">
+      Ver catálogo completo (${DB.series.length} series)
+    </button>
   </section>`;
 }
 
@@ -245,6 +299,9 @@ function detail(slug) {
 function episode(slug) {
   const e = DB.episodes.find(x => (x.slug || x.id) === slug);
   if (!e) return notfound();
+
+  // Guardar en el historial de "Continuar viendo"
+  saveHistory(e.seriesId, e);
 
   const seasonEps = DB.episodes.filter(x => x.seasonId === e.seasonId).sort((a, b) => a.number - b.number);
   const currentIndex = seasonEps.findIndex(x => x.id === e.id);
