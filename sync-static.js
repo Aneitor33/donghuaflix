@@ -14,17 +14,30 @@ const SEEDS = [
   '/'
 ];
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = ms =>
+  new Promise(resolve => setTimeout(resolve, ms));
 
 const clean = value =>
-  String(value || '').replace(/\s+/g, ' ').trim();
+  String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/* =========================================================
+   URLS
+   ========================================================= */
 
 function absolute(href, base = BASE_URL) {
   try {
     if (!href) return null;
-    if (/^(javascript:|mailto:|tel:|#)/i.test(href)) return null;
+
+    if (
+      /^(javascript:|mailto:|tel:|#)/i.test(href)
+    ) {
+      return null;
+    }
 
     return new URL(href, base).href;
+
   } catch {
     return null;
   }
@@ -33,8 +46,11 @@ function absolute(href, base = BASE_URL) {
 function canonical(url) {
   try {
     const u = new URL(url);
+
     u.hash = '';
+
     return u.href.replace(/\/+$/, '');
+
   } catch {
     return url;
   }
@@ -47,29 +63,44 @@ function slugFromUrl(url) {
       .split('/')
       .filter(Boolean)
       .pop() || '';
+
   } catch {
     return '';
   }
 }
 
+/* =========================================================
+   NÚMERO DE EPISODIO
+   ========================================================= */
+
 /*
  * Detecta el número REAL del episodio desde su URL.
  *
  * Ejemplos:
- * big-brother-1-x1             -> 1
- * big-brother-1-x10            -> 10
- * big-brother-1-episodio-x10   -> 10
+ *
+ * big-brother-1-x1
+ * big-brother-1-x10
+ * big-brother-1-episodio-x10
  */
-function episodeNumber(url) {
-  const value = decodeURIComponent(url || '');
 
-  let match = value.match(/[-_]x(\d+)\/?$/i);
+function episodeNumber(url) {
+
+  const value =
+    decodeURIComponent(url || '');
+
+  let match =
+    value.match(
+      /[-_]x(\d+)\/?$/i
+    );
 
   if (match) {
     return Number(match[1]);
   }
 
-  match = value.match(/episodio[-_ ]*x?(\d+)\/?$/i);
+  match =
+    value.match(
+      /episodio[-_ ]*x?(\d+)\/?$/i
+    );
 
   if (match) {
     return Number(match[1]);
@@ -77,62 +108,101 @@ function episodeNumber(url) {
 
   return null;
 }
+
+/* =========================================================
+   NÚMERO DE TEMPORADA
+   ========================================================= */
 
 /*
- * Detecta la temporada desde:
+ * Detecta:
  *
  * /season/big-brother-2
+ *
  * /episode/big-brother-2-x1
+ *
  * /episode/big-brother-2-episodio-x1
  */
+
 function seasonNumber(url) {
-  const value = decodeURIComponent(url || '');
 
-  let match = value.match(
-    /\/season\/[^/]*?[-_](\d+)\/?$/i
-  );
+  const value =
+    decodeURIComponent(url || '');
 
-  if (match) return Number(match[1]);
+  let match =
+    value.match(
+      /\/season\/[^/]*?[-_](\d+)\/?$/i
+    );
 
-  match = value.match(
-    /[-_](\d+)[-_](?:episodio[-_ ]*)?x\d+\/?$/i
-  );
+  if (match) {
+    return Number(match[1]);
+  }
 
-  if (match) return Number(match[1]);
+  match =
+    value.match(
+      /[-_](\d+)[-_](?:episodio[-_ ]*)?x\d+\/?$/i
+    );
+
+  if (match) {
+    return Number(match[1]);
+  }
 
   return null;
 }
 
-async function fetchHtml(url, attempts = 3) {
+/* =========================================================
+   FETCH
+   ========================================================= */
+
+async function fetchHtml(
+  url,
+  attempts = 3
+) {
+
   let lastError;
 
-  for (let attempt = 1; attempt <= attempts; attempt++) {
+  for (
+    let attempt = 1;
+    attempt <= attempts;
+    attempt++
+  ) {
+
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36',
-          'Accept':
-            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Accept-Language':
-            'es-ES,es;q=0.9,en;q=0.8'
-        },
-        redirect: 'follow'
-      });
+
+      const response =
+        await fetch(url, {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36',
+
+            'Accept':
+              'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+
+            'Accept-Language':
+              'es-ES,es;q=0.9,en;q=0.8'
+          },
+
+          redirect: 'follow'
+        });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        throw new Error(
+          `HTTP ${response.status}`
+        );
       }
 
       return await response.text();
 
     } catch (error) {
+
       lastError = error;
 
       if (attempt < attempts) {
+
         const wait =
           1000 * attempt +
-          Math.floor(Math.random() * 1000);
+          Math.floor(
+            Math.random() * 1000
+          );
 
         console.log(
           `   ↻ Reintento ${attempt + 1}/${attempts} en ${wait} ms`
@@ -146,7 +216,12 @@ async function fetchHtml(url, attempts = 3) {
   throw lastError;
 }
 
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+
 function uniqueUrls(values) {
+
   return [
     ...new Set(
       values
@@ -156,79 +231,203 @@ function uniqueUrls(values) {
   ];
 }
 
+function uniqueStrings(values) {
+
+  return [
+    ...new Set(
+      values
+        .map(clean)
+        .filter(Boolean)
+    )
+  ];
+}
+
 /* =========================================================
    SERIES
    ========================================================= */
 
-function parseSeriesLinks(html, pageUrl) {
-  const $ = cheerio.load(html);
+function parseSeriesLinks(
+  html,
+  pageUrl
+) {
+
+  const $ =
+    cheerio.load(html);
+
   const result = [];
 
-  $('a[href*="/series/"]').each((_, element) => {
-    const href = absolute(
-      $(element).attr('href'),
-      pageUrl
-    );
+  $('a[href*="/series/"]').each(
+    (_, element) => {
 
-    if (!href) return;
+      const href =
+        absolute(
+          $(element).attr('href'),
+          pageUrl
+        );
 
-    const url = canonical(href);
+      if (!href) return;
 
-    if (!new URL(url).pathname.startsWith('/series/')) {
-      return;
+      const url =
+        canonical(href);
+
+      let pathname = '';
+
+      try {
+        pathname =
+          new URL(url).pathname;
+      } catch {
+        return;
+      }
+
+      if (
+        !pathname.startsWith(
+          '/series/'
+        )
+      ) {
+        return;
+      }
+
+      const slug =
+        slugFromUrl(url);
+
+      if (!slug) return;
+
+      const title =
+        clean(
+          $(element).attr('title')
+        ) ||
+        clean(
+          $(element)
+            .find('img')
+            .attr('alt')
+        ) ||
+        clean(
+          $(element).text()
+        ) ||
+        slug.replace(
+          /-/g,
+          ' '
+        );
+
+      const image =
+        absolute(
+          $(element)
+            .find('img')
+            .attr('src'),
+          pageUrl
+        ) ||
+        absolute(
+          $(element)
+            .find('img')
+            .attr('data-src'),
+          pageUrl
+        ) ||
+        '';
+
+      result.push({
+        url,
+        slug,
+        title,
+        image
+      });
     }
-
-    const slug = slugFromUrl(url);
-
-    if (!slug) return;
-
-    const title =
-      clean($(element).attr('title')) ||
-      clean($(element).find('img').attr('alt')) ||
-      clean($(element).text()) ||
-      slug.replace(/-/g, ' ');
-
-    const image =
-      absolute(
-        $(element).find('img').attr('src'),
-        pageUrl
-      ) ||
-      absolute(
-        $(element).find('img').attr('data-src'),
-        pageUrl
-      ) ||
-      '';
-
-    result.push({
-      url,
-      slug,
-      title,
-      image
-    });
-  });
+  );
 
   return result;
 }
 
-function textFrom($, selectors) {
-  for (const selector of selectors) {
-    const element = $(selector).first();
+/* =========================================================
+   TEXTO
+   ========================================================= */
 
-    if (!element.length) continue;
+function textFrom(
+  $,
+  selectors
+) {
 
-    const text = clean(
-      element.attr('content') ||
-      element.text()
-    );
+  for (
+    const selector of selectors
+  ) {
 
-    if (text) return text;
+    const element =
+      $(selector).first();
+
+    if (!element.length) {
+      continue;
+    }
+
+    const text =
+      clean(
+        element.attr('content') ||
+        element.text()
+      );
+
+    if (text) {
+      return text;
+    }
   }
 
   return '';
 }
 
-function parseSeries(html, seriesUrl, fallback = {}) {
-  const $ = cheerio.load(html);
+/* =========================================================
+   EXTRAER GÉNEROS
+   ========================================================= */
+
+function extractGenres($) {
+
+  const genres = [];
+
+  const selectors = [
+    '.field--name-field-genero a',
+    '.field--name-field-generos a',
+    '.field--name-field-genre a',
+    '.field--name-field-genres a',
+    '.genre a',
+    '.genres a',
+    '.genero a',
+    '.generos a'
+  ];
+
+  for (
+    const selector of selectors
+  ) {
+
+    $(selector).each(
+      (_, element) => {
+
+        const value =
+          clean(
+            $(element).text()
+          );
+
+        if (
+          value &&
+          !genres.includes(value)
+        ) {
+          genres.push(value);
+        }
+      }
+    );
+  }
+
+  return uniqueStrings(
+    genres
+  );
+}
+
+/* =========================================================
+   PARSEAR SERIE
+   ========================================================= */
+
+function parseSeries(
+  html,
+  seriesUrl,
+  fallback = {}
+) {
+
+  const $ =
+    cheerio.load(html);
 
   const title =
     textFrom($, [
@@ -238,76 +437,122 @@ function parseSeries(html, seriesUrl, fallback = {}) {
       'meta[property="og:title"]'
     ]) ||
     fallback.title ||
-    slugFromUrl(seriesUrl).replace(/-/g, ' ');
+    slugFromUrl(
+      seriesUrl
+    ).replace(
+      /-/g,
+      ' '
+    );
 
   const image =
     absolute(
-      $('meta[property="og:image"]').attr('content'),
+      $('meta[property="og:image"]')
+        .attr('content'),
       seriesUrl
     ) ||
     absolute(
-      $('img').first().attr('src'),
+      $('img')
+        .first()
+        .attr('src'),
       seriesUrl
     ) ||
     fallback.image ||
     '';
 
-  const synopsis = textFrom($, [
-    '.field--name-body',
-    '.field--name-field-sinopsis',
-    '.synopsis',
-    '.description',
-    '.resumen'
-  ]);
+  const synopsis =
+    textFrom($, [
+      '.field--name-body',
+      '.field--name-field-sinopsis',
+      '.synopsis',
+      '.description',
+      '.resumen'
+    ]);
 
-  const originalTitle = textFrom($, [
-    '.field--name-field-titulo-original',
-    '.original-title',
-    '.titulo-original'
-  ]);
+  const originalTitle =
+    textFrom($, [
+      '.field--name-field-titulo-original',
+      '.original-title',
+      '.titulo-original'
+    ]);
 
-  const duration = textFrom($, [
-    '.field--name-field-duracion',
-    '.duration',
-    '.duracion'
-  ]);
+  const duration =
+    textFrom($, [
+      '.field--name-field-duracion',
+      '.duration',
+      '.duracion'
+    ]);
 
-  const releaseDate = textFrom($, [
-    '.field--name-field-fecha',
-    '.release-date',
-    '.fecha'
-  ]);
+  const releaseDate =
+    textFrom($, [
+      '.field--name-field-fecha',
+      '.release-date',
+      '.fecha'
+    ]);
 
-  const status = textFrom($, [
-    '.field--name-field-estado',
-    '.status',
-    '.estado'
-  ]) || fallback.status || '';
+  const status =
+    textFrom($, [
+      '.field--name-field-estado',
+      '.status',
+      '.estado'
+    ]) ||
+    fallback.status ||
+    '';
 
-  const seasonUrls = uniqueUrls(
-    $('a[href*="/season/"]')
-      .map((_, element) =>
-        absolute(
-          $(element).attr('href'),
-          seriesUrl
+  /*
+   * GÉNEROS
+   *
+   * Esta parte es importante porque antes
+   * faltaba y provocaba:
+   *
+   * Cannot read properties of undefined
+   * (reading 'length')
+   */
+
+  const genres =
+    extractGenres($);
+
+  /*
+   * TEMPORADAS
+   */
+
+  const seasonUrls =
+    uniqueUrls(
+      $('a[href*="/season/"]')
+        .map(
+          (_, element) =>
+            absolute(
+              $(element)
+                .attr('href'),
+              seriesUrl
+            )
         )
-      )
-      .get()
-  );
+        .get()
+    );
 
   return {
-    title: clean(
-      title.replace(
-        /\s*\|\s*Donghualife.*$/i,
-        ''
-      )
-    ),
+
+    title:
+      clean(
+        title.replace(
+          /\s*\|\s*Donghualife.*$/i,
+          ''
+        )
+      ),
+
     originalTitle,
+
     duration,
+
     status,
+
     releaseDate,
+
     synopsis,
+
     image,
+
+    genres,
+
     seasonUrls
   };
 }
@@ -316,37 +561,55 @@ function parseSeries(html, seriesUrl, fallback = {}) {
    TEMPORADAS
    ========================================================= */
 
-function parseSeason(html, seasonUrl) {
-  const $ = cheerio.load(html);
+function parseSeason(
+  html,
+  seasonUrl
+) {
+
+  const $ =
+    cheerio.load(html);
 
   const episodes = [];
 
   /*
    * IMPORTANTE:
-   * Estos enlaces SOLO sirven para localizar el primer episodio.
    *
-   * NO usamos la tabla para descubrir toda la temporada.
+   * Los enlaces de episodios de la página
+   * de temporada SOLO sirven para encontrar
+   * el primer episodio.
+   *
+   * NO utilizamos la tabla para obtener
+   * todos los episodios.
    */
-  $('a[href*="/episode/"]').each((_, element) => {
-    const href = absolute(
-      $(element).attr('href'),
-      seasonUrl
-    );
 
-    if (!href) return;
+  $('a[href*="/episode/"]').each(
+    (_, element) => {
 
-    const number = episodeNumber(href);
+      const href =
+        absolute(
+          $(element).attr('href'),
+          seasonUrl
+        );
 
-    if (number == null) return;
+      if (!href) return;
 
-    episodes.push({
-      url: canonical(href),
-      number
-    });
-  });
+      const number =
+        episodeNumber(href);
+
+      if (number == null) {
+        return;
+      }
+
+      episodes.push({
+        url: canonical(href),
+        number
+      });
+    }
+  );
 
   episodes.sort(
-    (a, b) => a.number - b.number
+    (a, b) =>
+      a.number - b.number
   );
 
   const seasonTitle =
@@ -355,50 +618,86 @@ function parseSeason(html, seasonUrl) {
       '.page-title',
       '.field--name-title'
     ]) ||
-    `Temporada ${seasonNumber(seasonUrl) || 1}`;
+    `Temporada ${
+      seasonNumber(seasonUrl) || 1
+    }`;
 
   return {
+
     title: seasonTitle,
-    firstEpisode: episodes[0] || null
+
+    firstEpisode:
+      episodes[0] || null
   };
 }
 
 /* =========================================================
-   EPISODIOS
+   SERVIDORES
    ========================================================= */
 
-function addServer(list, name, url, embed = true) {
-  if (!url) return;
+function addServer(
+  list,
+  name,
+  url,
+  embed = true
+) {
 
-  const cleanUrl = canonical(url);
+  if (!url) {
+    return;
+  }
 
-  if (!/^https?:\/\//i.test(cleanUrl)) {
+  const cleanUrl =
+    canonical(url);
+
+  if (
+    !/^https?:\/\//i.test(
+      cleanUrl
+    )
+  ) {
     return;
   }
 
   if (
     list.some(
-      server => server.url === cleanUrl
+      server =>
+        server.url === cleanUrl
     )
   ) {
     return;
   }
 
   list.push({
-    name: clean(name || 'Servidor'),
+
+    name:
+      clean(
+        name ||
+        'Servidor'
+      ),
+
     url: cleanUrl,
+
     embed
   });
 }
 
-function serverName(host) {
-  const h = host.toLowerCase();
+/* =========================================================
+   NOMBRE DEL SERVIDOR
+   ========================================================= */
 
-  if (h.includes('dailymotion')) {
+function serverName(host) {
+
+  const h =
+    host.toLowerCase();
+
+  if (
+    h.includes('dailymotion')
+  ) {
     return 'Dailymotion';
   }
 
-  if (h.includes('ok.ru')) {
+  if (
+    h.includes('ok.ru')
+  ) {
     return 'OK.ru';
   }
 
@@ -409,27 +708,44 @@ function serverName(host) {
     return 'StreamWish';
   }
 
-  if (h.includes('filemoon')) {
+  if (
+    h.includes('filemoon')
+  ) {
     return 'FileMoon';
   }
 
-  if (h.includes('voe')) {
+  if (
+    h.includes('voe')
+  ) {
     return 'VOE';
   }
 
-  if (h.includes('mega')) {
+  if (
+    h.includes('mega')
+  ) {
     return 'Mega';
   }
 
-  if (h.includes('mp4upload')) {
+  if (
+    h.includes('mp4upload')
+  ) {
     return 'MP4Upload';
   }
 
   return host;
 }
 
-function parseEpisode(html, episodeUrl) {
-  const $ = cheerio.load(html);
+/* =========================================================
+   PARSEAR EPISODIO
+   ========================================================= */
+
+function parseEpisode(
+  html,
+  episodeUrl
+) {
+
+  const $ =
+    cheerio.load(html);
 
   const title =
     textFrom($, [
@@ -438,7 +754,9 @@ function parseEpisode(html, episodeUrl) {
       '.field--name-title',
       'meta[property="og:title"]'
     ]) ||
-    slugFromUrl(episodeUrl).replace(
+    slugFromUrl(
+      episodeUrl
+    ).replace(
       /-/g,
       ' '
     );
@@ -446,10 +764,13 @@ function parseEpisode(html, episodeUrl) {
   const servers = [];
 
   /*
-   * Buscamos enlaces e iframes reales.
+   * BUSCAR SERVIDORES REALES
    */
-  $('a[href], iframe[src], video source[src], [data-src], [data-video], [data-embed]')
-    .each((_, element) => {
+
+  $(
+    'a[href], iframe[src], video source[src], [data-src], [data-video], [data-embed]'
+  ).each(
+    (_, element) => {
 
       const href =
         $(element).attr('href') ||
@@ -458,35 +779,49 @@ function parseEpisode(html, episodeUrl) {
         $(element).attr('data-video') ||
         $(element).attr('data-embed');
 
-      const url = absolute(
-        href,
-        episodeUrl
-      );
+      const url =
+        absolute(
+          href,
+          episodeUrl
+        );
 
-      if (!url) return;
+      if (!url) {
+        return;
+      }
 
       let hostname = '';
 
       try {
-        hostname = new URL(url).hostname;
+
+        hostname =
+          new URL(url)
+            .hostname;
+
       } catch {
         return;
       }
 
       /*
-       * Ignoramos enlaces internos de DonghuaLife
-       * que no sean servidores de vídeo.
+       * Ignorar enlaces internos
+       * de DonghuaLife.
        */
+
       if (
-        hostname.includes('donghualife.com') &&
+        hostname.includes(
+          'donghualife.com'
+        ) &&
         !/embed|player/i.test(url)
       ) {
         return;
       }
 
       const isEmbed =
-        element.tagName?.toLowerCase() === 'iframe' ||
-        /embed|player|video/i.test(url);
+        element.tagName
+          ?.toLowerCase() ===
+          'iframe' ||
+        /embed|player|video/i.test(
+          url
+        );
 
       addServer(
         servers,
@@ -494,102 +829,163 @@ function parseEpisode(html, episodeUrl) {
         url,
         isEmbed
       );
-    });
+    }
+  );
 
   let previousUrl = null;
   let nextUrl = null;
   let seriesUrl = null;
 
   /*
-   * ESTA ES LA PARTE CLAVE.
+   * BUSCAR BOTONES:
    *
-   * No calculamos x+1 nosotros.
-   * Seguimos exactamente el botón "Siguiente"
-   * que pone DonghuaLife.
+   * Anterior
+   * Serie
+   * Siguiente
    */
-  $('a[href]').each((_, element) => {
-    const text = clean(
-      $(element).text()
-    ).toLowerCase();
 
-    const href = absolute(
-      $(element).attr('href'),
-      episodeUrl
-    );
+  $('a[href]').each(
+    (_, element) => {
 
-    if (!href) return;
+      const text =
+        clean(
+          $(element).text()
+        ).toLowerCase();
 
-    if (
-      !previousUrl &&
-      /^(anterior|previous|prev)\b/i.test(text)
-    ) {
-      previousUrl = canonical(href);
+      const href =
+        absolute(
+          $(element).attr('href'),
+          episodeUrl
+        );
+
+      if (!href) {
+        return;
+      }
+
+      /*
+       * ANTERIOR
+       */
+
+      if (
+        !previousUrl &&
+        /^(anterior|previous|prev)\b/i.test(
+          text
+        )
+      ) {
+        previousUrl =
+          canonical(href);
+      }
+
+      /*
+       * SIGUIENTE
+       */
+
+      if (
+        !nextUrl &&
+        /^(siguiente|next)\b/i.test(
+          text
+        )
+      ) {
+        nextUrl =
+          canonical(href);
+      }
+
+      /*
+       * SERIE
+       */
+
+      if (
+        !seriesUrl &&
+        /^(serie|series)\b/i.test(
+          text
+        )
+      ) {
+        seriesUrl =
+          canonical(href);
+      }
     }
-
-    if (
-      !nextUrl &&
-      /^(siguiente|next)\b/i.test(text)
-    ) {
-      nextUrl = canonical(href);
-    }
-
-    if (
-      !seriesUrl &&
-      /^(serie|series)\b/i.test(text)
-    ) {
-      seriesUrl = canonical(href);
-    }
-  });
+  );
 
   /*
-   * Fallback por rel=prev / rel=next.
+   * FALLBACK:
+   *
+   * rel="prev"
+   * rel="next"
    */
+
   if (!previousUrl) {
-    previousUrl = absolute(
-      $('a[rel="prev"]').first().attr('href'),
-      episodeUrl
-    );
+
+    previousUrl =
+      absolute(
+        $('a[rel="prev"]')
+          .first()
+          .attr('href'),
+        episodeUrl
+      );
   }
 
   if (!nextUrl) {
-    nextUrl = absolute(
-      $('a[rel="next"]').first().attr('href'),
-      episodeUrl
-    );
+
+    nextUrl =
+      absolute(
+        $('a[rel="next"]')
+          .first()
+          .attr('href'),
+        episodeUrl
+      );
   }
 
   return {
-    title: clean(
-      title.replace(
-        /\s*\|\s*Donghualife.*$/i,
-        ''
-      )
-    ),
+
+    title:
+      clean(
+        title.replace(
+          /\s*\|\s*Donghualife.*$/i,
+          ''
+        )
+      ),
+
     servers,
-    previousUrl: previousUrl
-      ? canonical(previousUrl)
-      : null,
-    nextUrl: nextUrl
-      ? canonical(nextUrl)
-      : null,
-    seriesUrl: seriesUrl
-      ? canonical(seriesUrl)
-      : null
+
+    previousUrl:
+      previousUrl
+        ? canonical(previousUrl)
+        : null,
+
+    nextUrl:
+      nextUrl
+        ? canonical(nextUrl)
+        : null,
+
+    seriesUrl:
+      seriesUrl
+        ? canonical(seriesUrl)
+        : null
   };
 }
 
 /* =========================================================
-   CATÁLOGO
+   UPSERT
    ========================================================= */
 
-function upsert(array, item, key = 'id') {
-  const index = array.findIndex(
-    x => x[key] === item[key]
-  );
+function upsert(
+  array,
+  item,
+  key = 'id'
+) {
+
+  const index =
+    array.findIndex(
+      x =>
+        x[key] === item[key]
+    );
 
   if (index === -1) {
+
     array.push(item);
+
   } else {
+
     array[index] = {
       ...array[index],
       ...item
@@ -597,41 +993,68 @@ function upsert(array, item, key = 'id') {
   }
 }
 
-async function loadCatalog() {
-  try {
-    const raw = await fs.readFile(
-      OUT_FILE,
-      'utf8'
-    );
+/* =========================================================
+   CARGAR CATÁLOGO
+   ========================================================= */
 
-    const db = JSON.parse(raw);
+async function loadCatalog() {
+
+  try {
+
+    const raw =
+      await fs.readFile(
+        OUT_FILE,
+        'utf8'
+      );
+
+    const db =
+      JSON.parse(raw);
 
     return {
-      meta: db.meta || {},
-      series: Array.isArray(db.series)
-        ? db.series
-        : [],
-      seasons: Array.isArray(db.seasons)
-        ? db.seasons
-        : [],
-      episodes: Array.isArray(db.episodes)
-        ? db.episodes
-        : [],
-      movies: Array.isArray(db.movies)
-        ? db.movies
-        : [],
-      genres: Array.isArray(db.genres)
-        ? db.genres
-        : []
+
+      meta:
+        db.meta || {},
+
+      series:
+        Array.isArray(db.series)
+          ? db.series
+          : [],
+
+      seasons:
+        Array.isArray(db.seasons)
+          ? db.seasons
+          : [],
+
+      episodes:
+        Array.isArray(db.episodes)
+          ? db.episodes
+          : [],
+
+      movies:
+        Array.isArray(db.movies)
+          ? db.movies
+          : [],
+
+      genres:
+        Array.isArray(db.genres)
+          ? db.genres
+          : []
     };
 
   } catch {
+
     return {
+
       meta: {},
+
       series: [],
+
       seasons: [],
+
       episodes: [],
+
       movies: [],
+
       genres: []
     };
   }
@@ -642,14 +1065,21 @@ async function loadCatalog() {
    ========================================================= */
 
 async function discoverSeries() {
-  const map = new Map();
 
-  for (const seed of SEEDS) {
-    const url = canonical(
-      absolute(seed)
-    );
+  const map =
+    new Map();
+
+  for (
+    const seed of SEEDS
+  ) {
+
+    const url =
+      canonical(
+        absolute(seed)
+      );
 
     try {
+
       console.log(
         `🔎 Buscando series: ${url}`
       );
@@ -663,8 +1093,14 @@ async function discoverSeries() {
           url
         );
 
-      for (const item of found) {
-        if (!map.has(item.slug)) {
+      for (
+        const item of found
+      ) {
+
+        if (
+          !map.has(item.slug)
+        ) {
+
           map.set(
             item.slug,
             item
@@ -678,21 +1114,27 @@ async function discoverSeries() {
 
       await sleep(
         500 +
-        Math.floor(Math.random() * 700)
+        Math.floor(
+          Math.random() * 700
+        )
       );
 
     } catch (error) {
+
       console.log(
         `   ⚠️ ${error.message}`
       );
     }
   }
 
-  return [...map.values()];
+  return [
+    ...map.values()
+  ];
 }
 
 /* =========================================================
-   RECORRER EPISODIOS CON "SIGUIENTE"
+   RECORRER EPISODIOS
+   CON "SIGUIENTE"
    ========================================================= */
 
 async function crawlEpisodes(
@@ -702,12 +1144,17 @@ async function crawlEpisodes(
   seasonId,
   episodes
 ) {
-  const visited = new Set();
+
+  const visited =
+    new Set();
 
   let current =
-    canonical(firstEpisodeUrl);
+    canonical(
+      firstEpisodeUrl
+    );
 
   let lastNumber = 0;
+
   let count = 0;
 
   while (
@@ -718,20 +1165,26 @@ async function crawlEpisodes(
     visited.add(current);
 
     /*
-     * Esto NO es un límite de episodios.
-     * Es solamente protección contra un bucle infinito
-     * accidental del sitio.
+     * PROTECCIÓN CONTRA BUCLES.
+     *
+     * NO ES UN LÍMITE DE EPISODIOS.
      */
-    if (count >= 100000) {
+
+    if (
+      count >= 100000
+    ) {
+
       console.log(
         '      ⚠️ Posible bucle. Se detiene.'
       );
+
       break;
     }
 
     /*
-     * Evitar que una temporada entre en la siguiente.
+     * COMPROBAR TEMPORADA
      */
+
     const seasonOfCurrent =
       seasonNumber(current);
 
@@ -743,43 +1196,58 @@ async function crawlEpisodes(
       currentSeason !== null &&
       seasonOfCurrent !== currentSeason
     ) {
+
       console.log(
         '      ✓ Fin de temporada.'
       );
-      break;
-    }
 
-    const number =
-      episodeNumber(current);
-
-    if (number === null) {
-      console.log(
-        `      ⚠️ No se pudo obtener número: ${current}`
-      );
       break;
     }
 
     /*
-     * Si la navegación vuelve atrás o entra
-     * en un episodio menor, paramos.
+     * NÚMERO DEL EPISODIO
      */
+
+    const number =
+      episodeNumber(current);
+
+    if (
+      number === null
+    ) {
+
+      console.log(
+        `      ⚠️ No se pudo obtener número: ${current}`
+      );
+
+      break;
+    }
+
+    /*
+     * COMPROBAR QUE AVANZAMOS
+     */
+
     if (
       lastNumber > 0 &&
       number <= lastNumber
     ) {
+
       console.log(
         `      ⚠️ Navegación incorrecta: ${lastNumber} → ${number}`
       );
+
       break;
     }
 
     try {
+
       console.log(
         `      📄 Analizando Ep. ${number}`
       );
 
       const html =
-        await fetchHtml(current);
+        await fetchHtml(
+          current
+        );
 
       const data =
         parseEpisode(
@@ -792,34 +1260,50 @@ async function crawlEpisodes(
 
       const oldEpisode =
         episodes.find(
-          e => e.id === id
+          e =>
+            e.id === id
         );
 
       const episode = {
+
         id,
+
         slug: id,
+
         title:
           data.title ||
           `Episodio ${number}`,
-        sourceUrl: current,
-        servers: data.servers,
+
+        sourceUrl:
+          current,
+
+        servers:
+          data.servers,
+
         previousUrl:
           data.previousUrl,
+
         nextUrl:
           data.nextUrl,
+
         updatedAt:
           new Date().toISOString(),
+
         seriesId,
+
         seasonId,
+
         number
       };
 
       /*
-       * Conservamos datos antiguos útiles.
+       * CONSERVAR DATOS ANTIGUOS
        */
+
       if (
         oldEpisode?.releaseDate
       ) {
+
         episode.releaseDate =
           oldEpisode.releaseDate;
       }
@@ -839,31 +1323,50 @@ async function crawlEpisodes(
       );
 
       count++;
-      lastNumber = number;
+
+      lastNumber =
+        number;
+
+      /*
+       * SIGUIENTE
+       */
 
       const next =
         data.nextUrl
-          ? canonical(data.nextUrl)
+          ? canonical(
+              data.nextUrl
+            )
           : null;
 
       if (!next) {
+
         console.log(
           `      🏁 Último episodio: ${number}`
         );
-        break;
-      }
 
-      if (visited.has(next)) {
-        console.log(
-          '      ⚠️ El siguiente ya fue visitado.'
-        );
         break;
       }
 
       /*
-       * Comprobamos que "Siguiente" no
-       * nos haya mandado a otra temporada.
+       * EVITAR REPETICIONES
        */
+
+      if (
+        visited.has(next)
+      ) {
+
+        console.log(
+          '      ⚠️ El siguiente ya fue visitado.'
+        );
+
+        break;
+      }
+
+      /*
+       * COMPROBAR QUE SIGUE
+       * EN LA MISMA TEMPORADA
+       */
+
       const nextSeason =
         seasonNumber(next);
 
@@ -872,23 +1375,34 @@ async function crawlEpisodes(
         nextSeason !== null &&
         nextSeason !== currentSeason
       ) {
+
         console.log(
           `      🏁 Temporada ${currentSeason} termina en Ep. ${number}`
         );
+
         break;
       }
 
-      current = next;
+      /*
+       * AVANZAR AL SIGUIENTE
+       */
+
+      current =
+        next;
 
       await sleep(
         500 +
-        Math.floor(Math.random() * 700)
+        Math.floor(
+          Math.random() * 700
+        )
       );
 
     } catch (error) {
+
       console.log(
         `      ❌ Error Ep. ${number}: ${error.message}`
       );
+
       break;
     }
   }
@@ -927,19 +1441,45 @@ async function main() {
     `${old.episodes.length} episodios`
   );
 
+  /*
+   * NUEVO CATÁLOGO
+   */
+
   const db = {
-    meta: old.meta,
+
+    meta:
+      old.meta,
+
     series: [],
+
     seasons: [],
-    episodes: [...old.episodes],
-    movies: old.movies,
-    genres: old.genres
+
+    /*
+     * Conservamos episodios antiguos.
+     * Los nuevos se actualizan mediante upsert.
+     */
+
+    episodes:
+      [...old.episodes],
+
+    movies:
+      old.movies,
+
+    genres:
+      old.genres
   };
+
+  /*
+   * DESCUBRIR SERIES
+   */
 
   const discovered =
     await discoverSeries();
 
-  if (!discovered.length) {
+  if (
+    !discovered.length
+  ) {
+
     throw new Error(
       'No se encontraron series.'
     );
@@ -948,6 +1488,10 @@ async function main() {
   console.log(
     `\n📚 Series descubiertas: ${discovered.length}\n`
   );
+
+  /* =======================================================
+     PROCESAR SERIES
+     ======================================================= */
 
   for (
     let i = 0;
@@ -968,8 +1512,14 @@ async function main() {
 
     try {
 
+      /*
+       * PÁGINA DE LA SERIE
+       */
+
       const html =
-        await fetchHtml(item.url);
+        await fetchHtml(
+          item.url
+        );
 
       const detail =
         parseSeries(
@@ -983,49 +1533,79 @@ async function main() {
 
       const previous =
         old.series.find(
-          s => s.id === seriesId
+          s =>
+            s.id === seriesId
         );
 
+      /*
+       * IMPORTANTE:
+       *
+       * detail.genres SIEMPRE será un array
+       * gracias a extractGenres().
+       *
+       * También usamos ?. como protección adicional.
+       */
+
       const series = {
-        id: seriesId,
-        slug: seriesId,
+
+        id:
+          seriesId,
+
+        slug:
+          seriesId,
+
         title:
           detail.title ||
           previous?.title ||
           item.title,
+
         originalTitle:
           detail.originalTitle ||
           previous?.originalTitle ||
           '',
+
         duration:
           detail.duration ||
           previous?.duration ||
           '',
+
         status:
           detail.status ||
           previous?.status ||
           '',
+
         releaseDate:
           detail.releaseDate ||
           previous?.releaseDate ||
           '',
+
         synopsis:
           detail.synopsis ||
           previous?.synopsis ||
           '',
+
         image:
           detail.image ||
           previous?.image ||
           item.image ||
           '',
+
         sourceUrl:
-          canonical(item.url),
+          canonical(
+            item.url
+          ),
+
         genres:
-          detail.genres.length
+          detail.genres?.length
             ? detail.genres
-            : (previous?.genres || []),
+            : (
+                previous?.genres ||
+                []
+              ),
+
         seasonUrls:
           detail.seasonUrls,
+
         updatedAt:
           new Date().toISOString()
       };
@@ -1039,6 +1619,10 @@ async function main() {
         `   Temporadas encontradas: ${detail.seasonUrls.length}`
       );
 
+      /* =====================================================
+         TEMPORADAS
+         ===================================================== */
+
       for (
         let s = 0;
         s < detail.seasonUrls.length;
@@ -1051,7 +1635,9 @@ async function main() {
           );
 
         const number =
-          seasonNumber(seasonUrl) ||
+          seasonNumber(
+            seasonUrl
+          ) ||
           (s + 1);
 
         const seasonId =
@@ -1062,6 +1648,10 @@ async function main() {
         );
 
         try {
+
+          /*
+           * PÁGINA DE TEMPORADA
+           */
 
           const seasonHtml =
             await fetchHtml(
@@ -1075,14 +1665,21 @@ async function main() {
             );
 
           const season = {
-            id: seasonId,
+
+            id:
+              seasonId,
+
             seriesId,
+
             number,
+
             title:
               seasonData.title ||
               `Temporada ${number}`,
+
             sourceUrl:
               seasonUrl,
+
             updatedAt:
               new Date().toISOString()
           };
@@ -1092,12 +1689,18 @@ async function main() {
             season
           );
 
+          /*
+           * NO HAY EPISODIOS
+           */
+
           if (
             !seasonData.firstEpisode
           ) {
+
             console.log(
               '      ⚠️ No se encontró el primer episodio.'
             );
+
             continue;
           }
 
@@ -1106,26 +1709,50 @@ async function main() {
           );
 
           /*
-           * AQUÍ ESTÁ EL CAMBIO PRINCIPAL.
+           * =================================================
+           * AQUÍ COMIENZA EL RECORRIDO REAL
+           * =================================================
            *
-           * Desde el primer episodio:
+           * Ejemplo:
            *
-           * x1 → Siguiente → x2
-           * x2 → Siguiente → x3
-           * x3 → Siguiente → x4
+           * x1
+           * ↓
+           * Siguiente
+           * ↓
+           * x2
+           * ↓
+           * Siguiente
+           * ↓
+           * x3
+           * ↓
            * ...
+           *
+           * NO generamos nosotros x2, x3, x4...
+           *
+           * Utilizamos exactamente el botón
+           * "Siguiente" de DonghuaLife.
            */
+
           await crawlEpisodes(
-            seasonData.firstEpisode.url,
+
+            seasonData
+              .firstEpisode
+              .url,
+
             seasonUrl,
+
             seriesId,
+
             seasonId,
+
             db.episodes
           );
 
           await sleep(
             700 +
-            Math.floor(Math.random() * 800)
+            Math.floor(
+              Math.random() * 800
+            )
           );
 
         } catch (error) {
@@ -1145,41 +1772,77 @@ async function main() {
 
     await sleep(
       800 +
-      Math.floor(Math.random() * 1000)
+      Math.floor(
+        Math.random() * 1000
+      )
     );
   }
 
   /* =======================================================
-     ORDENAR
+     ORDENAR SERIES
      ======================================================= */
 
   db.series.sort(
     (a, b) =>
-      clean(a.title).localeCompare(
-        clean(b.title),
-        'es'
-      )
+      clean(a.title)
+        .localeCompare(
+          clean(b.title),
+          'es'
+        )
   );
+
+  /* =======================================================
+     ORDENAR TEMPORADAS
+     ======================================================= */
 
   db.seasons.sort(
     (a, b) =>
-      String(a.seriesId).localeCompare(
-        String(b.seriesId)
+
+      String(
+        a.seriesId
+      ).localeCompare(
+        String(
+          b.seriesId
+        )
       ) ||
-      Number(a.number || 0) -
-      Number(b.number || 0)
+
+      Number(
+        a.number || 0
+      ) -
+      Number(
+        b.number || 0
+      )
   );
+
+  /* =======================================================
+     ORDENAR EPISODIOS
+     ======================================================= */
 
   db.episodes.sort(
     (a, b) =>
-      String(a.seriesId).localeCompare(
-        String(b.seriesId)
+
+      String(
+        a.seriesId
+      ).localeCompare(
+        String(
+          b.seriesId
+        )
       ) ||
-      String(a.seasonId).localeCompare(
-        String(b.seasonId)
+
+      String(
+        a.seasonId
+      ).localeCompare(
+        String(
+          b.seasonId
+        )
       ) ||
-      Number(a.number || 0) -
-      Number(b.number || 0)
+
+      Number(
+        a.number || 0
+      ) -
+      Number(
+        b.number || 0
+      )
   );
 
   /* =======================================================
@@ -1187,10 +1850,18 @@ async function main() {
      ======================================================= */
 
   const genres =
-    new Set(db.genres || []);
+    new Set(
+      db.genres || []
+    );
 
-  for (const series of db.series) {
-    for (const genre of series.genres || []) {
+  for (
+    const series of db.series
+  ) {
+
+    for (
+      const genre of
+      series.genres || []
+    ) {
 
       const value =
         clean(genre);
@@ -1204,7 +1875,10 @@ async function main() {
   db.genres =
     [...genres].sort(
       (a, b) =>
-        a.localeCompare(b, 'es')
+        a.localeCompare(
+          b,
+          'es'
+        )
     );
 
   /* =======================================================
@@ -1215,17 +1889,30 @@ async function main() {
     new Date().toISOString();
 
   db.meta = {
+
     ...(old.meta || {}),
+
     version: 2,
-    source: `${BASE_URL}/`,
-    syncedAt: finishedAt,
+
+    source:
+      `${BASE_URL}/`,
+
+    syncedAt:
+      finishedAt,
+
     lastSync: {
-      status: 'success',
+
+      status:
+        'success',
+
       startedAt:
         old.meta?.lastSync?.startedAt ||
         null,
+
       finishedAt,
-      error: null
+
+      error:
+        null
     }
   };
 
@@ -1235,19 +1922,24 @@ async function main() {
 
   await fs.mkdir(
     path.dirname(OUT_FILE),
-    { recursive: true }
+    {
+      recursive: true
+    }
   );
 
   const tempFile =
     `${OUT_FILE}.tmp`;
 
   await fs.writeFile(
+
     tempFile,
+
     JSON.stringify(
       db,
       null,
       2
     ),
+
     'utf8'
   );
 
@@ -1255,6 +1947,10 @@ async function main() {
     tempFile,
     OUT_FILE
   );
+
+  /* =======================================================
+     RESULTADO
+     ======================================================= */
 
   console.log(
     '\n════════════════════════════════════════'
@@ -1293,12 +1989,18 @@ async function main() {
   );
 }
 
-main().catch(error => {
+/* =========================================================
+   EJECUTAR
+   ========================================================= */
 
-  console.error(
-    '\n❌ ERROR FATAL:',
-    error
-  );
+main().catch(
+  error => {
 
-  process.exit(1);
-});
+    console.error(
+      '\n❌ ERROR FATAL:',
+      error
+    );
+
+    process.exit(1);
+  }
+);
