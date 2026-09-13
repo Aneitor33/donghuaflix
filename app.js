@@ -11,7 +11,6 @@ const cleanTitle = (s) => {
   if (!title || title.toLowerCase() === 'temporadas') {
     const rawSlug = s?.slug || s?.id || '';
     if (rawSlug) {
-      // Transforma un slug como "zhen-dao-ge" en "Zhen Dao Ge"
       return rawSlug
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -24,27 +23,29 @@ const cleanTitle = (s) => {
 
 // Función auxiliar para validar, limpiar y buscar imágenes alternativas en las temporadas si falta en la serie
 const getSeriesImage = (s) => {
-  // 1. Validar si la imagen principal es válida y no es un marcador de posición
   if (s?.image && !s.image.includes('IcoPrueba.png')) {
     return s.image;
   }
-  
-  // 2. Si no tiene, buscar la imagen en las temporadas asociadas a esta serie
   const associatedSeasons = DB.seasons.filter(seas => seas.seriesId === s.id);
   for (const seas of associatedSeasons) {
     if (seas.image && !seas.image.includes('IcoPrueba.png')) {
       return seas.image;
     }
   }
-
-  // 3. Si de plano no hay ninguna, retornar vacío para mostrar el diseño por defecto
   return '';
 };
 
 async function load() {
   app.innerHTML = '<section class="section"><div class="grid">' + Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
   try {
-    const r = await fetch('./public/data/catalog.json?ts=' + Date.now(), { cache: 'no-store' });
+    const r = await fetch('./public/data/catalog.json?ts=' + Date.now(), { 
+      cache: 'reload',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
     DB = await r.json();
     document.getElementById('footerStatus').innerHTML = `
       ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}<br>
@@ -91,6 +92,46 @@ function home() {
     <div class="section-head"><h2>Catálogo de Series</h2><span class="muted">${DB.series.length}</span></div>
     <div class="grid">${DB.series.map(card).join('')}</div>
   </section>`;
+}
+
+// --- VISTAS DE NAVEGACIÓN SUPERIOR ---
+
+function listAllSeries() {
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><h2>Todas las Series</h2><span class="muted">${DB.series.length}</span></div>
+      <div class="grid">${DB.series.map(card).join('')}</div>
+    </section>
+  `;
+}
+
+function listByStatus(statusKeyword, titleText) {
+  const filtered = DB.series.filter(s => (s.status || '').toLowerCase().includes(statusKeyword.toLowerCase()));
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><h2>${titleText}</h2><span class="muted">${filtered.length}</span></div>
+      <div class="grid">${filtered.length ? filtered.map(card).join('') : '<p style="color:#888;">No hay elementos en esta categoría.</p>'}</div>
+    </section>
+  `;
+}
+
+function listMovies() {
+  const movies = DB.series.filter(s => (s.type || '').toLowerCase() === 'movie' || (s.title || '').toLowerCase().includes('película'));
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><h2>Películas</h2><span class="muted">${movies.length}</span></div>
+      <div class="grid">${movies.length ? movies.map(card).join('') : '<p style="color:#888;">No hay películas disponibles por el momento.</p>'}</div>
+    </section>
+  `;
+}
+
+function listGenres() {
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><h2>Géneros</h2></div>
+      <p style="color: #888;">Sección en desarrollo para explorar por categorías.</p>
+    </section>
+  `;
 }
 
 function search(q = '') {
@@ -221,15 +262,41 @@ function episode(slug) {
 
 function notfound() { app.innerHTML = '<section class="empty"><h2>No encontrado</h2></section>'; }
 
+// --- ENRUTADOR PRINCIPAL ---
 function route() {
   const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const type = p[0], arg = p[1];
+  
   if (!type) return home();
   if (type === 'search') return search(arg || '');
+  if (type === 'series' && !arg) return listAllSeries();
   if (type === 'series' && arg) return detail(arg);
+  if (type === 'airing') return listByStatus('emisión', 'Donghuas En Emisión');
+  if (type === 'completed') return listByStatus('finaliz', 'Donghuas Finalizados');
+  if (type === 'movies') return listMovies();
+  if (type === 'genres') return listGenres();
   if (type === 'episode') return episode(arg);
+  
   return home();
 }
 
+// Configuración de eventos globales (Cambio de ruta y Botón de Recarga)
 window.addEventListener('hashchange', route);
+
+document.addEventListener('DOMContentLoaded', () => {
+  const reloadBtn = document.getElementById('reloadBtn');
+  if (reloadBtn) {
+    reloadBtn.addEventListener('click', async () => {
+      reloadBtn.style.transform = 'rotate(360deg)';
+      reloadBtn.style.transition = 'transform 0.5s ease';
+      
+      await load();
+      
+      setTimeout(() => {
+        reloadBtn.style.transform = 'none';
+      }, 500);
+    });
+  }
+});
+
 load();
