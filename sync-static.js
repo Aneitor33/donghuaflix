@@ -16,13 +16,42 @@ const SEEDS = [
 
 const MAX_DISCOVERY_PAGES = 200;
 const MAX_EPISODES_PER_SEASON_SAFETY = 100000;
+
 const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
+
+/*
+   Mínimo de páginas que queremos comprobar
+   por temporada.
+
+   La página base cuenta como la primera.
+   Por eso comprobaremos además page=1..4.
+*/
+const MIN_SEASON_PAGE_PROBES = 5;
+
+/*
+   Protección para no generar infinitamente
+   URLs de episodios cuando intentamos completar
+   huecos mediante el patrón aprendido.
+*/
+const MAX_INFERRED_EPISODE_ATTEMPTS = 20;
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
 
 const clean = value =>
   String(value || '')
     .replace(/\s+/g, ' ')
     .trim();
+
+
+async function sleep(ms) {
+  await new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+}
 
 
 /* =========================================================
@@ -61,27 +90,77 @@ function canonical(raw) {
     u.hostname = u.hostname.toLowerCase();
 
     if (u.pathname.length > 1) {
-      u.pathname = u.pathname.replace(/\/+$/, '');
+      u.pathname =
+        u.pathname.replace(/\/+$/, '');
     }
 
     return u.href;
+
   } catch {
     return null;
   }
 }
 
 
+/*
+   Para las páginas de temporadas:
+
+   /temporada-x
+   /temporada-x?page=0
+
+   se consideran la misma página.
+
+   Esto es importante porque algunas páginas
+   muestran explícitamente "page=0" y otras no.
+*/
+function canonicalSeasonPage(raw) {
+  const url =
+    canonical(raw);
+
+  if (!url) {
+    return null;
+  }
+
+  try {
+
+    const u =
+      new URL(url);
+
+    const page =
+      u.searchParams.get('page');
+
+    if (
+      page === '0'
+    ) {
+      u.searchParams.delete('page');
+    }
+
+    return u.href;
+
+  } catch {
+    return url;
+  }
+}
+
+
 function slugFromUrl(raw) {
   try {
-    const u = new URL(raw, BASE_URL);
 
-    const parts = u.pathname
-      .split('/')
-      .filter(Boolean);
+    const u =
+      new URL(
+        raw,
+        BASE_URL
+      );
+
+    const parts =
+      u.pathname
+        .split('/')
+        .filter(Boolean);
 
     return decodeURIComponent(
       parts.at(-1) || ''
     ).replace(/\/$/, '');
+
   } catch {
     return '';
   }
@@ -90,154 +169,14 @@ function slugFromUrl(raw) {
 
 function sameOrigin(url) {
   try {
+
     return (
       new URL(url).origin ===
       new URL(BASE_URL).origin
     );
+
   } catch {
     return false;
-  }
-}
-
-
-/* =========================================================
-   NUMERACIÓN
-========================================================= */
-
-function seasonNumber(value) {
-  const slug =
-    typeof value === 'string' && value.includes('/')
-      ? slugFromUrl(value)
-      : String(value || '');
-
-  const match =
-    slug.match(
-      /(?:^|-)season-(\d+)(?:-|$)/i
-    ) ||
-    slug.match(
-      /-(\d+)(?:-0)?$/
-    );
-
-  if (match) {
-    return Number(match[1]);
-  }
-
-  const generic =
-    slug.match(
-      /(?:^|[- ])(?:temporada|season)[- ]?(\d+)/i
-    );
-
-  return generic
-    ? Number(generic[1])
-    : null;
-}
-
-
-function episodeNumber(value) {
-  const text = String(value || '');
-
-  const patterns = [
-    /(?:episodio|episode)[-_ ]?x?(\d+)/i,
-    /(?:^|[-_ ])x(\d+)(?:$|[-_ ])/i,
-    /(?:episode|episodio)[-_ ]?(\d+)/i
-  ];
-
-  for (const pattern of patterns) {
-    const match = text.match(pattern);
-
-    if (match) {
-      return Number(match[1]);
-    }
-  }
-
-  return null;
-}
-
-
-/* =========================================================
-   FETCH
-========================================================= */
-
-async function sleep(ms) {
-  await new Promise(resolve =>
-    setTimeout(resolve, ms)
-  );
-}
-
-
-async function fetchHtml(
-  url,
-  attempt = 1
-) {
-  const controller =
-    new AbortController();
-
-  const timer =
-    setTimeout(
-      () => controller.abort(),
-      FETCH_TIMEOUT_MS
-    );
-
-  try {
-    const response = await fetch(
-      url,
-      {
-        signal: controller.signal,
-        redirect: 'follow',
-
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; DonghuaFlixSync/2.0)',
-
-          'Accept':
-            'text/html,application/xhtml+xml'
-        }
-      }
-    );
-
-    if (!response.ok) {
-      if (
-        attempt < FETCH_RETRIES &&
-        [
-          408,
-          425,
-          429,
-          500,
-          502,
-          503,
-          504
-        ].includes(response.status)
-      ) {
-        await sleep(1000 * attempt);
-
-        return fetchHtml(
-          url,
-          attempt + 1
-        );
-      }
-
-      throw new Error(
-        `HTTP ${response.status} en ${url}`
-      );
-    }
-
-    return await response.text();
-
-  } catch (error) {
-
-    if (attempt < FETCH_RETRIES) {
-      await sleep(1000 * attempt);
-
-      return fetchHtml(
-        url,
-        attempt + 1
-      );
-    }
-
-    throw error;
-
-  } finally {
-    clearTimeout(timer);
   }
 }
 
@@ -254,6 +193,192 @@ function uniqueUrls(values) {
 
 
 /* =========================================================
+   NUMERACIÓN
+========================================================= */
+
+function seasonNumber(value) {
+
+  const slug =
+    typeof value === 'string' &&
+    value.includes('/')
+      ? slugFromUrl(value)
+      : String(value || '');
+
+
+  const match =
+    slug.match(
+      /(?:^|-)season-(\d+)(?:-|$)/i
+    ) ||
+    slug.match(
+      /-(\d+)(?:-0)?$/
+    );
+
+
+  if (match) {
+    return Number(match[1]);
+  }
+
+
+  const generic =
+    slug.match(
+      /(?:^|[- ])(?:temporada|season)[- ]?(\d+)/i
+    );
+
+
+  return generic
+    ? Number(generic[1])
+    : null;
+}
+
+
+function episodeNumber(value) {
+
+  const text =
+    String(value || '');
+
+
+  const patterns = [
+
+    /(?:episodio|episode)[-_ ]?x?(\d+)/i,
+
+    /(?:^|[-_ ])x(\d+)(?:$|[-_ ])/i,
+
+    /(?:episode|episodio)[-_ ]?(\d+)/i
+
+  ];
+
+
+  for (
+    const pattern
+    of patterns
+  ) {
+
+    const match =
+      text.match(pattern);
+
+    if (match) {
+      return Number(match[1]);
+    }
+  }
+
+
+  return null;
+}
+
+
+/* =========================================================
+   FETCH
+========================================================= */
+
+async function fetchHtml(
+  url,
+  attempt = 1
+) {
+
+  const controller =
+    new AbortController();
+
+
+  const timer =
+    setTimeout(
+      () => controller.abort(),
+      FETCH_TIMEOUT_MS
+    );
+
+
+  try {
+
+    const response =
+      await fetch(
+        url,
+        {
+          signal:
+            controller.signal,
+
+          redirect:
+            'follow',
+
+          headers: {
+
+            'User-Agent':
+              'Mozilla/5.0 (compatible; DonghuaFlixSync/3.0)',
+
+            'Accept':
+              'text/html,application/xhtml+xml'
+
+          }
+        }
+      );
+
+
+    if (!response.ok) {
+
+      if (
+        attempt < FETCH_RETRIES &&
+        [
+          408,
+          425,
+          429,
+          500,
+          502,
+          503,
+          504
+        ].includes(
+          response.status
+        )
+      ) {
+
+        await sleep(
+          1000 * attempt
+        );
+
+
+        return fetchHtml(
+          url,
+          attempt + 1
+        );
+      }
+
+
+      throw new Error(
+        `HTTP ${response.status} en ${url}`
+      );
+    }
+
+
+    return await response.text();
+
+
+  } catch (error) {
+
+    if (
+      attempt < FETCH_RETRIES
+    ) {
+
+      await sleep(
+        1000 * attempt
+      );
+
+
+      return fetchHtml(
+        url,
+        attempt + 1
+      );
+    }
+
+
+    throw error;
+
+
+  } finally {
+
+    clearTimeout(timer);
+
+  }
+}
+
+
+/* =========================================================
    DESCUBRIMIENTO DE SERIES
 ========================================================= */
 
@@ -261,15 +386,20 @@ function parseSeriesLinks(
   html,
   pageUrl
 ) {
-  const $ = cheerio.load(html);
 
-  const links = [];
+  const $ =
+    cheerio.load(html);
+
+  const links =
+    [];
+
 
   $('a[href]').each(
     (_, element) => {
 
       const href =
         $(element).attr('href');
+
 
       const url =
         canonical(
@@ -279,26 +409,40 @@ function parseSeriesLinks(
           )
         );
 
-      if (!url || !sameOrigin(url)) {
+
+      if (
+        !url ||
+        !sameOrigin(url)
+      ) {
         return;
       }
 
+
       try {
-        const u = new URL(url);
+
+        const u =
+          new URL(url);
+
 
         if (
           /\/series\//i.test(
             u.pathname
           )
         ) {
+
           links.push(url);
+
         }
 
       } catch {}
+
     }
   );
 
-  return uniqueUrls(links);
+
+  return uniqueUrls(
+    links
+  );
 }
 
 
@@ -306,15 +450,20 @@ function extractPaginationLinks(
   html,
   pageUrl
 ) {
-  const $ = cheerio.load(html);
 
-  const links = [];
+  const $ =
+    cheerio.load(html);
+
+  const links =
+    [];
+
 
   $('a[href]').each(
     (_, element) => {
 
       const href =
         $(element).attr('href');
+
 
       const url =
         canonical(
@@ -324,14 +473,23 @@ function extractPaginationLinks(
           )
         );
 
-      if (!url || !sameOrigin(url)) {
+
+      if (
+        !url ||
+        !sameOrigin(url)
+      ) {
         return;
       }
 
+
       try {
-        const u = new URL(url);
+
+        const u =
+          new URL(url);
+
         const current =
           new URL(pageUrl);
+
 
         if (
           u.pathname !==
@@ -340,57 +498,72 @@ function extractPaginationLinks(
           return;
         }
 
+
         if (
           !u.searchParams.has('page')
         ) {
           return;
         }
 
+
         const page =
           Number(
             u.searchParams.get('page')
           );
 
+
         if (
           Number.isInteger(page) &&
           page >= 1
         ) {
+
           links.push(url);
+
         }
 
       } catch {}
+
     }
   );
 
-  return uniqueUrls(links);
+
+  return uniqueUrls(
+    links
+  );
 }
 
 
 async function discoverPaginatedSeed(
   seed
 ) {
+
   const firstUrl =
     canonical(
       absolute(seed)
     );
 
-  const queue = [
-    firstUrl
-  ];
+
+  const queue =
+    [firstUrl];
+
 
   const visited =
     new Set();
 
+
   const found =
     new Set();
 
+
   while (
     queue.length &&
-    visited.size < MAX_DISCOVERY_PAGES
+    visited.size <
+      MAX_DISCOVERY_PAGES
   ) {
 
     const pageUrl =
       queue.shift();
+
 
     if (
       !pageUrl ||
@@ -399,16 +572,24 @@ async function discoverPaginatedSeed(
       continue;
     }
 
-    visited.add(pageUrl);
+
+    visited.add(
+      pageUrl
+    );
+
 
     console.log(
       `📄 Página ${visited.size}: ${pageUrl}`
     );
 
+
     try {
 
       const html =
-        await fetchHtml(pageUrl);
+        await fetchHtml(
+          pageUrl
+        );
+
 
       const series =
         parseSeriesLinks(
@@ -416,13 +597,17 @@ async function discoverPaginatedSeed(
           pageUrl
         );
 
+
       series.forEach(
-        url => found.add(url)
+        url =>
+          found.add(url)
       );
+
 
       console.log(
         `   ${series.length} enlaces de series`
       );
+
 
       const nextPages =
         extractPaginationLinks(
@@ -435,14 +620,21 @@ async function discoverPaginatedSeed(
             !queue.includes(url)
         );
 
+
       nextPages.forEach(
-        url => queue.push(url)
+        url =>
+          queue.push(url)
       );
 
-      if (nextPages.length) {
+
+      if (
+        nextPages.length
+      ) {
+
         console.log(
           `   ${nextPages.length} páginas siguientes detectadas`
         );
+
       }
 
     } catch (error) {
@@ -450,42 +642,60 @@ async function discoverPaginatedSeed(
       console.log(
         `   ⚠️ ${error.message}`
       );
+
     }
   }
 
-  return [...found];
+
+  return [
+    ...found
+  ];
 }
 
 
 async function discoverSeries() {
+
   const all =
     new Set();
 
-  for (const seed of SEEDS) {
+
+  for (
+    const seed
+    of SEEDS
+  ) {
 
     console.log(
       `\n🔎 Descubriendo desde ${seed}`
     );
+
 
     const urls =
       await discoverPaginatedSeed(
         seed
       );
 
+
     urls.forEach(
-      url => all.add(url)
+      url =>
+        all.add(url)
     );
+
 
     console.log(
       `✅ Acumuladas: ${all.size} series`
     );
+
   }
+
 
   console.log(
     `\n🎯 TOTAL SERIES DESCUBIERTAS: ${all.size}`
   );
 
-  return [...all];
+
+  return [
+    ...all
+  ];
 }
 
 
@@ -494,20 +704,31 @@ async function discoverSeries() {
 ========================================================= */
 
 function extractGenres($) {
+
   const genres =
     new Set();
 
+
   const selectors = [
+
     '[class*="genre"] a',
+
     '[class*="genero"] a',
+
     '[class*="category"] a',
+
     '[class*="categoria"] a',
+
     'a[href*="genre="]',
+
     'a[href*="/genre/"]'
+
   ];
 
+
   for (
-    const selector of selectors
+    const selector
+    of selectors
   ) {
 
     $(selector).each(
@@ -518,17 +739,26 @@ function extractGenres($) {
             $(el).text()
           );
 
+
         if (
           text &&
           text.length < 80
         ) {
-          genres.add(text);
+
+          genres.add(
+            text
+          );
+
         }
+
       }
     );
   }
 
-  return [...genres];
+
+  return [
+    ...genres
+  ];
 }
 
 
@@ -540,11 +770,14 @@ function parseSeries(
   html,
   url
 ) {
+
   const $ =
     cheerio.load(html);
 
+
   const title =
     clean(
+
       $('h1')
         .first()
         .text() ||
@@ -554,10 +787,13 @@ function parseSeries(
 
       $('title')
         .text()
+
     );
+
 
   const image =
     absolute(
+
       $('meta[property="og:image"]')
         .attr('content') ||
 
@@ -570,10 +806,13 @@ function parseSeries(
         .attr('data-src'),
 
       url
+
     );
+
 
   const synopsis =
     clean(
+
       $('[class*="synopsis"]')
         .first()
         .text() ||
@@ -592,16 +831,20 @@ function parseSeries(
 
       $('meta[name="description"]')
         .attr('content')
+
     );
+
 
   const seasonUrls =
     [];
+
 
   $('a[href]').each(
     (_, element) => {
 
       const href =
         $(element).attr('href');
+
 
       const seasonUrl =
         canonical(
@@ -611,12 +854,14 @@ function parseSeries(
           )
         );
 
+
       if (
         !seasonUrl ||
         !sameOrigin(seasonUrl)
       ) {
         return;
       }
+
 
       try {
 
@@ -625,22 +870,28 @@ function parseSeries(
             seasonUrl
           ).pathname;
 
+
         if (
           /\/season\//i.test(
             pathname
           )
         ) {
+
           seasonUrls.push(
             seasonUrl
           );
+
         }
 
       } catch {}
+
     }
   );
 
+
   const releaseDate =
     clean(
+
       $('[class*="release"]')
         .first()
         .text() ||
@@ -650,10 +901,13 @@ function parseSeries(
         .text() ||
 
       ''
+
     ) || null;
+
 
   const duration =
     clean(
+
       $('[class*="duration"]')
         .first()
         .text() ||
@@ -663,10 +917,13 @@ function parseSeries(
         .text() ||
 
       ''
+
     ) || null;
+
 
   const originalTitle =
     clean(
+
       $('[class*="original"]')
         .first()
         .text() ||
@@ -676,10 +933,13 @@ function parseSeries(
         .text() ||
 
       ''
+
     ) || null;
+
 
   const status =
     clean(
+
       $('[class*="status"]')
         .first()
         .text() ||
@@ -689,9 +949,12 @@ function parseSeries(
         .text() ||
 
       ''
+
     ) || null;
 
+
   return {
+
     id:
       slugFromUrl(url),
 
@@ -720,33 +983,40 @@ function parseSeries(
       extractGenres($),
 
     seasonUrls:
-      uniqueUrls(seasonUrls),
+      uniqueUrls(
+        seasonUrls
+      ),
 
     sourceUrl:
       canonical(url)
+
   };
 }
 
 
 /* =========================================================
-   EPISODIOS — EXTRACTOR ROBUSTO
+   EPISODIOS
 ========================================================= */
 
 function normalizeCandidate(
   raw,
   seasonUrl
 ) {
+
   if (!raw) {
     return null;
   }
 
+
   let value =
     String(raw).trim();
+
 
   value =
     value
       .replace(/\\\//g, '/')
       .replace(/[),.;]}]+$/g, '');
+
 
   const url =
     canonical(
@@ -756,6 +1026,7 @@ function normalizeCandidate(
       )
     );
 
+
   if (
     !url ||
     !sameOrigin(url)
@@ -763,10 +1034,12 @@ function normalizeCandidate(
     return null;
   }
 
+
   try {
 
     const u =
       new URL(url);
+
 
     if (
       !/\/episode\//i.test(
@@ -776,10 +1049,13 @@ function normalizeCandidate(
       return null;
     }
 
+
     return url;
 
   } catch {
+
     return null;
+
   }
 }
 
@@ -788,28 +1064,34 @@ function collectEpisodeUrlsFromSeason(
   html,
   seasonUrl
 ) {
+
   const $ =
     cheerio.load(html);
+
 
   const candidates =
     [];
 
-  const add = raw => {
-    const url =
-      normalizeCandidate(
-        raw,
-        seasonUrl
-      );
 
-    if (url) {
-      candidates.push(url);
-    }
-  };
+  const add =
+    raw => {
+
+      const url =
+        normalizeCandidate(
+          raw,
+          seasonUrl
+        );
+
+
+      if (url) {
+        candidates.push(url);
+      }
+
+    };
 
 
   /*
      MÉTODO 1
-     Enlaces normales de episodios
   */
 
   $('a[href*="/episode/"]')
@@ -823,7 +1105,6 @@ function collectEpisodeUrlsFromSeason(
 
   /*
      MÉTODO 2
-     Cualquier enlace
   */
 
   $('a[href]')
@@ -837,7 +1118,6 @@ function collectEpisodeUrlsFromSeason(
 
   /*
      MÉTODO 3
-     Atributos alternativos
   */
 
   $(
@@ -851,6 +1131,7 @@ function collectEpisodeUrlsFromSeason(
       (_, el) => {
 
         add(
+
           $(el).attr('data-href') ||
 
           $(el).attr('data-url') ||
@@ -862,15 +1143,15 @@ function collectEpisodeUrlsFromSeason(
           $(el).attr(
             'data-episode-url'
           )
+
         );
+
       }
     );
 
 
   /*
      MÉTODO 4
-     Buscar directamente dentro
-     del HTML bruto
   */
 
   const normalizedHtml =
@@ -879,16 +1160,24 @@ function collectEpisodeUrlsFromSeason(
       '/'
     );
 
+
   const regex =
-    /(?:https?:\/\/[^"'<>\\s]+)?\/episode\/[^"'<>\\s?#]+/gi;
+    /(?:https?:\/\/[^"'<>\s]+)?\/episode\/[^"'<>\s?#]+/gi;
+
 
   const matches =
-    normalizedHtml.match(regex) || [];
+    normalizedHtml.match(
+      regex
+    ) || [];
+
 
   for (
-    const match of matches
+    const match
+    of matches
   ) {
+
     add(match);
+
   }
 
 
@@ -899,30 +1188,25 @@ function collectEpisodeUrlsFromSeason(
 
 
 /* =========================================================
-   COMPROBAR QUE EL EPISODIO PERTENECE
-   A LA TEMPORADA CORRECTA
+   PERTENENCIA A TEMPORADA
 ========================================================= */
 
 function episodeBelongsToSeason(
   episodeUrl,
   seasonUrl
 ) {
+
   const episodeSlug =
     slugFromUrl(
       episodeUrl
     ).toLowerCase();
+
 
   const seasonSlug =
     slugFromUrl(
       seasonUrl
     ).toLowerCase();
 
-
-  /*
-     Forma normal:
-
-     beyond-timescape-1-episodio-x1
-  */
 
   if (
     episodeSlug.startsWith(
@@ -933,10 +1217,6 @@ function episodeBelongsToSeason(
   }
 
 
-  /*
-     Variante inglesa
-  */
-
   if (
     episodeSlug.startsWith(
       `${seasonSlug}-episode-`
@@ -946,15 +1226,11 @@ function episodeBelongsToSeason(
   }
 
 
-  /*
-     Segunda comprobación usando
-     número de temporada.
-  */
-
   const sn =
     seasonNumber(
       seasonSlug
     );
+
 
   if (sn != null) {
 
@@ -966,6 +1242,7 @@ function episodeBelongsToSeason(
         ''
       );
 
+
     if (
       episodeSlug.startsWith(
         `${prefix}-${sn}-episodio-`
@@ -974,6 +1251,7 @@ function episodeBelongsToSeason(
       return true;
     }
 
+
     if (
       episodeSlug.startsWith(
         `${prefix}-${sn}-episode-`
@@ -981,9 +1259,1266 @@ function episodeBelongsToSeason(
     ) {
       return true;
     }
+
   }
 
+
   return false;
+}
+
+
+/* =========================================================
+   PAGINACIÓN DE TEMPORADA
+========================================================= */
+
+/*
+   Extrae únicamente las páginas de paginación
+   de ESA temporada.
+
+   A diferencia de extractPaginationLinks(),
+   aquí aceptamos page=0 porque algunas páginas
+   lo muestran explícitamente.
+*/
+function extractSeasonPaginationLinks(
+  html,
+  seasonUrl
+) {
+
+  const $ =
+    cheerio.load(html);
+
+
+  const links =
+    [];
+
+
+  const baseSeason =
+    canonicalSeasonPage(
+      seasonUrl
+    );
+
+
+  if (!baseSeason) {
+    return [];
+  }
+
+
+  let basePath = '';
+
+
+  try {
+
+    basePath =
+      new URL(
+        baseSeason
+      ).pathname;
+
+  } catch {
+
+    return [];
+
+  }
+
+
+  $('a[href]').each(
+    (_, element) => {
+
+      const href =
+        $(element).attr('href');
+
+
+      const url =
+        canonicalSeasonPage(
+          absolute(
+            href,
+            seasonUrl
+          )
+        );
+
+
+      if (
+        !url ||
+        !sameOrigin(url)
+      ) {
+        return;
+      }
+
+
+      try {
+
+        const u =
+          new URL(url);
+
+
+        if (
+          u.pathname !==
+          basePath
+        ) {
+          return;
+        }
+
+
+        if (
+          !u.searchParams.has('page')
+        ) {
+          return;
+        }
+
+
+        const page =
+          Number(
+            u.searchParams.get('page')
+          );
+
+
+        if (
+          Number.isInteger(page) &&
+          page >= 0
+        ) {
+
+          links.push(url);
+
+        }
+
+      } catch {}
+
+    }
+  );
+
+
+  return [
+    ...new Set(
+      links
+    )
+  ];
+}
+
+
+/*
+   Genera una página concreta:
+
+   base
+   ?page=1
+   ?page=2
+   etc.
+*/
+function buildSeasonPageUrl(
+  seasonUrl,
+  page
+) {
+
+  const base =
+    canonicalSeasonPage(
+      seasonUrl
+    );
+
+
+  if (!base) {
+    return null;
+  }
+
+
+  if (
+    page <= 0
+  ) {
+    return base;
+  }
+
+
+  try {
+
+    const u =
+      new URL(base);
+
+
+    u.searchParams.set(
+      'page',
+      String(page)
+    );
+
+
+    return canonicalSeasonPage(
+      u.href
+    );
+
+  } catch {
+
+    return null;
+
+  }
+}
+
+
+/*
+   ESTA ES LA PARTE PRINCIPAL
+   DE LA RECUPERACIÓN HISTÓRICA.
+
+   Recorremos:
+
+   página base
+   page=1
+   page=2
+   page=3
+   page=4
+
+   como mínimo.
+
+   Después seguimos las páginas que
+   realmente descubra la web.
+*/
+async function collectAllSeasonEpisodeUrls(
+  seasonUrl
+) {
+
+  const base =
+    canonicalSeasonPage(
+      seasonUrl
+    );
+
+
+  if (!base) {
+
+    return {
+
+      episodeUrls: [],
+
+      pagesChecked: 0,
+
+      successfulPages: 0,
+
+      failedPages: 0,
+
+      complete: false
+
+    };
+
+  }
+
+
+  /*
+     Cola principal.
+  */
+
+  const queue =
+    [base];
+
+
+  /*
+     Forzamos como mínimo
+     las primeras cinco páginas.
+
+     La base cuenta como página 1.
+  */
+
+  for (
+    let page = 1;
+    page <= MIN_SEASON_PAGE_PROBES - 1;
+    page++
+  ) {
+
+    const generated =
+      buildSeasonPageUrl(
+        base,
+        page
+      );
+
+
+    if (
+      generated &&
+      !queue.includes(generated)
+    ) {
+
+      queue.push(
+        generated
+      );
+
+    }
+
+  }
+
+
+  const visited =
+    new Set();
+
+
+  const successful =
+    new Set();
+
+
+  const failed =
+    new Set();
+
+
+  const episodeUrls =
+    new Set();
+
+
+  let discoveredNewEpisodes =
+    0;
+
+
+  while (
+    queue.length ||
+    visited.size <
+      MIN_SEASON_PAGE_PROBES
+  ) {
+
+    /*
+       Si hemos terminado la cola pero
+       todavía no hemos alcanzado el mínimo,
+       seguimos generando páginas.
+    */
+
+    if (
+      !queue.length &&
+      visited.size <
+        MIN_SEASON_PAGE_PROBES
+    ) {
+
+      const nextPage =
+        visited.size;
+
+
+      const generated =
+        buildSeasonPageUrl(
+          base,
+          nextPage
+        );
+
+
+      if (
+        generated &&
+        !visited.has(generated)
+      ) {
+
+        queue.push(
+          generated
+        );
+
+      } else {
+
+        break;
+
+      }
+    }
+
+
+    const pageUrl =
+      queue.shift();
+
+
+    if (
+      !pageUrl
+    ) {
+      continue;
+    }
+
+
+    const normalizedPage =
+      canonicalSeasonPage(
+        pageUrl
+      );
+
+
+    if (
+      !normalizedPage ||
+      visited.has(normalizedPage)
+    ) {
+      continue;
+    }
+
+
+    visited.add(
+      normalizedPage
+    );
+
+
+    console.log(
+      `      📄 Página temporada ${visited.size}: ${normalizedPage}`
+    );
+
+
+    try {
+
+      const html =
+        await fetchHtml(
+          normalizedPage
+        );
+
+
+      successful.add(
+        normalizedPage
+      );
+
+
+      const before =
+        episodeUrls.size;
+
+
+      const found =
+        collectEpisodeUrlsFromSeason(
+          html,
+          seasonUrl
+        );
+
+
+      for (
+        const episodeUrl
+        of found
+      ) {
+
+        if (
+          episodeBelongsToSeason(
+            episodeUrl,
+            seasonUrl
+          )
+        ) {
+
+          episodeUrls.add(
+            episodeUrl
+          );
+
+        }
+
+      }
+
+
+      const gained =
+        episodeUrls.size -
+        before;
+
+
+      discoveredNewEpisodes +=
+        gained;
+
+
+      console.log(
+        `         🎬 ${found.length} enlaces detectados | +${gained} nuevos | total ${episodeUrls.size}`
+      );
+
+
+      /*
+         Descubrimos las páginas reales
+         que la web nos ofrece.
+      */
+
+      const nextPages =
+        extractSeasonPaginationLinks(
+          html,
+          seasonUrl
+        );
+
+
+      for (
+        const nextPage
+        of nextPages
+      ) {
+
+        const normalized =
+          canonicalSeasonPage(
+            nextPage
+          );
+
+
+        if (
+          normalized &&
+          !visited.has(normalized) &&
+          !queue.includes(normalized)
+        ) {
+
+          queue.push(
+            normalized
+          );
+
+        }
+
+      }
+
+
+      /*
+         Si hay un enlace "siguiente" que
+         no haya sido detectado como paginación,
+         también intentamos reconocerlo.
+      */
+
+      $('a[href]').each(
+        (_, el) => {
+
+          const text =
+            clean(
+              $(el).text()
+            ).toLowerCase();
+
+
+          if (
+            !text.includes('siguiente') &&
+            !text.includes('next') &&
+            !text.includes('siguiente página')
+          ) {
+            return;
+          }
+
+
+          const candidate =
+            canonicalSeasonPage(
+              absolute(
+                $(el).attr('href'),
+                normalizedPage
+              )
+            );
+
+
+          if (
+            candidate &&
+            !visited.has(candidate) &&
+            !queue.includes(candidate)
+          ) {
+
+            queue.push(
+              candidate
+            );
+
+          }
+
+        }
+      );
+
+
+    } catch (error) {
+
+      failed.add(
+        normalizedPage
+      );
+
+
+      console.log(
+        `         ⚠️ No se pudo leer: ${error.message}`
+      );
+
+    }
+
+
+    /*
+       Si ya hemos comprobado al menos
+       cinco páginas y no quedan páginas
+       descubiertas, podemos terminar.
+
+       No dependemos de que exista page=0.
+    */
+
+    if (
+      visited.size >=
+        MIN_SEASON_PAGE_PROBES &&
+      queue.length === 0
+    ) {
+
+      break;
+
+    }
+
+
+    /*
+       Protección adicional.
+    */
+
+    if (
+      episodeUrls.size >=
+        MAX_EPISODES_PER_SEASON_SAFETY
+    ) {
+
+      console.log(
+        '      🛑 Alcanzado límite de seguridad de episodios.'
+      );
+
+      break;
+
+    }
+
+  }
+
+
+  /*
+     Consideramos que la paginación ha sido
+     recorrida si:
+
+     - comprobamos al menos 5 páginas
+     - no quedan páginas pendientes
+     - al menos una página respondió correctamente
+  */
+
+  const paginationComplete =
+    visited.size >=
+      MIN_SEASON_PAGE_PROBES &&
+    queue.length === 0 &&
+    successful.size > 0;
+
+
+  /*
+     Ordenamos por número.
+  */
+
+  const sortedEpisodes =
+    [
+      ...episodeUrls
+    ].sort(
+      (a, b) => {
+
+        const na =
+          episodeNumber(a) ??
+          Number.MAX_SAFE_INTEGER;
+
+        const nb =
+          episodeNumber(b) ??
+          Number.MAX_SAFE_INTEGER;
+
+        return na - nb;
+
+      }
+    );
+
+
+  const numbers =
+    sortedEpisodes
+      .map(
+        episodeNumber
+      )
+      .filter(
+        Number.isFinite
+      );
+
+
+  const minEpisode =
+    numbers.length
+      ? Math.min(...numbers)
+      : null;
+
+
+  const maxEpisode =
+    numbers.length
+      ? Math.max(...numbers)
+      : null;
+
+
+  /*
+     Detectar huecos.
+
+     Ejemplo:
+
+     1,2,3,4,6,7
+
+     => falta 5
+  */
+
+  const missingEpisodes =
+    [];
+
+
+  if (
+    minEpisode === 1 &&
+    maxEpisode != null
+  ) {
+
+    const numberSet =
+      new Set(numbers);
+
+
+    for (
+      let n = 1;
+      n <= maxEpisode;
+      n++
+    ) {
+
+      if (
+        !numberSet.has(n)
+      ) {
+
+        missingEpisodes.push(n);
+
+      }
+
+    }
+
+  }
+
+
+  console.log(
+    `      📊 Páginas comprobadas: ${visited.size}`
+  );
+
+
+  console.log(
+    `      📊 Episodios descubiertos: ${sortedEpisodes.length}`
+  );
+
+
+  console.log(
+    `      📊 Rango: ${minEpisode ?? '?'} → ${maxEpisode ?? '?'}`
+  );
+
+
+  if (
+    missingEpisodes.length
+  ) {
+
+    console.log(
+      `      ⚠️ Episodios faltantes: ${missingEpisodes.slice(0, 30).join(', ')}${missingEpisodes.length > 30 ? '...' : ''}`
+    );
+
+  }
+
+
+  return {
+
+    episodeUrls:
+      sortedEpisodes,
+
+    pagesChecked:
+      visited.size,
+
+    successfulPages:
+      successful.size,
+
+    failedPages:
+      failed.size,
+
+    paginationComplete,
+
+    minEpisode,
+
+    maxEpisode,
+
+    totalEpisodes:
+      sortedEpisodes.length,
+
+    missingEpisodes,
+
+    discoveredNewEpisodes
+
+  };
+}
+
+
+/* =========================================================
+   APRENDER PATRÓN DE URL DE EPISODIO
+========================================================= */
+
+/*
+   No imponemos un patrón universal.
+
+   Lo aprendemos de una URL REAL de esa
+   temporada.
+
+   Ejemplo:
+
+   /episode/donghua-episodio-680
+
+   se convierte conceptualmente en:
+
+   /episode/donghua-episodio-{NUMBER}
+*/
+function learnEpisodeUrlPattern(
+  episodeUrl
+) {
+
+  const url =
+    canonical(
+      episodeUrl
+    );
+
+
+  if (!url) {
+    return null;
+  }
+
+
+  try {
+
+    const u =
+      new URL(url);
+
+
+    const pathname =
+      u.pathname;
+
+
+    /*
+       Preferimos la parte "episodio-680"
+       o "episode-680".
+    */
+
+    const regex =
+      /((?:episodio|episode)[-_ ]?)(\d+)/i;
+
+
+    const match =
+      pathname.match(regex);
+
+
+    if (!match) {
+      return null;
+    }
+
+
+    const prefix =
+      pathname.slice(
+        0,
+        match.index
+      );
+
+
+    const suffix =
+      pathname.slice(
+        match.index +
+        match[0].length
+      );
+
+
+    const separator =
+      match[1];
+
+
+    return {
+
+      build(number) {
+
+        const nextPath =
+          `${prefix}${separator}${number}${suffix}`;
+
+
+        const copy =
+          new URL(
+            u.origin
+          );
+
+
+        copy.pathname =
+          nextPath;
+
+
+        return canonical(
+          copy.href
+        );
+
+      }
+
+    };
+
+  } catch {
+
+    return null;
+
+  }
+}
+
+
+/* =========================================================
+   COMPLETAR HUECOS MEDIANTE PATRÓN
+========================================================= */
+
+/*
+   Esto es SOLO un mecanismo de respaldo.
+
+   Primero usamos la paginación real.
+
+   Si la paginación nos da:
+
+   680 ... 652
+
+   y falta 651,
+
+   podemos intentar:
+
+   URL de 650/652
+   → aprender patrón
+   → construir 651
+   → comprobar que existe
+   → comprobar que pertenece a la temporada.
+*/
+async function fillEpisodeGapsWithPattern(
+  seasonUrl,
+  episodeUrls,
+  missingEpisodes
+) {
+
+  if (
+    !missingEpisodes.length ||
+    !episodeUrls.length
+  ) {
+
+    return {
+
+      episodeUrls,
+
+      validatedInferred:
+        0
+
+    };
+
+  }
+
+
+  const sorted =
+    [...episodeUrls].sort(
+      (a, b) =>
+        (
+          episodeNumber(a) ??
+          999999999
+        ) -
+        (
+          episodeNumber(b) ??
+          999999999
+        )
+    );
+
+
+  let pattern =
+    null;
+
+
+  /*
+     Probamos varias URLs reales
+     hasta encontrar un patrón.
+  */
+
+  for (
+    const url
+    of sorted.slice(0, 10)
+  ) {
+
+    pattern =
+      learnEpisodeUrlPattern(
+        url
+      );
+
+
+    if (pattern) {
+      break;
+    }
+
+  }
+
+
+  if (!pattern) {
+
+    console.log(
+      '      ℹ️ No se pudo aprender un patrón de URL.'
+    );
+
+
+    return {
+
+      episodeUrls,
+
+      validatedInferred:
+        0
+
+    };
+
+  }
+
+
+  const result =
+    new Set(
+      episodeUrls
+    );
+
+
+  let validated =
+    0;
+
+
+  let attempts =
+    0;
+
+
+  /*
+     Primero intentamos los huecos reales.
+  */
+
+  for (
+    const number
+    of missingEpisodes
+  ) {
+
+    if (
+      attempts >=
+        MAX_INFERRED_EPISODE_ATTEMPTS
+    ) {
+
+      break;
+
+    }
+
+
+    attempts++;
+
+
+    const candidate =
+      pattern.build(
+        number
+      );
+
+
+    if (
+      !candidate ||
+      !sameOrigin(candidate)
+    ) {
+      continue;
+    }
+
+
+    if (
+      !episodeBelongsToSeason(
+        candidate,
+        seasonUrl
+      )
+    ) {
+      continue;
+    }
+
+
+    try {
+
+      const html =
+        await fetchHtml(
+          candidate
+        );
+
+
+      /*
+         No basta con que la URL responda.
+
+         También debe parecer realmente
+         un episodio.
+      */
+
+      const $ =
+        cheerio.load(html);
+
+
+      const title =
+        clean(
+          $('h1')
+            .first()
+            .text() ||
+
+          $('title')
+            .text()
+        );
+
+
+      const detectedNumber =
+        episodeNumber(
+          candidate
+        ) ??
+        episodeNumber(
+          title
+        );
+
+
+      if (
+        detectedNumber !==
+        number
+      ) {
+
+        console.log(
+          `      ⚠️ Candidato rechazado: esperaba ${number}, encontró ${detectedNumber ?? '?'}`
+        );
+
+
+        continue;
+
+      }
+
+
+      result.add(
+        candidate
+      );
+
+
+      validated++;
+
+
+      console.log(
+        `      🔧 Episodio ${number} recuperado mediante patrón`
+      );
+
+
+    } catch {
+
+      /*
+         Es normal que una URL inferida
+         no exista.
+      */
+
+    }
+
+  }
+
+
+  return {
+
+    episodeUrls: [
+      ...result
+    ].sort(
+      (a, b) =>
+        (
+          episodeNumber(a) ??
+          999999999
+        ) -
+        (
+          episodeNumber(b) ??
+          999999999
+        )
+    ),
+
+    validatedInferred:
+      validated
+
+  };
+}
+
+
+/* =========================================================
+   ANALIZAR COMPLETITUD
+========================================================= */
+
+function analyzeSeasonCompleteness(
+  episodeUrls,
+  paginationComplete
+) {
+
+  const numbers =
+    episodeUrls
+      .map(
+        episodeNumber
+      )
+      .filter(
+        Number.isFinite
+      );
+
+
+  if (!numbers.length) {
+
+    return {
+
+      complete:
+        false,
+
+      minEpisode:
+        null,
+
+      maxEpisode:
+        null,
+
+      totalEpisodes:
+        0,
+
+      missingEpisodes:
+        []
+
+    };
+
+  }
+
+
+  const uniqueNumbers =
+    [
+      ...new Set(
+        numbers
+      )
+    ].sort(
+      (a, b) =>
+        a - b
+    );
+
+
+  const minEpisode =
+    uniqueNumbers[0];
+
+
+  const maxEpisode =
+    uniqueNumbers.at(-1);
+
+
+  const missingEpisodes =
+    [];
+
+
+  /*
+     Para considerar una temporada
+     históricamente completa queremos
+     empezar en 1.
+
+     Si tenemos 620 → 680:
+
+     min = 620
+
+     => incompleta.
+  */
+
+  if (
+    minEpisode === 1
+  ) {
+
+    const set =
+      new Set(
+        uniqueNumbers
+      );
+
+
+    for (
+      let n = 1;
+      n <= maxEpisode;
+      n++
+    ) {
+
+      if (
+        !set.has(n)
+      ) {
+
+        missingEpisodes.push(n);
+
+      }
+
+    }
+
+  } else {
+
+    for (
+      let n = 1;
+      n < minEpisode;
+      n++
+    ) {
+
+      missingEpisodes.push(n);
+
+    }
+
+  }
+
+
+  const complete =
+    paginationComplete &&
+    minEpisode === 1 &&
+    missingEpisodes.length === 0 &&
+    uniqueNumbers.length === maxEpisode;
+
+
+  return {
+
+    complete,
+
+    minEpisode,
+
+    maxEpisode,
+
+    totalEpisodes:
+      uniqueNumbers.length,
+
+    missingEpisodes
+
+  };
 }
 
 
@@ -995,8 +2530,10 @@ function parseSeason(
   html,
   seasonUrl
 ) {
+
   const $ =
     cheerio.load(html);
+
 
   const urls =
     collectEpisodeUrlsFromSeason(
@@ -1004,14 +2541,6 @@ function parseSeason(
       seasonUrl
     );
 
-
-  /*
-     MUY IMPORTANTE:
-
-     Aquí eliminamos cualquier episodio
-     que realmente pertenezca a otra
-     temporada/serie.
-  */
 
   const filtered =
     urls.filter(
@@ -1027,7 +2556,9 @@ function parseSeason(
     filtered.map(
       url => {
 
-        let text = '';
+        let text =
+          '';
+
 
         $('a[href]')
           .each(
@@ -1037,29 +2568,41 @@ function parseSeason(
                 return;
               }
 
+
               const candidate =
                 normalizeCandidate(
                   $(el).attr('href'),
                   seasonUrl
                 );
 
+
               if (
-                candidate === url
+                candidate ===
+                url
               ) {
+
                 text =
                   clean(
                     $(el).text()
                   );
+
               }
+
             }
           );
 
+
         return {
+
           url,
+
           number:
             episodeNumber(url),
+
           text
+
         };
+
       }
     );
 
@@ -1071,20 +2614,17 @@ function parseSeason(
         a.number ??
         Number.MAX_SAFE_INTEGER;
 
+
       const nb =
         b.number ??
         Number.MAX_SAFE_INTEGER;
 
+
       return na - nb;
+
     }
   );
 
-
-  /*
-     Preferimos SIEMPRE x1.
-     Si por alguna razón x1 no aparece,
-     usamos el episodio numerado más bajo.
-  */
 
   const first =
     items.find(
@@ -1123,6 +2663,7 @@ function parseSeason(
 
     discoveredEpisodeLinks:
       items
+
   };
 }
 
@@ -1135,6 +2676,7 @@ function linkIsEpisodeOfSeason(
   url,
   seasonUrl
 ) {
+
   return Boolean(
     url &&
     episodeBelongsToSeason(
@@ -1151,8 +2693,10 @@ function extractEpisodeNav(
   episodeUrl,
   seasonUrl
 ) {
+
   let found =
     null;
+
 
   $('a[href]').each(
     (_, el) => {
@@ -1161,10 +2705,12 @@ function extractEpisodeNav(
         return;
       }
 
+
       const text =
         clean(
           $(el).text()
         ).toLowerCase();
+
 
       if (
         !text.includes(
@@ -1174,11 +2720,13 @@ function extractEpisodeNav(
         return;
       }
 
+
       const candidate =
         normalizeCandidate(
           $(el).attr('href'),
           episodeUrl
         );
+
 
       if (
         candidate &&
@@ -1187,11 +2735,15 @@ function extractEpisodeNav(
           seasonUrl
         )
       ) {
+
         found =
           candidate;
+
       }
+
     }
   );
+
 
   return found;
 }
@@ -1206,11 +2758,14 @@ function parseEpisode(
   episodeUrl,
   seasonUrl
 ) {
+
   const $ =
     cheerio.load(html);
 
+
   const title =
     clean(
+
       $('h1')
         .first()
         .text() ||
@@ -1220,6 +2775,7 @@ function parseEpisode(
 
       $('title')
         .text()
+
     );
 
 
@@ -1239,6 +2795,7 @@ function parseEpisode(
         episodeUrl
       );
 
+
     if (
       !url ||
       sameOrigin(url)
@@ -1246,20 +2803,26 @@ function parseEpisode(
       return;
     }
 
+
     const key =
-      `${name}|${url}`.toLowerCase();
+      `${name}|${url}`
+        .toLowerCase();
+
 
     if (
       servers.some(
         item =>
           `${item.name}|${item.url}`
-            .toLowerCase() === key
+            .toLowerCase() ===
+          key
       )
     ) {
       return;
     }
 
+
     servers.push({
+
       name:
         clean(name) ||
         'Servidor',
@@ -1268,13 +2831,11 @@ function parseEpisode(
 
       embed:
         Boolean(embed)
+
     });
+
   };
 
-
-  /*
-     Enlaces externos
-  */
 
   $('a[href]').each(
     (_, el) => {
@@ -1282,17 +2843,21 @@ function parseEpisode(
       const href =
         $(el).attr('href');
 
+
       const text =
         clean(
           $(el).text()
         );
 
+
       if (!href) {
         return;
       }
 
+
       const lower =
         href.toLowerCase();
+
 
       if (
         /dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|mega|youtube/
@@ -1302,30 +2867,34 @@ function parseEpisode(
         let hostname =
           'Servidor';
 
+
         try {
+
           hostname =
             new URL(
               href,
               episodeUrl
             ).hostname;
+
         } catch {}
 
+
         addServer(
+
           text ||
           hostname,
 
           href,
 
           false
+
         );
+
       }
+
     }
   );
 
-
-  /*
-     Iframes / vídeo
-  */
 
   $(
     'iframe[src],' +
@@ -1338,9 +2907,11 @@ function parseEpisode(
         const src =
           $(el).attr('src');
 
+
         if (!src) {
           return;
         }
+
 
         const full =
           absolute(
@@ -1348,12 +2919,15 @@ function parseEpisode(
             episodeUrl
           );
 
+
         if (!full) {
           return;
         }
 
+
         const lower =
           full.toLowerCase();
+
 
         if (
           /dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|youtube/
@@ -1363,20 +2937,24 @@ function parseEpisode(
           try {
 
             addServer(
-              new URL(full).hostname,
+
+              new URL(
+                full
+              ).hostname,
+
               full,
+
               true
+
             );
 
           } catch {}
+
         }
+
       }
     );
 
-
-  /*
-     data-src / data-embed / etc.
-  */
 
   $(
     '[data-src],' +
@@ -1396,9 +2974,11 @@ function parseEpisode(
 
           $(el).attr('data-video');
 
+
         if (!raw) {
           return;
         }
+
 
         const full =
           absolute(
@@ -1406,9 +2986,11 @@ function parseEpisode(
             episodeUrl
           );
 
+
         if (!full) {
           return;
         }
+
 
         if (
           /dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|youtube/i
@@ -1418,20 +3000,24 @@ function parseEpisode(
           try {
 
             addServer(
-              new URL(full).hostname,
+
+              new URL(
+                full
+              ).hostname,
+
               full,
+
               true
+
             );
 
           } catch {}
+
         }
+
       }
     );
 
-
-  /*
-     ANTERIOR
-  */
 
   let previousUrl =
     extractEpisodeNav(
@@ -1449,10 +3035,6 @@ function parseEpisode(
     );
 
 
-  /*
-     SIGUIENTE
-  */
-
   let nextUrl =
     extractEpisodeNav(
       $,
@@ -1469,10 +3051,6 @@ function parseEpisode(
     );
 
 
-  /*
-     rel=prev / rel=next
-  */
-
   const relPrev =
     normalizeCandidate(
       $('link[rel="prev"]')
@@ -1480,6 +3058,7 @@ function parseEpisode(
 
       episodeUrl
     );
+
 
   const relNext =
     normalizeCandidate(
@@ -1497,8 +3076,10 @@ function parseEpisode(
       seasonUrl
     )
   ) {
+
     previousUrl =
       relPrev;
+
   }
 
 
@@ -1509,13 +3090,16 @@ function parseEpisode(
       seasonUrl
     )
   ) {
+
     nextUrl =
       relNext;
+
   }
 
 
   const releaseDate =
     clean(
+
       $('[class*="release"]')
         .first()
         .text() ||
@@ -1525,6 +3109,7 @@ function parseEpisode(
         .text() ||
 
       ''
+
     ) || null;
 
 
@@ -1547,26 +3132,24 @@ function parseEpisode(
       null,
 
     releaseDate
+
   };
 }
 
 
 /* =========================================================
-   RECORRER TODOS LOS EPISODIOS
+   PROCESAR TODOS LOS EPISODIOS DESCUBIERTOS
 ========================================================= */
 
-async function crawlEpisodes(
+async function crawlEpisodeUrls(
   season,
+  episodeUrls,
   previousEpisodes = []
 ) {
-  if (
-    !season.firstEpisodeUrl
-  ) {
-    return [];
-  }
 
   const results =
     [];
+
 
   const oldEpisodeMap =
     new Map(
@@ -1578,44 +3161,52 @@ async function crawlEpisodes(
       )
     );
 
-  const visited =
-    new Set();
 
-  let currentUrl =
-    season.firstEpisodeUrl;
-
-  let previousNumber =
-    null;
+  let failures =
+    0;
 
 
-  while (
-    currentUrl &&
-    results.length <
-      MAX_EPISODES_PER_SEASON_SAFETY
+  /*
+     Importante:
+
+     Aquí ya NO dependemos de "Siguiente".
+
+     La lista viene de TODAS las páginas
+     de la temporada.
+  */
+
+  const sortedUrls =
+    [...episodeUrls].sort(
+      (a, b) =>
+        (
+          episodeNumber(a) ??
+          Number.MAX_SAFE_INTEGER
+        ) -
+        (
+          episodeNumber(b) ??
+          Number.MAX_SAFE_INTEGER
+        )
+    );
+
+
+  for (
+    let i = 0;
+    i < sortedUrls.length;
+    i++
   ) {
 
-    currentUrl =
+    const currentUrl =
       canonical(
-        currentUrl
+        sortedUrls[i]
       );
 
 
-    /*
-       Protección contra bucles
-    */
-
     if (
-      !currentUrl ||
-      visited.has(currentUrl)
+      !currentUrl
     ) {
-      break;
+      continue;
     }
 
-
-    /*
-       No permitir que Siguiente
-       salte a otra temporada.
-    */
 
     if (
       !linkIsEpisodeOfSeason(
@@ -1623,21 +3214,22 @@ async function crawlEpisodes(
         season.sourceUrl
       )
     ) {
+
       console.log(
-        `      🛑 Siguiente sale de la temporada: ${currentUrl}`
+        `      ⚠️ Episodio rechazado por pertenencia: ${currentUrl}`
       );
 
-      break;
+
+      failures++;
+
+
+      continue;
+
     }
 
 
-    visited.add(
-      currentUrl
-    );
-
-
     console.log(
-      `      ▶ ${results.length + 1}: ${currentUrl}`
+      `      ▶ Episodio ${i + 1}/${sortedUrls.length}: ${currentUrl}`
     );
 
 
@@ -1647,6 +3239,7 @@ async function crawlEpisodes(
         await fetchHtml(
           currentUrl
         );
+
 
       const detail =
         parseEpisode(
@@ -1663,25 +3256,6 @@ async function crawlEpisodes(
         episodeNumber(
           detail.title
         );
-
-
-      /*
-         El recorrido tiene que avanzar
-         1 → 2 → 3 → 4...
-      */
-
-      if (
-        number != null &&
-        previousNumber != null &&
-        number <= previousNumber
-      ) {
-
-        console.log(
-          `      ⚠️ Secuencia no ascendente (${previousNumber} → ${number}), se detiene.`
-        );
-
-        break;
-      }
 
 
       const episodeId =
@@ -1714,13 +3288,6 @@ async function crawlEpisodes(
         sourceUrl:
           currentUrl,
 
-        /*
-           Si encontramos servidores nuevos,
-           usamos esos.
-
-           Si no, conservamos los antiguos.
-        */
-
         servers:
           detail.servers.length
             ? detail.servers
@@ -1736,6 +3303,7 @@ async function crawlEpisodes(
 
         nextUrl:
           detail.nextUrl ||
+          oldEpisode.nextUrl ||
           null,
 
         updatedAt:
@@ -1750,63 +3318,186 @@ async function crawlEpisodes(
         number:
           number ??
           oldEpisode.number ??
-          results.length + 1,
+          i + 1,
 
         releaseDate:
           detail.releaseDate ||
           oldEpisode.releaseDate ||
           null
+
       });
 
 
-      previousNumber =
-        number ??
-        previousNumber;
-
-
-      /*
-         ESTE ES EL PUNTO CLAVE:
-
-         No generamos x2, x3, x4...
-
-         Seguimos el enlace real
-         "Siguiente" de DonghuaLife.
-      */
-
-      currentUrl =
-        detail.nextUrl;
-
-
     } catch (error) {
+
+      failures++;
+
 
       console.log(
         `      ❌ Error episodio: ${error.message}`
       );
 
-      break;
+
+      /*
+         Si ya existía, conservamos
+         la versión anterior.
+      */
+
+      const episodeId =
+        slugFromUrl(
+          currentUrl
+        );
+
+
+      const oldEpisode =
+        oldEpisodeMap.get(
+          episodeId
+        );
+
+
+      if (oldEpisode) {
+
+        results.push(
+          oldEpisode
+        );
+
+      }
+
     }
+
   }
 
 
-  /*
-     Si no hemos conseguido nada nuevo,
-     conservar el catálogo anterior.
-  */
+  return {
 
-  if (
-    results.length === 0 &&
-    previousEpisodes.length
-  ) {
+    episodes:
+      results,
 
-    console.log(
-      `      ↩️ Se conservan ${previousEpisodes.length} episodios anteriores.`
+    failures,
+
+    processed:
+      sortedUrls.length,
+
+    successful:
+      results.length
+
+  };
+}
+
+
+/* =========================================================
+   COMPLETITUD DESDE EPISODIOS PROCESADOS
+========================================================= */
+
+function analyzeProcessedCompleteness(
+  episodes,
+  paginationComplete,
+  processingFailures
+) {
+
+  const numbers =
+    episodes
+      .map(
+        item =>
+          Number(item.number)
+      )
+      .filter(
+        Number.isFinite
+      );
+
+
+  if (!numbers.length) {
+
+    return {
+
+      complete:
+        false,
+
+      minEpisode:
+        null,
+
+      maxEpisode:
+        null,
+
+      totalEpisodes:
+        0,
+
+      missingEpisodes:
+        []
+
+    };
+
+  }
+
+
+  const uniqueNumbers =
+    [
+      ...new Set(
+        numbers
+      )
+    ].sort(
+      (a, b) =>
+        a - b
     );
 
-    return previousEpisodes;
+
+  const minEpisode =
+    uniqueNumbers[0];
+
+
+  const maxEpisode =
+    uniqueNumbers.at(-1);
+
+
+  const set =
+    new Set(
+      uniqueNumbers
+    );
+
+
+  const missingEpisodes =
+    [];
+
+
+  for (
+    let n = 1;
+    n <= maxEpisode;
+    n++
+  ) {
+
+    if (
+      !set.has(n)
+    ) {
+
+      missingEpisodes.push(n);
+
+    }
+
   }
 
 
-  return results;
+  const complete =
+    paginationComplete &&
+    processingFailures === 0 &&
+    minEpisode === 1 &&
+    missingEpisodes.length === 0 &&
+    uniqueNumbers.length === maxEpisode;
+
+
+  return {
+
+    complete,
+
+    minEpisode,
+
+    maxEpisode,
+
+    totalEpisodes:
+      uniqueNumbers.length,
+
+    missingEpisodes
+
+  };
 }
 
 
@@ -1819,24 +3510,39 @@ function upsert(
   item,
   key = 'id'
 ) {
+
   const index =
     array.findIndex(
       entry =>
-        entry[key] === item[key]
+        entry[key] ===
+        item[key]
     );
 
-  if (index === -1) {
-    array.push(item);
+
+  if (
+    index === -1
+  ) {
+
+    array.push(
+      item
+    );
+
   } else {
+
     array[index] = {
+
       ...array[index],
+
       ...item
+
     };
+
   }
 }
 
 
 async function loadCatalog() {
+
   try {
 
     const text =
@@ -1845,8 +3551,10 @@ async function loadCatalog() {
         'utf8'
       );
 
+
     const db =
       JSON.parse(text);
+
 
     return {
 
@@ -1877,42 +3585,63 @@ async function loadCatalog() {
         Array.isArray(db.genres)
           ? db.genres
           : []
+
     };
+
 
   } catch {
 
     return {
+
       meta: {},
+
       series: [],
+
       seasons: [],
+
       episodes: [],
+
       movies: [],
+
       genres: []
+
     };
+
   }
 }
 
 
 async function saveCatalog(db) {
+
   await fs.mkdir(
-    path.dirname(OUT_FILE),
+    path.dirname(
+      OUT_FILE
+    ),
     {
-      recursive: true
+      recursive:
+        true
     }
   );
+
 
   const tmp =
     `${OUT_FILE}.tmp`;
 
+
   await fs.writeFile(
+
     tmp,
+
     JSON.stringify(
       db,
       null,
       2
     ),
+
     'utf8'
+
   );
+
 
   await fs.rename(
     tmp,
@@ -1922,13 +3651,815 @@ async function saveCatalog(db) {
 
 
 /* =========================================================
-   MAIN
+   PROCESAR UNA TEMPORADA — HISTÓRICO COMPLETO
 ========================================================= */
 
-async function main() {
+async function processFullSeason(
+  db,
+  detail,
+  seasonUrl,
+  oldSeason,
+  oldEpisodes
+) {
+
+  const seasonId =
+    slugFromUrl(
+      seasonUrl
+    );
+
 
   console.log(
-    '🚀 Iniciando sincronización mejorada del catálogo...'
+    `\n   📖 Temporada ${seasonNumber(seasonUrl) ?? seasonId}`
+  );
+
+
+  /*
+     1. Recorremos TODAS las páginas.
+  */
+
+  const discovery =
+    await collectAllSeasonEpisodeUrls(
+      seasonUrl
+    );
+
+
+  let episodeUrls =
+    discovery.episodeUrls;
+
+
+  /*
+     2. Si existen huecos,
+        intentamos recuperarlos con
+        el patrón aprendido.
+  */
+
+  if (
+    discovery.missingEpisodes.length
+  ) {
+
+    console.log(
+      `   🔧 Intentando recuperar ${discovery.missingEpisodes.length} huecos mediante patrón...`
+    );
+
+
+    const inferred =
+      await fillEpisodeGapsWithPattern(
+        seasonUrl,
+        episodeUrls,
+        discovery.missingEpisodes
+      );
+
+
+    episodeUrls =
+      inferred.episodeUrls;
+
+
+    if (
+      inferred.validatedInferred
+    ) {
+
+      console.log(
+        `   🔧 Recuperados mediante patrón: ${inferred.validatedInferred}`
+      );
+
+    }
+
+  }
+
+
+  /*
+     3. Analizamos lo descubierto.
+  */
+
+  const discoveredCompleteness =
+    analyzeSeasonCompleteness(
+      episodeUrls,
+      discovery.paginationComplete
+    );
+
+
+  console.log(
+    `   📊 Histórico descubierto: ${discoveredCompleteness.minEpisode ?? '?'} → ${discoveredCompleteness.maxEpisode ?? '?'}`
+  );
+
+
+  console.log(
+    `   📊 Total enlaces: ${discoveredCompleteness.totalEpisodes}`
+  );
+
+
+  /*
+     4. Creamos la temporada.
+  */
+
+  const seasonItem = {
+
+    ...(oldSeason || {}),
+
+    id:
+      seasonId,
+
+    slug:
+      seasonId,
+
+    sourceUrl:
+      canonical(
+        seasonUrl
+      ),
+
+    number:
+      seasonNumber(
+        seasonUrl
+      ),
+
+    seriesId:
+      detail.id,
+
+    firstEpisodeUrl:
+      episodeUrls.find(
+        url =>
+          episodeNumber(url) === 1
+      ) ||
+      episodeUrls[0] ||
+      null,
+
+    episodeCount:
+      discoveredCompleteness.totalEpisodes,
+
+    minEpisodeFound:
+      discoveredCompleteness.minEpisode,
+
+    maxEpisodeFound:
+      discoveredCompleteness.maxEpisode,
+
+    missingEpisodes:
+      discoveredCompleteness.missingEpisodes,
+
+    paginationComplete:
+      discovery.paginationComplete,
+
+    initialSyncComplete:
+      false,
+
+    updatedAt:
+      new Date().toISOString()
+
+  };
+
+
+  /*
+     5. Procesamos TODOS los episodios.
+  */
+
+  const crawl =
+    await crawlEpisodeUrls(
+      {
+        ...seasonItem
+      },
+      episodeUrls,
+      oldEpisodes
+    );
+
+
+  console.log(
+    `   🎬 Procesados: ${crawl.successful}/${crawl.processed}`
+  );
+
+
+  /*
+     6. Comprobamos la completitud REAL.
+  */
+
+  const completeness =
+    analyzeProcessedCompleteness(
+      crawl.episodes,
+      discovery.paginationComplete,
+      crawl.failures
+    );
+
+
+  /*
+     Guardamos estadísticas incluso
+     cuando la temporada está incompleta.
+  */
+
+  seasonItem.episodeCount =
+    completeness.totalEpisodes;
+
+  seasonItem.minEpisodeFound =
+    completeness.minEpisode;
+
+  seasonItem.maxEpisodeFound =
+    completeness.maxEpisode;
+
+  seasonItem.missingEpisodes =
+    completeness.missingEpisodes;
+
+  seasonItem.paginationComplete =
+    discovery.paginationComplete;
+
+  seasonItem.initialSyncComplete =
+    completeness.complete;
+
+
+  /*
+     7. SOLO reemplazamos completamente
+        la temporada si estamos seguros.
+
+     Esto evita el problema anterior:
+
+     catálogo:
+       620 → 680
+
+     nueva sincronización incompleta:
+       620 → 680
+
+     y accidentalmente borrar cosas.
+
+     Si el proceso está incompleto,
+     mezclamos lo nuevo con lo viejo.
+  */
+
+  if (
+    completeness.complete
+  ) {
+
+    db.episodes =
+      db.episodes.filter(
+        item =>
+          item.seasonId !==
+          seasonId
+      );
+
+
+    for (
+      const episode
+      of crawl.episodes
+    ) {
+
+      upsert(
+        db.episodes,
+        episode,
+        'id'
+      );
+
+    }
+
+
+    console.log(
+      `   🟢 TEMPORADA COMPLETA: 1 → ${completeness.maxEpisode}`
+    );
+
+
+  } else {
+
+    console.log(
+      `   🟡 TEMPORADA INCOMPLETA: NO se reemplaza el catálogo anterior.`
+    );
+
+
+    /*
+       Actualizamos/insertamos únicamente
+       episodios que hemos podido procesar.
+
+       Los antiguos que no hayan sido tocados
+       permanecen.
+    */
+
+    for (
+      const episode
+      of crawl.episodes
+    ) {
+
+      upsert(
+        db.episodes,
+        episode,
+        'id'
+      );
+
+    }
+
+
+    if (
+      oldEpisodes.length
+    ) {
+
+      console.log(
+        `   ↩️ Se conservan los ${oldEpisodes.length} episodios anteriores.`
+      );
+
+    }
+
+  }
+
+
+  /*
+     Guardamos la temporada después
+     de analizarla.
+  */
+
+  upsert(
+    db.seasons,
+    seasonItem,
+    'id'
+  );
+
+
+  return {
+
+    season:
+      seasonItem,
+
+    complete:
+      completeness.complete,
+
+    episodes:
+      crawl.episodes
+
+  };
+}
+
+
+/* =========================================================
+   SINCRONIZACIÓN INCREMENTAL
+========================================================= */
+
+/*
+   Esta función SOLO se utilizará para temporadas
+   que ya tengan:
+
+       initialSyncComplete === true
+
+   Por tanto:
+
+       620 → 680
+
+   NO puede entrar aquí.
+
+   Tiene que terminar primero el histórico.
+*/
+async function incrementalSeasonSync(
+  db,
+  season
+) {
+
+  if (
+    !season.initialSyncComplete
+  ) {
+
+    return {
+
+      changed:
+        false,
+
+      skipped:
+        true
+
+    };
+
+  }
+
+
+  const oldEpisodes =
+    db.episodes.filter(
+      item =>
+        item.seasonId ===
+        season.id
+    );
+
+
+  if (
+    !oldEpisodes.length
+  ) {
+
+    return {
+
+      changed:
+        false,
+
+      skipped:
+        true
+
+    };
+
+  }
+
+
+  const numbers =
+    oldEpisodes
+      .map(
+        item =>
+          Number(item.number)
+      )
+      .filter(
+        Number.isFinite
+      );
+
+
+  const lastEpisode =
+    numbers.length
+      ? Math.max(...numbers)
+      : null;
+
+
+  if (
+    lastEpisode == null
+  ) {
+
+    return {
+
+      changed:
+        false,
+
+      skipped:
+        true
+
+    };
+
+  }
+
+
+  console.log(
+    `   🔄 Incremental ${season.id}: último episodio ${lastEpisode}`
+  );
+
+
+  /*
+     Primero comprobamos la página actual
+     de la temporada.
+
+     Los episodios nuevos normalmente
+     aparecerán aquí.
+  */
+
+  let seasonHtml;
+
+
+  try {
+
+    seasonHtml =
+      await fetchHtml(
+        season.sourceUrl
+      );
+
+  } catch (error) {
+
+    console.log(
+      `   ⚠️ No se pudo comprobar temporada: ${error.message}`
+    );
+
+
+    return {
+
+      changed:
+        false,
+
+      skipped:
+        false
+
+    };
+
+  }
+
+
+  const currentUrls =
+    collectEpisodeUrlsFromSeason(
+      seasonHtml,
+      season.sourceUrl
+    )
+    .filter(
+      url =>
+        episodeBelongsToSeason(
+          url,
+          season.sourceUrl
+        )
+    );
+
+
+  const newUrls =
+    currentUrls
+      .filter(
+        url => {
+
+          const number =
+            episodeNumber(url);
+
+          return (
+            number != null &&
+            number > lastEpisode
+          );
+
+        }
+      );
+
+
+  /*
+     Aprendemos el patrón de la URL
+     más reciente disponible.
+  */
+
+  let pattern =
+    null;
+
+
+  const latestKnown =
+    oldEpisodes
+      .filter(
+        item =>
+          Number.isFinite(
+            Number(item.number)
+          )
+      )
+      .sort(
+        (a, b) =>
+          Number(b.number) -
+          Number(a.number)
+      )[0];
+
+
+  if (
+    latestKnown?.sourceUrl
+  ) {
+
+    pattern =
+      learnEpisodeUrlPattern(
+        latestKnown.sourceUrl
+      );
+
+  }
+
+
+  /*
+     Si tenemos patrón, comprobamos
+     1 a 1 los siguientes episodios.
+
+     Ejemplo:
+
+     último = 680
+
+     probamos:
+
+     681
+     682
+     683
+     ...
+
+     hasta encontrar uno que no exista.
+  */
+
+  if (pattern) {
+
+    let nextNumber =
+      lastEpisode + 1;
+
+
+    while (
+      nextNumber <=
+        lastEpisode +
+        MAX_INFERRED_EPISODE_ATTEMPTS
+    ) {
+
+      const candidate =
+        pattern.build(
+          nextNumber
+        );
+
+
+      if (
+        !candidate
+      ) {
+        break;
+      }
+
+
+      if (
+        newUrls.includes(candidate)
+      ) {
+
+        nextNumber++;
+
+        continue;
+
+      }
+
+
+      try {
+
+        const html =
+          await fetchHtml(
+            candidate
+          );
+
+
+        const $
+          = cheerio.load(html);
+
+
+        const title =
+          clean(
+            $('h1')
+              .first()
+              .text() ||
+
+            $('title')
+              .text()
+          );
+
+
+        const detectedNumber =
+          episodeNumber(candidate) ??
+          episodeNumber(title);
+
+
+        if (
+          detectedNumber !==
+          nextNumber
+        ) {
+
+          break;
+
+        }
+
+
+        newUrls.push(
+          candidate
+        );
+
+
+        console.log(
+          `      🆕 Nuevo episodio ${nextNumber}`
+        );
+
+
+        nextNumber++;
+
+
+      } catch {
+
+        /*
+           El primer episodio que no existe
+           corta la cadena.
+
+           Esto es justo lo que queremos
+           para una actualización incremental.
+        */
+
+        break;
+
+      }
+
+    }
+
+  }
+
+
+  const uniqueNew =
+    [
+      ...new Set(
+        newUrls
+      )
+    ].sort(
+      (a, b) =>
+        (
+          episodeNumber(a) ??
+          999999999
+        ) -
+        (
+          episodeNumber(b) ??
+          999999999
+        )
+    );
+
+
+  if (
+    !uniqueNew.length
+  ) {
+
+    console.log(
+      `   ✔️ No hay episodios nuevos en ${season.id}`
+    );
+
+
+    return {
+
+      changed:
+        false,
+
+      skipped:
+        false
+
+    };
+
+  }
+
+
+  console.log(
+    `   🆕 Episodios nuevos encontrados: ${uniqueNew.length}`
+  );
+
+
+  const crawl =
+    await crawlEpisodeUrls(
+      season,
+      uniqueNew,
+      oldEpisodes
+    );
+
+
+  for (
+    const episode
+    of crawl.episodes
+  ) {
+
+    upsert(
+      db.episodes,
+      episode,
+      'id'
+    );
+
+  }
+
+
+  const updatedNumbers =
+    db.episodes
+      .filter(
+        item =>
+          item.seasonId ===
+          season.id
+      )
+      .map(
+        item =>
+          Number(item.number)
+      )
+      .filter(
+        Number.isFinite
+      );
+
+
+  if (
+    updatedNumbers.length
+  ) {
+
+    season.maxEpisodeFound =
+      Math.max(
+        ...updatedNumbers
+      );
+
+
+    season.episodeCount =
+      new Set(
+        updatedNumbers
+      ).size;
+
+  }
+
+
+  season.updatedAt =
+    new Date().toISOString();
+
+
+  upsert(
+    db.seasons,
+    season,
+    'id'
+  );
+
+
+  return {
+
+    changed:
+      true,
+
+    skipped:
+      false
+
+  };
+}
+
+
+/* =========================================================
+   ¿CATÁLOGO HISTÓRICO COMPLETO?
+========================================================= */
+
+function catalogHasIncompleteSeasons(
+  db
+) {
+
+  return db.seasons.some(
+    season =>
+      season.initialSyncComplete !== true
+  );
+}
+
+
+/* =========================================================
+   MAIN — SINCRONIZACIÓN HISTÓRICA
+========================================================= */
+
+async function runFullSync() {
+
+  console.log(
+    '\n🚀 INICIANDO CONSTRUCCIÓN DEL CATÁLOGO HISTÓRICO COMPLETO\n'
   );
 
 
@@ -1936,25 +4467,14 @@ async function main() {
     await loadCatalog();
 
 
-  /*
-     Primero descubrimos TODAS
-     las series mediante paginación.
-  */
-
   const discovered =
     await discoverSeries();
 
 
   console.log(
-    `📚 Series descubiertas: ${discovered.length}`
+    `\n📚 Series descubiertas: ${discovered.length}`
   );
 
-
-  /*
-     Empezamos con el catálogo anterior
-     para no perder información si algo
-     falla durante esta sincronización.
-  */
 
   const startedAt =
     new Date().toISOString();
@@ -1963,9 +4483,11 @@ async function main() {
   const db = {
 
     meta: {
+
       ...previous.meta,
 
-      version: 3,
+      version:
+        4,
 
       source:
         `${BASE_URL}/`,
@@ -1978,6 +4500,9 @@ async function main() {
         status:
           'running',
 
+        type:
+          'full',
+
         startedAt,
 
         finishedAt:
@@ -1985,23 +4510,31 @@ async function main() {
 
         error:
           null
+
       }
+
     },
+
 
     series:
       [...previous.series],
 
+
     seasons:
       [...previous.seasons],
+
 
     episodes:
       [...previous.episodes],
 
+
     movies:
       [...previous.movies],
 
+
     genres:
       [...previous.genres]
+
   };
 
 
@@ -2023,6 +4556,7 @@ async function main() {
 
     const seriesUrl =
       discovered[i];
+
 
     const slug =
       slugFromUrl(
@@ -2053,8 +4587,10 @@ async function main() {
       const oldSeries =
         db.series.find(
           item =>
-            item.id === detail.id ||
-            item.slug === detail.slug
+            item.id ===
+              detail.id ||
+            item.slug ===
+              detail.slug
         );
 
 
@@ -2066,6 +4602,7 @@ async function main() {
 
         updatedAt:
           new Date().toISOString()
+
       };
 
 
@@ -2109,192 +4646,39 @@ async function main() {
           );
 
 
-        console.log(
-          `\n   📖 Temporada ${seasonNumber(seasonUrl) ?? seasonId}`
-        );
-
-
         const oldSeason =
           db.seasons.find(
             item =>
-              item.id === seasonId ||
-              item.sourceUrl === seasonUrl
+              item.id ===
+                seasonId ||
+              item.sourceUrl ===
+                seasonUrl
           );
 
 
         const oldEpisodes =
           db.episodes.filter(
             item =>
-              item.seasonId === seasonId
+              item.seasonId ===
+              seasonId
           );
 
 
         try {
 
-          const seasonHtml =
-            await fetchHtml(
-              seasonUrl
-            );
+          await processFullSeason(
 
+            db,
 
-          /*
-             Aquí está la nueva detección
-             robusta de episodios.
-          */
+            detail,
 
-          const parsedSeason =
-            parseSeason(
-              seasonHtml,
-              seasonUrl
-            );
+            seasonUrl,
 
+            oldSeason,
 
-          console.log(
-            `   🔎 Enlaces de episodios detectados: ${parsedSeason.discoveredEpisodeLinks.length}`
+            oldEpisodes
+
           );
-
-
-          if (
-            parsedSeason.firstEpisodeUrl
-          ) {
-
-            console.log(
-              `   🎯 Episodio inicial: ${parsedSeason.firstEpisodeUrl}`
-            );
-
-          } else {
-
-            console.log(
-              `   ⚠️ No se encontró episodio inicial para ${seasonId}`
-            );
-
-            if (
-              oldEpisodes.length
-            ) {
-
-              console.log(
-                `   ↩️ Se conservarán ${oldEpisodes.length} episodios existentes.`
-              );
-            }
-          }
-
-
-          const seasonItem = {
-
-            ...(oldSeason || {}),
-
-            id:
-              seasonId,
-
-            slug:
-              seasonId,
-
-            sourceUrl:
-              canonical(
-                seasonUrl
-              ),
-
-            number:
-              parsedSeason.number,
-
-            seriesId:
-              detail.id,
-
-            firstEpisodeUrl:
-              parsedSeason.firstEpisodeUrl,
-
-            updatedAt:
-              new Date().toISOString()
-          };
-
-
-          upsert(
-            db.seasons,
-            seasonItem,
-            'id'
-          );
-
-
-          /*
-             Si encontramos episodio inicial,
-             recorremos la cadena Siguiente.
-          */
-
-          if (
-            parsedSeason.firstEpisodeUrl
-          ) {
-
-            const seasonWithSeries = {
-
-              ...seasonItem,
-
-              firstEpisodeUrl:
-                parsedSeason.firstEpisodeUrl
-            };
-
-
-            const episodes =
-              await crawlEpisodes(
-                seasonWithSeries,
-                oldEpisodes
-              );
-
-
-            if (
-              episodes.length
-            ) {
-
-              /*
-                 Sustituimos únicamente
-                 los episodios de ESTA temporada.
-              */
-
-              db.episodes =
-                db.episodes.filter(
-                  item =>
-                    item.seasonId !==
-                    seasonId
-                );
-
-
-              for (
-                const episode
-                of episodes
-              ) {
-
-                upsert(
-                  db.episodes,
-                  episode,
-                  'id'
-                );
-              }
-
-
-              console.log(
-                `   ✅ Episodios encontrados: ${episodes.length}`
-              );
-
-            } else if (
-              oldEpisodes.length
-            ) {
-
-              console.log(
-                `   ↩️ Episodios conservados: ${oldEpisodes.length}`
-              );
-
-            } else {
-
-              console.log(
-                '   ⚠️ Episodios encontrados: 0'
-              );
-            }
-
-          } else {
-
-            console.log(
-              `   📦 Episodios actuales conservados: ${oldEpisodes.length}`
-            );
-          }
 
 
         } catch (error) {
@@ -2309,10 +4693,13 @@ async function main() {
           ) {
 
             console.log(
-              `   ↩️ Se conservan ${oldEpisodes.length} episodios existentes.`
+              `   ↩️ Se mantienen ${oldEpisodes.length} episodios anteriores.`
             );
+
           }
+
         }
+
       }
 
 
@@ -2321,12 +4708,14 @@ async function main() {
       console.log(
         `❌ Error serie: ${error.message}`
       );
+
     }
+
   }
 
 
   /* =====================================================
-     ORDENAR CATÁLOGO
+     ORDENAR
   ===================================================== */
 
   db.genres =
@@ -2364,12 +4753,15 @@ async function main() {
             b.seriesId
           )
         );
+
       }
+
 
       return (
         (a.number ?? 999999) -
         (b.number ?? 999999)
       );
+
     }
   );
 
@@ -2389,6 +4781,7 @@ async function main() {
             b.seriesId
           )
         );
+
       }
 
 
@@ -2404,6 +4797,7 @@ async function main() {
             b.seasonId
           )
         );
+
       }
 
 
@@ -2411,16 +4805,23 @@ async function main() {
         (a.number ?? 999999999) -
         (b.number ?? 999999999)
       );
+
     }
   );
 
 
   /* =====================================================
-     FINALIZAR
+     RESULTADO
   ===================================================== */
 
   const finished =
     new Date().toISOString();
+
+
+  const incomplete =
+    catalogHasIncompleteSeasons(
+      db
+    );
 
 
   db.meta.syncedAt =
@@ -2432,6 +4833,9 @@ async function main() {
     status:
       'success',
 
+    type:
+      'full',
+
     startedAt:
       db.meta.lastSync.startedAt,
 
@@ -2439,7 +4843,11 @@ async function main() {
       finished,
 
     error:
-      null
+      null,
+
+    catalogComplete:
+      !incomplete
+
   };
 
 
@@ -2449,24 +4857,278 @@ async function main() {
 
 
   console.log(
-    '\n🎉 Sincronización terminada.'
+    '\n===================================================='
   );
+
+
+  console.log(
+    '🎉 SINCRONIZACIÓN HISTÓRICA TERMINADA'
+  );
+
+
+  console.log(
+    '===================================================='
+  );
+
 
   console.log(
     `📚 Series: ${db.series.length}`
   );
 
+
   console.log(
     `📖 Temporadas: ${db.seasons.length}`
   );
+
 
   console.log(
     `🎬 Episodios: ${db.episodes.length}`
   );
 
+
   console.log(
     `🎭 Géneros: ${db.genres.length}`
   );
+
+
+  if (incomplete) {
+
+    console.log(
+      '\n🟡 ATENCIÓN: todavía existen temporadas incompletas.'
+    );
+
+
+    console.log(
+      '   La sincronización incremental NO se activará todavía.'
+    );
+
+  } else {
+
+    console.log(
+      '\n🟢 CATÁLOGO COMPLETO.'
+    );
+
+
+    console.log(
+      '   Las temporadas ya pueden entrar en modo incremental.'
+    );
+
+  }
+
+
+  return db;
+}
+
+
+/* =========================================================
+   SINCRONIZACIÓN INCREMENTAL GLOBAL
+========================================================= */
+
+async function runIncrementalSync() {
+
+  console.log(
+    '\n🔄 INICIANDO SINCRONIZACIÓN INCREMENTAL\n'
+  );
+
+
+  const db =
+    await loadCatalog();
+
+
+  let changed =
+    false;
+
+
+  /*
+     Solo temporadas marcadas como completas.
+  */
+
+  const completeSeasons =
+    db.seasons.filter(
+      season =>
+        season.initialSyncComplete === true
+    );
+
+
+  console.log(
+    `📖 Temporadas aptas para incremental: ${completeSeasons.length}/${db.seasons.length}`
+  );
+
+
+  for (
+    const season
+    of completeSeasons
+  ) {
+
+    try {
+
+      const result =
+        await incrementalSeasonSync(
+          db,
+          season
+        );
+
+
+      if (
+        result.changed
+      ) {
+
+        changed =
+          true;
+
+      }
+
+    } catch (error) {
+
+      console.log(
+        `   ❌ Error incremental ${season.id}: ${error.message}`
+      );
+
+    }
+
+  }
+
+
+  /*
+     Aunque no haya episodios nuevos,
+     guardamos el timestamp del último
+     chequeo exitoso.
+  */
+
+  const finished =
+    new Date().toISOString();
+
+
+  db.meta =
+    db.meta || {};
+
+
+  db.meta.syncedAt =
+    finished;
+
+
+  db.meta.lastSync = {
+
+    status:
+      'success',
+
+    type:
+      'incremental',
+
+    startedAt:
+      db.meta.lastSync?.startedAt ||
+      finished,
+
+    finishedAt:
+      finished,
+
+    error:
+      null,
+
+    changed
+
+  };
+
+
+  await saveCatalog(
+    db
+  );
+
+
+  console.log(
+    `\n✅ Incremental terminado. Cambios: ${changed ? 'sí' : 'no'}`
+  );
+
+
+  return db;
+}
+
+
+/* =========================================================
+   DECIDIR QUÉ HACER AL ARRANCAR
+========================================================= */
+
+async function main() {
+
+  console.log(
+    '\n=============================================='
+  );
+
+
+  console.log(
+    '🚀 DONGHUAFLIX SYNC'
+  );
+
+
+  console.log(
+    '==============================================\n'
+  );
+
+
+  const existing =
+    await loadCatalog();
+
+
+  /*
+     Si no existe catálogo o todavía hay
+     temporadas incompletas:
+
+     → hacemos histórico completo.
+  */
+
+  const needsFullSync =
+    !existing.seasons.length ||
+    catalogHasIncompleteSeasons(
+      existing
+    );
+
+
+  if (
+    needsFullSync
+  ) {
+
+    console.log(
+      '📚 El catálogo todavía no está completamente construido.'
+    );
+
+
+    console.log(
+      '🧭 Ejecutando sincronización histórica completa...\n'
+    );
+
+
+    await runFullSync();
+
+
+    /*
+       IMPORTANTE:
+
+       No arrancamos inmediatamente
+       un incremental aquí.
+
+       Primero dejamos que esta ejecución
+       termine y que el catálogo quede
+       completamente guardado.
+
+       La siguiente ejecución podrá decidir
+       si ya corresponde incremental.
+    */
+
+    return;
+
+  }
+
+
+  /*
+     Si llegamos aquí significa que
+     TODAS las temporadas están marcadas
+     como completas.
+
+     Entonces podemos hacer incremental.
+  */
+
+  await runIncrementalSync();
+
 }
 
 
@@ -2478,7 +5140,7 @@ main().catch(
   async error => {
 
     console.error(
-      '💥 Error fatal:',
+      '\n💥 ERROR FATAL:',
       error
     );
 
@@ -2487,6 +5149,7 @@ main().catch(
 
       const db =
         await loadCatalog();
+
 
       const finished =
         new Date().toISOString();
@@ -2511,7 +5174,9 @@ main().catch(
 
           error:
             error.message
+
         }
+
       };
 
 
@@ -2519,9 +5184,12 @@ main().catch(
         db
       );
 
+
     } catch {}
 
 
-    process.exitCode = 1;
+    process.exitCode =
+      1;
+
   }
 );
