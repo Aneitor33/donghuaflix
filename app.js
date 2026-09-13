@@ -140,6 +140,65 @@ function saveHistory(seriesId, episodeData) {
   } catch (e) {}
 }
 
+// ---------- AUTO SIGUIENTE EPISODIO ----------
+let currentEpisode = null;
+let autoNextEnabled = localStorage.getItem('donghuaflix_autonext') !== 'off';
+
+function toggleAutoNext() {
+  autoNextEnabled = !autoNextEnabled;
+  localStorage.setItem('donghuaflix_autonext', autoNextEnabled ? 'on' : 'off');
+  showToast(autoNextEnabled ? '▶️ Auto-siguiente activado' : '⏸️ Auto-siguiente desactivado');
+  const b = document.getElementById('autoNextBtn');
+  if (b) b.textContent = autoNextEnabled ? '🔁 Auto: ON' : '🔁 Auto: OFF';
+}
+
+function autoNext() {
+  if (!currentEpisode || !autoNextEnabled) return;
+  const seasonEps = dedupeEps(DB.episodes.filter(x => x.seasonId === currentEpisode.seasonId));
+  const idx = seasonEps.findIndex(x => x.id === currentEpisode.id);
+  const next = seasonEps[idx + 1];
+  if (next) {
+    showToast('Cargando siguiente episodio…');
+    setTimeout(() => { location.hash = '#/episode/' + qs(next.slug || next.id); }, 1200);
+  } else {
+    showToast('🎉 ¡Has terminado esta temporada!');
+  }
+}
+
+// Dailymotion avisa al padre cuando el video termina
+window.addEventListener('message', event => {
+  const origin = String(event.origin || '');
+  if (!/dailymotion|dmcdn/i.test(origin)) return;
+  const data = typeof event.data === 'string' ? event.data : JSON.stringify(event.data || {});
+  if (/video[_-]?end|ended/i.test(data)) autoNext();
+});
+
+// ---------- RECOMENDACIONES (sin repetir lo ya visto) ----------
+function getRecommendedSeries(currentSeries, limit = 8) {
+  const historyIds = new Set(Object.keys(getHistory()));
+  const currentGenres = seriesGenres(currentSeries).map(g => g.toLowerCase());
+
+  const others = DB.series.filter(s => s.id !== currentSeries.id);
+
+  // Puntuar por géneros en común
+  const scored = others.map(s => ({
+    s,
+    score: seriesGenres(s).map(g => g.toLowerCase()).filter(g => currentGenres.includes(g)).length
+  }));
+
+  // Prioridad 1: mismos géneros Y no vistos
+  const fresh = scored
+    .filter(x => x.score > 0 && !historyIds.has(x.s.id))
+    .sort((a, b) => b.score - a.score || (b.s.updatedAt || '').localeCompare(a.s.updatedAt || ''));
+
+  // Prioridad 2 (relleno): otros no vistos, los más recientes
+  const filler = scored
+    .filter(x => x.score === 0 && !historyIds.has(x.s.id))
+    .sort((a, b) => (b.s.updatedAt || '').localeCompare(a.s.updatedAt || ''));
+
+  return [...fresh, ...filler].slice(0, limit).map(x => x.s);
+}
+
 // ---------- CARGA ----------
 async function load() {
   app.innerHTML = '<section class="section"><div class="grid">' +
@@ -448,6 +507,7 @@ function episode(slug) {
   const e = findEpisode(slug);
   if (!e) return notfound();
 
+  currentEpisode = e;
   saveHistory(e.seriesId, e);
 
   const seasonEps = dedupeEps(DB.episodes.filter(x => x.seasonId === e.seasonId));
@@ -485,6 +545,19 @@ function episode(slug) {
         ? `<a class="btn dark" href="#/episode/${qs(nextEp.slug || nextEp.id)}">Siguiente ►</a>`
         : '<button class="btn dark" disabled>Siguiente ►</button>'}
     </div>
+    <div class="ep-nav" style="margin-top:10px">
+      <button class="btn dark" id="autoNextBtn" onclick="toggleAutoNext()">
+        ${autoNextEnabled ? '🔁 Auto: ON' : '🔁 Auto: OFF'}
+      </button>
+    </div>
+    ${(() => {
+      const recommended = getRecommendedSeries(serie || { id: e.seriesId });
+      return recommended.length ? `
+        <div style="margin-top:34px">
+          <div class="section-head"><h2>También te puede gustar</h2><span class="muted">${recommended.length}</span></div>
+          <div class="grid">${recommended.map(card).join('')}</div>
+        </div>` : '';
+    })()}
   </section>`;
 
   render();
