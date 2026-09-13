@@ -5,13 +5,20 @@ const app = document.getElementById('app');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 const qs = s => encodeURIComponent(s || '');
 
+// Función auxiliar para validar y limpiar imágenes defectuosas o placeholders
+const cleanImg = (url) => {
+  if (!url || url.includes('IcoPrueba.png')) return '';
+  return esc(url);
+};
+
 async function load() {
   app.innerHTML = '<section class="section"><div class="grid">' + Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
   try {
-    const r = await fetch('./public/data/catalog.json?ts=' + Date.now());
+    // Añadimos cache: 'no-store' y timestamp para evitar que Cloudflare o el navegador sirvan datos viejos
+    const r = await fetch('./public/data/catalog.json?ts=' + Date.now(), { cache: 'no-store' });
     DB = await r.json();
     document.getElementById('footerStatus').innerHTML = `
-      ${DB.meta.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}<br>
+      ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}<br>
       <span style="opacity: 0.85; font-size: 12px; margin-top: 4px; display: inline-block;">
         Desarrollado con ❤️ por <a href="https://instagram.com/bledark__" target="_blank" rel="noopener" style="color: #00ffcc; text-decoration: none; font-weight: 600;">@bledark__</a>
       </span>
@@ -23,9 +30,10 @@ async function load() {
 }
 
 function card(s) {
+  const validImg = cleanImg(s.image);
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
-      ${s.image ? `<img loading="lazy" src="${esc(s.image)}" alt="${esc(s.title)}">` : '<div class="no-img">DONGHUA</div>'}
+      ${validImg ? `<img loading="lazy" src="${validImg}" alt="${esc(s.title)}">` : '<div class="no-img" style="display:flex;align-items:center;justify-content:center;height:100%;background:#1a1a1a;color:#666;font-weight:bold;">DONGHUA</div>'}
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
     </div>
     <h3 style="color:#ffffff; font-weight:600; font-size:14px; margin-top:8px;">${esc(s.title)}</h3>
@@ -35,9 +43,10 @@ function card(s) {
 function home() {
   const recent = DB.series.slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const hero = recent[0];
+  const heroImg = cleanImg(hero?.image);
 
   app.innerHTML = `
-  <section class="hero" style="--hero:url('${esc(hero?.image || '')}')">
+  <section class="hero" style="--hero:url('${heroImg}')">
     <div class="hero-content">
       <div class="eyebrow">DONGHUAFLIX EXCLUSIVE</div>
       <h1>${esc(hero?.title || 'DonghuaFlix')}</h1>
@@ -108,10 +117,11 @@ function detail(slug) {
   if (!s) return notfound();
 
   const seasons = DB.seasons.filter(x => x.seriesId === s.id);
+  const validImg = cleanImg(s.image);
 
   app.innerHTML = `<section class="detail">
     <div class="detail-top">
-      <div class="detail-poster">${s.image ? `<img src="${esc(s.image)}" alt="${esc(s.title)}">` : ''}</div>
+      <div class="detail-poster">${validImg ? `<img src="${validImg}" alt="${esc(s.title)}">` : ''}</div>
       <div>
         <div class="eyebrow">${esc(s.status || '')}</div>
         <h1>${esc(s.title)}</h1>
