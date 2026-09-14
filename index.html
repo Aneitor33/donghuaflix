@@ -50,6 +50,24 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
+  
+  <!-- BARRA INFERIOR (móvil, estilo Netflix) -->
+  <nav class="bottom-nav">
+    <a href="#/" data-nav><span>🏠</span>Inicio</a>
+    <a href="#/series" data-nav><span>🎬</span>Series</a>
+    <a href="#/search" data-nav><span>🔍</span>Buscar</a>
+    <a href="#/mylist" data-nav><span>❤️</span>Mi lista</a>
+    <button onclick="toggleMoreMenu()"><span>⋮</span>Más</button>
+  </nav>
+
+  <!-- MENÚ DESPLEGABLE "MÁS" -->
+  <div class="more-menu" id="moreMenu">
+    <a href="#/movies">🎞️ Películas</a>
+    <a href="#/airing">📡 En emisión</a>
+    <a href="#/completed">✅ Finalizadas</a>
+    <a href="#/genres">🏷️ Géneros</a>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
