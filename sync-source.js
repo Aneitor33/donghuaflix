@@ -568,10 +568,10 @@ async function main() {
           const maxKnown = Math.max(0, ...nums);
           totalKnown = detail.totalEpisodes || detail.onlineEpisodes || null;
 
-          // Si hay total declarado: generar hasta él.
-          // Si no: sondear hasta 24 más allá del máximo visto (el bucle
-          // de fetch parará tras 4 fallos seguidos).
-          const target = totalKnown || (maxKnown + 24);
+          // Sondeo abierto: seguir generando (24 → 25 → 26 → ...) hasta
+          // que el fetch dé 4 errores seguidos (404 = fin de temporada).
+          // El límite de 500 es solo de seguridad absoluta.
+          const target = maxKnown + 500;
           for (let n = maxKnown + 1; n <= target; n++) {
             set.add(`${base}-${season}x${n}`);
           }
@@ -591,11 +591,18 @@ async function main() {
         // Película: un único episodio cuyos servidores están en la propia ficha
         episodeSource = [{ url, slug: `${slug}-pelicula`, html }];
       } else {
-        const all = await collectAllEpisodeUrls(url);
-        if (all.length > detail.episodeUrls.length) {
-          console.log(`   📄 Episodios con paginación: ${detail.episodeUrls.length} → ${all.length}`);
+        const crawled = await collectAllEpisodeUrls(url);
+        // UNIR: lo visto en la página + lo generado por sondeo (detail.episodeUrls)
+        const merged = [...new Set([...crawled, ...detail.episodeUrls])]
+          .sort((a, b) => {
+            const na = a.match(/-(\d+)x(\d+)$/) || a.match(/[?&]ep=(\d+)/);
+            const nb = b.match(/-(\d+)x(\d+)$/) || b.match(/[?&]ep=(\d+)/);
+            return (na && nb) ? Number(na[2] || na[1]) - Number(nb[2] || nb[1]) : 0;
+          });
+        if (merged.length > crawled.length) {
+          console.log(`   📄 Episodios tras sondeo: ${crawled.length} → ${merged.length}`);
         }
-        episodeSource = all.map(u => ({ url: u, slug: slugFromUrl(u) }));
+        episodeSource = merged.map(u => ({ url: u, slug: slugFromUrl(u) }));
       }
 
       const seasonIds = new Set();
@@ -608,8 +615,8 @@ async function main() {
         const seasonId = `${slug}-${code.season}`;
         const oldEp = db.episodes.find(e => e.id === epSlug);
         if (oldEp) { seasonIds.add(seasonId); missCount = 0; continue; } // ya lo tenemos (incremental)
-        // Sondeo sin total declarado: 4 seguidos que no existen = fin de temporada
-        if (!totalKnown && missCount >= 4) {
+        // 4 seguidos que no existen = fin de temporada (con o sin total)
+        if (missCount >= 4) {
           console.log(`   🛑 Fin de temporada detectado: 4 episodios seguidos no existen`);
           break;
         }
