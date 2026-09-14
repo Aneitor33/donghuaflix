@@ -7,6 +7,11 @@ on:
   workflow_dispatch:
     # Permite ejecutarlo manualmente desde la interfaz de GitHub
 
+# Mismo grupo que el workflow de cdramas: nunca corren a la vez
+concurrency:
+  group: sync-catalogos
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -27,10 +32,16 @@ jobs:
       - name: Ejecutar sincronización
         run: node sync-static.js
 
+      - name: Sincronizar portadas
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node poster-sync.js
+
       - name: Guardar cambios en el catálogo
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
           git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo"
+          git pull --rebase origin main
           git push
