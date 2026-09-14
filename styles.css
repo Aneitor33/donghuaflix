@@ -80,6 +80,22 @@ svg{display:inline-block;vertical-align:middle}
 .btn-x.round{width:46px;height:46px;padding:0;border-radius:50%}
 .btn-x.round svg{width:18px;height:18px}
 
+/* ---------- SELECTOR DE CATÁLOGO ---------- */
+.cat-bar{
+  position:sticky;top:64px;z-index:45;
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+  padding:10px 4%;
+  background:rgba(5,5,7,.35);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.cat-bar button{
+  padding:8px 24px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
+  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.cat-bar button:hover{background:rgba(255,255,255,.2);color:#fff}
+.cat-bar button.on{background:#fff;color:#000;border-color:#fff}
+
 /* ---------- PILLS DE FILTROS ---------- */
 .pills{display:flex;gap:8px;padding:84px 4% 6px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:2}
 .pills::-webkit-scrollbar{display:none}
