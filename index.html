@@ -43,6 +43,14 @@
     </div>
   </header>
 
+  <!-- SELECTOR DE CATÁLOGO (aparece cuando hay más de uno disponible) -->
+  <div class="cat-bar" id="catBar" style="display:none">
+    <button data-cat="donghua" onclick="switchCatalog('donghua')">Donghuas</button>
+    <button data-cat="cdrama" onclick="switchCatalog('cdrama')">Cdramas</button>
+    <button data-cat="anime" onclick="switchCatalog('anime')">Animación</button>
+    <button data-cat="cine" onclick="switchCatalog('cine')">Cine</button>
+  </div>
+
   <!-- CONTENEDOR DE LA SPA -->
   <main id="app"></main>
 
@@ -86,6 +94,6 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
