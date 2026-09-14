@@ -487,8 +487,7 @@ async function main() {
       let newCount = 0;
       for (const ep of episodeSource) {
         const epUrl = ep.url;
-        const epSlug = ep.slug;
-        const epSlug = slugFromUrl(epUrl);
+        const epSlug = ep.slug || slugFromUrl(epUrl);
         const code = parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
         const oldEp = db.episodes.find(e => e.id === epSlug);
