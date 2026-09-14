@@ -15,6 +15,15 @@ const SEEDS = (process.env.SEEDS || '/paises/china,/idiomas/mandarin')
   .map(s => s.trim())
   .filter(Boolean);
 const CATALOG_TAG = process.env.CATALOG_TAG || 'cdrama';
+// Prefijos de rutas que identifican FICHAS de contenido (series y películas)
+const LINK_PREFIXES = (process.env.LINK_PREFIXES || '/doramas/')
+  .split(',').map(s => s.trim()).filter(Boolean);
+// Prefijos que son PELÍCULAS (sin episodios: un solo "episodio" con los servidores)
+const MOVIE_PREFIXES = (process.env.MOVIE_PREFIXES || '')
+  .split(',').map(s => s.trim()).filter(Boolean);
+const MAX_PAGES = Number(process.env.MAX_DISCOVERY_PAGES || 60);
+// Si se define, solo se guardan las fichas cuyos géneros incluyan este texto
+const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
 
 const MAX_DISCOVERY_PAGES = 60;
 const FETCH_TIMEOUT_MS = 30000;
@@ -57,8 +66,12 @@ async function fetchHtml(url, attempt = 1) {
       signal: controller.signal,
       redirect: 'follow',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; DonghuaFlixCdramaSync/1.0)',
-        'Accept': 'text/html,application/xhtml+xml'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6',
+        'Referer': 'https://www.google.com/',
+        'Upgrade-Insecure-Requests': '1',
+        'Cache-Control': 'max-age=0'
       }
     });
     if (!res.ok) {
@@ -88,7 +101,8 @@ function parseSeriesLinks(html, pageUrl) {
     const url = absolute($(el).attr('href'), pageUrl);
     if (!url || !sameOrigin(url)) return;
     try {
-      if (new URL(url).pathname.startsWith('/doramas/')) links.push(url);
+      const p = new URL(url).pathname;
+      if (LINK_PREFIXES.some(pre => p.startsWith(pre))) links.push(url);
     } catch {}
   });
   return uniqueUrls(links);
@@ -105,6 +119,9 @@ function extractPagination(html, pageUrl) {
       if (u.searchParams.has('page')) {
         const p = Number(u.searchParams.get('page'));
         if (Number.isInteger(p) && p >= 2) links.push(url);
+      } else {
+        const m = u.pathname.match(/\/page\/(\d+)\/?$/);
+        if (m && Number(m[1]) >= 2) links.push(url);
       }
     } catch {}
   });
@@ -117,7 +134,7 @@ async function discoverSeries() {
     const first = absolute(seed);
     const queue = [first];
     const visited = new Set();
-    while (queue.length && visited.size < MAX_DISCOVERY_PAGES) {
+    while (queue.length && visited.size < MAX_PAGES) {
       const pageUrl = queue.shift();
       if (!pageUrl || visited.has(pageUrl)) continue;
       visited.add(pageUrl);
@@ -134,7 +151,7 @@ async function discoverSeries() {
       await sleep(POLITENESS_MS);
     }
   }
-  console.log(`\n🎯 TOTAL CDRAMAS DESCUBIERTOS: ${all.size}`);
+  console.log(`\n🎯 TOTAL [${CATALOG_TAG}] DESCUBIERTOS: ${all.size}`);
   return [...all];
 }
 
@@ -175,6 +192,8 @@ function parseSeries(html, url) {
     if (t.length > 80 && !synopsis) synopsis = t;
   });
 
+  const bodyTxt = clean($('body').text());
+
   // Detalles (tabla): Estado, País, Estreno, Episodios
   const details = {};
   $('dl, table, [class*="detail"], [class*="info"]').each((_, el) => {
@@ -189,22 +208,24 @@ function parseSeries(html, url) {
     }
   });
   if (!details.status) {
-    const body = clean($('body').text());
-    const m = body.match(/Estado\s+(En emisi[oó]n|Finalizado|Completado|En producci[oó]n)/i);
+    const m = bodyTxt.match(/Estado\s+(En emisi[oó]n|Finalizado|Completado|En producci[oó]n)/i);
     if (m) details.status = clean(m[1]);
-    const c = body.match(/Pa[ií]s\s+(China|Corea|Jap[oó]n|Tailandia)/i);
+    const c = bodyTxt.match(/Pa[ií]s\s+(China|Corea|Jap[oó]n|Tailandia)/i);
     if (c) details.country = clean(c[1]);
   }
-  const bodyTxt = clean($('body').text());
   const epM = bodyTxt.match(/(\d+)\s+de\s+(\d+)\s+online/i);
   if (epM) { details.online = Number(epM[1]); details.total = Number(epM[2]); }
 
-  // Géneros
+  // Géneros: enlaces de género (doramasflix) o línea "Género: X, Y" (cuevana)
   const genres = [];
-  $('a[href*="/etiquetas/"], a[href*="/generos/"]').each((_, el) => {
+  $('a[href*="/etiquetas/"], a[href*="/generos/"], a[href*="/genero"]').each((_, el) => {
     const g = clean($(el).text());
     if (g && g.length < 30) genres.push(g);
   });
+  if (!genres.length) {
+    const gm = bodyTxt.match(/G[eé]nero[s]?:\s*([A-Za-zÁÉÍÓÚÜÑáéíóúüñ, ]{3,80})/);
+    if (gm) gm[1].split(',').forEach(g => { const t = clean(g); if (t) genres.push(t); });
+  }
 
   // Enlaces de episodios: rutas tipo /ver/{slug}... o que contengan el slug
   const episodeUrls = [];
@@ -277,18 +298,30 @@ async function collectAllEpisodeUrls(firstUrl) {
       } catch {}
     });
 
+    // Episodios por parámetros: ?season=N&ep=M (pelisplay y similares)
+    const decoded = html.replace(/&amp;/g, '&');
+    const seasonRe = /([A-Za-z0-9\-_\/]*\?season=(\d+)&(?:amp;)?ep=(\d+))/g;
+    let sm;
+    while ((sm = seasonRe.exec(decoded)) !== null) {
+      const full = absolute(sm[1], url);
+      if (full && sameOrigin(full)) add(full);
+    }
+
     // Paginación de la ficha (misma ruta + ?page=N)
     $('a[href]').each((_, el) => {
       const full = absolute($(el).attr('href'), url);
       if (!full || !sameOrigin(full)) return;
       try {
         const u = new URL(full);
-        if (u.pathname === basePath && u.searchParams.has('page')) {
-          const key = normalizeEpPage(full);
-          if (!visitedPages.has(key)) {
-            visitedPages.add(key);
-            pages.push(full);
-            console.log(`      📄 Página de episodios: ${key}`);
+        const pageMatch = u.pathname.match(/^(.*)\/page\/(\d+)\/?$/) || (u.pathname === basePath && u.searchParams.has('page') ? [null, basePath, u.searchParams.get('page')] : null);
+        if (pageMatch && u.origin === new URL(firstUrl).origin) {
+          if (pageMatch[1] === basePath || u.pathname === basePath) {
+            const key = normalizeEpPage(full);
+            if (!visitedPages.has(key)) {
+              visitedPages.add(key);
+              pages.push(full);
+              console.log(`      📄 Página de episodios: ${key}`);
+            }
           }
         }
       } catch {}
@@ -299,10 +332,24 @@ async function collectAllEpisodeUrls(firstUrl) {
 }
 
 /* ---------- PARSEO DE EPISODIO ---------- */
+function parseEpCodeFromUrl(u) {
+  try {
+    const url = new URL(u);
+    const s = url.searchParams.get('season');
+    const e = url.searchParams.get('ep') || url.searchParams.get('episode');
+    if (s && e) return { season: Number(s), number: Number(e) };
+  } catch {}
+  return null;
+}
+
 function parseEpCode(slug) {
-  // Formato real del sitio: "{slug}-1x36" → temporada 1, episodio 36
-  const m = String(slug).match(/(\d+)x(\d+)$/);
+  // Formatos conocidos: "{slug}-1x36", "{slug}-1-36", "{slug}-episodio-36"
+  let m = String(slug).match(/(\d+)x(\d+)$/);
   if (m) return { season: Number(m[1]), number: Number(m[2]) };
+  m = String(slug).match(/-(\d+)-(\d+)$/);
+  if (m) return { season: Number(m[1]), number: Number(m[2]) };
+  m = String(slug).match(/(?:episodio|episode|capitulo|ep|e)-?(\d{1,4})$/i);
+  if (m) return { season: 1, number: Number(m[1]) };
   return { season: 1, number: null };
 }
 
@@ -407,6 +454,12 @@ async function main() {
         type: CATALOG_TAG,
         updatedAt: new Date().toISOString()
       };
+      // Filtro de género: descartar lo que no coincida (ej: solo "animacion")
+      if (GENRE_FILTER && !detail.genres.some(g => g.toLowerCase().includes(GENRE_FILTER))) {
+        console.log(`   ⏭️  Fuera del género "${GENRE_FILTER}": ${detail.genres.join(', ') || 'sin género'}`);
+        continue;
+      }
+
       upsert(db.series, seriesItem);
       detail.genres.forEach(g => allGenres.add(g));
 
@@ -416,14 +469,25 @@ async function main() {
         console.log(`💾 Checkpoint: ${i + 1}/${discovered.length}`);
       }
 
-      const allEpisodeUrls = await collectAllEpisodeUrls(url);
-      if (allEpisodeUrls.length > detail.episodeUrls.length) {
-        console.log(`   📄 Episodios con paginación: ${detail.episodeUrls.length} → ${allEpisodeUrls.length}`);
+      const isMovie = MOVIE_PREFIXES.some(pre => new URL(url).pathname.startsWith(pre));
+
+      let episodeSource;
+      if (isMovie) {
+        // Película: un único episodio cuyos servidores están en la propia ficha
+        episodeSource = [{ url, slug: `${slug}-pelicula`, html }];
+      } else {
+        const all = await collectAllEpisodeUrls(url);
+        if (all.length > detail.episodeUrls.length) {
+          console.log(`   📄 Episodios con paginación: ${detail.episodeUrls.length} → ${all.length}`);
+        }
+        episodeSource = all.map(u => ({ url: u, slug: slugFromUrl(u) }));
       }
 
       const seasonIds = new Set();
       let newCount = 0;
-      for (const epUrl of allEpisodeUrls) {
+      for (const ep of episodeSource) {
+        const epUrl = ep.url;
+        const epSlug = ep.slug;
         const epSlug = slugFromUrl(epUrl);
         const code = parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
@@ -431,7 +495,7 @@ async function main() {
         if (oldEp) { seasonIds.add(seasonId); continue; } // ya lo tenemos (incremental)
         try {
           console.log(`   ▶ ${epSlug}`);
-          const epHtml = await fetchHtml(epUrl);
+          const epHtml = ep.html || await fetchHtml(epUrl);
           const ep = parseEpisode(epHtml, epUrl);
           const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
           const num = code.number ?? episodeNumberFrom(ep.title, slug) ?? fallbackNum;
