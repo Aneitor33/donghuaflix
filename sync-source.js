@@ -261,7 +261,7 @@ function parseSeries(html, url) {
 
   // Géneros: enlaces de género (doramasflix) o línea "Género: X, Y" (cuevana)
   const genres = [];
-  $('a[href*="/etiquetas/"], a[href*="/generos/"], a[href*="/genero"]').each((_, el) => {
+  $('a[href*="/etiquetas/"], a[href*="/generos/"], a[href*="/genero"], a[href*="genre"], a[href*="/categoria/"]').each((_, el) => {
     const g = clean($(el).text());
     if (g && g.length < 30) genres.push(g);
   });
@@ -506,8 +506,15 @@ async function main() {
       };
       // Filtro de género: descartar lo que no coincida (ej: solo "animacion")
       if (GENRE_FILTER && !detail.genres.some(g => g.toLowerCase().includes(GENRE_FILTER))) {
-        console.log(`   ⏭️  Fuera del género "${GENRE_FILTER}": ${detail.genres.join(', ') || 'sin género'}`);
-        continue;
+        // Excepción: si el propio seed ya es una búsqueda de género (genre=...)
+        // y la ficha no expone géneros, la aceptamos (el listado ya venía filtrado)
+        const seedEsDeGenero = SEEDS.some(s => s.includes('genre='));
+        if (seedEsDeGenero && !detail.genres.length) {
+          console.log(`   ⚠️  Género no legible en la ficha, pero el seed ya es de género → se acepta`);
+        } else {
+          console.log(`   ⏭️  Fuera del género "${GENRE_FILTER}": ${detail.genres.join(', ') || 'sin género'}`);
+          continue;
+        }
       }
 
       // Filtro de país: descartar lo que no sea del país pedido (ej: solo "china")
