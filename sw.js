@@ -1,5 +1,5 @@
 /* DonghuaFlix Service Worker v4 — Network First (siempre fresco cuando hay internet) */
-const CACHE = 'donghuaflix-v4';
+const CACHE = 'donghuaflix-v5';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './icon-256.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
