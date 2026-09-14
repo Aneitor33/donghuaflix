@@ -1,0 +1,51 @@
+name: Sincronizar catálogo Cdramas
+
+on:
+  schedule:
+    - cron: '0 3,15 * * *'
+  workflow_dispatch:
+
+# Nunca correr a la vez que los otros workflows de catálogo: se ponen en cola
+concurrency:
+  group: sync-catalogos
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Ejecutar sincronización de Cdramas
+        env:
+          SOURCE_URL: https://doramasflix.io
+          SEEDS: /paises/china,/idiomas/mandarin
+          OUT_FILE: public/data/catalog-cdrama.json
+          CATALOG_TAG: cdrama
+        run: node sync-source.js
+
+      - name: Sincronizar portadas (TMDB/AniList)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node poster-sync.js
+
+      - name: Guardar cambios en el catálogo
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo cdrama"
+          git pull --rebase origin main
+          git push
+
