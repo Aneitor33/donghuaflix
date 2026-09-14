@@ -63,7 +63,7 @@ img{user-select:none}
 .eyebrow{font-size:11px;font-weight:800;letter-spacing:2.2px;color:#ddd;text-transform:uppercase}
 .hero h1{font-size:clamp(34px,6vw,80px);line-height:.95;letter-spacing:-3px;margin:14px 0 20px;text-shadow:0 4px 24px #000c}
 .hero p{font-size:15px;line-height:1.7;color:#d4d6db;max-width:650px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.hero-dots{position:absolute;right:5%;bottom:46px;z-index:2;display:flex;gap:8px}
+.hero-dots{position:absolute;right:5%;bottom:18px;z-index:3;z-index:2;display:flex;gap:8px}
 .hero-dots button{width:22px;height:4px;border-radius:99px;border:0;background:#ffffff40;cursor:pointer;padding:0;transition:background .3s}
 .hero-dots button.active{background:var(--red)}
 
@@ -101,7 +101,7 @@ img{user-select:none}
 .poster{aspect-ratio:2/3;border-radius:9px;overflow:hidden;background:#171920;position:relative;box-shadow:0 12px 30px #0006}
 .poster:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 70%,#0007);pointer-events:none}
 .poster img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .35s}
-.poster img.wide{object-fit:contain;background:#0a0b10}
+.poster img.wide{object-fit:cover;object-position:center}
 .card:hover .poster img{transform:scale(1.055)}
 .badge{position:absolute;left:8px;top:8px;z-index:2;background:#fff;color:#101116;padding:5px 7px;border-radius:5px;font-size:9px;font-weight:800;text-transform:uppercase}
 .badge:has-text("emisión"){}
@@ -118,7 +118,7 @@ img{user-select:none}
 .detail-top{max-width:1120px;display:grid;grid-template-columns:260px 1fr;gap:36px}
 .detail-poster{width:260px;aspect-ratio:2/3;border-radius:var(--radius);overflow:hidden;background:#171920;box-shadow:var(--shadow)}
 .detail-poster img{width:100%;height:100%;object-fit:cover;object-position:top center}
-.detail-poster img.wide{object-fit:contain;background:#0a0b10}
+.detail-poster img.wide{object-fit:cover;object-position:center}
 .detail h1{font-size:clamp(30px,5vw,62px);letter-spacing:-2.5px;margin:8px 0}
 .detail p{line-height:1.75;color:#c9ccd2;max-width:850px}
 .chips{display:flex;gap:7px;flex-wrap:wrap}
@@ -267,4 +267,34 @@ html,body{width:100%;overflow-x:hidden}
   .season-picker{max-width:100%}
   .ep-pagination{gap:10px}
   .ep-pagination .btn{padding:10px 13px;font-size:12px}
+}
+
+
+/* ---------- BARRA INFERIOR (móvil, estilo Netflix) ---------- */
+.bottom-nav{display:none}
+.more-menu{display:none}
+@media(max-width:900px){
+  body{padding-bottom:70px}
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;
+    background:#0b0d12f5;border-top:1px solid var(--line);
+    backdrop-filter:blur(14px);
+    padding:5px 2px calc(5px + env(safe-area-inset-bottom));
+  }
+  .bottom-nav a,.bottom-nav button{
+    flex:1;background:none;border:0;color:#8b8f98;text-decoration:none;
+    font-size:10px;font-weight:600;display:flex;flex-direction:column;
+    align-items:center;gap:3px;padding:5px 0;cursor:pointer;letter-spacing:.2px;
+  }
+  .bottom-nav a.active{color:#fff}
+  .bottom-nav a.active span{transform:translateY(-2px)}
+  .bottom-nav span{font-size:19px;transition:transform .2s}
+  .more-menu{
+    display:none;flex-direction:column;position:fixed;bottom:74px;right:10px;
+    background:#151820;border:1px solid var(--line);border-radius:14px;
+    padding:8px;z-index:61;box-shadow:var(--shadow);min-width:190px;
+  }
+  .more-menu.open{display:flex;animation:toastIn .2s ease}
+  .more-menu a{padding:12px 16px;color:#fff;text-decoration:none;font-size:13px;font-weight:600;border-radius:9px}
+  .more-menu a:hover{background:#22262f}
 }
