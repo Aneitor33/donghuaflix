@@ -633,7 +633,17 @@ async function main() {
         const code = parseEpCodeFromUrl(epUrl) || parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
         const oldEp = db.episodes.find(e => e.id === epSlug);
-        if (oldEp) { seasonIds.add(seasonId); missCount = 0; continue; } // ya lo tenemos (incremental)
+        if (oldEp && (oldEp.servers || []).length > 0) {
+          // Ya lo tenemos con servidores: nada que hacer
+          seasonIds.add(seasonId);
+          missCount = 0;
+          continue;
+        }
+        if (oldEp) {
+          // Existe pero SIN servidores: probablemente de un run anterior
+          // con extracción rota → lo volvemos a procesar y actualizar
+          console.log(`   ↻ ${epSlug} — existía sin servidores, re-procesando`);
+        }
         // 4 seguidos que no existen = fin de temporada (con o sin total)
         if (missCount >= 4) {
           console.log(`   🛑 Fin de temporada detectado: 4 episodios seguidos no existen`);
@@ -643,6 +653,17 @@ async function main() {
           console.log(`   ▶ ${epSlug}`);
           const epHtml = ep.html || await fetchHtml(epUrl);
           const parsed = parseEpisode(epHtml, epUrl);
+
+          // SOFT-404: doramasflix devuelve HTTP 200 en páginas de error.
+          // Un episodio real tiene servidores O título con "capítulo/episodio".
+          const pareceReal = parsed.servers.length > 0 ||
+            /cap[ií]tulo|episodio|temporada|episode/i.test(parsed.title);
+          if (!pareceReal) {
+            missCount++;
+            console.log(`   ⚠️ No existe (soft-404): "${parsed.title.slice(0, 50)}" — fallo ${missCount}/4`);
+            continue;
+          }
+
           const srvNames = parsed.servers.map(x => x.name).join(', ') || 'NINGUNO';
           console.log(`      🎥 ${parsed.servers.length} servidores: ${srvNames}`);
           const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
