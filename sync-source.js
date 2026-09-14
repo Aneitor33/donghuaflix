@@ -1,0 +1,433 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import * as cheerio from 'cheerio';
+
+/*
+   DONGHUAFLIX — SCRAPER DE CDRAMAS (doramasflix.io)
+   Totalmente independiente del scraper de donghuas.
+   Genera: public/data/catalog-cdrama.json
+*/
+const BASE_URL = process.env.SOURCE_URL || 'https://doramasflix.io';
+const OUT_FILE = path.resolve(process.env.OUT_FILE || 'public/data/catalog-cdrama.json');
+
+const SEEDS = (process.env.SEEDS || '/paises/china,/idiomas/mandarin')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+const CATALOG_TAG = process.env.CATALOG_TAG || 'cdrama';
+
+const MAX_DISCOVERY_PAGES = 60;
+const FETCH_TIMEOUT_MS = 30000;
+const FETCH_RETRIES = 3;
+const POLITENESS_MS = 600;
+
+async function sleep(ms) {
+  await new Promise(r => setTimeout(r, ms));
+}
+
+const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
+
+/* ---------- URLS ---------- */
+function absolute(raw, base = BASE_URL) {
+  if (!raw) return null;
+  const value = String(raw).trim();
+  if (!value || /^(javascript:|mailto:|tel:|#)/i.test(value)) return null;
+  try { return new URL(value, base).href; } catch { return null; }
+}
+function sameOrigin(url) {
+  try { return new URL(url).origin === new URL(BASE_URL).origin; }
+  catch { return false; }
+}
+function slugFromUrl(raw) {
+  try {
+    const u = new URL(raw, BASE_URL);
+    return decodeURIComponent(u.pathname.split('/').filter(Boolean).pop() || '');
+  } catch { return ''; }
+}
+function uniqueUrls(values) {
+  return [...new Set(values.map(u => absolute(u)).filter(Boolean))];
+}
+
+/* ---------- FETCH ---------- */
+async function fetchHtml(url, attempt = 1) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; DonghuaFlixCdramaSync/1.0)',
+        'Accept': 'text/html,application/xhtml+xml'
+      }
+    });
+    if (!res.ok) {
+      if (attempt < FETCH_RETRIES && [408, 425, 429, 500, 502, 503, 504].includes(res.status)) {
+        await sleep(1200 * attempt);
+        return fetchHtml(url, attempt + 1);
+      }
+      throw new Error(`HTTP ${res.status} en ${url}`);
+    }
+    return await res.text();
+  } catch (err) {
+    if (attempt < FETCH_RETRIES) {
+      await sleep(1200 * attempt);
+      return fetchHtml(url, attempt + 1);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* ---------- DESCUBRIMIENTO DE SERIES ---------- */
+function parseSeriesLinks(html, pageUrl) {
+  const $ = cheerio.load(html);
+  const links = [];
+  $('a[href]').each((_, el) => {
+    const url = absolute($(el).attr('href'), pageUrl);
+    if (!url || !sameOrigin(url)) return;
+    try {
+      if (new URL(url).pathname.startsWith('/doramas/')) links.push(url);
+    } catch {}
+  });
+  return uniqueUrls(links);
+}
+
+function extractPagination(html, pageUrl) {
+  const $ = cheerio.load(html);
+  const links = [];
+  $('a[href]').each((_, el) => {
+    const url = absolute($(el).attr('href'), pageUrl);
+    if (!url || !sameOrigin(url)) return;
+    try {
+      const u = new URL(url);
+      if (u.searchParams.has('page')) {
+        const p = Number(u.searchParams.get('page'));
+        if (Number.isInteger(p) && p >= 2) links.push(url);
+      }
+    } catch {}
+  });
+  return uniqueUrls(links);
+}
+
+async function discoverSeries() {
+  const all = new Set();
+  for (const seed of SEEDS) {
+    const first = absolute(seed);
+    const queue = [first];
+    const visited = new Set();
+    while (queue.length && visited.size < MAX_DISCOVERY_PAGES) {
+      const pageUrl = queue.shift();
+      if (!pageUrl || visited.has(pageUrl)) continue;
+      visited.add(pageUrl);
+      console.log(`📄 Página ${visited.size}: ${pageUrl}`);
+      try {
+        const html = await fetchHtml(pageUrl);
+        parseSeriesLinks(html, pageUrl).forEach(u => all.add(u));
+        for (const next of extractPagination(html, pageUrl)) {
+          if (!visited.has(next) && !queue.includes(next)) queue.push(next);
+        }
+      } catch (e) {
+        console.log(`   ⚠️ ${e.message}`);
+      }
+      await sleep(POLITENESS_MS);
+    }
+  }
+  console.log(`\n🎯 TOTAL CDRAMAS DESCUBIERTOS: ${all.size}`);
+  return [...all];
+}
+
+/* ---------- PARSEO DE SERIE ---------- */
+function extractMetaLine($) {
+  // Línea tipo: "2026 · JAPON · 12 Episodios · Subs By Hope"
+  const txt = clean($('h1').parent().text() || '');
+  return txt;
+}
+
+function parseSeries(html, url) {
+  const $ = cheerio.load(html);
+  const slug = slugFromUrl(url);
+
+  const title = clean(
+    $('h1').first().text() ||
+    $('meta[property="og:title"]').attr('content') ||
+    slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  );
+
+  // Portada vertical: primera imagen grande (el sitio muestra banner + poster)
+  let image = null;
+  const og = absolute($('meta[property="og:image"]').attr('content'), url);
+  if (og) image = og;
+  if (!image) {
+    $('img').each((_, el) => {
+      if (image) return;
+      const src = $(el).attr('data-src') || $(el).attr('src');
+      const full = absolute(src, url);
+      if (full && /\.(jpg|jpeg|png|webp)(\?|$)/i.test(full) && !/logo|icon|banner/i.test(full)) image = full;
+    });
+  }
+
+  // Sinopsis: párrafo después de "Ver TITULO Online :"
+  let synopsis = '';
+  $('p').each((_, el) => {
+    const t = clean($(el).text());
+    if (t.length > 80 && !synopsis) synopsis = t;
+  });
+
+  // Detalles (tabla): Estado, País, Estreno, Episodios
+  const details = {};
+  $('dl, table, [class*="detail"], [class*="info"]').each((_, el) => {
+    const t = clean($(el).text());
+    if (/Estado/i.test(t)) {
+      const m = t.match(/Estado\s+(.+?)(?:Pa[ií]s|Estreno|Episodios|$)/i);
+      if (m) details.status = clean(m[1]);
+      const c = t.match(/Pa[ií]s\s+(.+?)(?:Estreno|Episodios|Idiomas|$)/i);
+      if (c) details.country = clean(c[1]);
+      const ep = t.match(/Episodios\s+(\d+)\s*de\s*(\d+)/i);
+      if (ep) { details.online = Number(ep[1]); details.total = Number(ep[2]); }
+    }
+  });
+  if (!details.status) {
+    const body = clean($('body').text());
+    const m = body.match(/Estado\s+(En emisi[oó]n|Finalizado|Completado|En producci[oó]n)/i);
+    if (m) details.status = clean(m[1]);
+    const c = body.match(/Pa[ií]s\s+(China|Corea|Jap[oó]n|Tailandia)/i);
+    if (c) details.country = clean(c[1]);
+  }
+  const bodyTxt = clean($('body').text());
+  const epM = bodyTxt.match(/(\d+)\s+de\s+(\d+)\s+online/i);
+  if (epM) { details.online = Number(epM[1]); details.total = Number(epM[2]); }
+
+  // Géneros
+  const genres = [];
+  $('a[href*="/etiquetas/"], a[href*="/generos/"]').each((_, el) => {
+    const g = clean($(el).text());
+    if (g && g.length < 30) genres.push(g);
+  });
+
+  // Enlaces de episodios: rutas tipo /ver/{slug}... o que contengan el slug
+  const episodeUrls = [];
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href');
+    const full = absolute(href, url);
+    if (!full || !sameOrigin(full)) return;
+    try {
+      const p = new URL(full).pathname;
+      if (p.startsWith('/doramas/')) return; // es la propia ficha u otras series
+      if (/\/(ver|episodios?|capitulos?|watch|play)\//i.test(p) || p.includes(slug)) {
+        episodeUrls.push(full);
+      }
+    } catch {}
+  });
+
+  return {
+    id: slug, slug, title, image: image || null, synopsis: synopsis || null,
+    status: details.status || null,
+    country: details.country || null,
+    genres: [...new Set(genres)],
+    totalEpisodes: details.total || null,
+    onlineEpisodes: details.online || null,
+    episodeUrls: uniqueUrls(episodeUrls),
+    sourceUrl: absolute(url)
+  };
+}
+
+/* ---------- PARSEO DE EPISODIO ---------- */
+function parseEpCode(slug) {
+  // Formato real del sitio: "{slug}-1x36" → temporada 1, episodio 36
+  const m = String(slug).match(/(\d+)x(\d+)$/);
+  if (m) return { season: Number(m[1]), number: Number(m[2]) };
+  return { season: 1, number: null };
+}
+
+function episodeNumberFrom(text, slug) {
+  const t = String(text || '');
+  let m = t.match(/(?:cap[ií]tulo|episodio|episode|cap|ep)[^\d]*(\d{1,4})/i);
+  if (m) return Number(m[1]);
+  m = t.match(/(\d{1,4})(?:\s*(?:\||–|-)\s*\d+)?\s*$/);
+  if (m) return Number(m[1]);
+  return null;
+}
+
+function parseEpisode(html, url) {
+  const $ = cheerio.load(html);
+  const title = clean(
+    $('h1').first().text() ||
+    $('meta[property="og:title"]').attr('content') ||
+    slugFromUrl(url)
+  );
+  const servers = [];
+  const addServer = (name, raw, embed = false) => {
+    const u = absolute(raw, url);
+    if (!u) return;
+    const key = name.toLowerCase();
+    if (servers.some(s => s.url === u)) return;
+    servers.push({ name: clean(name) || 'Servidor', url: u, embed: Boolean(embed) });
+  };
+  $('iframe[src]').each((_, el) => {
+    const src = absolute($(el).attr('src'), url);
+    if (!src || sameOrigin(src)) return;
+    let host = 'Servidor';
+    try { host = new URL(src).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, src, true);
+  });
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href');
+    const full = absolute(href, url);
+    if (!full || sameOrigin(full)) return;
+    if (/ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega/i.test(full)) {
+      let host = 'Servidor';
+      try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
+      addServer(host, full, false);
+    }
+  });
+  return { title, servers };
+}
+
+/* ---------- BASE DE DATOS ---------- */
+async function loadCatalog() {
+  try {
+    const db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
+    return {
+      meta: db.meta || {},
+      series: Array.isArray(db.series) ? db.series : [],
+      seasons: Array.isArray(db.seasons) ? db.seasons : [],
+      episodes: Array.isArray(db.episodes) ? db.episodes : [],
+      genres: Array.isArray(db.genres) ? db.genres : []
+    };
+  } catch {
+    return { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
+  }
+}
+
+async function saveCatalog(db) {
+  await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
+  const tmp = `${OUT_FILE}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(db, null, 2), 'utf8');
+  await fs.rename(tmp, OUT_FILE);
+}
+
+function upsert(array, item, key = 'id') {
+  const i = array.findIndex(e => e[key] === item[key]);
+  if (i === -1) array.push(item);
+  else array[i] = { ...array[i], ...item };
+}
+
+/* ---------- MAIN ---------- */
+async function main() {
+  console.log(`\n🚀 INICIANDO SYNC [${CATALOG_TAG}] → ${BASE_URL} (${SEEDS.join(', ')})\n`);
+  const db = await loadCatalog();
+  const discovered = await discoverSeries();
+
+  const startedAt = new Date().toISOString();
+  const allGenres = new Set(db.genres);
+
+  for (let i = 0; i < discovered.length; i++) {
+    const url = discovered[i];
+    const slug = slugFromUrl(url);
+    console.log(`\n${i + 1}/${discovered.length} — ${slug}`);
+
+    try {
+      const html = await fetchHtml(url);
+      const detail = parseSeries(html, url);
+
+      const seriesItem = {
+        ...(db.series.find(s => s.id === slug) || {}),
+        id: slug, slug, title: detail.title, image: detail.image,
+        synopsis: detail.synopsis, status: detail.status,
+        country: detail.country, genres: detail.genres,
+        totalEpisodes: detail.totalEpisodes,
+        sourceUrl: detail.sourceUrl,
+        type: CATALOG_TAG,
+        updatedAt: new Date().toISOString()
+      };
+      upsert(db.series, seriesItem);
+      detail.genres.forEach(g => allGenres.add(g));
+
+      // CHECKPOINT cada 10 series
+      if ((i + 1) % 10 === 0) {
+        await saveCatalog(db);
+        console.log(`💾 Checkpoint: ${i + 1}/${discovered.length}`);
+      }
+
+      const seasonIds = new Set();
+      let newCount = 0;
+      for (const epUrl of detail.episodeUrls) {
+        const epSlug = slugFromUrl(epUrl);
+        const code = parseEpCode(epSlug);
+        const seasonId = `${slug}-${code.season}`;
+        const oldEp = db.episodes.find(e => e.id === epSlug);
+        if (oldEp) { seasonIds.add(seasonId); continue; } // ya lo tenemos (incremental)
+        try {
+          console.log(`   ▶ ${epSlug}`);
+          const epHtml = await fetchHtml(epUrl);
+          const ep = parseEpisode(epHtml, epUrl);
+          const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
+          const num = code.number ?? episodeNumberFrom(ep.title, slug) ?? fallbackNum;
+          upsert(db.episodes, {
+            id: epSlug, slug: epSlug,
+            title: ep.title || `Episodio ${num}`,
+            sourceUrl: epUrl,
+            servers: ep.servers,
+            seriesId: slug, seasonId, number: num,
+            updatedAt: new Date().toISOString()
+          });
+          seasonIds.add(seasonId);
+          newCount++;
+        } catch (e) {
+          console.log(`   ⚠️ ${e.message}`);
+        }
+        await sleep(POLITENESS_MS);
+      }
+
+      // Actualizar todas las temporadas tocadas
+      for (const seasonId of seasonIds) {
+        const sn = Number(seasonId.split('-').pop());
+        const seasonEps = db.episodes.filter(e => e.seasonId === seasonId);
+        upsert(db.seasons, {
+          id: seasonId, slug: seasonId, seriesId: slug,
+          sourceUrl: detail.sourceUrl, number: sn,
+          image: detail.image,
+          episodeCount: seasonEps.length,
+          initialSyncComplete: sn === 1 && detail.totalEpisodes
+            ? seasonEps.length >= detail.totalEpisodes
+            : seasonEps.length > 0,
+          updatedAt: new Date().toISOString()
+        });
+      }
+      const totalEps = db.episodes.filter(e => e.seriesId === slug).length;
+      console.log(`   🎬 Episodios: ${totalEps}${newCount ? ` (${newCount} nuevos)` : ''}`);
+
+    } catch (e) {
+      console.log(`❌ Error serie: ${e.message}`);
+    }
+    await sleep(POLITENESS_MS);
+  }
+
+  db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
+  db.meta = {
+    ...(db.meta || {}),
+    version: 1,
+    source: `${BASE_URL}/`,
+    syncedAt: new Date().toISOString(),
+    lastSync: { status: 'success', type: 'full', startedAt, finishedAt: new Date().toISOString(), error: null }
+  };
+  await saveCatalog(db);
+
+  console.log('\n====================================================');
+  console.log(`🎉 SYNC [${CATALOG_TAG}] TERMINADO`);
+  console.log(`📚 Series: ${db.series.length} | 🎬 Episodios: ${db.episodes.length} | 🎭 Géneros: ${db.genres.length}`);
+  console.log('====================================================\n');
+}
+
+main().catch(async e => {
+  console.error('\n💥 ERROR FATAL:', e);
+  try {
+    const db = await loadCatalog();
+    db.meta = { ...(db.meta || {}), lastSync: { status: 'error', finishedAt: new Date().toISOString(), error: e.message } };
+    await saveCatalog(db);
+  } catch {}
+  process.exitCode = 1;
+});
+
