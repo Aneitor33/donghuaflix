@@ -27,20 +27,22 @@ async function fetchJson(url, options = {}, attempt = 1) {
 }
 
 /* ---------- TMDB (requiere API key gratuita) ---------- */
-async function searchTmdb(title) {
+async function tmdbSearch(endpoint, title, lang) {
   if (!TMDB_KEY) return null;
-  const url = `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&language=es-ES`;
+  const url = `https://api.themoviedb.org/3/search/${endpoint}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&language=${lang}`;
   const data = await fetchJson(url);
   const norm = normalize(title);
   const results = data?.results || [];
-  // Preferir coincidencia más exacta del título
-  const best = results.find(r => normalize(r.name) === norm) || results[0];
+  const best = results.find(r => normalize(r.name || r.title) === norm) || results[0];
   if (!best?.poster_path) return null;
   return {
     poster: `https://image.tmdb.org/t/p/w500${best.poster_path}`,
-    match: best.name
+    match: best.name || best.title
   };
 }
+
+const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang);
+const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang);
 
 /* ---------- AniList (gratis, sin key) ---------- */
 async function searchAnilist(title) {
@@ -105,7 +107,36 @@ async function processFile(OUT_FILE) {
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
-    const hit = (await searchTmdb(title)) || (await searchAnilist(title));
+    // Candidatos: título visible + título original si existe
+    const candidates = [...new Set([title, s.originalTitle].filter(Boolean))];
+    let hit = null;
+
+    // 1) TMDB series: español → inglés → chino
+    for (const lang of ['es-ES', 'en-US', 'zh-CN']) {
+      for (const c of candidates) {
+        hit = await searchTmdb(c, lang);
+        if (hit) break;
+        await sleep(150);
+      }
+      if (hit) break;
+    }
+
+    // 2) TMDB películas (algunos donghuas son pelis)
+    if (!hit) {
+      for (const c of candidates) {
+        hit = await searchTmdbMovie(c, 'en-US');
+        if (hit) break;
+        await sleep(150);
+      }
+    }
+
+    // 3) AniList (romaji/english nativo)
+    if (!hit) {
+      for (const c of candidates) {
+        hit = await searchAnilist(c);
+        if (hit) break;
+      }
+    }
     if (!hit) { console.log('   ❌ Sin resultados'); fail++; await sleep(400); continue; }
 
     const local = await downloadPoster(hit.poster, slug);
