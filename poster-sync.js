@@ -97,7 +97,7 @@ async function processFile(OUT_FILE) {
     console.log(`⏭️  No existe ${OUT_FILE}, se omite`);
     return;
   }
-  let ok = 0, skip = 0, fail = 0;
+  let ok = 0, skip = 0, fail = 0, sinceSave = 0;
 
   for (const s of db.series) {
     const slug = s.slug || s.id;
@@ -115,7 +115,8 @@ async function processFile(OUT_FILE) {
     for (const lang of ['es-ES', 'en-US', 'zh-CN']) {
       for (const c of candidates) {
         hit = await searchTmdb(c, lang);
-        if (hit) break;
+        if (hit) { console.log(`   · TMDB[${lang}] "${c}" → ✅ ${hit.match}`); break; }
+        console.log(`   · TMDB[${lang}] "${c}" → ❌`);
         await sleep(150);
       }
       if (hit) break;
@@ -125,7 +126,8 @@ async function processFile(OUT_FILE) {
     if (!hit) {
       for (const c of candidates) {
         hit = await searchTmdbMovie(c, 'en-US');
-        if (hit) break;
+        if (hit) { console.log(`   · TMDB-peli[en-US] "${c}" → ✅ ${hit.match}`); break; }
+        console.log(`   · TMDB-peli[en-US] "${c}" → ❌`);
         await sleep(150);
       }
     }
@@ -134,7 +136,8 @@ async function processFile(OUT_FILE) {
     if (!hit) {
       for (const c of candidates) {
         hit = await searchAnilist(c);
-        if (hit) break;
+        if (hit) { console.log(`   · AniList "${c}" → ✅ ${hit.match}`); break; }
+        console.log(`   · AniList "${c}" → ❌`);
       }
     }
     if (!hit) { console.log('   ❌ Sin resultados'); fail++; await sleep(400); continue; }
@@ -145,6 +148,13 @@ async function processFile(OUT_FILE) {
     s.posterLocal = local;
     console.log(`   ✅ ${hit.match} → ${local}`);
     ok++;
+    sinceSave++;
+    // Checkpoint: guardar cada 10 portadas para no perder progreso
+    if (sinceSave >= 10) {
+      await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8');
+      sinceSave = 0;
+      console.log('   💾 Checkpoint de portadas guardado');
+    }
     await sleep(400); // respetar rate limits
   }
 
