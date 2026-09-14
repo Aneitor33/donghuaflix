@@ -284,7 +284,7 @@ function card(s) {
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
       ${imgUrl
-        ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}">`
+        ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}" onload="this.classList.toggle('wide',this.naturalWidth>this.naturalHeight)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">`
         : '<div class="no-img">DONGHUAFLIX</div>'}
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
       <button class="fav-heart ${fav ? 'on' : ''}" title="Mi lista"
@@ -541,7 +541,7 @@ function detail(slug, seasonRef) {
 
   app.innerHTML = `<section class="detail">
     <div class="detail-top">
-      <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}">` : ''}</div>
+      <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}" onload="this.classList.toggle('wide',this.naturalWidth>this.naturalHeight)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">` : ''}</div>
       <div>
         <div class="eyebrow">${esc(s.status || '')}</div>
         <h1>${esc(title)}</h1>
