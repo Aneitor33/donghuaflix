@@ -25,6 +25,11 @@ const MAX_PAGES = Number(process.env.MAX_DISCOVERY_PAGES || 60);
 // Si se define, solo se guardan las fichas cuyos géneros incluyan este texto
 const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
+// Comparación sin acentos: animación == animacion, ficción == ficcion
+const fold = s => String(s || '')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase();
 // Modo de descubrimiento: seeds | sitemap | both
 const DISCOVERY = (process.env.DISCOVERY || 'seeds').toLowerCase();
 
@@ -189,6 +194,20 @@ async function discoverSeries() {
   return [...all];
 }
 
+/* ---------- NORMALIZAR PAÍS (gentilicios → nombre) ---------- */
+function normalizeCountry(raw) {
+  const t = String(raw || '').toLowerCase();
+  if (!t) return null;
+  if (/chin/.test(t)) return 'China';
+  if (/core/.test(t)) return 'Corea';
+  if (/japon/.test(t)) return 'Japón';
+  if (/tailand/.test(t)) return 'Tailandia';
+  if (/taiw/.test(t)) return 'Taiwán';
+  if (/filipin/.test(t)) return 'Filipinas';
+  if (/hong ?kong/.test(t)) return 'Hong Kong';
+  return raw;
+}
+
 /* ---------- PARSEO DE SERIE ---------- */
 function extractMetaLine($) {
   // Línea tipo: "2026 · JAPON · 12 Episodios · Subs By Hope"
@@ -244,7 +263,7 @@ function parseSeries(html, url) {
   if (!details.status) {
     const m = bodyTxt.match(/Estado\s+(En emisi[oó]n|Finalizado|Completado|En producci[oó]n)/i);
     if (m) details.status = clean(m[1]);
-    const c = bodyTxt.match(/Pa[ií]s\s+(China|Corea|Jap[oó]n|Tailandia)/i);
+    const c = bodyTxt.match(/Pa[ií]s\s+([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{3,25})/);
     if (c) details.country = clean(c[1]);
   }
   const epM = bodyTxt.match(/(\d+)\s+de\s+(\d+)\s+online/i);
@@ -288,7 +307,7 @@ function parseSeries(html, url) {
   return {
     id: slug, slug, title, image: image || null, synopsis: synopsis || null,
     status: details.status || null,
-    country: details.country || null,
+    country: normalizeCountry(details.country),
     genres: [...new Set(genres)],
     totalEpisodes: details.total || null,
     onlineEpisodes: details.online || null,
@@ -505,7 +524,7 @@ async function main() {
         updatedAt: new Date().toISOString()
       };
       // Filtro de género: descartar lo que no coincida (ej: solo "animacion")
-      if (GENRE_FILTER && !detail.genres.some(g => g.toLowerCase().includes(GENRE_FILTER))) {
+      if (GENRE_FILTER && !detail.genres.some(g => fold(g).includes(fold(GENRE_FILTER)))) {
         // Excepción: si el propio seed ya es una búsqueda de género (genre=...)
         // y la ficha no expone géneros, la aceptamos (el listado ya venía filtrado)
         const seedEsDeGenero = SEEDS.some(s => s.includes('genre='));
@@ -518,7 +537,7 @@ async function main() {
       }
 
       // Filtro de país: descartar lo que no sea del país pedido (ej: solo "china")
-      if (COUNTRY_FILTER && !(detail.country || '').toLowerCase().includes(COUNTRY_FILTER)) {
+      if (COUNTRY_FILTER && !fold(detail.country).includes(fold(COUNTRY_FILTER))) {
         console.log(`   ⏭️  Fuera del país "${COUNTRY_FILTER}": ${detail.country || 'sin país'}`);
         continue;
       }
