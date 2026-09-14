@@ -7,7 +7,8 @@ const qs = s => encodeURIComponent(s || '');
 
 // ---------- HELPERS ----------
 const cleanTitle = (s) => {
-  const title = s?.title;
+  let title = s?.title;
+  if (title) title = title.replace(/\s*\|\s*Donghualife.*$/i, '').trim();
   if (!title || title.toLowerCase() === 'temporadas') {
     const rawSlug = s?.slug || s?.id || '';
     if (rawSlug) {
@@ -18,17 +19,21 @@ const cleanTitle = (s) => {
   return title;
 };
 
-// ✅ Nombre de temporada a partir del slug real del catálogo
-// El slug SIEMPRE es la última parte de la URL: donghualife.com/season/doupo-cangqiong-5
+// ✅ Título limpio de episodio: "X - 1 Episodio x245 | Donghualife 2.0" → "Episodio 245"
+const cleanEpisodeTitle = (e) => {
+  let t = (e.title || '').replace(/\s*\|\s*Donghualife.*$/i, '').trim();
+  const m = t.match(/(?:^|[-–—])\s*\d*\s*(?:Episodio|Episode)\s*x?(\d+)\s*$/i);
+  if (m) return `Episodio ${parseInt(m[1], 10)}`;
+  return t || `Episodio ${e.number}`;
+};
+
 const slugFromUrl = u => (u || '').split('?')[0].split('/').filter(Boolean).pop() || '';
 const prettySlug = slug => slug.split('-').filter(Boolean)
   .map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
 const seasonTitle = (season, index) => {
-  // 1) Si el catálogo trae el número explícito, usarlo
   if (Number.isFinite(season.number)) return `Temporada ${season.number}`;
 
-  // 2) Título real (ej: "Temporada 2: El Pilar de la Eternidad")
   const t = (season.title || '').trim();
   if (t && t.toLowerCase() !== 'temporadas') {
     const m = t.match(/(?:temporada|season)\s*(\d{1,3})/i) ||
@@ -37,26 +42,19 @@ const seasonTitle = (season, index) => {
     return t;
   }
 
-  // 3) Slug del catálogo (del campo slug/id o de la URL de origen)
   const slug = (season.slug || season.id || slugFromUrl(season.url || season.sourceUrl) || '').toLowerCase();
 
-  // "serie-1-0" → Temporada 1 (formato temporada-cour, ej: stay-low-profile-sect-chief-1-0)
   let m = slug.match(/-(\d{1,3})-\d{1,3}$/);
   if (m) return `Temporada ${parseInt(m[1], 10)}`;
 
-  // "serie-5" → Temporada 5 (ej: doupo-cangqiong-5)
   m = slug.match(/-(\d{1,3})$/);
   if (m) return `Temporada ${parseInt(m[1], 10)}`;
 
-  // Sin número = especial/OVA/película → nombre legible del slug
-  // (ej: "especial" → "Especial", "el-acuerdo-de-3-anos" → "El Acuerdo De 3 Años")
   if (slug) return prettySlug(slug);
 
   return `Temporada ${index + 1}`;
 };
 
-// ✅ Ordena las temporadas según el orden oficial del catálogo (series.seasonUrls)
-// Evita que "Especial" aparezca antes que la Temporada 1, etc.
 function orderSeasons(s, seasons) {
   const urls = s.seasonUrls || [];
   if (!urls.length) return seasons;
@@ -93,7 +91,53 @@ const seriesGenres = s => {
   return [];
 };
 
-// ---------- TOAST (notificaciones) ----------
+// ---------- EPISODIOS VISTOS ----------
+function getWatched() {
+  try { return JSON.parse(localStorage.getItem('donghuaflix_watched') || '{}'); }
+  catch (e) { return {}; }
+}
+
+function isWatched(seasonId, num) {
+  return Boolean(getWatched()[seasonId]?.[num]);
+}
+
+function markWatchedUpTo(seasonId, num) {
+  const all = getWatched();
+  all[seasonId] = all[seasonId] || {};
+  for (let n = 1; n <= num; n++) {
+    if (!all[seasonId][n]) all[seasonId][n] = Date.now();
+  }
+  localStorage.setItem('donghuaflix_watched', JSON.stringify(all));
+}
+
+function toggleWatched(seasonId, num) {
+  const all = getWatched();
+  all[seasonId] = all[seasonId] || {};
+  if (all[seasonId][num]) delete all[seasonId][num];
+  else all[seasonId][num] = Date.now();
+  localStorage.setItem('donghuaflix_watched', JSON.stringify(all));
+  showToast(isWatched(seasonId, num) ? '✓ Marcado como visto' : '✓ Marcador quitado');
+  const s = findSeries(detailState.seriesId);
+  if (s) {
+    const seasons = orderSeasons(s, DB.seasons.filter(x => x.seriesId === s.id));
+    if (seasons[detailState.seasonIdx]) renderEpisodePage(seasons[detailState.seasonIdx]);
+  }
+}
+
+function seriesProgress(s) {
+  const watched = getWatched();
+  const seasons = DB.seasons.filter(x => x.seriesId === s.id);
+  let total = 0, seen = 0;
+  for (const seas of seasons) {
+    const eps = DB.episodes.filter(e => e.seasonId === seas.id);
+    total += eps.length;
+    const w = watched[seas.id] || {};
+    seen += eps.filter(e => w[e.number]).length;
+  }
+  return total ? Math.round(seen / total * 100) : 0;
+}
+
+// ---------- TOAST ----------
 let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -104,7 +148,7 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ---------- FAVORITOS (Mi lista) ----------
+// ---------- FAVORITOS ----------
 function getFavs() {
   try { return JSON.parse(localStorage.getItem('donghuaflix_favs') || '[]'); }
   catch (e) { return []; }
@@ -121,7 +165,7 @@ function toggleFav(seriesId) {
 
 const isFav = id => getFavs().includes(id);
 
-// ---------- HISTORIAL (Continuar viendo) ----------
+// ---------- HISTORIAL ----------
 function getHistory() {
   try { return JSON.parse(localStorage.getItem('donghuaflix_history') || '{}'); }
   catch (e) { return {}; }
@@ -165,7 +209,6 @@ function autoNext() {
   }
 }
 
-// Dailymotion avisa al padre cuando el video termina
 window.addEventListener('message', event => {
   const origin = String(event.origin || '');
   if (!/dailymotion|dmcdn/i.test(origin)) return;
@@ -173,30 +216,40 @@ window.addEventListener('message', event => {
   if (/video[_-]?end|ended/i.test(data)) autoNext();
 });
 
-// ---------- RECOMENDACIONES (sin repetir lo ya visto) ----------
+// ---------- RECOMENDACIONES ----------
 function getRecommendedSeries(currentSeries, limit = 8) {
   const historyIds = new Set(Object.keys(getHistory()));
   const currentGenres = seriesGenres(currentSeries).map(g => g.toLowerCase());
 
   const others = DB.series.filter(s => s.id !== currentSeries.id);
 
-  // Puntuar por géneros en común
   const scored = others.map(s => ({
     s,
     score: seriesGenres(s).map(g => g.toLowerCase()).filter(g => currentGenres.includes(g)).length
   }));
 
-  // Prioridad 1: mismos géneros Y no vistos
   const fresh = scored
     .filter(x => x.score > 0 && !historyIds.has(x.s.id))
     .sort((a, b) => b.score - a.score || (b.s.updatedAt || '').localeCompare(a.s.updatedAt || ''));
 
-  // Prioridad 2 (relleno): otros no vistos, los más recientes
   const filler = scored
     .filter(x => x.score === 0 && !historyIds.has(x.s.id))
     .sort((a, b) => (b.s.updatedAt || '').localeCompare(a.s.updatedAt || ''));
 
   return [...fresh, ...filler].slice(0, limit).map(x => x.s);
+}
+
+// ---------- PANTALLA COMPLETA DEL REPRODUCTOR ----------
+function togglePlayerFS() {
+  const player = document.querySelector('.player');
+  if (!player) return;
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else if (player.requestFullscreen) {
+    player.requestFullscreen();
+  } else if (player.webkitRequestFullscreen) {
+    player.webkitRequestFullscreen();
+  }
 }
 
 // ---------- CARGA ----------
@@ -227,6 +280,7 @@ function card(s) {
   const imgUrl = getSeriesImage(s);
   const title = cleanTitle(s);
   const fav = isFav(s.id);
+  const progress = seriesProgress(s);
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
       ${imgUrl
@@ -235,12 +289,12 @@ function card(s) {
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
       <button class="fav-heart ${fav ? 'on' : ''}" title="Mi lista"
         onclick="event.stopPropagation();toggleFav('${esc(s.id)}');refreshFavUI(this,'${esc(s.id)}')">${fav ? '❤️' : '🤍'}</button>
+      ${progress > 0 ? `<div class="progress"><span style="width:${progress}%"></span></div>` : ''}
     </div>
     <h3>${esc(title)}</h3>
   </article>`;
 }
 
-// Actualiza el corazón sin recargar toda la vista
 function refreshFavUI(btn, seriesId) {
   const fav = isFav(seriesId);
   btn.classList.toggle('on', fav);
@@ -256,7 +310,7 @@ function rail(items, historyData = null) {
   }).join('')}</div>`;
 }
 
-// ---------- HERO CON CARRUSEL ----------
+// ---------- HERO ----------
 let heroItems = [], heroIdx = 0, heroTimer = null;
 
 function renderHero() {
@@ -458,12 +512,28 @@ function updateSearchResults(q = '') {
     : '<p class="muted" style="grid-column:1/-1">No se encontraron donghuas con ese nombre.</p>';
 }
 
-// ---------- DETALLE DE SERIE ----------
-function detail(slug) {
+// ---------- DETALLE DE SERIE (selector de temporadas estilo Netflix) ----------
+let detailState = { seriesId: null, seasonIdx: 0, page: null };
+const EPS_PER_PAGE = 50;
+
+function detail(slug, seasonRef) {
   const s = findSeries(slug);
   if (!s) return notfound();
 
   const seasons = orderSeasons(s, DB.seasons.filter(x => x.seriesId === s.id));
+
+  if (detailState.seriesId !== s.id) {
+    detailState = { seriesId: s.id, seasonIdx: 0, page: null };
+  }
+  if (seasonRef) {
+    const i = seasons.findIndex(x =>
+      (x.slug || x.id) === seasonRef || String(x.number) === String(seasonRef));
+    if (i !== -1) {
+      detailState.seasonIdx = i;
+      detailState.page = null;
+    }
+  }
+
   const imgUrl = getSeriesImage(s);
   const title = cleanTitle(s);
   const genres = seriesGenres(s);
@@ -485,21 +555,95 @@ function detail(slug) {
         </button>
       </div>
     </div>
-    <div style="margin-top:34px">
-      ${seasons.length ? seasons.map((season, i) => {
-        const eps = dedupeEps(DB.episodes.filter(e => e.seasonId === season.id));
-        return `<div class="season">
-          <h3>${esc(seasonTitle(season, i))} <span class="muted">(${eps.length} episodios)</span></h3>
-          <div class="episode-list">
-            ${eps.map(e => `<a class="episode" href="#/episode/${qs(e.slug || e.id)}">
-              <strong>Ep. ${e.number}</strong>
-              <span class="meta">${esc(e.title || '')}</span>
-            </a>`).join('')}
-          </div>
-        </div>`;
-      }).join('') : '<div class="empty">No hay episodios disponibles.</div>'}
-    </div>
+    <div id="seasonArea" style="margin-top:30px"></div>
   </section>`;
+
+  renderSeasonArea(seasons);
+}
+
+function renderSeasonArea(seasons) {
+  const area = document.getElementById('seasonArea');
+  if (!area) return;
+  if (!seasons.length) {
+    area.innerHTML = '<div class="empty">No hay episodios disponibles.</div>';
+    return;
+  }
+  area.innerHTML = `
+    <div class="season-picker">
+      <select id="seasonSelect" onchange="selectSeason(this.value)">
+        ${seasons.map((season, i) => {
+          const count = dedupeEps(DB.episodes.filter(e => e.seasonId === season.id)).length;
+          return `<option value="${i}" ${i === detailState.seasonIdx ? 'selected' : ''}>${esc(seasonTitle(season, i))} · ${count} episodios</option>`;
+        }).join('')}
+      </select>
+    </div>
+    <div id="episodeArea"></div>`;
+  renderEpisodePage(seasons[detailState.seasonIdx]);
+}
+
+function selectSeason(i) {
+  detailState.seasonIdx = Number(i);
+  detailState.page = null;
+  const s = findSeries(detailState.seriesId);
+  if (!s) return;
+  const seasons = orderSeasons(s, DB.seasons.filter(x => x.seriesId === s.id));
+  renderEpisodePage(seasons[detailState.seasonIdx]);
+}
+
+function renderEpisodePage(season) {
+  const area = document.getElementById('episodeArea');
+  if (!area) return;
+
+  const eps = dedupeEps(DB.episodes.filter(e => e.seasonId === season.id));
+  if (!eps.length) {
+    area.innerHTML = '<div class="empty">No hay episodios disponibles todavía para esta temporada.</div>';
+    return;
+  }
+
+  const totalPages = Math.ceil(eps.length / EPS_PER_PAGE);
+
+  // Si no hay página definida, abrir en la del último episodio visto
+  if (detailState.page == null || detailState.page >= totalPages) {
+    const watched = getWatched()[season.id] || {};
+    const lastWatched = Math.max(0, ...Object.keys(watched).map(Number));
+    detailState.page = lastWatched ? Math.floor((lastWatched - 1) / EPS_PER_PAGE) : 0;
+  }
+
+  const page = Math.min(detailState.page, totalPages - 1);
+  detailState.page = page;
+  const slice = eps.slice(page * EPS_PER_PAGE, (page + 1) * EPS_PER_PAGE);
+  const watched = getWatched()[season.id] || {};
+
+  area.innerHTML = `
+    <div class="episode-list">
+      ${slice.map(e => {
+        const w = Boolean(watched[e.number]);
+        return `<a class="episode ${w ? 'watched' : ''}" href="#/episode/${qs(e.slug || e.id)}">
+          <span class="ep-num">${e.number}</span>
+          <span class="ep-info">
+            <strong>${esc(cleanEpisodeTitle(e))}</strong>
+            <span class="meta">${esc((e.servers || []).map(x => x.name).join(' · ') || (e.releaseDate || ''))}</span>
+          </span>
+          <button class="watched-btn ${w ? 'on' : ''}" title="${w ? 'Quitar marcador' : 'Marcar como visto'}"
+            onclick="event.preventDefault();event.stopPropagation();toggleWatched('${esc(season.id)}',${e.number})">${w ? '✓' : ''}</button>
+        </a>`;
+      }).join('')}
+    </div>
+    ${totalPages > 1 ? `
+    <div class="ep-pagination">
+      <button class="btn dark" ${page === 0 ? 'disabled' : ''} onclick="gotoPage(${page - 1})">« Anterior</button>
+      <span class="muted">Página ${page + 1} de ${totalPages}</span>
+      <button class="btn dark" ${page >= totalPages - 1 ? 'disabled' : ''} onclick="gotoPage(${page + 1})">Siguiente »</button>
+    </div>` : ''}`;
+}
+
+function gotoPage(p) {
+  detailState.page = p;
+  const s = findSeries(detailState.seriesId);
+  if (!s) return;
+  const seasons = orderSeasons(s, DB.seasons.filter(x => x.seriesId === s.id));
+  renderEpisodePage(seasons[detailState.seasonIdx]);
+  setTimeout(() => document.getElementById('episodeArea')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
 
 // ---------- REPRODUCTOR ----------
@@ -509,6 +653,7 @@ function episode(slug) {
 
   currentEpisode = e;
   saveHistory(e.seriesId, e);
+  markWatchedUpTo(e.seasonId, e.number);
 
   const seasonEps = dedupeEps(DB.episodes.filter(x => x.seasonId === e.seasonId));
   const idx = seasonEps.findIndex(x => x.id === e.id);
@@ -517,20 +662,22 @@ function episode(slug) {
 
   const serie = findSeries(e.seriesId);
   const serieRef = serie ? (serie.slug || serie.id) : e.seriesId;
+  const season = DB.seasons.find(x => x.id === e.seasonId);
 
   let current = e.servers?.[0];
   const render = () => {
     const playerEl = document.getElementById('player');
     if (playerEl) {
       playerEl.innerHTML = current?.url
-        ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`
+        ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen *; encrypted-media; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen loading="lazy"></iframe>
+           <button class="fs-btn" onclick="togglePlayerFS()" title="Pantalla completa">⛶</button>`
         : '<div class="empty">Servidor no disponible.</div>';
     }
   };
 
   app.innerHTML = `<section class="detail">
-    <div class="eyebrow">EPISODIO ${e.number}</div>
-    <h1 style="font-size:26px;margin-bottom:6px">${esc(e.title)}</h1>
+    <div class="eyebrow">${esc(season ? seasonTitle(season, 0) : '')} · EPISODIO ${e.number}${isWatched(e.seasonId, e.number) ? ' · ✓ Visto' : ''}</div>
+    <h1 style="font-size:clamp(20px,3.5vw,30px);margin-bottom:6px">${esc(cleanEpisodeTitle(e))}</h1>
     <div class="player" id="player"></div>
     <div class="server-tabs">
       ${(e.servers || []).map((srv, i) =>
@@ -589,12 +736,12 @@ function highlightNav() {
 function route() {
   clearInterval(heroTimer);
   const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
-  const type = p[0], arg = p[1];
+  const type = p[0], arg = p[1], extra = p[2];
 
   if (!type) home();
   else if (type === 'search') search(arg || '');
   else if (type === 'series' && !arg) listAllSeries();
-  else if (type === 'series' && arg) detail(arg);
+  else if (type === 'series' && arg) detail(arg, extra);
   else if (type === 'airing') listByStatus('emisión', 'Donghuas En Emisión');
   else if (type === 'completed') listByStatus('finaliz', 'Donghuas Finalizados');
   else if (type === 'movies') listMovies();
@@ -611,7 +758,6 @@ function route() {
 // ---------- EVENTOS GLOBALES ----------
 window.addEventListener('hashchange', route);
 
-// Sombra sólida en la navbar al hacer scroll
 window.addEventListener('scroll', () => {
   document.querySelector('.nav')?.classList.toggle('scrolled', window.scrollY > 40);
   document.getElementById('toTop')?.classList.toggle('show', window.scrollY > 500);
@@ -628,11 +774,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Botón volver arriba
   document.getElementById('toTop')?.addEventListener('click', () =>
     window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // Registrar Service Worker (PWA)
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
