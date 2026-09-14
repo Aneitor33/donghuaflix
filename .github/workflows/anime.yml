@@ -35,6 +35,7 @@ jobs:
           MOVIE_PREFIXES: /peliculas/
           OUT_FILE: public/data/catalog-anime.json
           CATALOG_TAG: anime
+          GENRE_FILTER: animacion
           MAX_DISCOVERY_PAGES: 150
         run: node sync-source.js
 
