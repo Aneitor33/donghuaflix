@@ -1,7 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const OUT_FILE = path.resolve('public/data/catalog.json');
+const FILES = [
+  path.resolve('public/data/catalog.json'),
+  path.resolve('public/data/catalog-cdrama.json'),
+  path.resolve('public/data/catalog-anime.json'),
+  path.resolve('public/data/catalog-cine.json')
+];
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
@@ -82,8 +87,14 @@ async function downloadPoster(url, slug) {
   } catch { return null; }
 }
 
-async function main() {
-  const db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
+async function processFile(OUT_FILE) {
+  let db;
+  try {
+    db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
+  } catch {
+    console.log(`⏭️  No existe ${OUT_FILE}, se omite`);
+    return;
+  }
   let ok = 0, skip = 0, fail = 0;
 
   for (const s of db.series) {
@@ -107,9 +118,12 @@ async function main() {
   }
 
   await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8');
-  console.log(`\n========== PORTADAS ==========`);
+  console.log(`\n========== PORTADAS (${path.basename(OUT_FILE)}) ==========`);
   console.log(`✅ Nuevas: ${ok} | ⏭️ Ya tenían: ${skip} | ❌ Fallaron: ${fail}`);
 }
 
-main().catch(e => { console.error('💥', e); process.exit(1); });
+async function main() {
+  for (const file of FILES) await processFile(file);
+}
 
+main().catch(e => { console.error('💥', e); process.exit(1); });
