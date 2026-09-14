@@ -1,6 +1,69 @@
 console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:#e50914;font-size:14px;font-weight:bold;");
 
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
+
+/* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
+const CATALOGS = [
+  { id: 'donghua', file: './public/data/catalog.json', label: 'Donghuas' },
+  { id: 'cdrama', file: './public/data/catalog-cdrama.json', label: 'Cdramas' },
+  { id: 'anime', file: './public/data/catalog-anime.json', label: 'Animación' },
+  { id: 'cine', file: './public/data/catalog-cine.json', label: 'Cine' }
+];
+let DB_CACHE = {};
+let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghua';
+const CATALOG_AVAILABLE = { donghua: true };
+
+async function ensureCatalog(id) {
+  if (DB_CACHE[id]) return DB_CACHE[id];
+  const cat = CATALOGS.find(c => c.id === id);
+  const r = await fetch(cat.file + '?ts=' + Date.now(), { cache: 'reload' });
+  if (!r.ok) throw new Error('No se pudo cargar ' + cat.file);
+  const data = await r.json();
+  DB_CACHE[id] = data;
+  CATALOG_AVAILABLE[id] = true;
+  return data;
+}
+
+async function probeCatalogs() {
+  for (const c of CATALOGS) {
+    if (DB_CACHE[c.id]) { CATALOG_AVAILABLE[c.id] = true; continue; }
+    try {
+      const r = await fetch(c.file, { cache: 'no-store' });
+      CATALOG_AVAILABLE[c.id] = r.ok;
+    } catch { CATALOG_AVAILABLE[c.id] = false; }
+  }
+  renderCatBar();
+}
+
+function renderCatBar() {
+  const bar = document.getElementById('catBar');
+  if (!bar) return;
+  const available = CATALOGS.filter(c => CATALOG_AVAILABLE[c.id]);
+  bar.style.display = available.length > 1 ? '' : 'none';
+  bar.querySelectorAll('button').forEach(b => {
+    const id = b.dataset.cat;
+    b.classList.toggle('on', id === currentCatalog);
+    b.style.display = CATALOG_AVAILABLE[id] ? '' : 'none';
+  });
+}
+
+async function switchCatalog(id) {
+  if (id === currentCatalog) return;
+  app.innerHTML = '<section class="section page-top"><div class="grid">' +
+    Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
+  try {
+    DB = await ensureCatalog(id);
+    currentCatalog = id;
+    localStorage.setItem('donghuaflix_catalog', id);
+    setAmbience('');
+    location.hash = '#/';
+    renderCatBar();
+    route();
+  } catch (e) {
+    showToast('Catálogo no disponible todavía');
+    load();
+  }
+}
 const app = document.getElementById('app');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 const qs = s => encodeURIComponent(s || '');
@@ -275,11 +338,11 @@ function toggleMoreMenu() {
 
 /* ---------- CARGA ---------- */
 async function load() {
-  app.innerHTML = '<section class="section"><div class="grid">' +
+  app.innerHTML = '<section class="section page-top"><div class="grid">' +
     Array(8).fill('<div class="skeleton"></div>').join('') + '</div></section>';
   try {
-    const r = await fetch('./public/data/catalog.json?ts=' + Date.now(), { cache: 'reload' });
-    DB = await r.json();
+    DB = await ensureCatalog(currentCatalog);
+    renderCatBar();
     const footerStatus = document.getElementById('footerStatus');
     if (footerStatus) {
       footerStatus.innerHTML = `
@@ -288,10 +351,11 @@ async function load() {
         <a href="https://instagram.com/bledark__" target="_blank" rel="noopener">@bledark__</a>`;
     }
     route();
+    probeCatalogs();
   } catch (err) {
-    app.innerHTML = `<section class="empty">
+    app.innerHTML = `<section class="empty page-top">
       <h2>Error al cargar el catálogo</h2>
-      <p class="muted">Revisa tu conexión o el archivo public/data/catalog.json</p>
+      <p class="muted">Revisa tu conexión o el archivo del catálogo</p>
     </section>`;
   }
 }
