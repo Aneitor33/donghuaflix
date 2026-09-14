@@ -1,7 +1,7 @@
 {
   "meta": {
     "source": "https://donghualife.com/",
-    "syncedAt": "2026-09-14T12:19:59.803Z",
+    "syncedAt": "2026-09-14T17:05:22.234Z",
     "counts": {
       "series": 66,
       "seasons": 119,
@@ -13,8 +13,8 @@
     "lastSync": {
       "status": "success",
       "type": "full",
-      "startedAt": "2026-09-14T11:02:02.056Z",
-      "finishedAt": "2026-09-14T12:19:59.803Z",
+      "startedAt": "2026-09-14T17:05:22.223Z",
+      "finishedAt": "2026-09-14T17:05:22.234Z",
       "error": null,
       "catalogComplete": false
     }
