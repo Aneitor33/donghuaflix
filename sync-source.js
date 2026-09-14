@@ -432,12 +432,13 @@ function parseEpisode(html, url) {
     slugFromUrl(url)
   );
   const servers = [];
-  const addServer = (name, raw, embed = false) => {
+  const addServer = (name, raw, embed = false, lang = null) => {
     const u = absolute(raw, url);
     if (!u) return;
-    const key = name.toLowerCase();
     if (servers.some(s => s.url === u)) return;
-    servers.push({ name: clean(name) || 'Servidor', url: u, embed: Boolean(embed) });
+    const srv = { name: clean(name) || 'Servidor', url: u, embed: Boolean(embed) };
+    if (lang) srv.lang = lang; // 'latino' | 'subtitulado' | etc.
+    servers.push(srv);
   };
   $('iframe[src]').each((_, el) => {
     const src = absolute($(el).attr('src'), url);
@@ -446,15 +447,24 @@ function parseEpisode(html, url) {
     try { host = new URL(src).hostname.replace(/^www\./, ''); } catch {}
     addServer(host, src, true);
   });
-  // Botones de opciones con URLs en atributos data-*
-  $('[data-url], [data-embed], [data-src], [data-link], [data-player], [data-href]').each((_, el) => {
-    const raw = $(el).attr('data-url') || $(el).attr('data-embed') || $(el).attr('data-src') ||
-                $(el).attr('data-link') || $(el).attr('data-player') || $(el).attr('data-href');
+  // Botones de opciones con URLs en data-* + DETECCIÓN DE IDIOMA
+  // (las pestañas "Español Latino" / "Subtitulado" preceden a sus servidores)
+  let currentLang = null;
+  $('[data-url], [data-embed], [data-src], [data-link], [data-player], [data-href], button, a').each((_, el) => {
+    const node = $(el);
+    const txt = clean(node.text());
+    if (txt && txt.length < 30) {
+      if (/espa[nñ]ol latino|^latino$|castellano/i.test(txt)) { currentLang = 'latino'; return; }
+      if (/subtitulad|subt[ií]tulad/i.test(txt)) { currentLang = 'subtitulado'; return; }
+    }
+    const raw = node.attr('data-url') || node.attr('data-embed') || node.attr('data-src') ||
+                node.attr('data-link') || node.attr('data-player') || node.attr('data-href');
+    if (!raw) return;
     const full = absolute(raw, url);
     if (!full || sameOrigin(full)) return;
     let host = 'Servidor';
     try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
-    addServer(host, full, true);
+    addServer(host, full, true, currentLang);
   });
 
   $('a[href]').each((_, el) => {
@@ -468,7 +478,7 @@ function parseEpisode(html, url) {
     }
   });
   // MÉTODO EXTRA: barrido de TODO el HTML (incluye URLs dentro de <script>)
-  const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish)[^\s"'<>\\]*/gi;
+  const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids)[^\s"'<>\\]*/gi;
   for (const m of html.match(hostRe) || []) {
     let host = 'Servidor';
     try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
@@ -664,7 +674,7 @@ async function main() {
             continue;
           }
 
-          const srvNames = parsed.servers.map(x => x.name).join(', ') || 'NINGUNO';
+          const srvNames = parsed.servers.map(x => x.lang ? `${x.name}[${x.lang}]` : x.name).join(', ') || 'NINGUNO';
           console.log(`      🎥 ${parsed.servers.length} servidores: ${srvNames}`);
           const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
           const num = code.number ?? episodeNumberFrom(parsed.title, slug) ?? fallbackNum;
