@@ -34,8 +34,6 @@ jobs:
           LINK_PREFIXES: /doramas/
           OUT_FILE: public/data/catalog-cdrama.json
           CATALOG_TAG: cdrama
-          DISCOVERY: both
-          COUNTRY_FILTER: china
           MAX_DISCOVERY_PAGES: 60
         run: node sync-source.js
 
