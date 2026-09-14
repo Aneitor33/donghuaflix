@@ -488,21 +488,21 @@ async function main() {
       for (const ep of episodeSource) {
         const epUrl = ep.url;
         const epSlug = ep.slug || slugFromUrl(epUrl);
-        const code = parseEpCode(epSlug);
+        const code = parseEpCodeFromUrl(epUrl) || parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
         const oldEp = db.episodes.find(e => e.id === epSlug);
         if (oldEp) { seasonIds.add(seasonId); continue; } // ya lo tenemos (incremental)
         try {
           console.log(`   ▶ ${epSlug}`);
           const epHtml = ep.html || await fetchHtml(epUrl);
-          const ep = parseEpisode(epHtml, epUrl);
+          const parsed = parseEpisode(epHtml, epUrl);
           const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
-          const num = code.number ?? episodeNumberFrom(ep.title, slug) ?? fallbackNum;
+          const num = code.number ?? episodeNumberFrom(parsed.title, slug) ?? fallbackNum;
           upsert(db.episodes, {
             id: epSlug, slug: epSlug,
-            title: ep.title || `Episodio ${num}`,
+            title: parsed.title || `Episodio ${num}`,
             sourceUrl: epUrl,
-            servers: ep.servers,
+            servers: parsed.servers,
             seriesId: slug, seasonId, number: num,
             updatedAt: new Date().toISOString()
           });
