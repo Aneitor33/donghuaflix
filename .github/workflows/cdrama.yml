@@ -31,8 +31,12 @@ jobs:
         env:
           SOURCE_URL: https://doramasflix.io
           SEEDS: /paises/china,/idiomas/mandarin
+          LINK_PREFIXES: /doramas/
           OUT_FILE: public/data/catalog-cdrama.json
           CATALOG_TAG: cdrama
+          DISCOVERY: both
+          COUNTRY_FILTER: china
+          MAX_DISCOVERY_PAGES: 60
         run: node sync-source.js
 
       - name: Sincronizar portadas (TMDB/AniList)
@@ -48,4 +52,3 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo cdrama"
           git pull --rebase origin main
           git push
-
