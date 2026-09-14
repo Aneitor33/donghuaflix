@@ -24,6 +24,40 @@ const MOVIE_PREFIXES = (process.env.MOVIE_PREFIXES || '')
 const MAX_PAGES = Number(process.env.MAX_DISCOVERY_PAGES || 60);
 // Si se define, solo se guardan las fichas cuyos géneros incluyan este texto
 const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
+const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
+// Modo de descubrimiento: seeds | sitemap | both
+const DISCOVERY = (process.env.DISCOVERY || 'seeds').toLowerCase();
+
+async function discoverFromSitemap() {
+  const found = new Set();
+  const seenMaps = new Set();
+  const queue = [`${BASE_URL}/sitemap.xml`];
+  while (queue.length && seenMaps.size < 60) {
+    const url = queue.shift();
+    if (seenMaps.has(url)) continue;
+    seenMaps.add(url);
+    let text;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      text = await res.text();
+    } catch { continue; }
+    for (const m of text.matchAll(/<loc>([^<]+)<\/loc>/gi)) {
+      const loc = m[1].trim();
+      if (/sitemap[^<]*\.xml$/i.test(loc)) {
+        if (!seenMaps.has(loc)) queue.push(loc);
+      } else {
+        try {
+          const p = new URL(loc).pathname;
+          if (LINK_PREFIXES.some(pre => p.startsWith(pre))) found.add(loc);
+        } catch {}
+      }
+    }
+    await sleep(POLITENESS_MS);
+  }
+  console.log(`🗺️  Sitemap: ${found.size} fichas encontradas`);
+  return [...found];
+}
 
 const MAX_DISCOVERY_PAGES = 60;
 const FETCH_TIMEOUT_MS = 30000;
@@ -215,6 +249,15 @@ function parseSeries(html, url) {
   }
   const epM = bodyTxt.match(/(\d+)\s+de\s+(\d+)\s+online/i);
   if (epM) { details.online = Number(epM[1]); details.total = Number(epM[2]); }
+  if (!details.total) {
+    const capM = bodyTxt.match(/total de\s+(\d+)\s+cap/i);
+    if (capM) details.total = Number(capM[1]);
+  }
+  if (!details.total) {
+    // Mayor número acompañado de "episodios/capítulos" (evita coger "1 temporada")
+    const nums = [...bodyTxt.matchAll(/(\d{1,4})\s+(?:episodios|cap[ií]tulos)/gi)].map(x => Number(x[1]));
+    if (nums.length) details.total = Math.max(...nums);
+  }
 
   // Géneros: enlaces de género (doramasflix) o línea "Género: X, Y" (cuevana)
   const genres = [];
@@ -430,7 +473,14 @@ function upsert(array, item, key = 'id') {
 async function main() {
   console.log(`\n🚀 INICIANDO SYNC [${CATALOG_TAG}] → ${BASE_URL} (${SEEDS.join(', ')})\n`);
   const db = await loadCatalog();
-  const discovered = await discoverSeries();
+  let discovered = [];
+  if (DISCOVERY === 'seeds' || DISCOVERY === 'both') {
+    discovered = discovered.concat(await discoverSeries());
+  }
+  if (DISCOVERY === 'sitemap' || DISCOVERY === 'both') {
+    discovered = discovered.concat(await discoverFromSitemap());
+  }
+  discovered = [...new Set(discovered)];
 
   const startedAt = new Date().toISOString();
   const allGenres = new Set(db.genres);
@@ -460,6 +510,12 @@ async function main() {
         continue;
       }
 
+      // Filtro de país: descartar lo que no sea del país pedido (ej: solo "china")
+      if (COUNTRY_FILTER && !(detail.country || '').toLowerCase().includes(COUNTRY_FILTER)) {
+        console.log(`   ⏭️  Fuera del país "${COUNTRY_FILTER}": ${detail.country || 'sin país'}`);
+        continue;
+      }
+
       upsert(db.series, seriesItem);
       detail.genres.forEach(g => allGenres.add(g));
 
@@ -470,6 +526,39 @@ async function main() {
       }
 
       const isMovie = MOVIE_PREFIXES.some(pre => new URL(url).pathname.startsWith(pre));
+
+      // Completar episodios: la web pagina vía JS, así que aprendemos el
+      // patrón -{temporada}x{episodio} de los enlaces visibles y sondeamos
+      // hacia adelante comprobando existencia (fin: 4 seguidos que no existen).
+      let totalKnown = null;
+      if (!isMovie) {
+        const m = detail.episodeUrls.find(u => /-(\d+)x(\d+)$/.test(u));
+        if (m) {
+          const base = m.replace(/-(\d+)x(\d+)$/, '');
+          const season = m.match(/-(\d+)x(\d+)$/)[1];
+          const set = new Set(detail.episodeUrls);
+          const nums = detail.episodeUrls
+            .map(u => { const mm = u.match(/-(\d+)x(\d+)$/); return mm ? Number(mm[2]) : 0; });
+          const maxKnown = Math.max(0, ...nums);
+          totalKnown = detail.totalEpisodes || detail.onlineEpisodes || null;
+
+          // Si hay total declarado: generar hasta él.
+          // Si no: sondear hasta 24 más allá del máximo visto (el bucle
+          // de fetch parará tras 4 fallos seguidos).
+          const target = totalKnown || (maxKnown + 24);
+          for (let n = maxKnown + 1; n <= target; n++) {
+            set.add(`${base}-${season}x${n}`);
+          }
+          const complete = [...set].sort((a, b) => {
+            const na = a.match(/-(\d+)x(\d+)$/); const nb = b.match(/-(\d+)x(\d+)$/);
+            return (na && nb) ? Number(na[2]) - Number(nb[2]) : 0;
+          });
+          if (complete.length > detail.episodeUrls.length) {
+            console.log(`   🔧 Sondeo de episodios: ${detail.episodeUrls.length} visibles → probando hasta el ${target}${totalKnown ? ' (total declarado)' : ' (sin total, parada por 404s)'}`);
+            detail.episodeUrls = complete;
+          }
+        }
+      }
 
       let episodeSource;
       if (isMovie) {
@@ -485,13 +574,19 @@ async function main() {
 
       const seasonIds = new Set();
       let newCount = 0;
+      let missCount = 0;
       for (const ep of episodeSource) {
         const epUrl = ep.url;
         const epSlug = ep.slug || slugFromUrl(epUrl);
         const code = parseEpCodeFromUrl(epUrl) || parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
         const oldEp = db.episodes.find(e => e.id === epSlug);
-        if (oldEp) { seasonIds.add(seasonId); continue; } // ya lo tenemos (incremental)
+        if (oldEp) { seasonIds.add(seasonId); missCount = 0; continue; } // ya lo tenemos (incremental)
+        // Sondeo sin total declarado: 4 seguidos que no existen = fin de temporada
+        if (!totalKnown && missCount >= 4) {
+          console.log(`   🛑 Fin de temporada detectado: 4 episodios seguidos no existen`);
+          break;
+        }
         try {
           console.log(`   ▶ ${epSlug}`);
           const epHtml = ep.html || await fetchHtml(epUrl);
@@ -508,8 +603,10 @@ async function main() {
           });
           seasonIds.add(seasonId);
           newCount++;
+          missCount = 0;
         } catch (e) {
           console.log(`   ⚠️ ${e.message}`);
+          missCount++;
         }
         await sleep(POLITENESS_MS);
       }
