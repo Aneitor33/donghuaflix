@@ -76,6 +76,13 @@ const getSeriesImage = (s) => {
   return '';
 };
 
+
+// ---------- PORTADAS INTELIGENTES ----------
+// Imágenes horizontales (banners): fondo difuminado + imagen completa visible
+function imgLoaded(img) {
+  img.classList.toggle('wide', img.naturalWidth > img.naturalHeight);
+}
+
 const findSeries = ref => DB.series.find(x => (x.slug || x.id) === ref || x.id === ref);
 const findEpisode = ref => DB.episodes.find(x => (x.slug || x.id) === ref || x.id === ref);
 
@@ -135,6 +142,10 @@ function seriesProgress(s) {
     seen += eps.filter(e => w[e.number]).length;
   }
   return total ? Math.round(seen / total * 100) : 0;
+}
+
+function toggleMoreMenu() {
+  document.getElementById('moreMenu')?.classList.toggle('open');
 }
 
 // ---------- TOAST ----------
@@ -284,7 +295,7 @@ function card(s) {
   return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
       ${imgUrl
-        ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}" onload="this.classList.toggle('wide',this.naturalWidth>this.naturalHeight)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">`
+        ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}" onload="imgLoaded(this)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">`
         : '<div class="no-img">DONGHUAFLIX</div>'}
       <span class="badge">${esc(s.status || 'DONGHUA')}</span>
       <button class="fav-heart ${fav ? 'on' : ''}" title="Mi lista"
@@ -541,7 +552,7 @@ function detail(slug, seasonRef) {
 
   app.innerHTML = `<section class="detail">
     <div class="detail-top">
-      <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}" onload="this.classList.toggle('wide',this.naturalWidth>this.naturalHeight)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">` : ''}</div>
+      <div class="detail-poster">${imgUrl ? `<img src="${esc(imgUrl)}" alt="${esc(title)}" onload="imgLoaded(this)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">` : ''}</div>
       <div>
         <div class="eyebrow">${esc(s.status || '')}</div>
         <h1>${esc(title)}</h1>
@@ -735,6 +746,7 @@ function highlightNav() {
 
 function route() {
   clearInterval(heroTimer);
+  document.getElementById('moreMenu')?.classList.remove('open');
   const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const type = p[0], arg = p[1], extra = p[2];
 
