@@ -10,6 +10,9 @@ const FILES = [
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
+// Reintentos: espera entre reintentos y máximo de intentos antes de abandonar
+const RETRY_DAYS = Number(process.env.POSTER_RETRY_DAYS || 7);
+const MAX_FAILS = Number(process.env.POSTER_MAX_FAILS || 3);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -43,6 +46,17 @@ async function tmdbSearch(endpoint, title, lang) {
 
 const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang);
 const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang);
+
+/* ---------- Traducción gratuita (MyMemory, sin key) ---------- */
+async function translateTitle(text) {
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`;
+    const data = await fetchJson(url);
+    const t = data?.responseData?.translatedText;
+    if (t && String(t).toLowerCase() !== String(text).toLowerCase()) return t;
+  } catch {}
+  return null;
+}
 
 /* ---------- AniList (gratis, sin key) ---------- */
 async function searchAnilist(title) {
@@ -104,6 +118,23 @@ async function processFile(OUT_FILE) {
     // Si ya tiene portada local y no forzamos, saltar
     if (!FORCE && s.posterLocal) { skip++; continue; }
 
+    // Abandonadas tras MAX_FAILS intentos (salvo FORCE)
+    if (!FORCE && (s.posterFails || 0) >= MAX_FAILS) {
+      skip++;
+      console.log(`\n💀 ${slug} — abandonada tras ${s.posterFails} intentos (FORCE para reintentar)`);
+      continue;
+    }
+
+    // Reintento espaciado: solo si falló hace más de RETRY_DAYS días
+    if (!FORCE && s.posterLastFail) {
+      const dias = (Date.now() - new Date(s.posterLastFail).getTime()) / 86400000;
+      if (dias < RETRY_DAYS) {
+        skip++;
+        console.log(`\n⏳ ${slug} — reintento en ${Math.ceil(RETRY_DAYS - dias)} días`);
+        continue;
+      }
+    }
+
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
@@ -140,10 +171,34 @@ async function processFile(OUT_FILE) {
         console.log(`   · AniList "${c}" → ❌`);
       }
     }
+
+    // 4) Último recurso: traducir el título al inglés y reintentar todo
+    if (!hit) {
+      const translated = await translateTitle(title);
+      if (translated) {
+        console.log(`   · Traducción automática: "${title}" → "${translated}"`);
+        hit = await searchTmdb(translated, 'en-US');
+        if (hit) console.log(`   · TMDB[en-US] "${translated}" → ✅ ${hit.match}`);
+        if (!hit) { hit = await searchTmdbMovie(translated, 'en-US'); if (hit) console.log(`   · TMDB-peli "${translated}" → ✅ ${hit.match}`); }
+        if (!hit) { hit = await searchAnilist(translated); if (hit) console.log(`   · AniList "${translated}" → ✅ ${hit.match}`); }
+      }
+    }
     if (!hit) { console.log('   ❌ Sin resultados'); fail++; await sleep(400); continue; }
 
     const local = await downloadPoster(hit.poster, slug);
-    if (!local) { console.log('   ❌ No se pudo descargar'); fail++; await sleep(400); continue; }
+    if (!local) {
+      console.log('   ❌ No se pudo descargar');
+      s.posterFails = (s.posterFails || 0) + 1;
+      s.posterLastFail = new Date().toISOString();
+      fail++; sinceSave++;
+      console.log(`   📉 Fallo ${s.posterFails}/${MAX_FAILS}`);
+      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8'); sinceSave = 0; }
+      await sleep(400);
+      continue;
+    }
+    // Éxito: limpiar historial de fallos
+    delete s.posterFails;
+    delete s.posterLastFail;
 
     s.posterLocal = local;
     console.log(`   ✅ ${hit.match} → ${local}`);
