@@ -446,6 +446,17 @@ function parseEpisode(html, url) {
     try { host = new URL(src).hostname.replace(/^www\./, ''); } catch {}
     addServer(host, src, true);
   });
+  // Botones de opciones con URLs en atributos data-*
+  $('[data-url], [data-embed], [data-src], [data-link], [data-player], [data-href]').each((_, el) => {
+    const raw = $(el).attr('data-url') || $(el).attr('data-embed') || $(el).attr('data-src') ||
+                $(el).attr('data-link') || $(el).attr('data-player') || $(el).attr('data-href');
+    const full = absolute(raw, url);
+    if (!full || sameOrigin(full)) return;
+    let host = 'Servidor';
+    try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, full, true);
+  });
+
   $('a[href]').each((_, el) => {
     const href = $(el).attr('href');
     const full = absolute(href, url);
@@ -456,6 +467,14 @@ function parseEpisode(html, url) {
       addServer(host, full, false);
     }
   });
+  // MÉTODO EXTRA: barrido de TODO el HTML (incluye URLs dentro de <script>)
+  const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish)[^\s"'<>\\]*/gi;
+  for (const m of html.match(hostRe) || []) {
+    let host = 'Servidor';
+    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, m, true);
+  }
+
   return { title, servers };
 }
 
@@ -624,6 +643,8 @@ async function main() {
           console.log(`   ▶ ${epSlug}`);
           const epHtml = ep.html || await fetchHtml(epUrl);
           const parsed = parseEpisode(epHtml, epUrl);
+          const srvNames = parsed.servers.map(x => x.name).join(', ') || 'NINGUNO';
+          console.log(`      🎥 ${parsed.servers.length} servidores: ${srvNames}`);
           const fallbackNum = db.episodes.filter(e => e.seasonId === seasonId).length + 1;
           const num = code.number ?? episodeNumberFrom(parsed.title, slug) ?? fallbackNum;
           upsert(db.episodes, {
