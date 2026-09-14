@@ -233,6 +233,71 @@ function parseSeries(html, url) {
   };
 }
 
+
+/*
+   Recorre todas las páginas de episodios de una ficha.
+   La web muestra ~8 por página y el resto en ?page=2, ?page=3...
+*/
+function normalizeEpPage(url) {
+  try {
+    const u = new URL(url);
+    const page = u.searchParams.get('page');
+    if (page === '1' || page === '0') u.searchParams.delete('page');
+    return u.href;
+  } catch { return url; }
+}
+
+async function collectAllEpisodeUrls(firstUrl) {
+  const found = [];
+  const seen = new Set();
+  const add = u => {
+    const n = normalizeEpPage(u);
+    if (!seen.has(n)) { seen.add(n); found.push(n); }
+  };
+
+  const basePath = new URL(firstUrl).pathname;
+  const pages = [firstUrl];
+  const visitedPages = new Set([normalizeEpPage(firstUrl)]);
+
+  let i = 0;
+  while (i < pages.length && i < 30) {
+    const url = pages[i++];
+    let html;
+    try { html = await fetchHtml(url); }
+    catch { continue; }
+
+    const $ = cheerio.load(html);
+
+    // Enlaces de episodios
+    $('a[href]').each((_, el) => {
+      const full = absolute($(el).attr('href'), url);
+      if (!full || !sameOrigin(full)) return;
+      try {
+        if (/\/(capitulos?|ver|episodios?|watch|play)\//i.test(new URL(full).pathname)) add(full);
+      } catch {}
+    });
+
+    // Paginación de la ficha (misma ruta + ?page=N)
+    $('a[href]').each((_, el) => {
+      const full = absolute($(el).attr('href'), url);
+      if (!full || !sameOrigin(full)) return;
+      try {
+        const u = new URL(full);
+        if (u.pathname === basePath && u.searchParams.has('page')) {
+          const key = normalizeEpPage(full);
+          if (!visitedPages.has(key)) {
+            visitedPages.add(key);
+            pages.push(full);
+            console.log(`      📄 Página de episodios: ${key}`);
+          }
+        }
+      } catch {}
+    });
+  }
+
+  return found;
+}
+
 /* ---------- PARSEO DE EPISODIO ---------- */
 function parseEpCode(slug) {
   // Formato real del sitio: "{slug}-1x36" → temporada 1, episodio 36
@@ -351,9 +416,14 @@ async function main() {
         console.log(`💾 Checkpoint: ${i + 1}/${discovered.length}`);
       }
 
+      const allEpisodeUrls = await collectAllEpisodeUrls(url);
+      if (allEpisodeUrls.length > detail.episodeUrls.length) {
+        console.log(`   📄 Episodios con paginación: ${detail.episodeUrls.length} → ${allEpisodeUrls.length}`);
+      }
+
       const seasonIds = new Set();
       let newCount = 0;
-      for (const epUrl of detail.episodeUrls) {
+      for (const epUrl of allEpisodeUrls) {
         const epSlug = slugFromUrl(epUrl);
         const code = parseEpCode(epSlug);
         const seasonId = `${slug}-${code.season}`;
@@ -430,4 +500,3 @@ main().catch(async e => {
   } catch {}
   process.exitCode = 1;
 });
-
