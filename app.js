@@ -68,6 +68,7 @@ function orderSeasons(s, seasons) {
 }
 
 const getSeriesImage = (s) => {
+  if (s?.posterLocal) return s.posterLocal;
   if (s?.image && !s.image.includes('IcoPrueba.png')) return s.image;
   const seasons = DB.seasons.filter(seas => seas.seriesId === s.id);
   for (const seas of seasons) {
