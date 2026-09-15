@@ -1,0 +1,56 @@
+name: Sincronizar catálogo Cine
+
+on:
+  schedule:
+    - cron: '30 7,19 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-catalogos
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Ejecutar sincronización de Cine (solo películas)
+        env:
+          SOURCE_URL: https://lamovie.org
+          # El catálogo completo de películas con paginación /page/2/.../page/63/
+          # (los géneros se leen de cada ficha; el filtro por URL es JS y no hace falta)
+          SEEDS: "/peliculas"
+          LINK_PREFIXES: /peliculas/,/series/
+          MOVIE_PREFIXES: /peliculas/
+          ONLY_MOVIES: '1'
+          OUT_FILE: public/data/catalog-cine.json
+          CATALOG_TAG: cine
+          MAX_DISCOVERY_PAGES: 999
+          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
+        run: node sync-source.js
+
+      - name: Sincronizar portadas (TMDB/AniList)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node poster-sync.js
+
+      - name: Guardar cambios en el catálogo
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo cine"
+          git pull --rebase origin main
+          git push
