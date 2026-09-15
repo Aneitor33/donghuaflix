@@ -6,7 +6,6 @@ let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 const CATALOGS = [
   { id: 'donghua', file: './public/data/catalog.json', label: 'Donghuas' },
   { id: 'cdrama', file: './public/data/catalog-cdrama.json', label: 'Cdramas' },
-  { id: 'anime', file: './public/data/catalog-anime.json', label: 'Animación' },
   { id: 'cine', file: './public/data/catalog-cine.json', label: 'Cine' }
 ];
 let DB_CACHE = {};
@@ -733,7 +732,9 @@ function detail(slug, seasonRef) {
   const singleEps = singleSeason
     ? dedupeEps(DB.episodes.filter(e => e.seasonId === singleSeason.id))
     : [];
-  const isMovieEntry = singleEps.length === 1;
+  // Vista de película: lo dice el tipo detectado en la ficha;
+  // si no hay dato, solo si tiene 1 único episodio
+  const isMovieEntry = s.contentType === 'movie' || (!s.contentType && singleEps.length === 1);
 
   setAmbience(imgUrl);
 
