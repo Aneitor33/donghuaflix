@@ -5,8 +5,8 @@ let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
 const CATALOGS = [
   { id: 'donghua', file: './public/data/catalog.json', label: 'Donghuas' },
-  { id: 'cdrama', file: './public/data/catalog-cdrama.json', label: 'Cdramas' },
-  { id: 'cine', file: './public/data/catalog-cine.json', label: 'Cine' }
+  { id: 'peliculas', file: './public/data/catalog-peliculas.json', label: 'Películas' },
+  { id: 'series', file: './public/data/catalog-series.json', label: 'Series' }
 ];
 let DB_CACHE = {};
 let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghua';
@@ -246,6 +246,12 @@ const fold = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '
 // Año de una serie/peli: campo year, fecha o del título
 const getYear = s => s.year || (String(s.releaseDate || '').match(/\d{4}/) || [])[0] || (cleanTitle(s).match(/\b((?:19|20)\d{2})\b/) || [])[0] || null;
 const getCountry = s => s.country || null;
+// Tipo de contenido: el detectado en la ficha, o se infiere de la URL de origen
+const contentTypeOf = s => {
+  if (s.contentType) return s.contentType;
+  if ((s.sourceUrl || '').includes('/peliculas/')) return 'movie';
+  return 'series';
+};
 
 /* ---------- HISTORIAL ---------- */
 function getHistory() {
@@ -514,6 +520,22 @@ function home() {
     </section>`);
   }
 
+  // En Cine: separar Películas y Series en dos secciones
+  if (currentCatalog === 'series' || currentCatalog === 'peliculas') {
+    const cineMovies = DB.series.filter(s => contentTypeOf(s) === 'movie');
+    const cineSeries = DB.series.filter(s => contentTypeOf(s) === 'series');
+    if (cineMovies.length) sections.push(`
+    <section class="section">
+      <div class="section-head"><h2>🎬 Películas</h2><span class="muted">${cineMovies.length}</span></div>
+      ${rail(cineMovies)}
+    </section>`);
+    if (cineSeries.length) sections.push(`
+    <section class="section">
+      <div class="section-head"><h2>📺 Series</h2><span class="muted">${cineSeries.length}</span></div>
+      ${rail(cineSeries)}
+    </section>`);
+  }
+
   if (homeFilter === 'todo' || homeFilter === 'emision') {
     sections.push(`
     <section class="section">
@@ -583,10 +605,11 @@ function listAllSeries() {
   const years = [...new Set(DB.series.map(getYear).filter(Boolean))].sort().reverse();
   const countries = [...new Set(DB.series.map(getCountry).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
 
-  const state = { genre: '', year: '', country: '', sort: 'recent' };
+  const state = { type: '', genre: '', year: '', country: '', sort: 'recent' };
 
   const applyFilters = () => {
     let list = DB.series.slice();
+    if (state.type) list = list.filter(s => contentTypeOf(s) === state.type);
     if (state.genre) list = list.filter(s => seriesGenres(s).some(g => fold(g) === fold(state.genre)));
     if (state.year) list = list.filter(s => String(getYear(s)) === state.year);
     if (state.country) list = list.filter(s => fold(getCountry(s)) === fold(state.country));
@@ -606,6 +629,11 @@ function listAllSeries() {
   app.innerHTML = `
     <section class="section page-top">
       <div class="section-head"><h2>Catálogo completo</h2><span class="muted" id="catalogCount">${DB.series.length}</span></div>
+      <div class="type-tabs">
+        <button class="${state.type === '' ? 'on' : ''}" data-t="">Todo</button>
+        <button class="${state.type === 'movie' ? 'on' : ''}" data-t="movie">🎬 Películas</button>
+        <button class="${state.type === 'series' ? 'on' : ''}" data-t="series">📺 Series</button>
+      </div>
       <div class="filters">
         ${genres.length ? `<select id="fGenre"><option value="">🎭 Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
         ${years.length ? `<select id="fYear"><option value="">📅 Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
@@ -623,6 +651,11 @@ function listAllSeries() {
     if (el) el.onchange = () => { state[key] = el.value; renderGrid(); };
   };
   bind('fGenre', 'genre'); bind('fYear', 'year'); bind('fCountry', 'country'); bind('fSort', 'sort');
+  document.querySelectorAll('.type-tabs button').forEach(b => b.onclick = () => {
+    state.type = b.dataset.t;
+    document.querySelectorAll('.type-tabs button').forEach(x => x.classList.toggle('on', x === b));
+    renderGrid();
+  });
 }
 function listByStatus(statusKeyword, titleText) {
   const filtered = DB.series.filter(s => (s.status || '').toLowerCase().includes(statusKeyword.toLowerCase()));
@@ -734,7 +767,8 @@ function detail(slug, seasonRef) {
     : [];
   // Vista de película: lo dice el tipo detectado en la ficha;
   // si no hay dato, solo si tiene 1 único episodio
-  const isMovieEntry = s.contentType === 'movie' || (!s.contentType && singleEps.length === 1);
+  const isMovieEntry = s.contentType === 'movie'
+    || (!s.contentType && singleEps.length === 1 && (s.sourceUrl || '').includes('/peliculas/'));
 
   setAmbience(imgUrl);
 
