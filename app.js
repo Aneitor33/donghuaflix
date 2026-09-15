@@ -35,16 +35,29 @@ async function probeCatalogs() {
 }
 
 function renderCatBar() {
-  const bar = document.getElementById('catBar');
-  if (!bar) return;
+  const menu = document.getElementById('catalogMenu');
+  const wrap = document.getElementById('catalogWrap');
+  if (!menu || !wrap) return;
   const available = CATALOGS.filter(c => CATALOG_AVAILABLE[c.id]);
-  bar.style.display = available.length > 1 ? '' : 'none';
-  bar.querySelectorAll('button').forEach(b => {
+  wrap.style.display = available.length > 1 ? '' : 'none';
+  menu.querySelectorAll('button').forEach(b => {
     const id = b.dataset.cat;
     b.classList.toggle('on', id === currentCatalog);
     b.style.display = CATALOG_AVAILABLE[id] ? '' : 'none';
   });
 }
+
+function toggleCatalogMenu() {
+  document.getElementById('catalogMenu')?.classList.toggle('open');
+}
+
+// Cerrar el menú al tocar fuera de él
+document.addEventListener('click', e => {
+  const m = document.getElementById('catalogMenu');
+  if (m?.classList.contains('open') && !e.target.closest('.catalog-wrap')) {
+    m.classList.remove('open');
+  }
+});
 
 async function switchCatalog(id) {
   if (id === currentCatalog) return;
@@ -613,12 +626,12 @@ function listAllSeries() {
   app.innerHTML = `
     <section class="section page-top">
       <div class="section-head"><h2>Catálogo completo</h2><span class="muted" id="catalogCount">${DB.series.length}</span></div>
-      <div class="type-tabs">
-        <button class="${state.type === '' ? 'on' : ''}" data-t="">Todo</button>
-        <button class="${state.type === 'movie' ? 'on' : ''}" data-t="movie">${ICONS.film}<span>Películas</span></button>
-        <button class="${state.type === 'series' ? 'on' : ''}" data-t="series">${ICONS.tv}<span>Series</span></button>
-      </div>
       <div class="filters">
+        <select id="fType">
+          <option value="">Clasificación</option>
+          <option value="movie" ${state.type === 'movie' ? 'selected' : ''}>Películas</option>
+          <option value="series" ${state.type === 'series' ? 'selected' : ''}>Series</option>
+        </select>
         ${genres.length ? `<select id="fGenre"><option value="">Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
         ${years.length ? `<select id="fYear"><option value="">Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
         ${countries.length ? `<select id="fCountry"><option value="">País</option>${countries.map(c => `<option>${esc(c)}</option>`).join('')}</select>` : ''}
@@ -634,12 +647,7 @@ function listAllSeries() {
     const el = document.getElementById(id);
     if (el) el.onchange = () => { state[key] = el.value; renderGrid(); };
   };
-  bind('fGenre', 'genre'); bind('fYear', 'year'); bind('fCountry', 'country'); bind('fSort', 'sort');
-  document.querySelectorAll('.type-tabs button').forEach(b => b.onclick = () => {
-    state.type = b.dataset.t;
-    document.querySelectorAll('.type-tabs button').forEach(x => x.classList.toggle('on', x === b));
-    renderGrid();
-  });
+  bind('fType', 'type'); bind('fGenre', 'genre'); bind('fYear', 'year'); bind('fCountry', 'country'); bind('fSort', 'sort');
 }
 function listByStatus(statusKeyword, titleText) {
   const filtered = DB.series.filter(s => (s.status || '').toLowerCase().includes(statusKeyword.toLowerCase()));
@@ -1012,6 +1020,7 @@ function highlightNav() {
 function route() {
   clearInterval(heroTimer);
   document.getElementById('moreMenu')?.classList.remove('open');
+  document.getElementById('catalogMenu')?.classList.remove('open');
   const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const type = p[0], arg = p[1], extra = p[2];
 
