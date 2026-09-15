@@ -1,8 +1,8 @@
-name: Sincronizar catálogo Cine
+name: Sincronizar catálogo Películas
 
 on:
   schedule:
-    - cron: '30 7,19 * * *'
+    - cron: '0 4,16 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -26,17 +26,15 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Ejecutar sincronización de Cine (solo películas)
+      - name: Ejecutar sincronización de Películas
         env:
-          SOURCE_URL: https://lamovie.org
-          # El catálogo completo de películas con paginación /page/2/.../page/63/
-          # (los géneros se leen de cada ficha; el filtro por URL es JS y no hace falta)
-          SEEDS: "/peliculas"
-          LINK_PREFIXES: /peliculas/,/series/
-          MOVIE_PREFIXES: /peliculas/
+          SOURCE_URL: https://seriesflixhd.team
+          SEEDS: "/peliculas-online"
+          LINK_PREFIXES: /pelicula/,/peliculas/
+          MOVIE_PREFIXES: /pelicula/
           ONLY_MOVIES: '1'
-          OUT_FILE: public/data/catalog-cine.json
-          CATALOG_TAG: cine
+          OUT_FILE: public/data/catalog-peliculas.json
+          CATALOG_TAG: peliculas
           MAX_DISCOVERY_PAGES: 999
           SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
         run: node sync-source.js
@@ -51,6 +49,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
-          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo cine"
+          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo peliculas"
           git pull --rebase origin main
           git push
