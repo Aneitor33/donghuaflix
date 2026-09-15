@@ -24,7 +24,7 @@ a{color:inherit}
 img{user-select:none}
 .muted{color:var(--muted);font-size:12px}
 .center{text-align:center}
-.page-top{padding-top:110px}
+.page-top{padding-top:calc(var(--topoff) + 46px)}
 svg{display:inline-block;vertical-align:middle}
 
 /* ---------- FONDO AMBIENTE (cristal líquido) ---------- */
@@ -37,7 +37,7 @@ svg{display:inline-block;vertical-align:middle}
 
 /* ---------- NAVBAR SUPERIOR ---------- */
 .nav{
-  height:64px;position:fixed;top:0;left:0;right:0;z-index:50;
+  height:64px;position:fixed;top:46px;left:0;right:0;z-index:50;
   display:flex;align-items:center;padding:0 4%;gap:30px;
   background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.35) 70%,transparent);
   transition:background .3s;
@@ -80,13 +80,14 @@ svg{display:inline-block;vertical-align:middle}
 .btn-x.round{width:46px;height:46px;padding:0;border-radius:50%}
 .btn-x.round svg{width:18px;height:18px}
 
-/* ---------- SELECTOR DE CATÁLOGO ---------- */
+/* ---------- SELECTOR DE CATÁLOGO (siempre arriba) ---------- */
+:root{--topoff:110px}
 .cat-bar{
-  position:sticky;top:64px;z-index:45;
-  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
-  padding:10px 4%;
-  background:rgba(5,5,7,.35);backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  position:fixed;top:0;left:0;right:0;z-index:55;
+  display:flex;justify-content:center;gap:8px;
+  padding:7px 4%;
+  background:rgba(5,5,7,.75);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
 .cat-bar button{
   padding:8px 24px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
@@ -340,7 +341,6 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
 @media(orientation:landscape) and (max-height:560px){
   .nav{height:52px}
   .page-top{padding-top:70px}
-  .pills{padding-top:60px}
   .detail{padding-top:70px}
   .player{aspect-ratio:auto;height:calc(100vh - 140px)}
   .detail-close{top:62px}
@@ -373,7 +373,6 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
   .ep-pagination{gap:8px}
   .ep-pagination .btn-x{padding:10px 12px;font-size:12px}
   .detail-actions .btn-x.big{flex:1;padding:12px 14px;font-size:13.5px}
-  .pills{padding-top:78px}
   .hero-content{padding-bottom:44px}
 }
 @media(hover:none){
@@ -402,3 +401,46 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
 }
 .movie-cta{margin-top:28px}
 .movie-cta .btn-x.big{padding:16px 34px;font-size:16px}
+
+
+/* ---------- PESTAÑAS PELÍCULAS / SERIES ---------- */
+.type-tabs{display:flex;gap:8px;margin-bottom:16px}
+.type-tabs button{
+  padding:9px 20px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
+  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.type-tabs button:hover{background:rgba(255,255,255,.2);color:#fff}
+.type-tabs button.on{background:#fff;color:#000;border-color:#fff}
+
+
+/* ---------- ETIQUETAS DE IDIOMA EN SERVIDORES ---------- */
+.server-tabs button{display:inline-flex;align-items:center;gap:7px}
+.lang-tag{
+  font-size:9px;font-weight:800;letter-spacing:.8px;
+  padding:2px 6px;border-radius:4px;line-height:1;
+}
+.lang-tag.latino{background:#2ecc71;color:#06130b}
+.lang-tag.castellano{background:#e5b53a;color:#1a1206}
+.lang-tag.subtitulado{background:#4aa8ff;color:#061324}
+
+
+/* ---------- PESTAÑAS DE IDIOMA (servidores) ---------- */
+.lang-tabs{display:flex;gap:8px;margin-bottom:12px}
+.lang-tabs button{
+  padding:9px 22px;border-radius:999px;font-size:12.5px;font-weight:700;cursor:pointer;
+  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.lang-tabs button:hover{background:rgba(255,255,255,.2);color:#fff}
+.lang-tabs button.on{background:#fff;color:#000;border-color:#fff}
+
+/* ---------- FOOTER: enlace Instagram ---------- */
+footer a.ig-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:#fff;text-decoration:none;font-weight:700;
+  padding:4px 12px;border-radius:999px;
+  background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+}
+footer a.ig-link:hover{filter:brightness(1.15)}
+footer a.ig-link svg{width:13px;height:13px}
