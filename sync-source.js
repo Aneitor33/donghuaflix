@@ -233,7 +233,7 @@ async function discoverSeries() {
     }
 
     // Sondeo secuencial del listado (?page=N hasta error o sin novedades)
-    const probed = await probeListingPages(firstUrl, all);
+    const probed = await probeListingPages(first, all);
     probed.forEach(u => all.add(u));
   }
   console.log(`\n🎯 TOTAL [${CATALOG_TAG}] DESCUBIERTOS: ${all.size}`);
