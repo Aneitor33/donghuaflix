@@ -654,7 +654,7 @@ async function loadCatalog() {
 async function saveCatalog(db) {
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   const tmp = `${OUT_FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(db, null, 2), 'utf8');
+  await fs.writeFile(tmp, JSON.stringify(db), 'utf8'); // compacto: el repo rechaza >100MB
   await fs.rename(tmp, OUT_FILE);
 }
 
@@ -803,41 +803,29 @@ async function main() {
         continue;
       }
 
-      // Completar episodios: la web pagina vía JS, así que aprendemos el
-      // patrón de los enlaces visibles y sondeamos hacia adelante.
-      // Soporta DOS formatos:
-      //   A) doramasflix:  .../capitulos/slug-1x24      → genera slug-1x25, -1x26...
-      //   B) pelisplay:    .../series/slug?season=1&ep=3 → genera ?ep=4, 5, 6...
-      // Parada: 4 seguidos que no existen (404 o soft-404 validado).
-      let totalKnown = null;
+      // Sondeo multi-temporada encadenado:
+      //   1) Aprendemos el patrón del primer episodio visible
+      //      A) doramasflix/seriesflix: .../episodio/slug-1x1   → base + {S}x{N}
+      //      B) pelisplay:              .../slug?season=1&ep=1  → params season/ep
+      //   2) Procesamos 1 → 2 → 3…: tras cada éxito encolamos el siguiente (n+1)
+      //   3) Al acumular 4 fallos seguidos: probamos la TEMPORADA SIGUIENTE (x1)
+      //   4) Si la siguiente temporada existe, sigue su cadena; si no, fin de serie.
+      let mk = null;          // (season, n) => url
+      let epNumOf = null;     // (url) => número de episodio
+      let epSeasonOf = null;  // (url) => temporada
       if (!isMovie) {
-        const urls = [...new Set(detail.episodeUrls)];
-        const mx = urls.find(u => /(\d+)x(\d+)$/.test(u));
-        const ms = urls.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
-
-        let build = null;   // (n) => url del episodio n
-        let numOf = null;   // (url) => nº de episodio
+        const urls0 = [...new Set(detail.episodeUrls)];
+        const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
+        const ms = urls0.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
         if (mx) {
           const m = mx.match(/^(.*)-(\d+)x(\d+)(\/?)$/);
-          build = (n) => `${m[1]}-${m[2]}x${n}${m[4] || ''}`;
-          numOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+          mk = (s, n) => `${m[1]}-${s}x${n}${m[4] || ''}`;
+          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
         } else if (ms) {
-          build = (n) => { const u = new URL(ms); u.searchParams.set('ep', String(n)); return u.href; };
-          numOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
-        }
-
-        if (build) {
-          const set = new Set(urls);
-          const maxKnown = Math.max(0, ...urls.map(numOf));
-          totalKnown = detail.totalEpisodes || detail.onlineEpisodes || null;
-
-          // Sondeo abierto: maxKnown+1 → +500 (tope de seguridad)
-          for (let n = 1; n <= maxKnown + 500; n++) set.add(build(n));
-          const complete = [...set].sort((a, b) => numOf(a) - numOf(b));
-          if (complete.length > urls.length) {
-            console.log(`   🔧 Sondeo: ${urls.length} visibles → probando hasta el ${maxKnown + 500}${totalKnown ? ` (total declarado: ${totalKnown})` : ' (parada por errores ×4)'}`);
-            detail.episodeUrls = complete;
-          }
+          mk = (s, n) => { const u = new URL(ms); u.searchParams.set('season', String(s)); u.searchParams.set('ep', String(n)); return u.href; };
+          epNumOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
+          epSeasonOf = (u) => { try { const uu = new URL(u); const s = uu.searchParams.get('season'); return s ? Number(s) : 1; } catch { return 1; } };
         }
       }
 
@@ -921,13 +909,20 @@ async function main() {
         if (merged.length > crawled.length) {
           console.log(`   📄 Episodios tras sondeo: ${crawled.length} → ${merged.length}`);
         }
-        episodeSource = merged.map(u => ({ url: u, slug: slugFromUrl(u) }));
+        episodeSource = merged.map(u => ({ url: u, slug: slugFromUrl(u) }))
+          .sort((a, b) =>
+            ((epSeasonOf && epSeasonOf(a.url)) || 1) - ((epSeasonOf && epSeasonOf(b.url)) || 1) ||
+            ((epNumOf && epNumOf(a.url)) || 0) - ((epNumOf && epNumOf(b.url)) || 0));
       }
 
       const seasonIds = new Set();
       let newCount = 0;
       let missCount = 0;
-      for (const ep of episodeSource) {
+      const seenEps = new Set(episodeSource.map(e => e.url));
+      const queueEps = [...episodeSource];
+      let seasonJumps = 0;
+      while (queueEps.length) {
+        const ep = queueEps.shift();
         const epUrl = ep.url;
         const epSlug = ep.slug || slugFromUrl(epUrl);
         const code = parseEpCodeFromUrl(epUrl) || parseEpCode(epSlug);
@@ -944,9 +939,22 @@ async function main() {
           // con extracción rota → lo volvemos a procesar y actualizar
           console.log(`   ↻ ${epSlug} — existía sin servidores, re-procesando`);
         }
-        // 4 seguidos que no existen = fin de temporada (con o sin total)
+        // 4 fallos seguidos: fin de temporada → probamos la SIGUIENTE (x1).
+        // Máximo 3 saltos por serie (equilibrio: series ocultas vs peticiones)
         if (missCount >= 4) {
-          console.log(`   🛑 Fin de temporada detectado: 4 episodios seguidos no existen`);
+          const ns = code.season + 1;
+          if (mk && seasonJumps < 3 && ns <= 20) {
+            seasonJumps++;
+            missCount = 0;
+            const u = mk(ns, 1);
+            if (!seenEps.has(u)) {
+              seenEps.add(u);
+              queueEps.push({ url: u, slug: slugFromUrl(u) });
+            }
+            console.log(`   🧭 Temporada ${code.season} terminada — probando temporada ${ns}…`);
+            continue;
+          }
+          console.log(`   🛑 Fin de serie detectado (temporada ${code.season} agotada)`);
           break;
         }
         try {
@@ -994,6 +1002,14 @@ async function main() {
           seasonIds.add(seasonId);
           newCount++;
           missCount = 0;
+          // Encadenar: encolar el episodio siguiente de esta temporada
+          if (mk && code.number) {
+            const nx = mk(code.season, code.number + 1);
+            if (code.number < 500 && !seenEps.has(nx)) {
+              seenEps.add(nx);
+              queueEps.push({ url: nx, slug: slugFromUrl(nx) });
+            }
+          }
         } catch (e) {
           console.log(`   ⚠️ ${e.message}`);
           missCount++;
