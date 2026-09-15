@@ -84,6 +84,8 @@ const ICONS = {
   next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
   up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
+  film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M3 16h18M8 3v18M16 3v18"/></svg>',
+  tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2.5"/><path d="M8 3l4 4 4-4"/></svg>',
   repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>'
 };
 
@@ -469,14 +471,6 @@ function mountHero(items) {
 }
 
 /* ---------- VISTA HOME ---------- */
-let homeFilter = 'todo';
-function setHomeFilter(f) {
-  homeFilter = f;
-  document.querySelectorAll('.pills .pill').forEach(p =>
-    p.classList.toggle('on', p.dataset.f === f));
-  home();
-}
-
 function home() {
   const recent = DB.series.slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const bySize = DB.series.slice().sort((a, b) => seriesEpisodeCount(b) - seriesEpisodeCount(a));
@@ -492,16 +486,8 @@ function home() {
     (s.type || '').toLowerCase() === 'movie' || (s.title || '').toLowerCase().includes('película'));
   const top10 = bySize.slice(0, 10);
 
-  // Pills filtrables (estilo Netflix)
-  const pill = (f, label) => `<div class="pill ${homeFilter === f ? 'on' : ''}" data-f="${f}" onclick="setHomeFilter('${f}')">${label}</div>`;
-  const pills = `<div class="pills">
-    ${pill('todo', 'Todo')}${pill('emision', 'En emisión')}${pill('finalizados', 'Finalizados')}${pill('peliculas', 'Películas')}
-  </div>`;
 
-  let heroPool = recent;
-  if (homeFilter === 'emision') heroPool = airingList.length ? airingList : recent;
-  if (homeFilter === 'finalizados') heroPool = completedList.length ? completedList : recent;
-  if (homeFilter === 'peliculas') heroPool = moviesList.length ? moviesList : recent;
+  const heroPool = recent;
 
   const sections = [];
 
@@ -537,7 +523,7 @@ function home() {
     </section>`);
   }
 
-  if (homeFilter === 'todo' || homeFilter === 'emision') {
+  if (airingList.length || top10.length) {
     sections.push(`
     <section class="section">
       <div class="section-head"><h2>Top 10 hoy</h2><span class="muted">serie</span></div>
@@ -550,7 +536,7 @@ function home() {
     </section>`);
   }
 
-  if ((homeFilter === 'todo' || homeFilter === 'finalizados') && completedList.length) {
+  if (completedList.length) {
     sections.push(`
     <section class="section">
       <div class="section-head"><h2>Finalizadas</h2><span class="muted">${completedList.length}</span></div>
@@ -558,7 +544,7 @@ function home() {
     </section>`);
   }
 
-  if ((homeFilter === 'todo' || homeFilter === 'peliculas') && moviesList.length) {
+  if (moviesList.length) {
     sections.push(`
     <section class="section">
       <div class="section-head"><h2>Películas y Especiales</h2><span class="muted">${moviesList.length}</span></div>
@@ -566,16 +552,13 @@ function home() {
     </section>`);
   }
 
-  if (homeFilter === 'todo') {
-    sections.push(`
+  sections.push(`
     <section class="section">
       <div class="section-head"><h2>Agregados recientemente</h2><span class="muted">${Math.min(recent.length, 15)}</span></div>
       ${rail(recent.slice(0, 15))}
     </section>`);
-  }
 
   app.innerHTML = `
-  ${pills}
   <section class="hero" id="hero">
     <div class="hero-shade"></div>
     <div class="hero-content">
@@ -632,8 +615,8 @@ function listAllSeries() {
       <div class="section-head"><h2>Catálogo completo</h2><span class="muted" id="catalogCount">${DB.series.length}</span></div>
       <div class="type-tabs">
         <button class="${state.type === '' ? 'on' : ''}" data-t="">Todo</button>
-        <button class="${state.type === 'movie' ? 'on' : ''}" data-t="movie">🎬 Películas</button>
-        <button class="${state.type === 'series' ? 'on' : ''}" data-t="series">📺 Series</button>
+        <button class="${state.type === 'movie' ? 'on' : ''}" data-t="movie">${ICONS.film}<span>Películas</span></button>
+        <button class="${state.type === 'series' ? 'on' : ''}" data-t="series">${ICONS.tv}<span>Series</span></button>
       </div>
       <div class="filters">
         ${genres.length ? `<select id="fGenre"><option value="">Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
@@ -703,16 +686,32 @@ function listMyList() {
 }
 
 /* ---------- BUSCADOR ---------- */
+let searchState = { genre: '', year: '', country: '' };
+
 function search(q = '') {
   if (!document.getElementById('q')) {
+    searchState = { genre: '', year: '', country: '' };
+    const genres = [...new Set(DB.series.flatMap(seriesGenres))].sort((a, b) => a.localeCompare(b, 'es'));
+    const years = [...new Set(DB.series.map(getYear).filter(Boolean))].sort().reverse();
+    const countries = [...new Set(DB.series.map(getCountry).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
     app.innerHTML = `
       <section class="search page-top">
         <h1>Buscar</h1>
         <div class="searchbar">${ICONS.search}
-          <input id="q" type="text" value="${esc(q)}" autocomplete="off" placeholder="Nombre del donghua...">
+          <input id="q" type="text" value="${esc(q)}" autocomplete="off" placeholder="Nombre...">
+        </div>
+        <div class="filters">
+          ${genres.length ? `<select id="sfGenre"><option value="">Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
+          ${years.length ? `<select id="sfYear"><option value="">Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
+          ${countries.length ? `<select id="sfCountry"><option value="">País</option>${countries.map(c => `<option>${esc(c)}</option>`).join('')}</select>` : ''}
         </div>
         <div id="results" class="grid"></div>
       </section>`;
+    const bindF = (id, key) => {
+      const el = document.getElementById(id);
+      if (el) el.onchange = () => { searchState[key] = el.value; updateSearchResults(document.getElementById('q').value); };
+    };
+    bindF('sfGenre', 'genre'); bindF('sfYear', 'year'); bindF('sfCountry', 'country');
     const input = document.getElementById('q');
     input.addEventListener('input', e => updateSearchResults(e.target.value));
     setTimeout(() => { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }, 50);
@@ -727,10 +726,13 @@ function updateSearchResults(q = '') {
     container.innerHTML = '<p class="muted" style="grid-column:1/-1">Escribe para ver sugerencias...</p>';
     return;
   }
-  const list = DB.series.filter(s => {
+  let list = DB.series.filter(s => {
     const title = cleanTitle(s).toLowerCase();
     return title.startsWith(query) || title.split(' ').some(w => w.startsWith(query)) || title.includes(query);
   });
+  if (searchState.genre) list = list.filter(s => seriesGenres(s).some(g => fold(g) === fold(searchState.genre)));
+  if (searchState.year) list = list.filter(s => String(getYear(s)) === searchState.year);
+  if (searchState.country) list = list.filter(s => fold(getCountry(s)) === fold(searchState.country));
   container.innerHTML = list.length ? list.map(card).join('') : '<p class="muted" style="grid-column:1/-1">No se encontraron donghuas con ese nombre.</p>';
 }
 
@@ -1016,6 +1018,7 @@ function route() {
   if (!type) home();
   else if (type === 'search') search(arg || '');
   else if (type === 'series' && !arg) listAllSeries();
+  else if (type === 'movies') { const t = DB.series.filter(s => contentTypeOf(s) === 'movie'); app.innerHTML = `<section class="section page-top"><div class="section-head"><h2>Películas</h2><span class="muted">${t.length}</span></div><div class="grid">${t.map(card).join('')}</div></section>`; }
   else if (type === 'series' && arg) detail(arg, extra);
   else if (type === 'airing') listByStatus('emisión', 'Donghuas En Emisión');
   else if (type === 'completed') listByStatus('finaliz', 'Donghuas Finalizados');
