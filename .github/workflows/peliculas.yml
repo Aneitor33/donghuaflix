@@ -32,6 +32,7 @@ jobs:
           SEEDS: "/peliculas"
           LINK_PREFIXES: /pelicula/
           MOVIE_PREFIXES: /pelicula/
+          ALLOW_CROSS_ORIGIN: '1'
           ONLY_MOVIES: '1'
           OUT_FILE: public/data/catalog-peliculas.json
           CATALOG_TAG: peliculas
