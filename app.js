@@ -728,6 +728,13 @@ function detail(slug, seasonRef) {
   const lastSeason = lastEp ? DB.seasons.find(x => x.id === lastEp.seasonId) : null;
   const lastSn = lastSeason && Number.isFinite(lastSeason.number) ? lastSeason.number : 1;
 
+  // ¿Es una película? → 1 sola temporada con 1 solo episodio
+  const singleSeason = seasons.length === 1 ? seasons[0] : null;
+  const singleEps = singleSeason
+    ? dedupeEps(DB.episodes.filter(e => e.seasonId === singleSeason.id))
+    : [];
+  const isMovieEntry = singleEps.length === 1;
+
   setAmbience(imgUrl);
 
   app.innerHTML = `<section class="detail-v2">
@@ -738,14 +745,15 @@ function detail(slug, seasonRef) {
         <div class="eyebrow">${esc(s.status || '')}</div>
         <h1>${esc(title)}</h1>
         <div class="detail-meta">
+          ${isMovieEntry ? `<span class="movie-tag">PELÍCULA</span> ·` : ''}
           ${s.year ? `<span>${s.year}</span> ·` : ''}
           ${s.country ? `<span>${esc(s.country)}</span> ·` : ''}
-          <span>${seasons.length} temporada${seasons.length === 1 ? '' : 's'}</span> ·
-          <span>${epsTotal} episodios</span>
+          ${!isMovieEntry ? `<span>${seasons.length} temporada${seasons.length === 1 ? '' : 's'}</span> ·
+          <span>${epsTotal} episodios</span>` : ''}
           ${genres.length ? ' · <span>' + esc(genres.slice(0, 3).join(' · ')) + '</span>' : ''}
         </div>
         <div class="detail-actions">
-          ${lastEp ? `<button class="btn-x play big" onclick="location.hash='#/episode/${qs(lastEp.slug || lastEp.id)}'">${ICONS.play}<span>Reproducir${lastEp.number > 1 ? ` · T${lastSn}:E${lastEp.number}` : ''}</span></button>` : ''}
+          ${lastEp ? `<button class="btn-x play big" onclick="location.hash='#/episode/${qs(lastEp.slug || lastEp.id)}'">${ICONS.play}<span>${isMovieEntry ? 'Reproducir' : `Reproducir${lastEp.number > 1 ? ` · T${lastSn}:E${lastEp.number}` : ''}`}</span></button>` : ''}
           <button class="btn-x glass round" id="favBtn" title="Mi lista">${fav ? ICONS.check : ICONS.plus}</button>
         </div>
       </div>
@@ -753,7 +761,10 @@ function detail(slug, seasonRef) {
     <div class="detail-body">
       ${genres.length ? `<div class="chips">${genres.map(g => `<a class="chip" href="#/genre/${qs(g)}">${esc(g)}</a>`).join('')}</div>` : ''}
       <p class="detail-syn">${esc(s.synopsis || 'Sinopsis no disponible.')}</p>
-      <div id="seasonArea"></div>
+      ${isMovieEntry ? `
+      <div class="movie-cta">
+        <button class="btn-x play big" onclick="location.hash='#/episode/${qs(singleEps[0].slug || singleEps[0].id)}'">${ICONS.play}<span>▶ Reproducir ahora</span></button>
+      </div>` : '<div id="seasonArea"></div>'}
     </div>
   </section>`;
 
@@ -762,7 +773,7 @@ function detail(slug, seasonRef) {
     document.getElementById('favBtn').innerHTML = f ? ICONS.check : ICONS.plus;
   };
 
-  renderSeasonArea(seasons);
+  if (!isMovieEntry) renderSeasonArea(seasons);
 }
 
 function renderSeasonArea(seasons) {
