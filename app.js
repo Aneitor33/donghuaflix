@@ -242,6 +242,12 @@ function toggleFav(seriesId) {
 }
 const isFav = id => getFavs().includes(id);
 
+// Comparación sin acentos (para filtros)
+const fold = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+// Año de una serie/peli: campo year, fecha o del título
+const getYear = s => s.year || (String(s.releaseDate || '').match(/\d{4}/) || [])[0] || (cleanTitle(s).match(/\b((?:19|20)\d{2})\b/) || [])[0] || null;
+const getCountry = s => s.country || null;
+
 /* ---------- HISTORIAL ---------- */
 function getHistory() {
   try { return JSON.parse(localStorage.getItem('donghuaflix_history') || '{}'); }
@@ -574,11 +580,50 @@ function home() {
 
 /* ---------- LISTADOS ---------- */
 function listAllSeries() {
+  const genres = [...new Set(DB.series.flatMap(seriesGenres))].sort((a, b) => a.localeCompare(b, 'es'));
+  const years = [...new Set(DB.series.map(getYear).filter(Boolean))].sort().reverse();
+  const countries = [...new Set(DB.series.map(getCountry).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+
+  const state = { genre: '', year: '', country: '', sort: 'recent' };
+
+  const applyFilters = () => {
+    let list = DB.series.slice();
+    if (state.genre) list = list.filter(s => seriesGenres(s).some(g => fold(g) === fold(state.genre)));
+    if (state.year) list = list.filter(s => String(getYear(s)) === state.year);
+    if (state.country) list = list.filter(s => fold(getCountry(s)) === fold(state.country));
+    if (state.sort === 'az') list.sort((a, b) => cleanTitle(a).localeCompare(cleanTitle(b), 'es'));
+    else list.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+    return list;
+  };
+
+  const renderGrid = () => {
+    const el = document.getElementById('catalogGrid');
+    const count = document.getElementById('catalogCount');
+    const list = applyFilters();
+    if (count) count.textContent = list.length;
+    if (el) el.innerHTML = list.length ? list.map(card).join('') : '<p class="muted" style="grid-column:1/-1">Nada coincide con esos filtros.</p>';
+  };
+
   app.innerHTML = `
     <section class="section page-top">
-      <div class="section-head"><h2>Todas las Series</h2><span class="muted">${DB.series.length}</span></div>
-      <div class="grid">${DB.series.map(card).join('')}</div>
+      <div class="section-head"><h2>Catálogo completo</h2><span class="muted" id="catalogCount">${DB.series.length}</span></div>
+      <div class="filters">
+        ${genres.length ? `<select id="fGenre"><option value="">🎭 Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
+        ${years.length ? `<select id="fYear"><option value="">📅 Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
+        ${countries.length ? `<select id="fCountry"><option value="">🌍 País</option>${countries.map(c => `<option>${esc(c)}</option>`).join('')}</select>` : ''}
+        <select id="fSort">
+          <option value="recent">🕐 Más recientes</option>
+          <option value="az">🔤 A – Z</option>
+        </select>
+      </div>
+      <div class="grid" id="catalogGrid">${DB.series.map(card).join('')}</div>
     </section>`;
+
+  const bind = (id, key) => {
+    const el = document.getElementById(id);
+    if (el) el.onchange = () => { state[key] = el.value; renderGrid(); };
+  };
+  bind('fGenre', 'genre'); bind('fYear', 'year'); bind('fCountry', 'country'); bind('fSort', 'sort');
 }
 function listByStatus(statusKeyword, titleText) {
   const filtered = DB.series.filter(s => (s.status || '').toLowerCase().includes(statusKeyword.toLowerCase()));
@@ -693,6 +738,8 @@ function detail(slug, seasonRef) {
         <div class="eyebrow">${esc(s.status || '')}</div>
         <h1>${esc(title)}</h1>
         <div class="detail-meta">
+          ${s.year ? `<span>${s.year}</span> ·` : ''}
+          ${s.country ? `<span>${esc(s.country)}</span> ·` : ''}
           <span>${seasons.length} temporada${seasons.length === 1 ? '' : 's'}</span> ·
           <span>${epsTotal} episodios</span>
           ${genres.length ? ' · <span>' + esc(genres.slice(0, 3).join(' · ')) + '</span>' : ''}
@@ -823,7 +870,7 @@ function episode(slug) {
     const playerEl = document.getElementById('player');
     if (playerEl) {
       playerEl.innerHTML = current?.url
-        ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen *; encrypted-media; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen loading="lazy"></iframe>
+        ? `<iframe src="${esc(current.url)}" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allow="autoplay; fullscreen *; encrypted-media; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen loading="lazy"></iframe>
            <button class="fs-btn" onclick="togglePlayerFS()" title="Pantalla completa">${ICONS.full}</button>`
         : '<div class="empty">Servidor no disponible.</div>';
     }
