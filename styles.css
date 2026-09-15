@@ -393,3 +393,12 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
 }
 .filters select:hover{border-color:#4a4f5c}
 .filters select:focus{outline:0;border-color:var(--red)}
+
+
+/* ---------- FICHA DE PELÍCULA ---------- */
+.movie-tag{
+  background:var(--red);color:#fff;font-size:10px;font-weight:800;
+  letter-spacing:1.5px;padding:4px 9px;border-radius:4px;
+}
+.movie-cta{margin-top:28px}
+.movie-cta .btn-x.big{padding:16px 34px;font-size:16px}
