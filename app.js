@@ -356,10 +356,11 @@ async function load() {
     renderCatBar();
     const footerStatus = document.getElementById('footerStatus');
     if (footerStatus) {
+      const igIcon = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>';
       footerStatus.innerHTML = `
-        ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')}` : 'Catálogo listo'}
-        &nbsp;·&nbsp; Desarrollado con amor por
-        <a href="https://instagram.com/bledark__" target="_blank" rel="noopener">@bledark__</a>`;
+        ${DB.meta?.syncedAt ? `Actualizado: ${new Date(DB.meta.syncedAt).toLocaleString('es-ES')} · ` : ''}
+        Desarrollado por
+        <a class="ig-link" href="https://instagram.com/bledark__" target="_blank" rel="noopener">${igIcon} @bledark__</a>`;
     }
     route();
     probeCatalogs();
@@ -635,12 +636,12 @@ function listAllSeries() {
         <button class="${state.type === 'series' ? 'on' : ''}" data-t="series">📺 Series</button>
       </div>
       <div class="filters">
-        ${genres.length ? `<select id="fGenre"><option value="">🎭 Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
-        ${years.length ? `<select id="fYear"><option value="">📅 Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
-        ${countries.length ? `<select id="fCountry"><option value="">🌍 País</option>${countries.map(c => `<option>${esc(c)}</option>`).join('')}</select>` : ''}
+        ${genres.length ? `<select id="fGenre"><option value="">Género</option>${genres.map(g => `<option>${esc(g)}</option>`).join('')}</select>` : ''}
+        ${years.length ? `<select id="fYear"><option value="">Año</option>${years.map(y => `<option>${y}</option>`).join('')}</select>` : ''}
+        ${countries.length ? `<select id="fCountry"><option value="">País</option>${countries.map(c => `<option>${esc(c)}</option>`).join('')}</select>` : ''}
         <select id="fSort">
-          <option value="recent">🕐 Más recientes</option>
-          <option value="az">🔤 A – Z</option>
+          <option value="recent">Más recientes</option>
+          <option value="az">A – Z</option>
         </select>
       </div>
       <div class="grid" id="catalogGrid">${DB.series.map(card).join('')}</div>
@@ -911,7 +912,43 @@ function episode(slug) {
 
   setAmbience(getSeriesImage(serie || {}) || (season?.image || ''));
 
+  // Servidores agrupados por idioma (estilo Netflix)
+  const langLabel = { latino: 'Latino', castellano: 'Castellano', subtitulado: 'Subtitulado' };
+  const groups = [];
+  for (const l of ['latino', 'castellano', 'subtitulado']) {
+    const sv = (e.servers || []).filter(s => s.lang === l);
+    if (sv.length) groups.push({ key: l, label: langLabel[l], servers: sv });
+  }
+  const untagged = (e.servers || []).filter(s => !s.lang);
+  if (untagged.length) groups.push({ key: 'none', label: 'Servidores', servers: untagged });
+
   let current = e.servers?.[0];
+  let activeGroup = Math.max(0, groups.findIndex(g => g.servers.includes(current)));
+
+  const selectServer = (srv) => { current = srv; render(); };
+
+  const renderServers = () => {
+    const wrap = document.getElementById('serverGroups');
+    if (!wrap || !groups.length) return;
+    const g = groups[activeGroup];
+    wrap.innerHTML = `
+      <div class="lang-tabs">
+        ${groups.map((x, i) => `<button class="${i === activeGroup ? 'on' : ''}" data-g="${i}">${x.label}</button>`).join('')}
+      </div>
+      <div class="server-tabs">
+        ${g.servers.map(srv => `<button class="${srv === current ? 'active' : ''}" data-url="${esc(srv.url)}">${esc(srv.name)}</button>`).join('')}
+      </div>`;
+    wrap.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
+      activeGroup = Number(b.dataset.g);
+      selectServer(groups[activeGroup].servers[0]);
+      renderServers();
+    });
+    wrap.querySelectorAll('[data-url]').forEach(b => b.onclick = () => {
+      const srv = g.servers.find(s => s.url === b.dataset.url);
+      if (srv) { selectServer(srv); renderServers(); }
+    });
+  };
+
   const render = () => {
     const playerEl = document.getElementById('player');
     if (playerEl) {
@@ -926,10 +963,7 @@ function episode(slug) {
     <div class="eyebrow">${esc(season ? seasonTitle(season, 0) : '')} · EPISODIO ${e.number}${isWatched(e.seasonId, e.number) ? ' · VISTO' : ''}</div>
     <h1 class="ep-title">${esc(cleanEpisodeTitle(e))}</h1>
     <div class="player" id="player"></div>
-    <div class="server-tabs">
-      ${(e.servers || []).map((srv, i) =>
-        `<button class="${i === 0 ? 'active' : ''}" data-i="${i}">${esc(srv.name)}</button>`).join('')}
-    </div>
+    <div id="serverGroups"></div>
     <div class="ep-nav">
       ${prevEp
         ? `<a class="btn-x glass" href="#/episode/${qs(prevEp.slug || prevEp.id)}">${ICONS.prev}<span>Anterior</span></a>`
@@ -953,12 +987,7 @@ function episode(slug) {
   </section>`;
 
   render();
-  document.querySelectorAll('.server-tabs button').forEach(b => b.onclick = () => {
-    document.querySelectorAll('.server-tabs button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    current = e.servers[Number(b.dataset.i)];
-    render();
-  });
+  renderServers();
 }
 
 function notfound() {
