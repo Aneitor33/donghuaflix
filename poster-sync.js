@@ -3,9 +3,8 @@ import path from 'node:path';
 
 const FILES = [
   path.resolve('public/data/catalog.json'),
-  path.resolve('public/data/catalog-cdrama.json'),
-  path.resolve('public/data/catalog-anime.json'),
-  path.resolve('public/data/catalog-cine.json')
+  path.resolve('public/data/catalog-peliculas.json'),
+  path.resolve('public/data/catalog-series.json')
 ];
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
