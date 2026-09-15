@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 
@@ -33,10 +33,16 @@
       <a href="#/genres" data-nav>Géneros</a>
       <a href="#/mylist" data-nav>Mi lista</a>
     </nav>
-    <div class="cat-bar" id="catBar" style="display:none">
-      <button data-cat="donghua" onclick="switchCatalog('donghua')">Donghuas</button>
-      <button data-cat="peliculas" onclick="switchCatalog('peliculas')">Películas</button>
-      <button data-cat="series" onclick="switchCatalog('series')">Series</button>
+    <div class="catalog-wrap" id="catalogWrap" style="display:none">
+      <button class="catalog-fab" onclick="toggleCatalogMenu()" title="Cambiar catálogo" aria-label="Cambiar catálogo">
+        <img src="icon-192.png" alt="">
+        <svg class="fab-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="catalog-menu" id="catalogMenu">
+        <button data-cat="donghua" onclick="switchCatalog('donghua')">Donghuas</button>
+        <button data-cat="peliculas" onclick="switchCatalog('peliculas')">Películas</button>
+        <button data-cat="series" onclick="switchCatalog('series')">Series</button>
+      </div>
     </div>
     <div class="nav-actions">
       <a href="#/search" class="icon-btn" title="Buscar" aria-label="Buscar">
@@ -93,6 +99,6 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
