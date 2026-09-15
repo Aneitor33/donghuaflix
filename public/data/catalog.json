@@ -1210,7 +1210,8 @@
         "https://donghualife.com/season/alquimia-suprema-1",
         "https://donghualife.com/season/alquimia-suprema-2"
       ],
-      "updatedAt": "2026-09-15T03:23:55.421Z"
+      "updatedAt": "2026-09-15T03:23:55.421Z",
+      "posterLocal": "./public/img/posters/alquimia-suprema.jpg"
     },
     {
       "id": "combat-continent-2-la-inigualable-secta-tang",
@@ -2597,7 +2598,8 @@
         "https://donghualife.com/season/legend-misty-sword-immortal-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-misty-sword-immortal",
-      "updatedAt": "2026-09-15T03:31:12.261Z"
+      "updatedAt": "2026-09-15T03:31:12.261Z",
+      "posterLocal": "./public/img/posters/legend-misty-sword-immortal.jpg"
     },
     {
       "id": "throne-ten-thousand-swords",
@@ -6262,7 +6264,8 @@
         "https://donghualife.com/season/great-doctor-miss-nine-2"
       ],
       "sourceUrl": "https://donghualife.com/series/great-doctor-miss-nine",
-      "updatedAt": "2026-09-15T03:58:53.130Z"
+      "updatedAt": "2026-09-15T03:58:53.130Z",
+      "posterLocal": "./public/img/posters/great-doctor-miss-nine.jpg"
     },
     {
       "id": "caminantes-del-purgatorio",
@@ -8132,7 +8135,8 @@
         "https://donghualife.com/season/la-leyenda-del-inmortal-de-la-espada-taiyi-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-inmortal-de-la-espada-taiyi",
-      "updatedAt": "2026-09-15T04:11:08.827Z"
+      "updatedAt": "2026-09-15T04:11:08.827Z",
+      "posterLocal": "./public/img/posters/la-leyenda-del-inmortal-de-la-espada-taiyi.jpg"
     },
     {
       "id": "la-mejor-vida-del-joven-maestro",
@@ -10184,7 +10188,8 @@
         "https://donghualife.com/season/la-chica-electrica-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-chica-electrica",
-      "updatedAt": "2026-09-15T04:22:00.735Z"
+      "updatedAt": "2026-09-15T04:22:00.735Z",
+      "posterLocal": "./public/img/posters/la-chica-electrica.jpg"
     },
     {
       "id": "me-reencarne-como-el-monstruo-mas-debil",
