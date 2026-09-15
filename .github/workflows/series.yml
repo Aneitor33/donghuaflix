@@ -31,6 +31,7 @@ jobs:
           SOURCE_URL: https://seriesflixhd.team
           SEEDS: "/series-online"
           LINK_PREFIXES: /serie/,/series/
+          ALLOW_CROSS_ORIGIN: '1'
           OUT_FILE: public/data/catalog-series.json
           CATALOG_TAG: series
           MAX_DISCOVERY_PAGES: 999
