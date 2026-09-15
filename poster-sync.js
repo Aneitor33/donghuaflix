@@ -143,7 +143,7 @@ async function processFile(OUT_FILE) {
       console.log('   ❌ Sin resultados (no se reintentará)');
       s.posterFailed = true;
       fail++; sinceSave++;
-      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8'); sinceSave = 0; }
+      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8'); sinceSave = 0; }
       await sleep(400);
       continue;
     }
@@ -154,7 +154,7 @@ async function processFile(OUT_FILE) {
       s.posterFailed = true;
       fail++; sinceSave++;
       console.log('   ❌ Descarga fallida (no se reintentará)');
-      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8'); sinceSave = 0; }
+      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8'); sinceSave = 0; }
       await sleep(400);
       continue;
     }
@@ -166,14 +166,14 @@ async function processFile(OUT_FILE) {
     sinceSave++;
     // Checkpoint: guardar cada 10 portadas para no perder progreso
     if (sinceSave >= 10) {
-      await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8');
+      await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
       sinceSave = 0;
       console.log('   💾 Checkpoint de portadas guardado');
     }
     await sleep(400); // respetar rate limits
   }
 
-  await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8');
+  await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
   console.log(`\n========== PORTADAS (${path.basename(OUT_FILE)}) ==========`);
   console.log(`✅ Nuevas: ${ok} | ⏭️ Ya tenían: ${skip} | ❌ Fallaron: ${fail}`);
 }
