@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
 
@@ -710,6 +711,27 @@ async function main() {
 
   let cursor = 0;
   let doneCount = 0;
+  let lastPush = 0;
+  let ckLock = Promise.resolve();
+  const withLock = fn => { const p = ckLock.then(fn); ckLock = p.catch(() => {}); return p; };
+
+  const pushProgress = () => withLock(async () => {
+    try {
+      await saveCatalog(db);
+      execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
+      execSync('git config --local user.name "github-actions[bot]"');
+      execSync('git add .');
+      execSync('git diff-index --quiet HEAD || git commit -m "sync: progreso parcial"');
+      // SIN pull/rebase aquí: mutar el árbol de trabajo a mitad de la corrida
+      // rompe los guardados concurrentes (ENOENT). El pull--rebase lo hace
+      // el paso final del workflow, cuando ya no hay escrituras.
+      execSync('git push');
+      console.log(`\n🚀 Progreso subido al repo (${doneCount}/${discovered.length}) — a salvo ante cortes\n`);
+    } catch (e) {
+      console.log(`⚠️ Push intermedio falló (se reintenta en el próximo bloque): ${String(e.message).slice(0, 90)}`);
+    }
+  });
+
   const processItem = async () => {
     while (cursor < discovered.length) {
     const i = cursor++;
@@ -763,10 +785,14 @@ async function main() {
       upsert(db.series, seriesItem);
       detail.genres.forEach(g => allGenres.add(g));
 
-      // CHECKPOINT cada 10 items completados
+      // CHECKPOINT cada 10 items (disco) + PUSH cada 500 (repo, a prueba de cortes)
       if (doneCount % 10 === 0) {
-        await saveCatalog(db);
+        await withLock(() => saveCatalog(db));
         console.log(`💾 Checkpoint: ${doneCount}/${discovered.length}`);
+      }
+      if (doneCount - lastPush >= 500) {
+        lastPush = doneCount;
+        pushProgress();
       }
 
       const isMovie = MOVIE_PREFIXES.some(pre => new URL(url).pathname.startsWith(pre));
@@ -1004,6 +1030,8 @@ async function main() {
   // Pool de trabajadores paralelos
   console.log(`\n⚡ Procesando con ${WORKERS} trabajadores en paralelo…`);
   await Promise.all(Array.from({ length: WORKERS }, processItem));
+
+  await ckLock; // esperar pushes/guardados pendientes
 
   db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
   db.meta = {
