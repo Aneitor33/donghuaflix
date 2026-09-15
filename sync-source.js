@@ -27,6 +27,14 @@ const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
 // Permitir fichas enlazadas desde OTRO dominio (clones que enlazan al dominio
 // principal, ej. pelisflixhd1.top → pelisflixhd.blog). Se reescriben al BASE_URL.
 const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
+// Rutas típicas de reproductor: se aceptan aunque sean del mismo dominio
+const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor)\//i;
+function isPlayableUrl(u) {
+  if (!u) return false;
+  if (!sameOrigin(u)) return true;
+  try { return PLAYER_PATH.test(new URL(u).pathname); } catch { return false; }
+}
+
 function rewriteToBase(url) {
   try {
     const u = new URL(url);
@@ -43,6 +51,8 @@ const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
 const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
 // Si está activado, solo se procesan fichas de películas (se ignoran series)
 const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
+
+let diagCount = 0;
 
 // Comparación sin acentos: animación == animacion, ficción == ficcion
 const fold = s => String(s || '')
@@ -566,7 +576,7 @@ function parseEpisode(html, url) {
   };
   $('iframe[src]').each((_, el) => {
     const src = absolute($(el).attr('src'), url);
-    if (!src || sameOrigin(src)) return;
+    if (!isPlayableUrl(src)) return;
     let host = 'Servidor';
     try { host = new URL(src).hostname.replace(/^www\./, ''); } catch {}
     addServer(host, src, true);
@@ -586,7 +596,7 @@ function parseEpisode(html, url) {
                 node.attr('data-link') || node.attr('data-player') || node.attr('data-href');
     if (!raw) return;
     const full = absolute(raw, url);
-    if (!full || sameOrigin(full)) return;
+    if (!isPlayableUrl(full)) return;
     let host = 'Servidor';
     try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
     addServer(host, full, true, currentLang);
@@ -595,8 +605,10 @@ function parseEpisode(html, url) {
   $('a[href]').each((_, el) => {
     const href = $(el).attr('href');
     const full = absolute(href, url);
-    if (!full || sameOrigin(full)) return;
-    if (/ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega/i.test(full)) {
+    if (!full) return;
+    const known = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega/i.test(full);
+    if (!known && !isPlayableUrl(full)) return;
+    {
       let host = 'Servidor';
       try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
       addServer(host, full, false);
@@ -906,6 +918,21 @@ async function main() {
           console.log(`   ▶ ${epSlug}`);
           const epHtml = ep.html || await fetchHtml(epUrl);
           const parsed = parseEpisode(epHtml, epUrl);
+
+          // 🧪 Si la ficha no da servidores, volcar cómo guarda el reproductor
+          if (!parsed.servers.length && diagCount < 5) {
+            diagCount++;
+            console.log(`   🧪 [${epSlug}] sin servidores — analizando reproductor…`);
+            for (const kw of ['reproducir', 'player', 'opcion', 'iframe', 'embed', 'data-server', 'data-url', 'source']) {
+              const low = epHtml.toLowerCase();
+              const i = low.indexOf(kw.toLowerCase());
+              if (i !== -1) {
+                const frag = epHtml.slice(Math.max(0, i - 60), i + 240)
+                  .replace(/\s+/g, ' ').replace(/</g, '<');
+                console.log(`   🧪 [${kw}] …${frag.slice(0, 280)}`);
+              }
+            }
+          }
 
           // SOFT-404: doramasflix devuelve HTTP 200 en páginas de error.
           // Un episodio real tiene servidores O título con "capítulo/episodio".
