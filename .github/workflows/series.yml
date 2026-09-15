@@ -1,12 +1,10 @@
-
-name: Sincronizar catálogo dramas
+name: Sincronizar catálogo Series
 
 on:
   schedule:
-    - cron: '30 7,19 * * *'
+    - cron: '0 2,14 * * *'
   workflow_dispatch:
 
-# Nunca correr a la vez que los otros workflows de catálogo: se ponen en cola
 concurrency:
   group: sync-catalogos
   cancel-in-progress: false
@@ -28,15 +26,15 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Ejecutar sincronización de Cine
+      - name: Ejecutar sincronización de Series
         env:
-          SOURCE_URL: https://pelisplay.lol
-          SEEDS: "/peliculas,/series"
-          LINK_PREFIXES: /peliculas/,/series/
-          MOVIE_PREFIXES: /peliculas/
-          OUT_FILE: public/data/catalog-cine.json
-          CATALOG_TAG: cine
-          MAX_DISCOVERY_PAGES: 25
+          SOURCE_URL: https://seriesflixhd.team
+          SEEDS: "/series-online"
+          LINK_PREFIXES: /serie/,/series/
+          OUT_FILE: public/data/catalog-series.json
+          CATALOG_TAG: series
+          MAX_DISCOVERY_PAGES: 999
+          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
         run: node sync-source.js
 
       - name: Sincronizar portadas (TMDB/AniList)
@@ -49,6 +47,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
-          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo cine"
+          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo series"
           git pull --rebase origin main
           git push
