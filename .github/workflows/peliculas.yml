@@ -28,9 +28,9 @@ jobs:
 
       - name: Ejecutar sincronización de Películas
         env:
-          SOURCE_URL: https://seriesflixhd.team
-          SEEDS: "/peliculas-online"
-          LINK_PREFIXES: /pelicula/,/peliculas/
+          SOURCE_URL: https://pelisflixhd1.top
+          SEEDS: "/peliculas"
+          LINK_PREFIXES: /pelicula/
           MOVIE_PREFIXES: /pelicula/
           ONLY_MOVIES: '1'
           OUT_FILE: public/data/catalog-peliculas.json
@@ -41,7 +41,7 @@ jobs:
 
       - name: Sincronizar portadas (TMDB/AniList)
         env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          TMDB_API_KEY: ${{{{ secrets.TMDB_API_KEY }}}}
         run: node poster-sync.js
 
       - name: Guardar cambios en el catálogo
