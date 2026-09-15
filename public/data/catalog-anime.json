@@ -548,7 +548,8 @@
       "totalEpisodes": null,
       "sourceUrl": "https://pelisplay.lol/peliculas/gintama-yoshiwara-in-flames",
       "type": "anime",
-      "updatedAt": "2026-09-14T21:45:20.834Z"
+      "updatedAt": "2026-09-14T21:45:20.834Z",
+      "posterLocal": "./public/img/posters/gintama-yoshiwara-in-flames.jpg"
     },
     {
       "id": "among-us",
@@ -6088,7 +6089,8 @@
       "totalEpisodes": null,
       "sourceUrl": "https://pelisplay.lol/series/special-a",
       "type": "anime",
-      "updatedAt": "2026-09-14T22:02:01.570Z"
+      "updatedAt": "2026-09-14T22:02:01.570Z",
+      "posterLocal": "./public/img/posters/special-a.jpg"
     },
     {
       "id": "battle-game-in-5-seconds",
@@ -6692,7 +6694,8 @@
       "totalEpisodes": null,
       "sourceUrl": "https://pelisplay.lol/series/rey-chaman",
       "type": "anime",
-      "updatedAt": "2026-09-14T22:03:39.002Z"
+      "updatedAt": "2026-09-14T22:03:39.002Z",
+      "posterLocal": "./public/img/posters/rey-chaman.png"
     },
     {
       "id": "asi-hablo-kishibe-rohan",
