@@ -1,13 +1,13 @@
 {
   "meta": {
     "version": 1,
-    "source": "https://pelisplay.lol/",
-    "syncedAt": "2026-09-15T09:43:31.611Z",
+    "source": "https://lamovie.org/",
+    "syncedAt": "2026-09-15T15:11:41.314Z",
     "lastSync": {
       "status": "success",
       "type": "full",
-      "startedAt": "2026-09-15T09:20:57.497Z",
-      "finishedAt": "2026-09-15T09:43:31.611Z",
+      "startedAt": "2026-09-15T15:11:41.306Z",
+      "finishedAt": "2026-09-15T15:11:41.314Z",
       "error": null
     }
   },
