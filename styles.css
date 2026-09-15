@@ -37,7 +37,7 @@ svg{display:inline-block;vertical-align:middle}
 
 /* ---------- NAVBAR SUPERIOR ---------- */
 .nav{
-  height:64px;position:fixed;top:46px;left:0;right:0;z-index:50;
+  height:64px;position:fixed;top:0;left:0;right:0;z-index:50;
   display:flex;align-items:center;padding:0 4%;gap:30px;
   background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.35) 70%,transparent);
   transition:background .3s;
@@ -48,10 +48,15 @@ svg{display:inline-block;vertical-align:middle}
 .brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
 .brand-mark svg{width:13px;height:13px;color:#fff}
 .brand b{color:var(--red);font-weight:800}
-.nav nav{display:flex;gap:20px}
-.nav nav a{color:#c9ccd2;text-decoration:none;font-size:13px;font-weight:500;transition:color .2s;padding:6px 0}
-.nav nav a:hover{color:#fff}
-.nav nav a.active{color:#fff;font-weight:700}
+.nav nav{display:flex;gap:7px;align-items:center}
+.nav nav a{
+  color:#d5d8de;text-decoration:none;font-size:12.5px;font-weight:600;
+  padding:7px 14px;border-radius:999px;white-space:nowrap;
+  background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.nav nav a:hover{background:rgba(255,255,255,.2);color:#fff}
+.nav nav a.active{background:#fff;color:#000;border-color:#fff;font-weight:700}
 .nav-actions{margin-left:auto;display:flex;gap:9px}
 .icon-btn{
   width:38px;height:38px;cursor:pointer;text-decoration:none;
