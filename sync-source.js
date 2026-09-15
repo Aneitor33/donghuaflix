@@ -181,7 +181,7 @@ function extractPagination(html, pageUrl) {
 */
 async function probeListingPages(baseUrl, known) {
   const found = [];
-  const base = canonical(absolute(baseUrl));
+  const base = absolute(baseUrl);
   if (!base) return found;
   for (let n = 2; n <= MAX_PAGES; n++) {
     let url;
