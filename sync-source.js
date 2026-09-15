@@ -25,6 +25,14 @@ const MAX_PAGES = Number(process.env.MAX_DISCOVERY_PAGES || 60);
 // Si se define, solo se guardan las fichas cuyos géneros incluyan este texto
 const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
+// Servidores EXCLUIDOS del catálogo (anuncios agresivos/adultos)
+const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
+  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload')
+  .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
+// Si está activado, solo se procesan fichas de películas (se ignoran series)
+const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
+
 // Comparación sin acentos: animación == animacion, ficción == ficcion
 const fold = s => String(s || '')
   .normalize('NFD')
@@ -167,6 +175,40 @@ function extractPagination(html, pageUrl) {
   return uniqueUrls(links);
 }
 
+/*
+   Sondeo secuencial de un listado: prueba ?page=2, 3, 4...
+   hasta que la página falle (404) o no aporte fichas nuevas.
+*/
+async function probeListingPages(baseUrl, known) {
+  const found = [];
+  const base = canonical(absolute(baseUrl));
+  if (!base) return found;
+  for (let n = 2; n <= MAX_PAGES; n++) {
+    let url;
+    try {
+      const u = new URL(base);
+      u.searchParams.set('page', String(n));
+      url = u.href;
+    } catch { break; }
+    try {
+      const html = await fetchHtml(url);
+      const links = parseSeriesLinks(html, url);
+      const fresh = links.filter(l => !known.has(l) && !found.includes(l));
+      if (!fresh.length) {
+        console.log(`   🛑 ?page=${n}: sin fichas nuevas — fin del listado`);
+        break;
+      }
+      fresh.forEach(l => found.push(l));
+      console.log(`   📄 ?page=${n}: +${fresh.length} fichas (total ${known.size + found.length})`);
+    } catch (e) {
+      console.log(`   🛑 ?page=${n}: ${e.message} — fin del listado`);
+      break;
+    }
+    await sleep(POLITENESS_MS);
+  }
+  return found;
+}
+
 async function discoverSeries() {
   const all = new Set();
   for (const seed of SEEDS) {
@@ -189,6 +231,10 @@ async function discoverSeries() {
       }
       await sleep(POLITENESS_MS);
     }
+
+    // Sondeo secuencial del listado (?page=N hasta error o sin novedades)
+    const probed = await probeListingPages(firstUrl, all);
+    probed.forEach(u => all.add(u));
   }
   console.log(`\n🎯 TOTAL [${CATALOG_TAG}] DESCUBIERTOS: ${all.size}`);
   return [...all];
@@ -246,6 +292,13 @@ function parseSeries(html, url) {
   });
 
   const bodyTxt = clean($('body').text());
+
+  // Año de estreno: "Fecha de Estreno 2012-09-10" / "Estreno 2024" / cualquier año en la ficha
+  let year = null;
+  const yM = bodyTxt.match(/(?:estreno|fecha de estreno|a\u00f1o)[^\d]{0,20}((?:19|20)\d{2})/i)
+    || title.match(/\b((?:19|20)\d{2})\b/)
+    || bodyTxt.match(/\b((?:19|20)\d{2})\b/);
+  if (yM) year = Number(yM[1]);
 
   // Detalles (tabla): Estado, País, Estreno, Episodios
   const details = {};
@@ -308,6 +361,7 @@ function parseSeries(html, url) {
     id: slug, slug, title, image: image || null, synopsis: synopsis || null,
     status: details.status || null,
     country: normalizeCountry(details.country),
+    year,
     genres: [...new Set(genres)],
     totalEpisodes: details.total || null,
     onlineEpisodes: details.online || null,
@@ -435,6 +489,9 @@ function parseEpisode(html, url) {
   const addServer = (name, raw, embed = false, lang = null) => {
     const u = absolute(raw, url);
     if (!u) return;
+    let srvHost = name;
+    try { srvHost = new URL(u).hostname; } catch {}
+    if (isBlacklisted(srvHost) || isBlacklisted(name)) return; // servidores vetados
     if (servers.some(s => s.url === u)) return;
     const srv = { name: clean(name) || 'Servidor', url: u, embed: Boolean(embed) };
     if (lang) srv.lang = lang; // 'latino' | 'subtitulado' | etc.
@@ -478,6 +535,13 @@ function parseEpisode(html, url) {
     }
   });
   // MÉTODO EXTRA: barrido de TODO el HTML (incluye URLs dentro de <script>)
+  const directRe = /https?:\/\/[^\s"'<>\\]+\.(?:mp4|webm)(\?[^\s"'<>\\]*)?/gi;
+  for (const m of html.match(directRe) || []) {
+    let host = 'Video directo';
+    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, m, false);
+  }
+
   const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids)[^\s"'<>\\]*/gi;
   for (const m of html.match(hostRe) || []) {
     let host = 'Servidor';
@@ -521,6 +585,17 @@ function upsert(array, item, key = 'id') {
 async function main() {
   console.log(`\n🚀 INICIANDO SYNC [${CATALOG_TAG}] → ${BASE_URL} (${SEEDS.join(', ')})\n`);
   const db = await loadCatalog();
+
+  // Limpieza retroactiva: quitar servidores vetados de episodios ya guardados
+  let cleaned = 0;
+  for (const ep of db.episodes) {
+    if (!Array.isArray(ep.servers)) continue;
+    const before = ep.servers.length;
+    ep.servers = ep.servers.filter(s => !isBlacklisted(s.name) && !isBlacklisted(s.url || ''));
+    if (ep.servers.length !== before) cleaned++;
+  }
+  if (cleaned) console.log(`🧹 Limpieza: ${cleaned} episodios quitados de servidores con anuncios adultos`);
+
   let discovered = [];
   if (DISCOVERY === 'seeds' || DISCOVERY === 'both') {
     discovered = discovered.concat(await discoverSeries());
@@ -582,6 +657,12 @@ async function main() {
 
       const isMovie = MOVIE_PREFIXES.some(pre => new URL(url).pathname.startsWith(pre));
 
+      // Modo solo-películas: ignorar series por completo
+      if (ONLY_MOVIES && !isMovie) {
+        console.log(`   ⏭️  Solo películas: se ignora la serie ${slug}`);
+        continue;
+      }
+
       // Completar episodios: la web pagina vía JS, así que aprendemos el
       // patrón -{temporada}x{episodio} de los enlaces visibles y sondeamos
       // hacia adelante comprobando existencia (fin: 4 seguidos que no existen).
@@ -617,10 +698,42 @@ async function main() {
 
       let episodeSource;
       if (isMovie) {
-        // Película: un único episodio cuyos servidores están en la propia ficha
-        episodeSource = [{ url, slug: `${slug}-pelicula`, html }];
+        // Película: los servidores suelen estar en la subpágina /ver/
+        let playerHtml = html;
+        let verUrl = null;
+        const $m = cheerio.load(html);
+        $m('a[href]').each((_, el) => {
+          const h = absolute($m(el).attr('href'), url);
+          if (h && h !== url && /\/ver\/?(\?|#|$)/.test(h)) verUrl = h;
+        });
+        if (verUrl) {
+          try {
+            playerHtml = await fetchHtml(verUrl);
+            console.log(`   📺 Página de reproducción: ${verUrl}`);
+          } catch { /* usamos la ficha si falla */ }
+        }
+        episodeSource = [{ url, slug: `${slug}-pelicula`, html: playerHtml }];
       } else {
         const crawled = await collectAllEpisodeUrls(url);
+
+        // 🩺 DIAGNÓSTICO: si no hay enlaces de episodios, la serie usa
+        // reproductor embebido (JS). Volcar pistas al log para adaptar el parser.
+        if (!crawled.length) {
+          console.log('   🩺 SERIE CON REPRODUCTOR EMBEBIDO — analizando estructura…');
+          const htmlLower = html.toLowerCase();
+          for (const kw of ['episodio', 'episode', 'temporada', 'season']) {
+            const i = htmlLower.indexOf(kw);
+            if (i !== -1) {
+              const frag = html.slice(Math.max(0, i - 60), i + 260)
+                .replace(/\s+/g, ' ').replace(/</g, '<').trim();
+              console.log(`   🩺 [${kw}] …${frag.slice(0, 300)}`);
+            }
+          }
+          const ajax = (html.match(/admin-ajax\.php/g) || []).length;
+          const postid = html.match(/postid-(\d+)/);
+          if (ajax) console.log(`   🩺 admin-ajax.php referenciado ×${ajax}`);
+          if (postid) console.log(`   🩺 postid: ${postid[1]}`);
+        }
         // UNIR: lo visto en la página + lo generado por sondeo (detail.episodeUrls)
         const merged = [...new Set([...crawled, ...detail.episodeUrls])]
           .sort((a, b) => {
