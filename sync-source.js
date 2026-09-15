@@ -24,6 +24,17 @@ const MOVIE_PREFIXES = (process.env.MOVIE_PREFIXES || '')
 const MAX_PAGES = Number(process.env.MAX_DISCOVERY_PAGES || 60);
 // Si se define, solo se guardan las fichas cuyos géneros incluyan este texto
 const GENRE_FILTER = (process.env.GENRE_FILTER || '').toLowerCase();
+// Permitir fichas enlazadas desde OTRO dominio (clones que enlazan al dominio
+// principal, ej. pelisflixhd1.top → pelisflixhd.blog). Se reescriben al BASE_URL.
+const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
+function rewriteToBase(url) {
+  try {
+    const u = new URL(url);
+    if (u.origin === new URL(BASE_URL).origin) return url;
+    if (!ALLOW_CROSS_ORIGIN) return null;
+    return `${new URL(BASE_URL).origin}${u.pathname}${u.search}`;
+  } catch { return null; }
+}
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
 // Servidores EXCLUIDOS del catálogo (anuncios agresivos/adultos)
 const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
@@ -147,11 +158,13 @@ function parseSeriesLinks(html, pageUrl) {
   const $ = cheerio.load(html);
   const links = [];
   $('a[href]').each((_, el) => {
-    const url = absolute($(el).attr('href'), pageUrl);
-    if (!url || !sameOrigin(url)) return;
+    const raw = absolute($(el).attr('href'), pageUrl);
+    if (!raw) return;
     try {
-      const p = new URL(url).pathname;
-      if (LINK_PREFIXES.some(pre => p.startsWith(pre))) links.push(url);
+      const p = new URL(raw).pathname;
+      if (!LINK_PREFIXES.some(pre => p.startsWith(pre))) return;
+      const url = rewriteToBase(raw);
+      if (url) links.push(url);
     } catch {}
   });
   return uniqueUrls(links);
@@ -161,9 +174,12 @@ function extractPagination(html, pageUrl) {
   const $ = cheerio.load(html);
   const links = [];
   $('a[href]').each((_, el) => {
-    const url = absolute($(el).attr('href'), pageUrl);
-    if (!url || !sameOrigin(url)) return;
+    const raw = absolute($(el).attr('href'), pageUrl);
+    if (!raw) return;
     try {
+      const u0 = new URL(raw);
+      if (u0.origin !== new URL(BASE_URL).origin && !ALLOW_CROSS_ORIGIN) return;
+      const url = rewriteToBase(raw) || raw;
       const u = new URL(url);
       if (u.searchParams.has('page')) {
         const p = Number(u.searchParams.get('page'));
