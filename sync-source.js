@@ -54,6 +54,7 @@ const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCas
 const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
 
 let diagCount = 0;
+let movieDiag = 0;
 
 // Comparación sin acentos: animación == animacion, ficción == ficcion
 const fold = s => String(s || '')
@@ -609,7 +610,7 @@ function parseEpisode(html, url) {
     const href = $(el).attr('href');
     const full = absolute(href, url);
     if (!full) return;
-    const known = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega/i.test(full);
+    const known = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega|ibra\.lat/i.test(full);
     if (!known && !isPlayableUrl(full)) return;
     {
       let host = 'Servidor';
@@ -625,7 +626,7 @@ function parseEpisode(html, url) {
     addServer(host, m, false);
   }
 
-  const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids)[^\s"'<>\\]*/gi;
+  const hostRe = /https?:\/\/[^\s"'<>\\]*(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat)[^\s"'<>\\]*/gi;
   for (const m of html.match(hostRe) || []) {
     let host = 'Servidor';
     try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
@@ -846,6 +847,43 @@ async function main() {
           } catch { /* usamos la ficha si falla */ }
         }
         episodeSource = [{ url, slug: `${slug}-pelicula`, html: playerHtml }];
+
+        // 🧪 Volcante de candidatos (primeras 5 películas): ver la URL REAL del reproductor
+        if (movieDiag < 5) {
+          movieDiag++;
+          const $d = cheerio.load(playerHtml);
+          const cands = [];
+          $d('a[href]').each((_, el) => {
+            const h = absolute($d(el).attr('href'), url);
+            if (h && sameOrigin(h) && cands.length < 15) cands.push(h);
+          });
+          const datas = [];
+          $d('[data-url], [data-embed], [data-player], [data-server], [data-link], [data-href], [data-src], [data-id], [data-post]').each((_, el) => {
+            if (datas.length >= 12) return;
+            const a = Object.entries(el.attribs || {}).filter(([k]) => k.startsWith('data'))
+              .map(([k, v]) => `${k}="${String(v).slice(0, 60)}"`).join(' ');
+            if (a) datas.push(a);
+          });
+          const ifr = [];
+          $d('iframe[src]').each((_, el) => { if (ifr.length < 6) ifr.push(absolute($d(el).attr('src'), url)); });
+          console.log(`   🧪 [${slug}] CANDIDATOS href internos:`);
+          cands.forEach(c => console.log(`   🧪   ${c}`));
+          console.log(`   🧪 [${slug}] data-* :`);
+          datas.forEach(d => console.log(`   🧪   <${d}>`));
+          console.log(`   🧪 [${slug}] iframes: ${ifr.join(' | ') || 'ninguno'}`);
+          // URLs escondidas en el JavaScript (endpoints del reproductor vía AJAX)
+          const scriptUrls = new Set();
+          for (const m of playerHtml.matchAll(/['"]((?:https?:)?\/(?:\/[^'"]+|wp-admin\/admin-ajax\.php[^'"]*|[^'"]*(?:player|embed|stream|ajax|api|go|reproducir)[^'"]*))['"]/gi)) {
+            const u = absolute(m[1].replace(/^\//, '/'), url);
+            if (u && scriptUrls.size < 15) scriptUrls.add(String(u).slice(0, 120));
+          }
+          console.log(`   🧪 [${slug}] URLs en scripts (endpoints):`);
+          [...scriptUrls].forEach(u => console.log(`   🧪   ${u}`));
+          // Formularios (algunos temas envían POST al reproductor)
+          const forms = [];
+          $d('form[action]').each((_, el) => { if (forms.length < 5) forms.push(absolute($d(el).attr('action'), url)); });
+          if (forms.length) console.log(`   🧪 [${slug}] formularios: ${forms.join(' | ')}`);
+        }
       } else {
         const crawled = await collectAllEpisodeUrls(url);
 
