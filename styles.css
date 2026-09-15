@@ -81,22 +81,7 @@ svg{display:inline-block;vertical-align:middle}
 .btn-x.round{width:46px;height:46px;padding:0;border-radius:50%}
 .btn-x.round svg{width:18px;height:18px}
 
-/* ---------- SELECTOR DE CATÁLOGO (siempre arriba) ---------- */
-:root{--topoff:110px}
-.cat-bar{
-  position:fixed;top:0;left:0;right:0;z-index:55;
-  display:flex;justify-content:center;gap:8px;
-  padding:7px 4%;
-  background:rgba(5,5,7,.75);backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.07);
-}
-.cat-bar button{
-  padding:8px 24px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
-  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
-  border:1px solid var(--glass-brd);transition:.2s;
-}
-.cat-bar button:hover{background:rgba(255,255,255,.2);color:#fff}
-.cat-bar button.on{background:#fff;color:#000;border-color:#fff}
+:root{--topoff:64px}
 
 /* ---------- PILLS DE FILTROS ---------- */
 .pills{display:flex;gap:8px;padding:84px 4% 6px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:2}
@@ -384,15 +369,6 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
 
 /* ---------- PANEL DE FILTROS DEL CATÁLOGO ---------- */
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.filters select{
-  appearance:none;-webkit-appearance:none;cursor:pointer;
-  background:var(--surface) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3e%3c/svg%3e") no-repeat right 13px center;
-  color:#fff;border:1px solid var(--line);border-radius:8px;
-  padding:10px 36px 10px 14px;font-size:13px;font-weight:600;
-  transition:border-color .2s;
-}
-.filters select:hover{border-color:#4a4f5c}
-.filters select:focus{outline:0;border-color:var(--red)}
 
 
 /* ---------- FICHA DE PELÍCULA ---------- */
@@ -445,3 +421,56 @@ footer a.ig-link{
 }
 footer a.ig-link:hover{filter:brightness(1.15)}
 footer a.ig-link svg{width:13px;height:13px}
+
+
+/* ---------- SELECTOR DE CATÁLOGOS (FAB circular) ---------- */
+.catalog-wrap{position:relative;margin-left:auto;display:flex;align-items:center}
+.catalog-fab{
+  width:42px;height:42px;border-radius:50%;cursor:pointer;position:relative;
+  border:1.5px solid var(--glass-brd);
+  background:var(--glass);backdrop-filter:blur(16px);
+  display:grid;place-items:center;transition:.2s;flex-shrink:0;
+}
+.catalog-fab img{width:26px;height:26px;border-radius:7px;object-fit:cover;display:block}
+.catalog-fab:hover{background:rgba(255,255,255,.2);transform:scale(1.06)}
+.fab-caret{
+  position:absolute;right:-3px;bottom:-3px;width:16px;height:16px;padding:2px;
+  color:#fff;background:rgba(0,0,0,.75);border-radius:50%;
+  border:1px solid var(--glass-brd);
+}
+.catalog-menu{
+  display:none;flex-direction:column;min-width:170px;padding:8px;
+  position:absolute;top:52px;right:0;z-index:60;
+  background:rgba(14,16,22,.8);backdrop-filter:blur(20px) saturate(1.3);
+  border:1px solid var(--glass-brd);border-radius:14px;box-shadow:var(--shadow);
+}
+.catalog-menu.open{display:flex;animation:toastIn .2s ease}
+.catalog-menu button{
+  padding:11px 16px;background:none;border:0;color:#e8eaee;text-align:left;
+  font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;transition:.15s;
+}
+.catalog-menu button:hover{background:rgba(255,255,255,.09);color:#fff}
+.catalog-menu button.on{color:var(--red2);font-weight:800}
+
+@media(max-width:900px){
+  /* Móvil/vertical: FAB flotante en esquina inferior derecha, sobre la bottom-nav */
+  .catalog-wrap{
+    position:fixed;right:14px;bottom:calc(80px + env(safe-area-inset-bottom));
+    z-index:70;margin:0;
+  }
+  .catalog-fab{width:52px;height:52px;box-shadow:var(--shadow)}
+  .catalog-fab img{width:32px;height:32px}
+  .catalog-menu{top:auto;bottom:62px;right:0}
+}
+
+/* ---------- FILTROS: píldoras de cristal líquido transparente ---------- */
+.filters select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:rgba(255,255,255,.07) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3e%3c/svg%3e") no-repeat right 14px center;
+  backdrop-filter:blur(16px) saturate(1.3);
+  color:#fff;border:1px solid var(--glass-brd);border-radius:999px;
+  padding:10px 38px 10px 17px;font-size:13px;font-weight:600;
+  transition:border-color .2s,background .2s;
+}
+.filters select:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+.filters select:focus{outline:0;border-color:rgba(255,255,255,.45)}
