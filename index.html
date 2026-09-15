@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <meta name="description" content="DonghuaFlix — Catálogo de donghuas y animación china en alta calidad.">
+  <meta name="description" content="DonghuaFlix — Donghuas, películas y series en alta calidad.">
   <title>DonghuaFlix</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
-  <!-- FONDO AMBIENTE (cristal líquido: refleja la portada destacada) -->
+  <!-- FONDO AMBIENTE (cristal líquido) -->
   <div class="bg-ambience" id="bgAmbience"></div>
 
-  <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+  <!-- BARRA SUPERIOR ÚNICA: logo + menú + selector de catálogo + acciones -->
   <header class="nav">
     <a class="brand" href="#/">
-      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="brand-mark"><img src="icon-192.png" alt="DonghuaFlix"></span>
       <span>Donghua<b>Flix</b></span>
     </a>
     <nav>
@@ -33,6 +33,11 @@
       <a href="#/genres" data-nav>Géneros</a>
       <a href="#/mylist" data-nav>Mi lista</a>
     </nav>
+    <div class="cat-bar" id="catBar" style="display:none">
+      <button data-cat="donghua" onclick="switchCatalog('donghua')">Donghuas</button>
+      <button data-cat="peliculas" onclick="switchCatalog('peliculas')">Películas</button>
+      <button data-cat="series" onclick="switchCatalog('series')">Series</button>
+    </div>
     <div class="nav-actions">
       <a href="#/search" class="icon-btn" title="Buscar" aria-label="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -43,14 +48,6 @@
     </div>
   </header>
 
-  <!-- SELECTOR DE CATÁLOGO (aparece cuando hay más de uno disponible) -->
-  <div class="cat-bar" id="catBar" style="display:none">
-    <button data-cat="donghua" onclick="switchCatalog('donghua')">Donghuas</button>
-    <button data-cat="cdrama" onclick="switchCatalog('cdrama')">Cdramas</button>
-    <button data-cat="anime" onclick="switchCatalog('anime')">Animación</button>
-    <button data-cat="cine" onclick="switchCatalog('cine')">Cine</button>
-  </div>
-
   <!-- CONTENEDOR DE LA SPA -->
   <main id="app"></main>
 
@@ -59,14 +56,17 @@
     <p id="footerStatus">Cargando catálogo...</p>
   </footer>
 
-  <!-- BARRA INFERIOR (móvil, estilo Netflix) -->
+  <!-- BARRA INFERIOR (móvil) -->
   <nav class="bottom-nav">
     <a href="#/" data-nav>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
       Inicio</a>
     <a href="#/series" data-nav>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M7 4v16M17 4v16"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2.5"/><path d="M8 3l4 4 4-4"/></svg>
       Series</a>
+    <a href="#/movies" data-nav>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M3 16h18M8 3v18M16 3v18"/></svg>
+      Películas</a>
     <a href="#/search" data-nav>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       Buscar</a>
@@ -80,7 +80,6 @@
 
   <!-- MENÚ "MÁS" -->
   <div class="more-menu" id="moreMenu">
-    <a href="#/movies">Películas</a>
     <a href="#/airing">En emisión</a>
     <a href="#/completed">Finalizadas</a>
     <a href="#/genres">Géneros</a>
@@ -94,6 +93,6 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
