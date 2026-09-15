@@ -100,6 +100,8 @@ function slugFromUrl(raw) {
     return decodeURIComponent(u.pathname.split('/').filter(Boolean).pop() || '');
   } catch { return ''; }
 }
+const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 function uniqueUrls(values) {
   return [...new Set(values.map(u => absolute(u)).filter(Boolean))];
 }
@@ -183,25 +185,40 @@ async function probeListingPages(baseUrl, known) {
   const found = [];
   const base = absolute(baseUrl);
   if (!base) return found;
-  for (let n = 2; n <= MAX_PAGES; n++) {
-    let url;
+
+  // Detectar el formato de paginación con n=2:
+  // formato A: /page/N/ (estándar WordPress) · formato B: ?page=N
+  const formats = [
+    (n) => { const u = new URL(base); u.pathname = u.pathname.replace(/\/$/, '') + '/page/' + n + '/'; return u.href; },
+    (n) => { const u = new URL(base); u.searchParams.set('page', String(n)); return u.href; }
+  ];
+  let build = null;
+  for (const mk of formats) {
     try {
-      const u = new URL(base);
-      u.searchParams.set('page', String(n));
-      url = u.href;
-    } catch { break; }
+      const html = await fetchHtml(mk(2));
+      if (parseSeriesLinks(html, mk(2)).length) { build = mk; break; }
+    } catch { /* probar siguiente formato */ }
+    await sleep(300);
+  }
+  if (!build) {
+    console.log('   🛑 Sin paginación detectada en este listado');
+    return found;
+  }
+
+  for (let n = 2; n <= MAX_PAGES; n++) {
+    const url = build(n);
     try {
       const html = await fetchHtml(url);
       const links = parseSeriesLinks(html, url);
       const fresh = links.filter(l => !known.has(l) && !found.includes(l));
       if (!fresh.length) {
-        console.log(`   🛑 ?page=${n}: sin fichas nuevas — fin del listado`);
+        console.log(`   🛑 página ${n}: sin fichas nuevas — fin del listado`);
         break;
       }
       fresh.forEach(l => found.push(l));
-      console.log(`   📄 ?page=${n}: +${fresh.length} fichas (total ${known.size + found.length})`);
+      console.log(`   📄 página ${n}: +${fresh.length} fichas (total ${known.size + found.length})`);
     } catch (e) {
-      console.log(`   🛑 ?page=${n}: ${e.message} — fin del listado`);
+      console.log(`   🛑 página ${n}: ${e.message} — fin del listado`);
       break;
     }
     await sleep(POLITENESS_MS);
@@ -222,7 +239,26 @@ async function discoverSeries() {
       console.log(`📄 Página ${visited.size}: ${pageUrl}`);
       try {
         const html = await fetchHtml(pageUrl);
-        parseSeriesLinks(html, pageUrl).forEach(u => all.add(u));
+        const links = parseSeriesLinks(html, pageUrl);
+        links.forEach(u => all.add(u));
+
+        // 🧪 Si la página no tiene enlaces <a>, comprobar si los datos vienen
+        // embebidos en JSON dentro del HTML (apps SPA que hidratan con datos)
+        if (!links.length) {
+          for (const pre of LINK_PREFIXES) {
+            const n = (html.match(new RegExp(escapeRe(pre), 'g')) || []).length;
+            if (n) {
+              const i = html.indexOf(pre);
+              const sample = html.slice(Math.max(0, i - 80), i + 220)
+                .replace(/\s+/g, ' ').replace(/</g, '<');
+              console.log(`   🧪 [${pre}] aparece ×${n} en el HTML sin enlaces <a>. Muestra: …${sample.slice(0, 280)}`);
+            }
+          }
+          if (!LINK_PREFIXES.some(pre => html.includes(pre))) {
+            console.log('   🧪 La página no contiene referencias a fichas (¿listado 100% JS?)');
+          }
+        }
+
         for (const next of extractPagination(html, pageUrl)) {
           if (!visited.has(next) && !queue.includes(next)) queue.push(next);
         }
@@ -357,8 +393,23 @@ function parseSeries(html, url) {
     } catch {}
   });
 
+  // Detección de tipo analizando la ficha (no el nº de episodios encontrados)
+  let contentType = null;
+  if (/serie de tv/i.test(bodyTxt) ||
+      /\d{1,3}\s*(?:temporada|temporadas)\b/i.test(bodyTxt) ||
+      /(?:episodios|cap[ií]tulos)\b[^.]{0,15}\d/i.test(bodyTxt)) {
+    contentType = 'series';
+  } else if (/pel[ií]cula\b/i.test(bodyTxt) && !/pel[ií]cula de tv/i.test(bodyTxt)) {
+    contentType = 'movie';
+  } else if (details.total) {
+    contentType = 'series';
+  } else if (/\b\d{1,2}\s*h(?:\s*\d{1,2}\s*m)?\b/i.test(bodyTxt)) {
+    contentType = 'movie';
+  }
+
   return {
     id: slug, slug, title, image: image || null, synopsis: synopsis || null,
+    contentType,
     status: details.status || null,
     country: normalizeCountry(details.country),
     year,
@@ -511,7 +562,8 @@ function parseEpisode(html, url) {
     const node = $(el);
     const txt = clean(node.text());
     if (txt && txt.length < 30) {
-      if (/espa[nñ]ol latino|^latino$|castellano/i.test(txt)) { currentLang = 'latino'; return; }
+      if (/^latino$|espa[nñ]ol latino/i.test(txt)) { currentLang = 'latino'; return; }
+      if (/castellano/i.test(txt)) { currentLang = 'castellano'; return; }
       if (/subtitulad|subt[ií]tulad/i.test(txt)) { currentLang = 'subtitulado'; return; }
     }
     const raw = node.attr('data-url') || node.attr('data-embed') || node.attr('data-src') ||
@@ -596,6 +648,24 @@ async function main() {
   }
   if (cleaned) console.log(`🧹 Limpieza: ${cleaned} episodios quitados de servidores con anuncios adultos`);
 
+  // Solo-películas: eliminar series ya guardadas (y sus temporadas/episodios)
+  if (ONLY_MOVIES) {
+    const removedIds = new Set();
+    const before = db.series.length;
+    db.series = db.series.filter(s => {
+      try {
+        const isPeli = MOVIE_PREFIXES.some(pre => new URL(s.sourceUrl).pathname.startsWith(pre));
+        if (!isPeli) removedIds.add(s.id);
+        return isPeli;
+      } catch { return true; }
+    });
+    if (removedIds.size) {
+      db.seasons = db.seasons.filter(se => !removedIds.has(se.seriesId));
+      db.episodes = db.episodes.filter(ep => !removedIds.has(ep.seriesId));
+      console.log(`🧹 Solo películas: eliminadas ${removedIds.size} series del catálogo (${before} → ${db.series.length} títulos)`);
+    }
+  }
+
   let discovered = [];
   if (DISCOVERY === 'seeds' || DISCOVERY === 'both') {
     discovered = discovered.concat(await discoverSeries());
@@ -611,6 +681,13 @@ async function main() {
   for (let i = 0; i < discovered.length; i++) {
     const url = discovered[i];
     const slug = slugFromUrl(url);
+
+    // Modo solo-películas: descartar series por la ruta, sin gastar petición
+    if (ONLY_MOVIES && !MOVIE_PREFIXES.some(pre => { try { return new URL(url).pathname.startsWith(pre); } catch { return false; } })) {
+      console.log(`⏭️  [${i + 1}/${discovered.length}] Solo películas: ${slug}`);
+      continue;
+    }
+
     console.log(`\n${i + 1}/${discovered.length} — ${slug}`);
 
     try {
@@ -664,33 +741,38 @@ async function main() {
       }
 
       // Completar episodios: la web pagina vía JS, así que aprendemos el
-      // patrón -{temporada}x{episodio} de los enlaces visibles y sondeamos
-      // hacia adelante comprobando existencia (fin: 4 seguidos que no existen).
+      // patrón de los enlaces visibles y sondeamos hacia adelante.
+      // Soporta DOS formatos:
+      //   A) doramasflix:  .../capitulos/slug-1x24      → genera slug-1x25, -1x26...
+      //   B) pelisplay:    .../series/slug?season=1&ep=3 → genera ?ep=4, 5, 6...
+      // Parada: 4 seguidos que no existen (404 o soft-404 validado).
       let totalKnown = null;
       if (!isMovie) {
-        const m = detail.episodeUrls.find(u => /-(\d+)x(\d+)$/.test(u));
-        if (m) {
-          const base = m.replace(/-(\d+)x(\d+)$/, '');
-          const season = m.match(/-(\d+)x(\d+)$/)[1];
-          const set = new Set(detail.episodeUrls);
-          const nums = detail.episodeUrls
-            .map(u => { const mm = u.match(/-(\d+)x(\d+)$/); return mm ? Number(mm[2]) : 0; });
-          const maxKnown = Math.max(0, ...nums);
+        const urls = [...new Set(detail.episodeUrls)];
+        const mx = urls.find(u => /(\d+)x(\d+)$/.test(u));
+        const ms = urls.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
+
+        let build = null;   // (n) => url del episodio n
+        let numOf = null;   // (url) => nº de episodio
+        if (mx) {
+          const m = mx.match(/^(.*)-(\d+)x(\d+)(\/?)$/);
+          build = (n) => `${m[1]}-${m[2]}x${n}${m[4] || ''}`;
+          numOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+        } else if (ms) {
+          build = (n) => { const u = new URL(ms); u.searchParams.set('ep', String(n)); return u.href; };
+          numOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
+        }
+
+        if (build) {
+          const set = new Set(urls);
+          const maxKnown = Math.max(0, ...urls.map(numOf));
           totalKnown = detail.totalEpisodes || detail.onlineEpisodes || null;
 
-          // Sondeo abierto: seguir generando (24 → 25 → 26 → ...) hasta
-          // que el fetch dé 4 errores seguidos (404 = fin de temporada).
-          // El límite de 500 es solo de seguridad absoluta.
-          const target = maxKnown + 500;
-          for (let n = maxKnown + 1; n <= target; n++) {
-            set.add(`${base}-${season}x${n}`);
-          }
-          const complete = [...set].sort((a, b) => {
-            const na = a.match(/-(\d+)x(\d+)$/); const nb = b.match(/-(\d+)x(\d+)$/);
-            return (na && nb) ? Number(na[2]) - Number(nb[2]) : 0;
-          });
-          if (complete.length > detail.episodeUrls.length) {
-            console.log(`   🔧 Sondeo de episodios: ${detail.episodeUrls.length} visibles → probando hasta el ${target}${totalKnown ? ' (total declarado)' : ' (sin total, parada por 404s)'}`);
+          // Sondeo abierto: maxKnown+1 → +500 (tope de seguridad)
+          for (let n = 1; n <= maxKnown + 500; n++) set.add(build(n));
+          const complete = [...set].sort((a, b) => numOf(a) - numOf(b));
+          if (complete.length > urls.length) {
+            console.log(`   🔧 Sondeo: ${urls.length} visibles → probando hasta el ${maxKnown + 500}${totalKnown ? ` (total declarado: ${totalKnown})` : ' (parada por errores ×4)'}`);
             detail.episodeUrls = complete;
           }
         }
@@ -719,20 +801,52 @@ async function main() {
         // 🩺 DIAGNÓSTICO: si no hay enlaces de episodios, la serie usa
         // reproductor embebido (JS). Volcar pistas al log para adaptar el parser.
         if (!crawled.length) {
-          console.log('   🩺 SERIE CON REPRODUCTOR EMBEBIDO — analizando estructura…');
+          console.log('   🩺 SERIE CON REPRODUCTOR EMBEBIDO — volcando diagnóstico completo…');
           const htmlLower = html.toLowerCase();
+
+          // 1) Palabras clave con contexto
           for (const kw of ['episodio', 'episode', 'temporada', 'season']) {
             const i = htmlLower.indexOf(kw);
             if (i !== -1) {
-              const frag = html.slice(Math.max(0, i - 60), i + 260)
+              const frag = html.slice(Math.max(0, i - 60), i + 220)
                 .replace(/\s+/g, ' ').replace(/</g, '<').trim();
-              console.log(`   🩺 [${kw}] …${frag.slice(0, 300)}`);
+              console.log(`   🩺 [${kw}] …${frag.slice(0, 260)}`);
             }
           }
+
+          // 2) Elementos con atributos data-* de episodio (botones del selector)
+          const $diag = cheerio.load(html);
+          const dataAttrs = [];
+          $diag('[data-episode], [data-ep], [data-season], [data-num]').each((_, el) => {
+            if (dataAttrs.length >= 3) return;
+            const attribs = Object.entries(el.attribs || {})
+              .filter(([k]) => k.startsWith('data-'))
+              .map(([k, v]) => `${k}="${String(v).slice(0, 40)}"`).join(' ');
+            if (attribs) dataAttrs.push(attribs);
+          });
+          dataAttrs.forEach(a => console.log(`   🩺 [data] <elem ${a}>`));
+
+          // 3) Variables JS sospechosas
+          const vars = new Set();
+          for (const m of html.matchAll(/(?:var|let|const)\s+(\w*(?:episode|season|player|eps?|cap)\w*)\s*=/gi)) {
+            vars.add(m[1]);
+          }
+          if (vars.size) console.log(`   🩺 [vars] ${[...vars].slice(0, 8).join(', ')}`);
+
+          // 4) Endpoint AJAX y acciones del reproductor
           const ajax = (html.match(/admin-ajax\.php/g) || []).length;
+          if (ajax) {
+            console.log(`   🩺 admin-ajax.php ×${ajax}`);
+            const actions = new Set();
+            for (const m of html.matchAll(/action['"\s:=]+['"]([\w-]+)['"]/gi)) actions.add(m[1]);
+            if (actions.size) console.log(`   🩺 [actions] ${[...actions].slice(0, 8).join(', ')}`);
+          }
           const postid = html.match(/postid-(\d+)/);
-          if (ajax) console.log(`   🩺 admin-ajax.php referenciado ×${ajax}`);
           if (postid) console.log(`   🩺 postid: ${postid[1]}`);
+
+          // 5) Muestra de JSON embebido con episodios
+          const jm = html.match(/\{[^{}]{0,400}(?:episode|season|episodio|temporada)[^{}]{0,400}\}/i);
+          if (jm) console.log(`   🩺 [json] ${jm[0].replace(/\s+/g, ' ').slice(0, 320)}`);
         }
         // UNIR: lo visto en la página + lo generado por sondeo (detail.episodeUrls)
         const merged = [...new Set([...crawled, ...detail.episodeUrls])]
