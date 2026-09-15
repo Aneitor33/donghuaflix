@@ -1,4 +1,5 @@
-name: Sincronizar catálogo Cine
+
+name: Sincronizar catálogo dramas
 
 on:
   schedule:
