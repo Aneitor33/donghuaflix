@@ -96,7 +96,9 @@ async function discoverFromSitemap() {
 const MAX_DISCOVERY_PAGES = 60;
 const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
-const POLITENESS_MS = 600;
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
+// Trabajadores paralelos: acelera la primera sincronización de catálogos grandes
+const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || 4)));
 
 async function sleep(ms) {
   await new Promise(r => setTimeout(r, ms));
@@ -706,17 +708,22 @@ async function main() {
   const startedAt = new Date().toISOString();
   const allGenres = new Set(db.genres);
 
-  for (let i = 0; i < discovered.length; i++) {
+  let cursor = 0;
+  let doneCount = 0;
+  const processItem = async () => {
+    while (cursor < discovered.length) {
+    const i = cursor++;
     const url = discovered[i];
     const slug = slugFromUrl(url);
 
     // Modo solo-películas: descartar series por la ruta, sin gastar petición
     if (ONLY_MOVIES && !MOVIE_PREFIXES.some(pre => { try { return new URL(url).pathname.startsWith(pre); } catch { return false; } })) {
-      console.log(`⏭️  [${i + 1}/${discovered.length}] Solo películas: ${slug}`);
+      console.log(`⏭️  [${doneCount + 1}/${discovered.length}] Solo películas: ${slug}`);
+      doneCount++;
       continue;
     }
 
-    console.log(`\n${i + 1}/${discovered.length} — ${slug}`);
+    console.log(`\n[${doneCount + 1}/${discovered.length}] — ${slug}`);
 
     try {
       const html = await fetchHtml(url);
@@ -741,23 +748,25 @@ async function main() {
           console.log(`   ⚠️  Género no legible en la ficha, pero el seed ya es de género → se acepta`);
         } else {
           console.log(`   ⏭️  Fuera del género "${GENRE_FILTER}": ${detail.genres.join(', ') || 'sin género'}`);
-          continue;
+          doneCount++;
+          return;
         }
       }
 
       // Filtro de país: descartar lo que no sea del país pedido (ej: solo "china")
       if (COUNTRY_FILTER && !fold(detail.country).includes(fold(COUNTRY_FILTER))) {
         console.log(`   ⏭️  Fuera del país "${COUNTRY_FILTER}": ${detail.country || 'sin país'}`);
-        continue;
+        doneCount++;
+        return;
       }
 
       upsert(db.series, seriesItem);
       detail.genres.forEach(g => allGenres.add(g));
 
-      // CHECKPOINT cada 10 series
-      if ((i + 1) % 10 === 0) {
+      // CHECKPOINT cada 10 items completados
+      if (doneCount % 10 === 0) {
         await saveCatalog(db);
-        console.log(`💾 Checkpoint: ${i + 1}/${discovered.length}`);
+        console.log(`💾 Checkpoint: ${doneCount}/${discovered.length}`);
       }
 
       const isMovie = MOVIE_PREFIXES.some(pre => new URL(url).pathname.startsWith(pre));
@@ -987,8 +996,14 @@ async function main() {
     } catch (e) {
       console.log(`❌ Error serie: ${e.message}`);
     }
+    doneCount++;
     await sleep(POLITENESS_MS);
-  }
+    }
+  };
+
+  // Pool de trabajadores paralelos
+  console.log(`\n⚡ Procesando con ${WORKERS} trabajadores en paralelo…`);
+  await Promise.all(Array.from({ length: WORKERS }, processItem));
 
   db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
   db.meta = {
