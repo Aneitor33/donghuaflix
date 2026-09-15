@@ -380,3 +380,16 @@ footer a{color:var(--red);text-decoration:none;font-weight:600}
   .cw-play{opacity:1}
   .fav-heart{opacity:1}
 }
+
+
+/* ---------- PANEL DE FILTROS DEL CATÁLOGO ---------- */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.filters select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:var(--surface) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3e%3c/svg%3e") no-repeat right 13px center;
+  color:#fff;border:1px solid var(--line);border-radius:8px;
+  padding:10px 36px 10px 14px;font-size:13px;font-weight:600;
+  transition:border-color .2s;
+}
+.filters select:hover{border-color:#4a4f5c}
+.filters select:focus{outline:0;border-color:var(--red)}
