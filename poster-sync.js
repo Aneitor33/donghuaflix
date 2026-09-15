@@ -10,9 +10,8 @@ const FILES = [
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
-// Reintentos: espera entre reintentos y máximo de intentos antes de abandonar
-const RETRY_DAYS = Number(process.env.POSTER_RETRY_DAYS || 7);
-const MAX_FAILS = Number(process.env.POSTER_MAX_FAILS || 3);
+// Fallo permanente: si no se encuentra, no se vuelve a intentar nunca
+// (salvo FORCE_POSTERS=1). Así el repaso de catálogos grandes tarda segundos.
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -115,90 +114,52 @@ async function processFile(OUT_FILE) {
 
   for (const s of db.series) {
     const slug = s.slug || s.id;
-    // Si ya tiene portada local y no forzamos, saltar
-    if (!FORCE && s.posterLocal) { skip++; continue; }
+    // Si ya tiene portada (local o de la ficha original) y no forzamos, saltar.
+    // Las fuentes tipo lamovie/pelisplay traen pósters de TMDB: no hace falta re-descargar.
+    const hasSourceImage = s.image && !/icoprueba|no-disponible|placeholder/i.test(s.image);
+    if (!FORCE && (s.posterLocal || hasSourceImage)) { skip++; continue; }
 
-    // Abandonadas tras MAX_FAILS intentos (salvo FORCE)
-    if (!FORCE && (s.posterFails || 0) >= MAX_FAILS) {
-      skip++;
-      console.log(`\n💀 ${slug} — abandonada tras ${s.posterFails} intentos (FORCE para reintentar)`);
-      continue;
-    }
-
-    // Reintento espaciado: solo si falló hace más de RETRY_DAYS días
-    if (!FORCE && s.posterLastFail) {
-      const dias = (Date.now() - new Date(s.posterLastFail).getTime()) / 86400000;
-      if (dias < RETRY_DAYS) {
-        skip++;
-        console.log(`\n⏳ ${slug} — reintento en ${Math.ceil(RETRY_DAYS - dias)} días`);
-        continue;
-      }
-    }
+    // Fallida en un intento anterior: no se repite (salvo FORCE)
+    if (!FORCE && s.posterFailed) { skip++; continue; }
 
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
-    // Candidatos: título visible + título original si existe
+    // Búsqueda única: nombre visible y nombre original, una vez por fuente
     const candidates = [...new Set([title, s.originalTitle].filter(Boolean))];
     let hit = null;
 
-    // 1) TMDB series: español → inglés → chino
-    for (const lang of ['es-ES', 'en-US', 'zh-CN']) {
-      for (const c of candidates) {
-        hit = await searchTmdb(c, lang);
-        if (hit) { console.log(`   · TMDB[${lang}] "${c}" → ✅ ${hit.match}`); break; }
-        console.log(`   · TMDB[${lang}] "${c}" → ❌`);
-        await sleep(150);
-      }
-      if (hit) break;
+    for (const c of candidates) {
+      hit = await searchTmdb(c, 'es-ES');
+      if (hit) { console.log(`   · TMDB "${c}" → ✅ ${hit.match}`); break; }
+      await sleep(150);
     }
-
-    // 2) TMDB películas (algunos donghuas son pelis)
-    if (!hit) {
-      for (const c of candidates) {
-        hit = await searchTmdbMovie(c, 'en-US');
-        if (hit) { console.log(`   · TMDB-peli[en-US] "${c}" → ✅ ${hit.match}`); break; }
-        console.log(`   · TMDB-peli[en-US] "${c}" → ❌`);
-        await sleep(150);
-      }
-    }
-
-    // 3) AniList (romaji/english nativo)
     if (!hit) {
       for (const c of candidates) {
         hit = await searchAnilist(c);
         if (hit) { console.log(`   · AniList "${c}" → ✅ ${hit.match}`); break; }
-        console.log(`   · AniList "${c}" → ❌`);
       }
     }
-
-    // 4) Último recurso: traducir el título al inglés y reintentar todo
     if (!hit) {
-      const translated = await translateTitle(title);
-      if (translated) {
-        console.log(`   · Traducción automática: "${title}" → "${translated}"`);
-        hit = await searchTmdb(translated, 'en-US');
-        if (hit) console.log(`   · TMDB[en-US] "${translated}" → ✅ ${hit.match}`);
-        if (!hit) { hit = await searchTmdbMovie(translated, 'en-US'); if (hit) console.log(`   · TMDB-peli "${translated}" → ✅ ${hit.match}`); }
-        if (!hit) { hit = await searchAnilist(translated); if (hit) console.log(`   · AniList "${translated}" → ✅ ${hit.match}`); }
-      }
-    }
-    if (!hit) { console.log('   ❌ Sin resultados'); fail++; await sleep(400); continue; }
-
-    const local = await downloadPoster(hit.poster, slug);
-    if (!local) {
-      console.log('   ❌ No se pudo descargar');
-      s.posterFails = (s.posterFails || 0) + 1;
-      s.posterLastFail = new Date().toISOString();
+      console.log('   ❌ Sin resultados (no se reintentará)');
+      s.posterFailed = true;
       fail++; sinceSave++;
-      console.log(`   📉 Fallo ${s.posterFails}/${MAX_FAILS}`);
       if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8'); sinceSave = 0; }
       await sleep(400);
       continue;
     }
-    // Éxito: limpiar historial de fallos
-    delete s.posterFails;
-    delete s.posterLastFail;
+
+    const local = await downloadPoster(hit.poster, slug);
+    if (!local) {
+      console.log('   ❌ No se pudo descargar');
+      s.posterFailed = true;
+      fail++; sinceSave++;
+      console.log('   ❌ Descarga fallida (no se reintentará)');
+      if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db, null, 2), 'utf8'); sinceSave = 0; }
+      await sleep(400);
+      continue;
+    }
+    delete s.posterFailed;
 
     s.posterLocal = local;
     console.log(`   ✅ ${hit.match} → ${local}`);
