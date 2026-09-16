@@ -59,7 +59,7 @@ function rewriteToBase(url) {
 }
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
 const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
-  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload,t.me')
+  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload,t.me,tmdb.org')
   .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
 const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
@@ -613,7 +613,7 @@ function parseEpisode(html, url) {
     const full = absolute(href, url);
     if (!full) return;
     const known = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega|ibra\.lat/i.test(full);
-    if (!known && !isPlayableUrl(full)) return;
+    if (!known && !looksLikePlayer(full)) return;
     {
       let host = 'Servidor';
       try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
