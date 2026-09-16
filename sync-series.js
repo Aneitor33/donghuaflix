@@ -885,6 +885,10 @@ async function main() {
 
       let seasonCount = 0;
 
+      let mk = null;
+      let epNumOf = null;
+      let epSeasonOf = null;
+
       let episodeSource;
       if (isMovie) {
         let playerHtml = html;
@@ -992,9 +996,6 @@ async function main() {
             ((epSeasonOf && epSeasonOf(a.url)) || 1) - ((epSeasonOf && epSeasonOf(b.url)) || 1) ||
             ((epNumOf && epNumOf(a.url)) || 0) - ((epNumOf && epNumOf(b.url)) || 0));
 
-      let mk = null;
-      let epNumOf = null;
-      let epSeasonOf = null;
       if (!isMovie) {
         const urls0 = [...new Set(detail.episodeUrls)];
         const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
