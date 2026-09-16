@@ -805,8 +805,10 @@ function detail(slug, seasonRef) {
   const singleEps = singleSeason
     ? dedupeEps(DB.episodes.filter(e => e.seasonId === singleSeason.id))
     : [];
+  const allEpsCount = DB.episodes.filter(e => e.seriesId === s.id).length;
   const isMovieEntry = s.contentType === 'movie'
-    || (!s.contentType && singleEps.length === 1 && (s.sourceUrl || '').includes('/peliculas/'));
+    || (s.sourceUrl || '').includes('/peliculas/')
+    || allEpsCount === 1;
 
   setAmbience(imgUrl);
 
@@ -827,6 +829,7 @@ function detail(slug, seasonRef) {
         </div>
         <div class="detail-actions">
           ${lastEp ? `<button class="btn-x play big" onclick="location.hash='#/episode/${qs(lastEp.slug || lastEp.id)}'">${ICONS.play}<span>${isMovieEntry ? 'Reproducir' : `Reproducir${lastEp.number > 1 ? ` · T${lastSn}:E${lastEp.number}` : ''}`}</span></button>` : ''}
+
           <button class="btn-x glass round" id="favBtn" title="Mi lista">${fav ? ICONS.check : ICONS.plus}</button>
         </div>
       </div>
@@ -990,14 +993,20 @@ function episode(slug) {
     const playerEl = document.getElementById('player');
     if (playerEl) {
       playerEl.innerHTML = current?.url
-        ? `<iframe src="${esc(current.url)}" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allow="autoplay; fullscreen *; encrypted-media; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen loading="lazy"></iframe>
+        ? `<iframe src="${esc(current.url)}" allow="autoplay; fullscreen *; encrypted-media; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen loading="lazy"></iframe>
            <button class="fs-btn" onclick="togglePlayerFS()" title="Pantalla completa">${ICONS.full}</button>`
         : '<div class="empty">Servidor no disponible.</div>';
     }
   };
 
   app.innerHTML = `<section class="detail page-top">
-    <div class="eyebrow">${esc(season ? seasonTitle(season, 0) : '')} · EPISODIO ${e.number}${isWatched(e.seasonId, e.number) ? ' · VISTO' : ''}</div>
+    <div class="eyebrow">${(() => {
+      const epsSerie = DB.episodes.filter(x => x.seriesId === e.seriesId).length;
+      const esPeli = serie && (serie.contentType === 'movie' || (serie.sourceUrl || '').includes('/peliculas/') || epsSerie === 1);
+      return esPeli
+        ? `PELÍCULA${isWatched(e.seasonId, e.number) ? ' · VISTO' : ''}`
+        : `${esc(season ? seasonTitle(season, 0) : '')} · EPISODIO ${e.number}${isWatched(e.seasonId, e.number) ? ' · VISTO' : ''}`;
+    })()}</div>
     <h1 class="ep-title">${esc(cleanEpisodeTitle(e))}</h1>
     <div class="player" id="player"></div>
     <div id="serverGroups"></div>
