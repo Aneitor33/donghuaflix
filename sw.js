@@ -1,5 +1,5 @@
 /* DonghuaFlix Service Worker — App offline */
-const CACHE = 'donghuaflix-v4';
+const CACHE = 'donghuaflix-v5';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest',
   './icon-192.png', './icon-256.png', './icon-512.png'];
 
@@ -32,8 +32,8 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // HTML (incl. navegación): red primero para que salgan cambios rápido
-  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
+  // HTML y código (JS/CSS): red primero — los cambios llegan al instante
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
     e.respondWith(
       fetch(e.request)
         .then(res => {
