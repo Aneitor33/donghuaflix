@@ -1,313 +1,53 @@
-name: Sincronizar catálogo PeliCineHD
+name: Sincronizar catálogo Películas
 
 on:
-  # Ejecutar automáticamente cada hora
   schedule:
-    - cron: '0 * * * *'
-
-  # Permitir ejecución manual desde GitHub
+    - cron: '0 4,16 * * *'
   workflow_dispatch:
-    inputs:
-      full_sync:
-        description: 'Forzar sincronización completa del catálogo'
-        required: false
-        default: false
-        type: boolean
 
-# Evita que dos sincronizaciones trabajen
-# sobre el mismo catálogo al mismo tiempo.
 concurrency:
-  group: peliculas-pelicinehd-sync
+  group: sync-catalogos
   cancel-in-progress: false
 
-permissions:
-  contents: write
-
-env:
-  # ======================================================
-  # FUENTE
-  # ======================================================
-
-  SOURCE_URL: https://pelicinehd.com
-
-  # Listado principal de películas
-  MOVIES_INDEX: /movies/
-
-  # Paginación
-  MOVIES_ARCHIVE: /movies/page/
-
-  # ======================================================
-  # SINCRONIZACIÓN
-  # ======================================================
-
-  # 6 películas procesándose simultáneamente
-  WORKERS: 6
-
-  # Pausa entre peticiones
-  POLITENESS_MS: 500
-
-  # Tiempo máximo de una petición
-  REQUEST_TIMEOUT_MS: 30000
-
-  # Número de intentos ante errores temporales
-  RETRIES: 3
-
-  # En sincronización incremental:
-  # revisar las primeras 5 páginas
-  INCREMENTAL_PAGES: 5
-
-  # Límite de seguridad para una sincronización completa
-  MAX_DISCOVERY_PAGES: 150
-
-  # Guardar avances cada X películas
-  CHECKPOINT_EVERY: 10
-
-  # ======================================================
-  # SALIDA
-  # ======================================================
-
-  OUT_FILE: public/data/catalog-pelicinehd.json
-
-  CATALOG_TAG: pelicinehd
-
-  # ======================================================
-  # MODO
-  # ======================================================
-
-  # Si se ejecuta manualmente con "Forzar sincronización
-  # completa", se convertirá en true.
-  FULL_SYNC: ${{ inputs.full_sync || false }}
-
-
 jobs:
-
   sync:
-
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-
-      # ==================================================
-      # 1. DESCARGAR REPOSITORIO
-      # ==================================================
-
       - name: Descargar repositorio
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-
-
-      # ==================================================
-      # 2. NODE.JS
-      # ==================================================
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-
-
-      # ==================================================
-      # 3. INSTALAR DEPENDENCIAS
-      # ==================================================
+          node-version: '20'
 
       - name: Instalar dependencias
-        run: npm ci
+        run: npm install
+
+      - name: Ejecutar sincronización de Películas
+        env:
+          SOURCE_URL: https://pelisflixhd1.top
+          SEEDS: "/peliculas"
+          LINK_PREFIXES: /pelicula/
+          MOVIE_PREFIXES: /pelicula/
+          ALLOW_CROSS_ORIGIN: '1'
+          WORKERS: 6
+          POLITENESS_MS: 150
+          ONLY_MOVIES: '1'
+          OUT_FILE: public/data/catalog-peliculas.json
+          CATALOG_TAG: peliculas
+          MAX_DISCOVERY_PAGES: 999
+          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
+        run: node sync-source.js
 
 
-      # ==================================================
-      # 4. MOSTRAR CONFIGURACIÓN
-      # ==================================================
-
-      - name: Mostrar configuración
+      - name: Guardar cambios en el catálogo
         run: |
-          echo "=============================================="
-          echo "       PELICINEHD CATALOG SYNC"
-          echo "=============================================="
-          echo "Fuente: $SOURCE_URL"
-          echo "Listado: $SOURCE_URL$MOVIES_INDEX"
-          echo "Workers: $WORKERS"
-          echo "Modo FULL_SYNC: $FULL_SYNC"
-          echo "Incremental: $INCREMENTAL_PAGES páginas"
-          echo "Máximo páginas: $MAX_DISCOVERY_PAGES"
-          echo "Salida: $OUT_FILE"
-          echo "=============================================="
-
-
-      # ==================================================
-      # 5. SINCRONIZAR CATÁLOGO
-      # ==================================================
-
-      - name: Sincronizar catálogo PeliCineHD
-        run: |
-          node sync-source.js
-
-
-      # ==================================================
-      # 6. COMPROBAR CATÁLOGO
-      # ==================================================
-
-      - name: Comprobar catálogo generado
-        run: |
-          echo "=============================================="
-          echo "COMPROBANDO CATÁLOGO"
-          echo "=============================================="
-
-          if [ ! -f "$OUT_FILE" ]; then
-            echo "❌ ERROR: No existe $OUT_FILE"
-            exit 1
-          fi
-
-          echo "✅ Archivo encontrado: $OUT_FILE"
-
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-
-          const file = process.env.OUT_FILE;
-
-          const raw = fs.readFileSync(file, 'utf8');
-          const catalog = JSON.parse(raw);
-
-          if (!catalog || typeof catalog !== 'object') {
-            throw new Error('El catálogo no es un objeto válido');
-          }
-
-          if (!Array.isArray(catalog.series)) {
-            throw new Error('catalog.series no es un array');
-          }
-
-          if (!Array.isArray(catalog.seasons)) {
-            throw new Error('catalog.seasons no es un array');
-          }
-
-          if (!Array.isArray(catalog.episodes)) {
-            throw new Error('catalog.episodes no es un array');
-          }
-
-          if (!Array.isArray(catalog.genres)) {
-            throw new Error('catalog.genres no es un array');
-          }
-
-          console.log(`Películas/series: ${catalog.series.length}`);
-          console.log(`Temporadas: ${catalog.seasons.length}`);
-          console.log(`Episodios: ${catalog.episodes.length}`);
-          console.log(`Géneros: ${catalog.genres.length}`);
-
-          if (catalog.series.length === 0) {
-            throw new Error(
-              'El catálogo está vacío. Se detiene el workflow para evitar publicar un catálogo vacío.'
-            );
-          }
-
-          console.log('✅ Estructura del catálogo correcta');
-          NODE
-
-
-      # ==================================================
-      # 7. SINCRONIZAR POSTERS
-      # ==================================================
-
-      - name: Sincronizar posters
-        run: |
-          if [ -f "poster-sync.js" ]; then
-            node poster-sync.js
-          else
-            echo "ℹ️ poster-sync.js no existe. Se omite."
-          fi
-
-
-      # ==================================================
-      # 8. COMPROBAR CAMBIOS
-      # ==================================================
-
-      - name: Comprobar cambios
-        id: changes
-        run: |
-          echo "=============================================="
-          echo "CAMBIOS DETECTADOS"
-          echo "=============================================="
-
-          git status --short
-
-          if git status --porcelain | grep -q .; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "✅ Hay cambios."
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "ℹ️ No hay cambios."
-          fi
-
-
-      # ==================================================
-      # 9. CONFIGURAR GIT
-      # ==================================================
-
-      - name: Configurar Git
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-
-      # ==================================================
-      # 10. GUARDAR CAMBIOS
-      # ==================================================
-
-      - name: Guardar cambios
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          echo "=============================================="
-          echo "GUARDANDO CAMBIOS"
-          echo "=============================================="
-
-          git add public/data/catalog-pelicinehd.json
-
-          # Añadir posters únicamente si existen cambios
-          if [ -d "public/data/posters" ]; then
-            git add public/data/posters
-          fi
-
-          # Comprobar si realmente hay algo preparado
-          if git diff --cached --quiet; then
-            echo "ℹ️ No hay cambios para commit."
-            exit 0
-          fi
-
-          git commit -m "sync: actualizar catálogo PeliCineHD [skip ci]"
-
-
-      # ==================================================
-      # 11. ACTUALIZAR RAMA REMOTA
-      # ==================================================
-
-      - name: Actualizar rama antes de subir
-        if: steps.changes.outputs.changed == 'true'
-        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo peliculas"
           git pull --rebase origin main
-
-
-      # ==================================================
-      # 12. SUBIR CATÁLOGO
-      # ==================================================
-
-      - name: Subir cambios
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          git push origin HEAD:main
-
-
-      # ==================================================
-      # 13. FINAL
-      # ==================================================
-
-      - name: Finalizar
-        run: |
-          echo "=============================================="
-          echo "✅ SINCRONIZACIÓN FINALIZADA"
-          echo "=============================================="
-          echo "Fuente: $SOURCE_URL"
-          echo "Catálogo: $OUT_FILE"
-          echo "Hora: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-          echo "=============================================="
+          git push
