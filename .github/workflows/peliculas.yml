@@ -33,7 +33,7 @@ jobs:
           LINK_PREFIXES: /pelicula/
           MOVIE_PREFIXES: /pelicula/
           ALLOW_CROSS_ORIGIN: '1'
-          WORKERS: 6
+          WORKERS: 8
           POLITENESS_MS: 150
           ONLY_MOVIES: '1'
           OUT_FILE: public/data/catalog-peliculas.json
