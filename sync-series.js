@@ -59,7 +59,7 @@ function rewriteToBase(url) {
 }
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
 const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
-  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload')
+  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload,t.me')
   .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
 const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
@@ -810,6 +810,7 @@ async function main() {
       execSync('git config --local user.name "github-actions[bot]"');
       execSync('git add .');
       execSync('git diff-index --quiet HEAD || git commit -m "sync: progreso parcial"');
+      execSync('git pull --rebase origin main || true');
       execSync('git push');
       console.log(`\n🚀 Progreso subido al repo (${doneCount}/${discovered.length}) — a salvo ante cortes\n`);
     } catch (e) {
@@ -888,6 +889,7 @@ async function main() {
         const urls0 = [...new Set(detail.episodeUrls)];
         const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
         const ms = urls0.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
+        const mt = urls0.find(u => /temporada\/(\d+)\/capitulo\/(\d+)/i.test(u));
         if (mt) {
           const mm2 = mt.match(/^(.*)\/temporada\/(\d{1,3})\/capitulo\/(\d{1,4})\/?$/i);
           if (mm2) {
@@ -1183,4 +1185,3 @@ main().catch(async e => {
   } catch {}
   process.exitCode = 1;
 });
-
