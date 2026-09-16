@@ -28,10 +28,10 @@ const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
    Los grids de "relacionadas" usan <img data-src="...pelisflixhd.blog/...jpg">
    y el barrido de data-* las capturaba como 24-30 "servidores" falsos.
 */
-const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor)\//i;
+const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor|vidurl)\//i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
-const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide)/i;
+const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder)/i;
 
 function looksLikePlayer(u) {
   if (!u) return false;
@@ -59,7 +59,7 @@ function rewriteToBase(url) {
 }
 const COUNTRY_FILTER = (process.env.COUNTRY_FILTER || '').toLowerCase();
 const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
-  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload')
+  'streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload,t.me,tmdb.org')
   .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 const isBlacklisted = host => SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
 const ONLY_MOVIES = process.env.ONLY_MOVIES === '1';
@@ -542,6 +542,8 @@ function parseEpCodeFromUrl(u) {
 function parseEpCode(slug) {
   let m = String(slug).match(/(\d+)x(\d+)$/);
   if (m) return { season: Number(m[1]), number: Number(m[2]) };
+  m = String(slug).match(/temporada\/(\d{1,3})\/capitulo\/(\d{1,4})/i);
+  if (m) return { season: Number(m[1]), number: Number(m[2]) };
   m = String(slug).match(/-(\d+)-(\d+)$/);
   if (m) return { season: Number(m[1]), number: Number(m[2]) };
   m = String(slug).match(/(?:episodio|episode|capitulo|ep|e)-?(\d{1,4})$/i);
@@ -551,7 +553,9 @@ function parseEpCode(slug) {
 
 function episodeNumberFrom(text, slug) {
   const t = String(text || '');
-  let m = t.match(/(?:cap[ií]tulo|episodio|episode|cap|ep)[^\d]*(\d{1,4})/i);
+  let m = t.match(/temporada[^\d]{0,10}(\d{1,3})[^\d]{0,20}cap[ií]tulo[^\d]{0,5}(\d{1,4})/i);
+  if (m) return Number(m[2]);
+  m = t.match(/(?:cap[ií]tulo|episodio|episode|cap|ep)[^\d]*(\d{1,4})/i);
   if (m) return Number(m[1]);
   m = t.match(/(\d{1,4})(?:\s*(?:\||–|-)\s*\d+)?\s*$/);
   if (m) return Number(m[1]);
@@ -609,7 +613,7 @@ function parseEpisode(html, url) {
     const full = absolute(href, url);
     if (!full) return;
     const known = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega|ibra\.lat/i.test(full);
-    if (!known && !isPlayableUrl(full)) return;
+    if (!known && !looksLikePlayer(full)) return;
     {
       let host = 'Servidor';
       try { host = new URL(full).hostname.replace(/^www\./, ''); } catch {}
@@ -806,6 +810,7 @@ async function main() {
       execSync('git config --local user.name "github-actions[bot]"');
       execSync('git add .');
       execSync('git diff-index --quiet HEAD || git commit -m "sync: progreso parcial"');
+      execSync('git pull --rebase origin main || true');
       execSync('git push');
       console.log(`\n🚀 Progreso subido al repo (${doneCount}/${discovered.length}) — a salvo ante cortes\n`);
     } catch (e) {
@@ -884,7 +889,16 @@ async function main() {
         const urls0 = [...new Set(detail.episodeUrls)];
         const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
         const ms = urls0.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
-        if (mx) {
+        const mt = urls0.find(u => /temporada\/(\d+)\/capitulo\/(\d+)/i.test(u));
+        if (mt) {
+          const mm2 = mt.match(/^(.*)\/temporada\/(\d{1,3})\/capitulo\/(\d{1,4})\/?$/i);
+          if (mm2) {
+            const base = mm2[1];
+            mk = (s, n) => `${base}/temporada/${s}/capitulo/${n}/`;
+            epNumOf = (u) => { const x = u.match(/capitulo\/(\d{1,4})/i); return x ? Number(x[1]) : 0; };
+            epSeasonOf = (u) => { const x = u.match(/temporada\/(\d{1,3})/i); return x ? Number(x[1]) : 1; };
+          }
+        } else if (mx) {
           const m = mx.match(/^(.*)-(\d+)x(\d+)(\/?)$/);
           mk = (s, n) => `${m[1]}-${s}x${n}${m[4] || ''}`;
           epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
