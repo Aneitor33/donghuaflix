@@ -31,7 +31,7 @@ const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
 const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor)\//i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
-const KNOWN_VIDEO_HOST = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|pelisflixhd\./i;
+const KNOWN_VIDEO_HOST = /ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat)/i;
 
 function looksLikePlayer(u) {
   if (!u) return false;
@@ -564,7 +564,8 @@ function parseEpisode(html, url) {
       if (/castellano/i.test(txt)) { currentLang = 'castellano'; return; }
       if (/subtitulad|subt[ií]tulad/i.test(txt)) { currentLang = 'subtitulado'; return; }
     }
-    const raw = node.attr('data-url') || node.attr('data-embed') || node.attr('data-src') ||
+    if (el.tagName === 'img') return;   // ← las miniaturas lazy-load jamás son servidores
+    const raw = node.attr('data-url') || node.attr('data-embed') ||
                 node.attr('data-link') || node.attr('data-player') || node.attr('data-href');
     if (!raw) return;
     const full = absolute(raw, url);
