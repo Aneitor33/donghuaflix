@@ -1,53 +1,55 @@
-name: Sincronizar catálogo Películas
+# ══════════════════════════════════════════════
+#  PELÍCULAS — pelicinehd.com (SOLO películas)
+#  Catálogo: public/data/catalog-peliculas.json
+# ══════════════════════════════════════════════
+name: Sincronizar películas (PeliCineHD)
 
 on:
   schedule:
-    - cron: '0 4,16 * * *'
+    - cron: '20 */6 * * *'      # cada 6h, minuto 20
   workflow_dispatch:
 
 concurrency:
-  group: sync-catalogos
+  group: sync-pelicinehd-peliculas
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       contents: write
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Instalar dependencias
         run: npm install
 
-      - name: Ejecutar sincronización de Películas
+      - name: Ejecutar sync de películas
         env:
-          SOURCE_URL: https://pelisflixhd1.top
-          SEEDS: "/peliculas"
-          LINK_PREFIXES: /pelicula/
-          MOVIE_PREFIXES: /pelicula/
-          ALLOW_CROSS_ORIGIN: '1'
-          WORKERS: 8
-          POLITENESS_MS: 150
+          SOURCE_URL: 'https://pelicinehd.com'
+          OUT_FILE: 'public/data/catalog-peliculas.json'
+          CATALOG_TAG: 'pelicula'
+          SEEDS: '/peliculas/'
+          LINK_PREFIXES: '/movies/'
+          MOVIE_PREFIXES: '/movies/'
           ONLY_MOVIES: '1'
-          OUT_FILE: public/data/catalog-peliculas.json
-          CATALOG_TAG: peliculas
-          MAX_DISCOVERY_PAGES: 999
-          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
+          MAX_DISCOVERY_PAGES: '500'
+          ALLOW_CROSS_ORIGIN: '1'
+          WORKERS: '4'
+          POLITENESS_MS: '150'
         run: node sync-source.js
 
-
-      - name: Guardar cambios en el catálogo
+      - name: Guardar catálogo
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo peliculas"
+          git add public/data/catalog-peliculas.json public/data/catalog-peliculas.part*.json
+          git diff --staged --quiet || git commit -m "sync(peliculas): actualizar catálogo [skip ci]"
           git pull --rebase origin main
           git push
