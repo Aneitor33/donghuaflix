@@ -1,57 +1,149 @@
-name: Sincronizar catálogo Películas
+name: Sincronizar catálogo PeliCineHD
 
 on:
   schedule:
-    - cron: '0 4,16 * * *'
+    # Ejecutar cada hora
+    - cron: "0 * * * *"
+
+  # Permite ejecutarlo manualmente desde GitHub
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
-  group: sync-catalogos
+  group: peliculas-sync
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
 
+    steps:
+
+      # ─────────────────────────────────────────────
+      # 1. Descargar el repositorio
+      # ─────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ─────────────────────────────────────────────
+      # 2. Configurar Node.js
+      # ─────────────────────────────────────────────
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
+          cache: npm
 
+      # ─────────────────────────────────────────────
+      # 3. Instalar dependencias
+      # ─────────────────────────────────────────────
       - name: Instalar dependencias
         run: npm install
 
-      - name: Ejecutar sincronización de Películas
+      # ─────────────────────────────────────────────
+      # 4. Ejecutar sincronización PeliCineHD
+      # ─────────────────────────────────────────────
+      - name: Sincronizar catálogo
         env:
-          SOURCE_URL: https://pelisflixhd1.top
-          SEEDS: "/peliculas"
-          LINK_PREFIXES: /pelicula/
-          MOVIE_PREFIXES: /pelicula/
-          ALLOW_CROSS_ORIGIN: '1'
+          SOURCE_URL: https://pelicinehd.com
+
+          # Catálogo principal
+          MOVIES_INDEX: /peliculas/
+
+          # Archivo de películas
+          MOVIES_ARCHIVE: /movies/
+
+          # Prefijo de las fichas individuales
+          MOVIE_PREFIX: /movies/
+
+          # Número de páginas que se revisan durante
+          # una actualización incremental.
+          INCREMENTAL_PAGES: 5
+
+          # Primera sincronización completa.
+          # El scraper decidirá automáticamente si
+          # necesita reconstruir o actualizar.
+          FULL_SYNC: false
+
+          # Número máximo de páginas durante una
+          # reconstrucción completa.
+          MAX_DISCOVERY_PAGES: 150
+
+          # Número de películas procesadas simultáneamente.
           WORKERS: 6
-          POLITENESS_MS: 150
-          ONLY_MOVIES: '1'
-          OUT_FILE: public/data/catalog-peliculas.json
-          CATALOG_TAG: peliculas
-          MAX_DISCOVERY_PAGES: 999
-          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
+
+          # Espera entre peticiones.
+          POLITENESS_MS: 500
+
+          # Tiempo máximo de espera de una petición.
+          REQUEST_TIMEOUT_MS: 30000
+
+          # Número de reintentos.
+          RETRIES: 3
+
+          # Guardar progreso cada X películas.
+          CHECKPOINT_EVERY: 10
+
         run: node sync-source.js
 
-      - name: Sincronizar portadas (TMDB/AniList)
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        run: node poster-sync.js
-
-      - name: Guardar cambios en el catálogo
+      # ─────────────────────────────────────────────
+      # 5. Sincronizar portadas
+      # ─────────────────────────────────────────────
+      - name: Sincronizar portadas
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo peliculas"
-          git pull --rebase origin main
+          if [ -f poster-sync.js ]; then
+            node poster-sync.js
+          else
+            echo "poster-sync.js no existe; se omite."
+          fi
+
+      # ─────────────────────────────────────────────
+      # 6. Comprobar cambios
+      # ─────────────────────────────────────────────
+      - name: Comprobar cambios
+        id: changes
+        run: |
+          git status --short
+
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ─────────────────────────────────────────────
+      # 7. Guardar catálogo actualizado
+      # ─────────────────────────────────────────────
+      - name: Guardar cambios
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add public/data/catalog-peliculas.json
+
+          if [ -f public/data/catalog-peliculas.json ]; then
+            git add public/data/catalog-peliculas.json
+          fi
+
+          if [ -d public/data/posters ]; then
+            git add public/data/posters
+          fi
+
+          git commit -m "sync: actualizar catálogo PeliCineHD [skip ci]"
+
           git push
+
+      # ─────────────────────────────────────────────
+      # 8. Mostrar resultado
+      # ─────────────────────────────────────────────
+      - name: Finalizar
+        run: |
+          echo "────────────────────────────────────"
+          echo "Sincronización PeliCineHD finalizada"
+          echo "Fuente: https://pelicinehd.com"
+          echo "────────────────────────────────────"
