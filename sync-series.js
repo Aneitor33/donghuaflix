@@ -28,7 +28,7 @@ const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
    Los grids de "relacionadas" usan <img data-src="...pelisflixhd.blog/...jpg">
    y el barrido de data-* las capturaba como 24-30 "servidores" falsos.
 */
-const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor)\//i;
+const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor|vidurl)\//i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
 const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder)/i;
