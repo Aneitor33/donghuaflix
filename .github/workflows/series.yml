@@ -1,55 +1,53 @@
-name: Sincronizar catálogo Series
+# ══════════════════════════════════════════════
+#  SERIES — pelicinehd.com (series + temporadas + episodios)
+#  Catálogo: public/data/catalog-series.json
+# ══════════════════════════════════════════════
+name: Sincronizar series (PeliCineHD)
 
 on:
   schedule:
-    - cron: '0 2,14 * * *'
+    - cron: '40 */6 * * *'      # cada 6h, minuto 40
   workflow_dispatch:
 
 concurrency:
-  group: sync-catalogos
+  group: sync-pelicinehd-series
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 300
     permissions:
       contents: write
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Instalar dependencias
         run: npm install
 
-      - name: Ejecutar sincronización de Series
+      - name: Ejecutar sync de series
         env:
-          SOURCE_URL: https://seriesflixhd.team
-          SEEDS: "/series-online"
-          LINK_PREFIXES: /serie/,/series/
+          SOURCE_URL: 'https://pelicinehd.com'
+          OUT_FILE: 'public/data/catalog-series.json'
+          CATALOG_TAG: 'serie'
+          SEEDS: '/series/'
+          LINK_PREFIXES: '/series/'
+          MAX_DISCOVERY_PAGES: '500'
           ALLOW_CROSS_ORIGIN: '1'
-          WORKERS: 6
-          POLITENESS_MS: 150
-          OUT_FILE: public/data/catalog-series.json
-          CATALOG_TAG: series
-          MAX_DISCOVERY_PAGES: 999
-          SERVER_BLACKLIST: streamhg,earnvids,streamruby,smoothie,playerwish,upstream,dropload
+          WORKERS: '4'
+          POLITENESS_MS: '150'
         run: node sync-source.js
 
-      - name: Sincronizar portadas (TMDB/AniList)
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        run: node poster-sync.js
-
-      - name: Guardar cambios en el catálogo
+      - name: Guardar catálogo
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add .
-          git diff-index --quiet HEAD || git commit -m "sync: actualizar catálogo series"
+          git add public/data/catalog-series.json public/data/catalog-series.part*.json
+          git diff --staged --quiet || git commit -m "sync(series): actualizar catálogo [skip ci]"
           git pull --rebase origin main
           git push
