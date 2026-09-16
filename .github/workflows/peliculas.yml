@@ -1,8 +1,8 @@
 # ══════════════════════════════════════════════
-#  PELÍCULAS — pelicinehd.com (SOLO películas)
+#  PELÍCULAS — pelispedia.mov (SOLO películas)
 #  Catálogo: public/data/catalog-peliculas.json
 # ══════════════════════════════════════════════
-name: Sincronizar películas (PeliCineHD)
+name: Sincronizar películas (Pelispedia)
 
 on:
   schedule:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: sync-pelicinehd-peliculas
+  group: sync-pelispedia-peliculas
   cancel-in-progress: false
 
 jobs:
@@ -31,15 +31,14 @@ jobs:
 
       - name: Ejecutar sync de películas
         env:
-          SOURCE_URL: 'https://pelicinehd.com'
+          SOURCE_URL: 'https://pelispedia.mov'
           OUT_FILE: 'public/data/catalog-peliculas.json'
           CATALOG_TAG: 'pelicula'
-          SEEDS: '/peliculas/'
-          LINK_PREFIXES: '/movies/'
-          MOVIE_PREFIXES: '/movies/'
+          SEEDS: '/peliculas'
+          LINK_PREFIXES: '/pelicula/'
+          MOVIE_PREFIXES: '/pelicula/'
           ONLY_MOVIES: '1'
           MAX_DISCOVERY_PAGES: '500'
-          ALLOW_CROSS_ORIGIN: '1'
           WORKERS: '4'
           POLITENESS_MS: '150'
         run: node sync-source.js
@@ -49,7 +48,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/data/catalog-peliculas.json public/data/catalog-peliculas.part*.json
+          git add -A public/data/
           git diff --staged --quiet || git commit -m "sync(peliculas): actualizar catálogo [skip ci]"
           git pull --rebase origin main
           git push
