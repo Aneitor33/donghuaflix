@@ -6,7 +6,8 @@ let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 const CATALOGS = [
   { id: 'donghua', file: './public/data/catalog.json', label: 'Donghuas' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json', label: 'Películas' },
-  { id: 'series', file: './public/data/catalog-series.json', label: 'Series' }
+  { id: 'series', file: './public/data/catalog-series.json', label: 'Series' },
+  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json', label: 'Ultrapeli' }
 ];
 let DB_CACHE = {};
 let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghua';
