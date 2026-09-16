@@ -2,77 +2,131 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
 
-const BASE_URL = process.env.SOURCE_URL || 'https://pelicinehd.com';
+/*
+============================================================
+ DONGHUAFLIX — SCRAPER DE PELÍCULAS PELICINEHD
+============================================================
+
+ Fuente:
+   https://pelicinehd.com
+
+ Listado:
+   /movies/
+   /movies/page/2/
+   /movies/page/3/
+   ...
+
+ Fichas:
+   /movies/{slug}/
+
+ Salida:
+   public/data/catalog-pelicinehd.json
+
+ IMPORTANTE:
+ - Este scraper es específico para PeliCineHD.
+ - No utiliza la lógica antigua de Doramasflix.
+ - Un HTTP 403 NO se interpreta como catálogo vacío.
+ - Si falla el descubrimiento, el catálogo anterior se conserva.
+ - Las películas se procesan en paralelo.
+ - El número de workers se controla mediante WORKERS.
+============================================================
+*/
+
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const BASE_URL = (
+  process.env.SOURCE_URL ||
+  'https://pelicinehd.com'
+).replace(/\/+$/, '');
+
 const OUT_FILE = path.resolve(
-  process.env.OUT_FILE || 'public/data/catalog-pelicinehd.json'
+  process.env.OUT_FILE ||
+  'public/data/catalog-pelicinehd.json'
 );
 
-// ---------------------------------------------------------
-// CONFIGURACIÓN
-// ---------------------------------------------------------
+const CATALOG_TAG =
+  process.env.CATALOG_TAG ||
+  'pelicinehd';
 
-const CONFIG = {
-  // Primera página del catálogo
-  moviesIndex: '/peliculas/',
+const MOVIES_INDEX =
+  process.env.MOVIES_INDEX ||
+  '/movies/';
 
-  // Archivo real que utiliza WordPress
-  moviesArchive: '/movies/',
+const MOVIES_ARCHIVE =
+  process.env.MOVIES_ARCHIVE ||
+  '/movies/page/';
 
-  // Ruta de las fichas
-  moviePrefix: '/movies/',
-
-  // Número máximo de páginas que se explorarán
-  maxDiscoveryPages: Number(
-    process.env.MAX_DISCOVERY_PAGES || 150
-  ),
-
-  // Tiempo entre peticiones
-  politenessMs: Number(
-    process.env.POLITENESS_MS || 250
-  ),
-
-  // Timeout
-  timeoutMs: Number(
-    process.env.FETCH_TIMEOUT_MS || 30000
-  ),
-
-  // Reintentos
-  retries: Number(
-    process.env.FETCH_RETRIES || 3
-  ),
-
-  // Películas procesadas simultáneamente
-  workers: Math.max(
-    1,
-    Math.min(
-      6,
-      Number(process.env.WORKERS || 4)
-    )
-  ),
-
-  // Guardar cada X películas
-  checkpointEvery: Number(
-    process.env.CHECKPOINT_EVERY || 10
-  ),
-
-  // Máximo de páginas que queremos volver a comprobar
-  // en una sincronización incremental.
-  incrementalPages: Number(
-    process.env.INCREMENTAL_PAGES || 5
+const WORKERS = Math.max(
+  1,
+  Math.min(
+    12,
+    Number(process.env.WORKERS || 6)
   )
-};
+);
 
-// ---------------------------------------------------------
-// UTILIDADES
-// ---------------------------------------------------------
+const POLITENESS_MS = Math.max(
+  0,
+  Number(process.env.POLITENESS_MS || 500)
+);
 
-const clean = value =>
-  String(value || '')
-    .replace(/\s+/g, ' ')
-    .trim();
+const FETCH_TIMEOUT_MS = Math.max(
+  5000,
+  Number(process.env.REQUEST_TIMEOUT_MS || 30000)
+);
+
+const FETCH_RETRIES = Math.max(
+  1,
+  Number(process.env.RETRIES || 3)
+);
+
+const MAX_DISCOVERY_PAGES = Math.max(
+  1,
+  Number(process.env.MAX_DISCOVERY_PAGES || 150)
+);
+
+const INCREMENTAL_PAGES = Math.max(
+  1,
+  Number(process.env.INCREMENTAL_PAGES || 5)
+);
+
+const CHECKPOINT_EVERY = Math.max(
+  1,
+  Number(process.env.CHECKPOINT_EVERY || 10)
+);
+
+const FULL_SYNC =
+  String(process.env.FULL_SYNC || 'false').toLowerCase() === 'true' ||
+  process.env.FULL_SYNC === '1';
+
+const SERVER_BLACKLIST = (
+  process.env.SERVER_BLACKLIST ||
+  ''
+)
+  .split(',')
+  .map(x => x.trim().toLowerCase())
+  .filter(Boolean);
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
 
 const sleep = ms =>
   new Promise(resolve => setTimeout(resolve, ms));
+
+const clean = value =>
+  String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const fold = value =>
+  clean(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 function absolute(raw, base = BASE_URL) {
   if (!raw) return null;
@@ -81,7 +135,7 @@ function absolute(raw, base = BASE_URL) {
 
   if (
     !value ||
-    /^(javascript:|mailto:|tel:|#)/i.test(value)
+    /^(javascript:|mailto:|tel:|data:|#)/i.test(value)
   ) {
     return null;
   }
@@ -95,18 +149,27 @@ function absolute(raw, base = BASE_URL) {
 
 function sameOrigin(url) {
   try {
-    return (
-      new URL(url).origin ===
-      new URL(BASE_URL).origin
-    );
+    return new URL(url).origin === new URL(BASE_URL).origin;
   } catch {
     return false;
   }
 }
 
+function normalizeUrl(url) {
+  try {
+    const u = new URL(url, BASE_URL);
+
+    u.hash = '';
+
+    return u.href;
+  } catch {
+    return null;
+  }
+}
+
 function slugFromUrl(url) {
   try {
-    const u = new URL(url);
+    const u = new URL(url, BASE_URL);
 
     const parts = u.pathname
       .split('/')
@@ -124,43 +187,110 @@ function unique(values) {
   return [
     ...new Set(
       values
+        .map(normalizeUrl)
         .filter(Boolean)
-        .map(String)
     )
   ];
 }
 
-// ---------------------------------------------------------
-// FETCH
-// ---------------------------------------------------------
+function isMovieUrl(url) {
+  try {
+    return new URL(url).pathname.startsWith('/movies/');
+  } catch {
+    return false;
+  }
+}
 
-async function fetchHtml(url, attempt = 1) {
-  const controller = new AbortController();
+function isArchiveUrl(url) {
+  try {
+    const p = new URL(url).pathname;
+
+    return (
+      p === '/movies/' ||
+      /^\/movies\/page\/\d+\/?$/.test(p)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function moviePageUrl(page) {
+  if (page <= 1) {
+    return new URL(
+      MOVIES_INDEX,
+      BASE_URL
+    ).href;
+  }
+
+  return new URL(
+    `${MOVIES_ARCHIVE}${page}/`,
+    BASE_URL
+  ).href;
+}
+
+function isBlacklisted(value) {
+  const text = fold(value);
+
+  return SERVER_BLACKLIST.some(
+    item => text.includes(item)
+  );
+}
+
+
+/* =========================================================
+   FETCH
+========================================================= */
+
+class HttpError extends Error {
+  constructor(message, status, url) {
+    super(message);
+    this.name = 'HttpError';
+    this.status = status;
+    this.url = url;
+  }
+}
+
+async function fetchText(
+  url,
+  attempt = 1
+) {
+  const controller =
+    new AbortController();
 
   const timer = setTimeout(
     () => controller.abort(),
-    CONFIG.timeoutMs
+    FETCH_TIMEOUT_MS
   );
 
   try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      redirect: 'follow',
+    const response = await fetch(
+      url,
+      {
+        method: 'GET',
+        redirect: 'follow',
+        signal: controller.signal,
 
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
-          'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-          'Chrome/126.0 Safari/537.36',
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
 
-        'Accept':
-          'text/html,application/xhtml+xml,' +
-          'application/xml;q=0.9,image/avif,*/*;q=0.8',
+          'Accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 
-        'Accept-Language':
-          'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6'
+          'Accept-Language':
+            'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6',
+
+          'Cache-Control':
+            'no-cache',
+
+          'Pragma':
+            'no-cache',
+
+          'Upgrade-Insecure-Requests':
+            '1'
+        }
       }
-    });
+    );
 
     if (!response.ok) {
       const retryable = [
@@ -173,20 +303,28 @@ async function fetchHtml(url, attempt = 1) {
         504
       ].includes(response.status);
 
+      /*
+       * 403 es importante:
+       * NO lo convertimos en una página vacía.
+       */
       if (
         retryable &&
-        attempt < CONFIG.retries
+        attempt < FETCH_RETRIES
       ) {
-        await sleep(1000 * attempt);
+        await sleep(
+          1500 * attempt
+        );
 
-        return fetchHtml(
+        return fetchText(
           url,
           attempt + 1
         );
       }
 
-      throw new Error(
-        `HTTP ${response.status}: ${url}`
+      throw new HttpError(
+        `HTTP ${response.status}: ${url}`,
+        response.status,
+        url
       );
     }
 
@@ -194,10 +332,20 @@ async function fetchHtml(url, attempt = 1) {
 
   } catch (error) {
 
-    if (attempt < CONFIG.retries) {
-      await sleep(1000 * attempt);
+    if (
+      error instanceof HttpError
+    ) {
+      throw error;
+    }
 
-      return fetchHtml(
+    if (
+      attempt < FETCH_RETRIES
+    ) {
+      await sleep(
+        1500 * attempt
+      );
+
+      return fetchText(
         url,
         attempt + 1
       );
@@ -210,189 +358,629 @@ async function fetchHtml(url, attempt = 1) {
   }
 }
 
-// ---------------------------------------------------------
-// IDENTIFICAR FICHAS DE PELÍCULAS
-// ---------------------------------------------------------
 
-function isMovieUrl(url) {
+/* =========================================================
+   CARGAR CATÁLOGO EXISTENTE
+========================================================= */
+
+function emptyCatalog() {
+  return {
+    meta: {
+      version: 2,
+      source: `${BASE_URL}/`,
+      syncedAt: null,
+      lastSync: null
+    },
+
+    series: [],
+
+    seasons: [],
+
+    episodes: [],
+
+    genres: []
+  };
+}
+
+async function loadCatalog() {
   try {
-    const u = new URL(url);
+    const text =
+      await fs.readFile(
+        OUT_FILE,
+        'utf8'
+      );
 
-    if (u.origin !== new URL(BASE_URL).origin) {
-      return false;
+    const parsed =
+      JSON.parse(text);
+
+    if (
+      !parsed ||
+      typeof parsed !== 'object'
+    ) {
+      throw new Error(
+        'Catálogo inválido'
+      );
     }
 
-    const pathname =
-      u.pathname.replace(/\/+$/, '');
+    return {
+      ...emptyCatalog(),
+      ...parsed,
 
-    return (
-      pathname.startsWith('/movies/') &&
-      pathname !== '/movies'
-    );
+      meta: {
+        ...emptyCatalog().meta,
+        ...(parsed.meta || {})
+      },
 
-  } catch {
-    return false;
+      series: Array.isArray(
+        parsed.series
+      )
+        ? parsed.series
+        : [],
+
+      seasons: Array.isArray(
+        parsed.seasons
+      )
+        ? parsed.seasons
+        : [],
+
+      episodes: Array.isArray(
+        parsed.episodes
+      )
+        ? parsed.episodes
+        : [],
+
+      genres: Array.isArray(
+        parsed.genres
+      )
+        ? parsed.genres
+        : []
+    };
+
+  } catch (error) {
+
+    if (
+      error.code === 'ENOENT'
+    ) {
+      console.log(
+        '📁 No existe catálogo anterior. Se creará uno nuevo.'
+      );
+
+      return emptyCatalog();
+    }
+
+    throw error;
   }
 }
 
-// ---------------------------------------------------------
-// DESCUBRIMIENTO DE PELÍCULAS
-// ---------------------------------------------------------
 
-function extractMovieLinks(html, pageUrl) {
-  const $ = cheerio.load(html);
+/* =========================================================
+   GUARDAR CATÁLOGO DE FORMA SEGURA
+========================================================= */
 
-  const result = [];
+async function saveCatalog(catalog) {
 
-  $('a[href]').each((_, element) => {
+  const directory =
+    path.dirname(OUT_FILE);
 
-    const href =
-      $(element).attr('href');
+  await fs.mkdir(
+    directory,
+    {
+      recursive: true
+    }
+  );
 
-    const url =
-      absolute(href, pageUrl);
+  const temporary =
+    `${OUT_FILE}.tmp`;
 
-    if (!url) return;
+  const json =
+    JSON.stringify(
+      catalog,
+      null,
+      2
+    );
 
-    if (!isMovieUrl(url)) return;
+  await fs.writeFile(
+    temporary,
+    json,
+    'utf8'
+  );
 
-    result.push(url);
-  });
-
-  return unique(result);
+  await fs.rename(
+    temporary,
+    OUT_FILE
+  );
 }
 
-// ---------------------------------------------------------
-// PAGINACIÓN
-// ---------------------------------------------------------
 
-function extractPagination(
+/* =========================================================
+   UPSERT
+========================================================= */
+
+function upsert(
+  array,
+  item
+) {
+  const index =
+    array.findIndex(
+      x => x.id === item.id
+    );
+
+  if (index === -1) {
+    array.push(item);
+  } else {
+    array[index] = {
+      ...array[index],
+      ...item
+    };
+  }
+}
+
+
+/* =========================================================
+   DESCUBRIMIENTO DE PELÍCULAS
+========================================================= */
+
+function extractMovieLinks(
   html,
   pageUrl
 ) {
-  const $ = cheerio.load(html);
+  const $ =
+    cheerio.load(html);
 
-  const pages = [];
+  const found = [];
 
-  $('a[href]').each((_, element) => {
+  $('a[href]').each(
+    (_, element) => {
 
-    const href =
-      $(element).attr('href');
+      const href =
+        $(element).attr('href');
 
-    const url =
-      absolute(href, pageUrl);
-
-    if (!url) return;
-
-    if (!sameOrigin(url)) return;
-
-    try {
-
-      const u = new URL(url);
-
-      const match =
-        u.pathname.match(
-          /^\/movies\/page\/(\d+)\/?$/
+      const url =
+        absolute(
+          href,
+          pageUrl
         );
 
-      if (!match) return;
+      if (!url) return;
 
-      const page =
-        Number(match[1]);
-
-      if (
-        Number.isInteger(page) &&
-        page >= 1
-      ) {
-        pages.push({
-          page,
-          url
-        });
+      if (!sameOrigin(url)) {
+        return;
       }
 
-    } catch {}
-  });
+      try {
 
-  return pages;
-}
+        const parsed =
+          new URL(url);
 
-// ---------------------------------------------------------
-// GENERAR PÁGINA N
-// ---------------------------------------------------------
+        const pathname =
+          parsed.pathname;
 
-function archivePageUrl(page) {
+        /*
+         * Ficha:
+         * /movies/slug/
+         *
+         * Excluimos:
+         * /movies/
+         * /movies/page/2/
+         */
+        if (
+          !pathname.startsWith(
+            '/movies/'
+          )
+        ) {
+          return;
+        }
 
-  if (page <= 1) {
-    return `${BASE_URL}/movies/`;
-  }
+        if (
+          isArchiveUrl(url)
+        ) {
+          return;
+        }
 
-  return `${BASE_URL}/movies/page/${page}/`;
-}
+        const slug =
+          slugFromUrl(url);
 
-// ---------------------------------------------------------
-// DESCUBRIMIENTO INCREMENTAL
-// ---------------------------------------------------------
+        if (!slug) return;
 
-async function discoverMovies(
-  existing,
-  fullSync = false
-) {
-  const found = new Set();
+        found.push(
+          normalizeUrl(url)
+        );
 
-  const known = new Set(
-    existing.map(movie =>
-      movie.sourceUrl
-    )
+      } catch {}
+    }
   );
 
-  const maxPages = fullSync
-    ? CONFIG.maxDiscoveryPages
-    : CONFIG.incrementalPages;
+  return unique(found);
+}
 
-  console.log('');
+
+/* =========================================================
+   PAGINACIÓN
+========================================================= */
+
+function extractPaginationPages(
+  html,
+  pageUrl
+) {
+  const $ =
+    cheerio.load(html);
+
+  const pages =
+    new Set();
+
+  /*
+   * Buscamos enlaces reales.
+   */
+  $('a[href]').each(
+    (_, element) => {
+
+      const href =
+        $(element).attr('href');
+
+      const url =
+        absolute(
+          href,
+          pageUrl
+        );
+
+      if (!url) return;
+
+      if (!sameOrigin(url)) {
+        return;
+      }
+
+      if (
+        !isArchiveUrl(url)
+      ) {
+        return;
+      }
+
+      try {
+
+        const pathname =
+          new URL(url).pathname;
+
+        const match =
+          pathname.match(
+            /^\/movies\/page\/(\d+)\/?$/
+          );
+
+        if (match) {
+          pages.add(
+            Number(match[1])
+          );
+        } else if (
+          pathname === '/movies/' ||
+          pathname === '/movies'
+        ) {
+          pages.add(1);
+        }
+
+      } catch {}
+    }
+  );
+
+  /*
+   * También buscamos el número
+   * máximo visible en el HTML.
+   */
+  const matches =
+    html.matchAll(
+      /\/movies\/page\/(\d+)\/?/gi
+    );
+
+  for (const match of matches) {
+    const n =
+      Number(match[1]);
+
+    if (
+      Number.isFinite(n)
+    ) {
+      pages.add(n);
+    }
+  }
+
+  return [
+    ...pages
+  ].filter(
+    n =>
+      n >= 1 &&
+      n <= MAX_DISCOVERY_PAGES
+  ).sort(
+    (a, b) => a - b
+  );
+}
+
+
+/* =========================================================
+   RESULTADO DE UNA PÁGINA
+========================================================= */
+
+async function readListingPage(
+  page
+) {
+  const url =
+    moviePageUrl(page);
+
   console.log(
-    fullSync
-      ? '🔎 DESCUBRIMIENTO COMPLETO'
-      : '⚡ DESCUBRIMIENTO INCREMENTAL'
+    `\n📄 Listado ${page}: ${url}`
+  );
+
+  const html =
+    await fetchText(url);
+
+  const movies =
+    extractMovieLinks(
+      html,
+      url
+    );
+
+  const pages =
+    extractPaginationPages(
+      html,
+      url
+    );
+
+  console.log(
+    `   🎬 Películas encontradas: ${movies.length}`
+  );
+
+  if (pages.length) {
+    console.log(
+      `   📚 Páginas detectadas: ${pages.slice(0, 15).join(', ')}${pages.length > 15 ? '...' : ''}`
+    );
+  }
+
+  return {
+    url,
+    html,
+    movies,
+    pages
+  };
+}
+
+
+/* =========================================================
+   DESCUBRIMIENTO COMPLETO
+========================================================= */
+
+async function fullDiscovery() {
+
+  console.log(
+    '\n===================================================='
+  );
+
+  console.log(
+    '🔎 DESCUBRIMIENTO COMPLETO PELICINEHD'
+  );
+
+  console.log(
+    '===================================================='
+  );
+
+  const all =
+    new Set();
+
+  const visited =
+    new Set();
+
+  /*
+   * Primera página.
+   */
+  const first =
+    await readListingPage(1);
+
+  first.movies.forEach(
+    url => all.add(url)
+  );
+
+  visited.add(1);
+
+  /*
+   * Usamos las páginas detectadas
+   * por el propio sitio.
+   */
+  const queue =
+    [...first.pages]
+      .filter(n => n > 1);
+
+  /*
+   * Aunque el HTML solo muestre
+   * "1 2 3 ... 109", iremos
+   * comprobando secuencialmente.
+   */
+  let nextPage = 2;
+
+  while (
+    nextPage <= MAX_DISCOVERY_PAGES
+  ) {
+
+    if (
+      !queue.includes(nextPage)
+    ) {
+      queue.push(nextPage);
+    }
+
+    nextPage++;
+  }
+
+  queue.sort(
+    (a, b) => a - b
   );
 
   for (
+    const page of queue
+  ) {
+
+    if (
+      visited.has(page)
+    ) {
+      continue;
+    }
+
+    visited.add(page);
+
+    let result;
+
+    try {
+
+      result =
+        await readListingPage(
+          page
+        );
+
+    } catch (error) {
+
+      /*
+       * MUY IMPORTANTE:
+       * si recibimos 403 durante
+       * el descubrimiento, abortamos.
+       *
+       * No interpretamos esto
+       * como "no hay más películas".
+       */
+      if (
+        error instanceof HttpError &&
+        error.status === 403
+      ) {
+        throw new Error(
+          `PeliCineHD bloqueó el acceso con HTTP 403 en la página ${page}. ` +
+          `No se modificará el catálogo existente.`
+        );
+      }
+
+      console.log(
+        `   ⚠️ No se pudo leer página ${page}: ${error.message}`
+      );
+
+      /*
+       * Un error temporal no significa
+       * automáticamente que terminó el catálogo.
+       */
+      continue;
+    }
+
+    result.movies.forEach(
+      url => all.add(url)
+    );
+
+    /*
+     * Si una página no tiene películas,
+     * tenemos una señal fuerte de final.
+     *
+     * Pero no detenemos inmediatamente
+     * si todavía había páginas detectadas.
+     */
+    if (
+      result.movies.length === 0 &&
+      page > 2
+    ) {
+
+      console.log(
+        `   🛑 Página ${page} sin películas. Fin probable del archivo.`
+      );
+
+      /*
+       * Solo terminamos si las siguientes
+       * páginas tampoco estaban anunciadas.
+       */
+      const announcedLater =
+        result.pages.some(
+          p => p > page
+        );
+
+      if (!announcedLater) {
+        break;
+      }
+    }
+
+    await sleep(
+      POLITENESS_MS
+    );
+  }
+
+  console.log(
+    `\n🎯 TOTAL DE PELÍCULAS DESCUBIERTAS: ${all.size}`
+  );
+
+  return [
+    ...all
+  ];
+}
+
+
+/* =========================================================
+   DESCUBRIMIENTO INCREMENTAL
+========================================================= */
+
+async function incrementalDiscovery(
+  existing
+) {
+
+  console.log(
+    '\n===================================================='
+  );
+
+  console.log(
+    '⚡ DESCUBRIMIENTO INCREMENTAL'
+  );
+
+  console.log(
+    '===================================================='
+  );
+
+  const known =
+    new Set(
+      existing
+        .map(
+          item =>
+            normalizeUrl(
+              item.sourceUrl
+            )
+        )
+        .filter(Boolean)
+    );
+
+  const discovered =
+    new Set();
+
+  let consecutiveOldPages = 0;
+
+  /*
+   * Revisamos las primeras páginas.
+   *
+   * Esto permite detectar películas
+   * nuevas al principio del archivo.
+   */
+  for (
     let page = 1;
-    page <= maxPages;
+    page <= INCREMENTAL_PAGES;
     page++
   ) {
 
-    const url =
-      archivePageUrl(page);
-
-    console.log(
-      `📄 Catálogo ${page}: ${url}`
-    );
-
-    let html;
+    let result;
 
     try {
-      html =
-        await fetchHtml(url);
+
+      result =
+        await readListingPage(
+          page
+        );
+
     } catch (error) {
-      console.log(
-        `⚠️ No se pudo leer página ${page}:`,
-        error.message
-      );
 
-      break;
-    }
-
-    const links =
-      extractMovieLinks(
-        html,
-        url
-      );
-
-    if (!links.length) {
+      if (
+        error instanceof HttpError &&
+        error.status === 403
+      ) {
+        throw new Error(
+          `PeliCineHD bloqueó el acceso con HTTP 403 en la página ${page}. ` +
+          `El catálogo existente se conserva sin cambios.`
+        );
+      }
 
       console.log(
-        `🛑 Página ${page} sin películas`
+        `   ⚠️ Error en página ${page}: ${error.message}`
       );
 
       break;
@@ -400,104 +988,84 @@ async function discoverMovies(
 
     let newOnPage = 0;
 
-    for (const movieUrl of links) {
+    for (
+      const movieUrl
+      of result.movies
+    ) {
 
-      if (!known.has(movieUrl)) {
-        found.add(movieUrl);
+      discovered.add(
+        movieUrl
+      );
+
+      if (
+        !known.has(movieUrl)
+      ) {
         newOnPage++;
       }
     }
 
     console.log(
-      `   🎬 ${links.length} películas`
+      `   🆕 Nuevas en página ${page}: ${newOnPage}`
     );
-
-    console.log(
-      `   🆕 ${newOnPage} nuevas`
-    );
-
-    /*
-     * En modo incremental:
-     *
-     * Si una página completa ya está formada
-     * exclusivamente por películas conocidas,
-     * podemos dejar de recorrer páginas antiguas.
-     */
 
     if (
-      !fullSync &&
       newOnPage === 0
+    ) {
+      consecutiveOldPages++;
+    } else {
+      consecutiveOldPages = 0;
+    }
+
+    /*
+     * Si tenemos varias páginas seguidas
+     * completamente conocidas, normalmente
+     * ya estamos fuera de la zona nueva.
+     */
+    if (
+      consecutiveOldPages >= 2
     ) {
 
       console.log(
-        '   🛑 No hay películas nuevas.'
+        '   🛑 Varias páginas consecutivas sin novedades.'
       );
 
       break;
     }
 
     await sleep(
-      CONFIG.politenessMs
+      POLITENESS_MS
     );
   }
 
-  console.log('');
   console.log(
-    `🎯 Nuevas fichas encontradas: ${found.size}`
+    `\n🎯 URLs comprobadas incrementalmente: ${discovered.size}`
   );
 
-  return [...found];
+  return [
+    ...discovered
+  ];
 }
 
-// ---------------------------------------------------------
-// EXTRAER TEXTO META
-// ---------------------------------------------------------
 
-function meta(
+/* =========================================================
+   EXTRAER TEXTO DE UN ELEMENTO
+========================================================= */
+
+function textOf(
   $,
   selector
 ) {
   return clean(
-    $(selector).attr('content')
+    $(selector)
+      .first()
+      .text()
   );
 }
 
-// ---------------------------------------------------------
-// EXTRAER LISTA
-// ---------------------------------------------------------
 
-function extractList(
-  $,
-  selectors
-) {
-  const result = [];
-
-  for (const selector of selectors) {
-
-    $(selector).each((_, element) => {
-
-      const value =
-        clean($(element).text());
-
-      if (
-        value &&
-        value.length < 100
-      ) {
-        result.push(value);
-      }
-    });
-
-    if (result.length) {
-      break;
-    }
-  }
-
-  return unique(result);
-}
-
-// ---------------------------------------------------------
-// EXTRAER PORTADA
-// ---------------------------------------------------------
+/* =========================================================
+   PORTADA
+========================================================= */
 
 function extractPoster(
   $,
@@ -506,10 +1074,9 @@ function extractPoster(
 
   const og =
     absolute(
-      meta(
-        $,
+      $(
         'meta[property="og:image"]'
-      ),
+      ).attr('content'),
       url
     );
 
@@ -519,10 +1086,9 @@ function extractPoster(
 
   const twitter =
     absolute(
-      meta(
-        $,
+      $(
         'meta[name="twitter:image"]'
-      ),
+      ).attr('content'),
       url
     );
 
@@ -530,79 +1096,232 @@ function extractPoster(
     return twitter;
   }
 
-  let image = null;
+  let result = null;
 
-  $('img').each((_, element) => {
+  $('img').each(
+    (_, element) => {
 
-    if (image) return;
+      if (result) return;
 
-    const src =
-      $(element).attr('data-src') ||
-      $(element).attr('data-lazy-src') ||
-      $(element).attr('src');
+      const src =
+        $(
+          element
+        ).attr('data-src') ||
+        $(
+          element
+        ).attr('data-lazy-src') ||
+        $(
+          element
+        ).attr('src');
 
-    const full =
-      absolute(src, url);
+      const image =
+        absolute(
+          src,
+          url
+        );
 
-    if (!full) return;
+      if (!image) return;
 
-    if (
-      /logo|icon|avatar|banner/i.test(full)
-    ) {
-      return;
+      if (
+        /logo|icon|avatar/i.test(
+          image
+        )
+      ) {
+        return;
+      }
+
+      result = image;
     }
+  );
 
-    image = full;
-  });
-
-  return image;
+  return result;
 }
 
-// ---------------------------------------------------------
-// EXTRAER AÑO
-// ---------------------------------------------------------
 
-function extractYear(
-  body,
-  title
+/* =========================================================
+   GÉNEROS
+========================================================= */
+
+function extractGenres(
+  $,
+  url
 ) {
 
-  const patterns = [
+  const genres =
+    new Set();
 
-    /(?:estreno|año)[^0-9]{0,20}((?:19|20)\d{2})/i,
+  /*
+   * Primero intentamos enlaces
+   * de taxonomías/géneros.
+   */
+  $('a[href]').each(
+    (_, element) => {
 
-    /\b((?:19|20)\d{2})\b/
-  ];
+      const text =
+        clean(
+          $(element).text()
+        );
 
-  for (const regex of patterns) {
+      if (!text) return;
 
-    const match =
-      body.match(regex);
+      const href =
+        absolute(
+          $(element).attr('href'),
+          url
+        );
 
-    if (match) {
-      return Number(match[1]);
+      if (!href) return;
+
+      try {
+
+        const pathname =
+          new URL(href).pathname;
+
+        if (
+          /genre|genero|género/i.test(
+            pathname
+          )
+        ) {
+          genres.add(text);
+        }
+
+      } catch {}
+    }
+  );
+
+  /*
+   * En las fichas de PeliCineHD
+   * los géneros suelen aparecer juntos
+   * cerca de la duración/año.
+   */
+  if (
+    genres.size === 0
+  ) {
+
+    const body =
+      clean(
+        $('body').text()
+      );
+
+    const h1 =
+      textOf($, 'h1');
+
+    const start =
+      h1
+        ? body.indexOf(h1)
+        : -1;
+
+    if (start >= 0) {
+
+      const fragment =
+        body.slice(
+          start,
+          start + 700
+        );
+
+      /*
+       * Ejemplo:
+       * "Acción, Ciencia ficción, Suspense 1h 46m 2026"
+       */
+      const match =
+        fragment.match(
+          /^.*?\n?\s*([^0-9]{2,150}?)\s+\d+\s*h(?:\s*\d+\s*m)?/i
+        );
+
+      if (match) {
+
+        const raw =
+          clean(
+            match[1]
+          );
+
+        if (
+          raw &&
+          raw.length < 180
+        ) {
+
+          raw
+            .split(',')
+            .map(clean)
+            .filter(
+              x =>
+                x.length > 1 &&
+                x.length < 50
+            )
+            .forEach(
+              x => genres.add(x)
+            );
+        }
+      }
     }
   }
 
-  const titleMatch =
-    title.match(
-      /\b((?:19|20)\d{2})\b/
-    );
-
-  return titleMatch
-    ? Number(titleMatch[1])
-    : null;
+  return [
+    ...genres
+  ];
 }
 
-// ---------------------------------------------------------
-// DURACIÓN
-// ---------------------------------------------------------
 
-function extractRuntime(body) {
+/* =========================================================
+   AÑO
+========================================================= */
+
+function extractYear(
+  $,
+  title
+) {
+
+  const body =
+    clean(
+      $('body').text()
+    );
+
+  const candidates = [
+    body.match(
+      /(?:estreno|año|fecha)[^0-9]{0,30}((?:19|20)\d{2})/i
+    ),
+
+    body.match(
+      /\b((?:19|20)\d{2})\b/
+    ),
+
+    title.match(
+      /\b((?:19|20)\d{2})\b/
+    )
+  ];
+
+  for (
+    const match
+    of candidates
+  ) {
+
+    if (match) {
+      return Number(
+        match[1]
+      );
+    }
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   DURACIÓN
+========================================================= */
+
+function extractRuntime(
+  $
+) {
+
+  const body =
+    clean(
+      $('body').text()
+    );
 
   const match =
     body.match(
-      /\b(\d{1,2})h(?:\s*(\d{1,2})m)?\b/i
+      /\b(\d{1,2})\s*h(?:\s*(\d{1,2})\s*m)?\b/i
     );
 
   if (!match) {
@@ -610,7 +1329,9 @@ function extractRuntime(body) {
   }
 
   const hours =
-    Number(match[1]);
+    Number(
+      match[1]
+    );
 
   const minutes =
     match[2]
@@ -620,95 +1341,420 @@ function extractRuntime(body) {
   return {
     hours,
     minutes,
-    text: `${hours}h${
+    text:
       minutes
-        ? ` ${minutes}m`
-        : ''
-    }`
+        ? `${hours}h ${minutes}m`
+        : `${hours}h`
   };
 }
 
-// ---------------------------------------------------------
-// TMDB
-// ---------------------------------------------------------
 
-function extractTmdb(body) {
+/* =========================================================
+   TMDB
+========================================================= */
 
-  const match =
-    body.match(
-      /TMDB\s*([0-9]+(?:\.[0-9]+)?)/i
-    );
-
-  if (!match) {
-    return null;
-  }
-
-  return Number(match[1]);
-}
-
-// ---------------------------------------------------------
-// SINOPSIS
-// ---------------------------------------------------------
-
-function extractSynopsis(
+function extractTmdb(
   $,
   body
 ) {
 
-  const ogDescription =
-    meta(
-      $,
-      'meta[property="og:description"]'
-    );
+  const selectors = [
+    '[class*="tmdb"]',
+    '[id*="tmdb"]'
+  ];
 
-  if (
-    ogDescription &&
-    ogDescription.length > 30
+  for (
+    const selector
+    of selectors
   ) {
-    return ogDescription;
+
+    const text =
+      textOf(
+        $,
+        selector
+      );
+
+    const match =
+      text.match(
+        /(\d+(?:\.\d+)?)/
+      );
+
+    if (match) {
+      return Number(
+        match[1]
+      );
+    }
   }
 
+  const match =
+    body.match(
+      /(\d+(?:\.\d+)?)\s*TMDB/i
+    );
+
+  if (match) {
+    return Number(
+      match[1]
+    );
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   SINOPSIS
+========================================================= */
+
+function extractSynopsis(
+  $,
+  title
+) {
+
+  const candidates = [];
+
+  /*
+   * Meta description.
+   */
   const description =
-    meta(
-      $,
-      'meta[name="description"]'
+    clean(
+      $(
+        'meta[name="description"]'
+      ).attr('content')
     );
 
   if (
     description &&
-    description.length > 30
+    description.length > 40
   ) {
-    return description;
+    candidates.push(
+      description
+    );
   }
 
-  let result = '';
+  /*
+   * OpenGraph description.
+   */
+  const og =
+    clean(
+      $(
+        'meta[property="og:description"]'
+      ).attr('content')
+    );
 
-  $('p').each((_, element) => {
+  if (
+    og &&
+    og.length > 40
+  ) {
+    candidates.push(
+      og
+    );
+  }
 
-    if (result) return;
+  /*
+   * Párrafos.
+   */
+  $('p').each(
+    (_, element) => {
 
-    const text =
-      clean($(element).text());
+      const text =
+        clean(
+          $(element).text()
+        );
+
+      if (
+        text.length >= 80 &&
+        text.length <= 1500
+      ) {
+        candidates.push(
+          text
+        );
+      }
+    }
+  );
+
+  for (
+    const candidate
+    of candidates
+  ) {
+
+    const folded =
+      fold(candidate);
 
     if (
-      text.length > 80 &&
-      !/navegador|adblock|ghostery/i.test(text)
+      folded.includes(
+        'utiliza el navegador'
+      ) ||
+      folded.includes(
+        'bloqueador de anuncios'
+      ) ||
+      folded.includes(
+        'telegram'
+      )
     ) {
-      result = text;
+      continue;
     }
-  });
 
-  return result || null;
+    if (
+      fold(candidate)
+        .includes(
+          fold(title)
+        )
+    ) {
+      /*
+       * No descartamos automáticamente:
+       * algunas descripciones incluyen
+       * el título.
+       */
+    }
+
+    return candidate;
+  }
+
+  return null;
 }
 
-// ---------------------------------------------------------
-// OPCIONES DEL REPRODUCTOR
-// ---------------------------------------------------------
+
+/* =========================================================
+   DIRECTOR / ACTORES
+========================================================= */
+
+function extractLabeledList(
+  $,
+  labels
+) {
+
+  const result = [];
+
+  $('body *').each(
+    (_, element) => {
+
+      const text =
+        clean(
+          $(element).text()
+        );
+
+      if (
+        !text ||
+        text.length > 400
+      ) {
+        return;
+      }
+
+      const normalized =
+        fold(text);
+
+      const label =
+        labels.find(
+          x =>
+            normalized ===
+            fold(x)
+        );
+
+      if (!label) {
+        return;
+      }
+
+      let value = '';
+
+      const next =
+        $(element)
+          .next()
+          .text();
+
+      if (
+        clean(next)
+      ) {
+        value =
+          clean(next);
+      }
+
+      if (!value) {
+        const parentText =
+          clean(
+            $(element)
+              .parent()
+              .text()
+          );
+
+        const re =
+          new RegExp(
+            `^${label}\\s*[:\\-]?\\s*(.+)$`,
+            'i'
+          );
+
+        const match =
+          parentText.match(re);
+
+        if (match) {
+          value =
+            clean(
+              match[1]
+            );
+        }
+      }
+
+      if (
+        value &&
+        value.length < 1000
+      ) {
+
+        value
+          .split(',')
+          .map(clean)
+          .filter(Boolean)
+          .forEach(
+            x => result.push(x)
+          );
+      }
+    }
+  );
+
+  return [
+    ...new Set(result)
+  ];
+}
+
+
+/* =========================================================
+   SERVIDORES / OPCIONES
+========================================================= */
+
+function cleanServerName(
+  raw
+) {
+
+  return clean(
+    String(raw || '')
+      .replace(
+        /^opci[oó]n\s*\d+\s*/i,
+        ''
+      )
+      .replace(
+        /^\d+\s*[.\-:]\s*/,
+        ''
+      )
+  );
+}
+
+function detectLanguage(
+  text
+) {
+
+  const t =
+    fold(text);
+
+  if (
+    /subtit|subtitul/.test(t)
+  ) {
+    return 'SUBTITULADO';
+  }
+
+  if (
+    /castellano|cast|espanol|español/.test(t)
+  ) {
+    return 'CAS';
+  }
+
+  if (
+    /latino|lat\b/.test(t)
+  ) {
+    return 'LAT';
+  }
+
+  if (
+    /ingles|inglés|english/.test(t)
+  ) {
+    return 'INGLES';
+  }
+
+  if (
+    /dual/.test(t)
+  ) {
+    return 'DUAL';
+  }
+
+  return null;
+}
+
+function detectQuality(
+  text
+) {
+
+  const t =
+    fold(text);
+
+  if (
+    /\b2160p\b|\b4k\b/.test(t)
+  ) {
+    return '4K';
+  }
+
+  if (
+    /\b1080p\b|\bfhd\b/.test(t)
+  ) {
+    return '1080P';
+  }
+
+  if (
+    /\b720p\b|\bhd\b/.test(t)
+  ) {
+    return 'HD';
+  }
+
+  if (
+    /\bcam\b/.test(t)
+  ) {
+    return 'CAM';
+  }
+
+  return null;
+}
+
+function extractUrlFromElement(
+  $,
+  element,
+  pageUrl
+) {
+
+  const attrs = [
+    'href',
+    'data-url',
+    'data-link',
+    'data-src',
+    'data-embed',
+    'data-player',
+    'data-server',
+    'data-href'
+  ];
+
+  for (
+    const attr
+    of attrs
+  ) {
+
+    const value =
+      $(element).attr(
+        attr
+      );
+
+    const url =
+      absolute(
+        value,
+        pageUrl
+      );
+
+    if (url) {
+      return url;
+    }
+  }
+
+  return null;
+}
 
 function extractServers(
   $,
-  pageUrl,
-  html
+  html,
+  pageUrl
 ) {
 
   const servers = [];
@@ -719,233 +1765,272 @@ function extractServers(
   function addServer({
     name,
     url,
-    language = null,
-    embed = false
+    label
   }) {
 
-    const full =
-      absolute(url, pageUrl);
+    const cleanNameValue =
+      cleanServerName(
+        name || label || 'Servidor'
+      );
 
-    if (!full) return;
-
-    if (seen.has(full)) {
+    if (
+      !cleanNameValue
+    ) {
       return;
     }
 
-    seen.add(full);
+    /*
+     * No guardamos basura.
+     */
+    if (
+      isBlacklisted(
+        `${cleanNameValue} ${url || ''}`
+      )
+    ) {
+      return;
+    }
 
-    let host = '';
+    const language =
+      detectLanguage(
+        label ||
+        cleanNameValue
+      );
 
-    try {
-      host =
-        new URL(full)
-          .hostname
-          .replace(/^www\./, '');
-    } catch {}
+    const quality =
+      detectQuality(
+        label ||
+        cleanNameValue
+      );
+
+    const key =
+      `${fold(cleanNameValue)}|${url || ''}|${language || ''}|${quality || ''}`;
+
+    if (
+      seen.has(key)
+    ) {
+      return;
+    }
+
+    seen.add(key);
 
     servers.push({
       name:
-        clean(name) ||
-        host ||
-        'Servidor',
+        cleanNameValue,
 
-      host,
+      url:
+        url || null,
 
-      url: full,
+      lang:
+        language,
 
-      language,
+      quality:
+        quality,
 
-      embed
+      label:
+        clean(
+          label ||
+          cleanNameValue
+        )
     });
   }
 
+
   /*
-   * -------------------------------------------------------
-   * 1. IFRAME
-   * -------------------------------------------------------
+   * OPCIONES / BOTONES
    */
+  $('a, button, li, div, span').each(
+    (_, element) => {
 
-  $('iframe[src]').each((_, element) => {
+      const text =
+        clean(
+          $(element).text()
+        );
 
-    const src =
-      $(element).attr('src');
+      if (
+        !text ||
+        text.length > 180
+      ) {
+        return;
+      }
 
-    if (!src) return;
+      /*
+       * Solo nos interesan elementos
+       * que parezcan opciones de servidor.
+       */
+      const looksLikeOption =
+        /opci[oó]n\s*\d+/i.test(text) ||
+        /\b(?:minochinos|voe|morencius|streamwish|strwish|wishonly|filemoon|media)\b/i.test(text);
 
-    let host = '';
+      if (
+        !looksLikeOption
+      ) {
+        return;
+      }
 
-    try {
-      host =
-        new URL(
-          absolute(src, pageUrl)
+      const url =
+        extractUrlFromElement(
+          $,
+          element,
+          pageUrl
+        );
+
+      addServer({
+        name: text,
+        label: text,
+        url
+      });
+    }
+  );
+
+
+  /*
+   * IFRAME.
+   */
+  $('iframe[src]').each(
+    (_, element) => {
+
+      const url =
+        absolute(
+          $(element).attr('src'),
+          pageUrl
+        );
+
+      if (!url) {
+        return;
+      }
+
+      const surrounding =
+        clean(
+          $(element)
+            .parent()
+            .text()
+        );
+
+      addServer({
+        name:
+          surrounding ||
+          new URL(url).hostname,
+
+        label:
+          surrounding ||
+          new URL(url).hostname,
+
+        url
+      });
+    }
+  );
+
+
+  /*
+   * DATA-*.
+   */
+  $(
+    '[data-url], [data-link], [data-src], [data-embed], [data-player], [data-server]'
+  ).each(
+    (_, element) => {
+
+      const url =
+        extractUrlFromElement(
+          $,
+          element,
+          pageUrl
+        );
+
+      if (!url) {
+        return;
+      }
+
+      const text =
+        clean(
+          $(element).text()
+        );
+
+      const attrs =
+        Object.entries(
+          element.attribs || {}
         )
-        .hostname
-        .replace(/^www\./, '');
+          .map(
+            ([key, value]) =>
+              `${key}=${value}`
+          )
+          .join(' ');
 
-    } catch {}
+      const label =
+        `${text} ${attrs}`.trim();
 
-    addServer({
-      name: host || 'Servidor',
-      url: src,
-      embed: true
-    });
-  });
+      addServer({
+        name:
+          text ||
+          new URL(url).hostname,
 
-  /*
-   * -------------------------------------------------------
-   * 2. ATRIBUTOS DATA-*
-   *
-   * Importante porque PeliCineHD utiliza botones
-   * de OPCIÓN para seleccionar servidores.
-   * -------------------------------------------------------
-   */
+        label,
 
-  const dataSelectors = [
-    '[data-url]',
-    '[data-embed]',
-    '[data-src]',
-    '[data-link]',
-    '[data-player]',
-    '[data-href]',
-    '[data-server]'
-  ].join(',');
-
-  $(dataSelectors).each((_, element) => {
-
-    const node =
-      $(element);
-
-    const raw =
-      node.attr('data-url') ||
-      node.attr('data-embed') ||
-      node.attr('data-src') ||
-      node.attr('data-link') ||
-      node.attr('data-player') ||
-      node.attr('data-href') ||
-      node.attr('data-server');
-
-    if (!raw) return;
-
-    const text =
-      clean(node.text());
-
-    let language = null;
-
-    if (
-      /latino/i.test(text)
-    ) {
-      language = 'latino';
-
-    } else if (
-      /castellano/i.test(text)
-    ) {
-      language = 'castellano';
-
-    } else if (
-      /subtitulado/i.test(text)
-    ) {
-      language = 'subtitulado';
-
-    } else if (
-      /ingles|inglés/i.test(text)
-    ) {
-      language = 'ingles';
+        url
+      });
     }
+  );
 
-    addServer({
-      name: text || null,
-      url: raw,
-      language,
-      embed: true
-    });
-  });
 
   /*
-   * -------------------------------------------------------
-   * 3. ENLACES DE OPCIONES
-   * -------------------------------------------------------
-   */
-
-  $('a[href]').each((_, element) => {
-
-    const node =
-      $(element);
-
-    const href =
-      node.attr('href');
-
-    if (!href) return;
-
-    const text =
-      clean(node.text());
-
-    const looksLikePlayer =
-      /lat|cast|sub|ingles|opci[oó]n|player|ver|servidor/i
-        .test(text);
-
-    if (!looksLikePlayer) {
-      return;
-    }
-
-    addServer({
-      name: text,
-      url: href,
-      embed: false
-    });
-  });
-
-  /*
-   * -------------------------------------------------------
-   * 4. URLS EXTERNAS EN EL HTML
+   * URLs explícitas dentro de scripts.
    *
-   * Solo recogemos URLs que aparecen públicamente
-   * en el HTML. No intentamos saltar protecciones.
-   * -------------------------------------------------------
+   * No hacemos ninguna petición adicional:
+   * simplemente aprovechamos URLs que
+   * ya están públicamente presentes
+   * en el HTML recibido.
    */
-
   const urlRegex =
     /https?:\/\/[^\s"'<>\\]+/gi;
 
-  const candidates =
-    html.match(urlRegex) || [];
+  for (
+    const match
+    of html.matchAll(urlRegex)
+  ) {
 
-  for (const candidate of candidates) {
+    const raw =
+      match[0]
+        .replace(
+          /[),;]+$/,
+          ''
+        );
 
-    let url = candidate
-      .replace(/&amp;/g, '&')
-      .replace(/[),;]+$/, '');
-
-    let host = '';
+    let url;
 
     try {
-      host =
-        new URL(url)
-          .hostname
-          .replace(/^www\./, '');
-
+      url =
+        new URL(raw).href;
     } catch {
       continue;
     }
 
-    if (
-      /voe|filemoon|streamwish|smoothpre|dailymotion|ok\.ru|mixdrop|vidmoly|uqload/i
-        .test(host)
-    ) {
+    const host =
+      new URL(url).hostname;
 
-      addServer({
-        name: host,
-        url,
-        embed: true
-      });
+    /*
+     * Solo si parece servidor de vídeo.
+     */
+    if (
+      !/(voe|minochinos|morencius|streamwish|strwish|wishonly|filemoon|media|stream)/i.test(
+        host
+      )
+    ) {
+      continue;
     }
+
+    addServer({
+      name: host,
+      label: host,
+      url
+    });
   }
 
   return servers;
 }
 
-// ---------------------------------------------------------
-// PARSEAR FICHA
-// ---------------------------------------------------------
+
+/* =========================================================
+   PARSEO DE UNA PELÍCULA
+========================================================= */
 
 function parseMovie(
   html,
@@ -958,155 +2043,31 @@ function parseMovie(
   const slug =
     slugFromUrl(url);
 
+  const title =
+    clean(
+      $('h1')
+        .first()
+        .text()
+    ) ||
+    clean(
+      $(
+        'meta[property="og:title"]'
+      ).attr('content')
+    ) ||
+    slug
+      .replace(
+        /-/g,
+        ' '
+      )
+      .replace(
+        /\b\w/g,
+        x => x.toUpperCase()
+      );
+
   const body =
     clean(
       $('body').text()
     );
-
-  const title =
-    clean(
-      $('h1').first().text()
-    ) ||
-    meta(
-      $,
-      'meta[property="og:title"]'
-    ) ||
-    slug;
-
-  /*
-   * Géneros
-   */
-
-  const genres = [];
-
-  /*
-   * Primero buscamos enlaces que parecen géneros.
-   */
-
-  $('a').each((_, element) => {
-
-    const text =
-      clean($(element).text());
-
-    if (!text) return;
-
-    const href =
-      $(element).attr('href') || '';
-
-    if (
-      /genero|genre|categoria/i.test(href) &&
-      text.length < 40
-    ) {
-      genres.push(text);
-    }
-  });
-
-  /*
-   * Fallback:
-   *
-   * "Acción, Aventura, Comedia 2h 6m..."
-   */
-
-  if (!genres.length) {
-
-    const firstLine =
-      clean(
-        $('h1')
-          .first()
-          .parent()
-          .text()
-      );
-
-    const match =
-      firstLine.match(
-        /^(.+?)\s+\d+h(?:\s*\d+m)?/i
-      );
-
-    if (match) {
-
-      match[1]
-        .split(',')
-        .map(clean)
-        .filter(Boolean)
-        .forEach(g =>
-          genres.push(g)
-        );
-    }
-  }
-
-  /*
-   * Director
-   */
-
-  let director = null;
-
-  const directorMatch =
-    body.match(
-      /Director\s+(.+?)(?=\s+Actores|\s+TMDB|$)/i
-    );
-
-  if (directorMatch) {
-    director =
-      clean(directorMatch[1]);
-  }
-
-  /*
-   * Actores
-   */
-
-  let actors = [];
-
-  const actorMatch =
-    body.match(
-      /Actores\s+(.+?)(?=\s+TMDB|$)/i
-    );
-
-  if (actorMatch) {
-
-    actors =
-      actorMatch[1]
-        .split(',')
-        .map(clean)
-        .filter(Boolean);
-  }
-
-  /*
-   * Runtime
-   */
-
-  const runtime =
-    extractRuntime(body);
-
-  /*
-   * Año
-   */
-
-  const year =
-    extractYear(
-      body,
-      title
-    );
-
-  /*
-   * TMDB
-   */
-
-  const tmdb =
-    extractTmdb(body);
-
-  /*
-   * Sinopsis
-   */
-
-  const synopsis =
-    extractSynopsis(
-      $,
-      body
-    );
-
-  /*
-   * Portada
-   */
 
   const image =
     extractPoster(
@@ -1114,376 +2075,351 @@ function parseMovie(
       url
     );
 
-  /*
-   * Servidores
-   */
+  const genres =
+    extractGenres(
+      $,
+      url
+    );
+
+  const year =
+    extractYear(
+      $,
+      title
+    );
+
+  const runtime =
+    extractRuntime(
+      $
+    );
+
+  const synopsis =
+    extractSynopsis(
+      $,
+      title
+    );
+
+  const directors =
+    extractLabeledList(
+      $,
+      [
+        'Director',
+        'Directores'
+      ]
+    );
+
+  const actors =
+    extractLabeledList(
+      $,
+      [
+        'Actores',
+        'Actores principales'
+      ]
+    );
+
+  const tmdb =
+    extractTmdb(
+      $,
+      body
+    );
 
   const servers =
     extractServers(
       $,
-      url,
-      html
+      html,
+      url
     );
 
+  /*
+   * Calidad general de la ficha.
+   */
+  let quality = null;
+
+  const qualityMatch =
+    body.match(
+      /\b(4K|2160p|FHD|1080p|HD|720p|CAM)\b/i
+    );
+
+  if (qualityMatch) {
+    quality =
+      qualityMatch[1]
+        .toUpperCase();
+  }
+
   return {
-
     id: slug,
-
     slug,
 
     title,
 
-    image,
+    image:
+      image || null,
 
-    synopsis,
+    synopsis:
+      synopsis || null,
 
     year,
 
-    runtime,
+    runtime:
+      runtime
+        ? runtime.text
+        : null,
+
+    runtimeMinutes:
+      runtime
+        ? (
+            runtime.hours * 60 +
+            runtime.minutes
+          )
+        : null,
+
+    quality,
 
     tmdb,
 
-    genres:
-      unique(genres),
+    genres,
 
-    director,
+    directors,
 
     actors,
 
     servers,
 
-    sourceUrl: url
+    sourceUrl:
+      normalizeUrl(url)
   };
 }
 
-// ---------------------------------------------------------
-// BASE DE DATOS
-// ---------------------------------------------------------
 
-async function loadCatalog() {
+/* =========================================================
+   CONVERTIR PELÍCULA AL ESQUEMA DEL CATÁLOGO
+========================================================= */
 
-  try {
+function movieToCatalog(
+  movie,
+  oldMovie,
+  now
+) {
 
-    const raw =
-      await fs.readFile(
-        OUT_FILE,
-        'utf8'
-      );
+  const movieId =
+    movie.id;
 
-    const db =
-      JSON.parse(raw);
+  /*
+   * Mantenemos la película
+   * dentro de "series" porque
+   * ese es el esquema que ya utiliza
+   * el frontend actual.
+   */
+  const seriesItem = {
+    ...(oldMovie || {}),
 
-    return {
+    id:
+      movieId,
 
-      meta:
-        db.meta || {},
+    slug:
+      movie.slug,
 
-      movies:
-        Array.isArray(db.movies)
-          ? db.movies
-          : [],
+    title:
+      movie.title,
 
-      genres:
-        Array.isArray(db.genres)
-          ? db.genres
-          : []
-    };
-
-  } catch {
-
-    return {
-
-      meta: {},
-
-      movies: [],
-
-      genres: []
-    };
-  }
-}
-
-// ---------------------------------------------------------
-// GUARDAR CATÁLOGO
-// ---------------------------------------------------------
-
-async function saveCatalog(db) {
-
-  await fs.mkdir(
-    path.dirname(OUT_FILE),
-    {
-      recursive: true
-    }
-  );
-
-  const temporary =
-    `${OUT_FILE}.tmp`;
-
-  await fs.writeFile(
-    temporary,
-    JSON.stringify(
-      db,
+    image:
+      movie.image ||
+      oldMovie?.image ||
       null,
-      2
-    ),
-    'utf8'
-  );
 
-  await fs.rename(
-    temporary,
-    OUT_FILE
-  );
+    synopsis:
+      movie.synopsis ||
+      oldMovie?.synopsis ||
+      null,
+
+    year:
+      movie.year ||
+      oldMovie?.year ||
+      null,
+
+    runtime:
+      movie.runtime ||
+      oldMovie?.runtime ||
+      null,
+
+    runtimeMinutes:
+      movie.runtimeMinutes ||
+      oldMovie?.runtimeMinutes ||
+      null,
+
+    quality:
+      movie.quality ||
+      oldMovie?.quality ||
+      null,
+
+    tmdb:
+      movie.tmdb ??
+      oldMovie?.tmdb ??
+      null,
+
+    genres:
+      movie.genres.length
+        ? movie.genres
+        : (
+            oldMovie?.genres ||
+            []
+          ),
+
+    directors:
+      movie.directors.length
+        ? movie.directors
+        : (
+            oldMovie?.directors ||
+            []
+          ),
+
+    actors:
+      movie.actors.length
+        ? movie.actors
+        : (
+            oldMovie?.actors ||
+            []
+          ),
+
+    contentType:
+      'movie',
+
+    type:
+      CATALOG_TAG,
+
+    status:
+      'Finalizado',
+
+    country:
+      oldMovie?.country ||
+      null,
+
+    totalEpisodes:
+      1,
+
+    sourceUrl:
+      movie.sourceUrl,
+
+    updatedAt:
+      now
+  };
+
+  /*
+   * La película se representa como
+   * un único "episodio" para que
+   * el reproductor existente pueda
+   * seguir utilizando el mismo modelo.
+   */
+  const episodeId =
+    `${movie.slug}-pelicula`;
+
+  const episode = {
+    id:
+      episodeId,
+
+    slug:
+      episodeId,
+
+    title:
+      movie.title,
+
+    sourceUrl:
+      movie.sourceUrl,
+
+    servers:
+      movie.servers,
+
+    seriesId:
+      movieId,
+
+    seasonId:
+      `${movieId}-1`,
+
+    number:
+      1,
+
+    updatedAt:
+      now
+  };
+
+  const season = {
+    id:
+      `${movieId}-1`,
+
+    slug:
+      `${movieId}-1`,
+
+    seriesId:
+      movieId,
+
+    sourceUrl:
+      movie.sourceUrl,
+
+    number:
+      1,
+
+    image:
+      movie.image ||
+      null,
+
+    episodeCount:
+      1,
+
+    initialSyncComplete:
+      true,
+
+    updatedAt:
+      now
+  };
+
+  return {
+    seriesItem,
+    season,
+    episode
+  };
 }
 
-// ---------------------------------------------------------
-// UPSERT
-// ---------------------------------------------------------
 
-function upsert(
-  array,
-  item,
-  key = 'id'
+/* =========================================================
+   WORKERS
+========================================================= */
+
+async function processMovies(
+  catalog,
+  movieUrls
 ) {
 
-  const index =
-    array.findIndex(
-      existing =>
-        existing[key] === item[key]
-    );
-
-  if (index === -1) {
-
-    array.push(item);
-
-  } else {
-
-    /*
-     * Conservamos cualquier dato antiguo
-     * que la página no vuelva a mostrar.
-     */
-
-    array[index] = {
-      ...array[index],
-      ...item
-    };
-  }
-}
-
-// ---------------------------------------------------------
-// WORKER
-// ---------------------------------------------------------
-
-async function processMovie(
-  url,
-  db,
-  genreSet
-) {
-
-  const slug =
-    slugFromUrl(url);
-
   console.log(
-    `🎬 ${slug}`
+    '\n===================================================='
   );
 
-  try {
-
-    const html =
-      await fetchHtml(url);
-
-    const movie =
-      parseMovie(
-        html,
-        url
-      );
-
-    /*
-     * No sustituimos una ficha válida
-     * por una ficha rota.
-     */
-
-    if (
-      !movie.title ||
-      !movie.slug
-    ) {
-
-      throw new Error(
-        'Ficha inválida'
-      );
-    }
-
-    /*
-     * Si esta ejecución no encontró servidores,
-     * conservamos los servidores anteriores.
-     */
-
-    const old =
-      db.movies.find(
-        movie =>
-          movie.id === slug
-      );
-
-    if (
-      old &&
-      old.servers?.length &&
-      !movie.servers.length
-    ) {
-
-      movie.servers =
-        old.servers;
-    }
-
-    movie.updatedAt =
-      new Date().toISOString();
-
-    upsert(
-      db.movies,
-      movie
-    );
-
-    movie.genres.forEach(
-      genre =>
-        genreSet.add(genre)
-    );
-
-    console.log(
-      `   ✓ ${movie.title}`
-    );
-
-    console.log(
-      `   🖼️ Imagen: ${
-        movie.image
-          ? 'sí'
-          : 'no'
-      }`
-    );
-
-    console.log(
-      `   🎥 Servidores: ${
-        movie.servers.length
-      }`
-    );
-
-    return true;
-
-  } catch (error) {
-
-    console.log(
-      `   ❌ ${error.message}`
-    );
-
-    return false;
-  }
-}
-
-// ---------------------------------------------------------
-// MAIN
-// ---------------------------------------------------------
-
-async function main() {
-
-  console.log('');
   console.log(
-    '╔══════════════════════════════════════╗'
-  );
-  console.log(
-    '║      PELICINEHD CATALOG SYNC         ║'
-  );
-  console.log(
-    '╚══════════════════════════════════════╝'
-  );
-  console.log('');
-
-  console.log(
-    `🌐 Fuente: ${BASE_URL}`
+    `⚡ PROCESANDO ${movieUrls.length} PELÍCULAS`
   );
 
-  const db =
-    await loadCatalog();
-
-  /*
-   * -------------------------------------------------------
-   * DECIDIR SI ES PRIMERA SINCRONIZACIÓN
-   * -------------------------------------------------------
-   */
-
-  const firstSync =
-    db.movies.length === 0;
-
   console.log(
-    firstSync
-      ? '🆕 Primera sincronización'
-      : `♻️ Catálogo existente: ${
-          db.movies.length
-        } películas`
+    `⚙️ Workers: ${WORKERS}`
   );
 
-  /*
-   * -------------------------------------------------------
-   * DESCUBRIR
-   * -------------------------------------------------------
-   */
+  console.log(
+    '===================================================='
+  );
 
-  const discovered =
-    await discoverMovies(
-      db.movies,
-      firstSync
-    );
-
-  /*
-   * -------------------------------------------------------
-   * SI NO HAY NADA NUEVO
-   * -------------------------------------------------------
-   */
-
-  if (!discovered.length) {
-
-    db.meta = {
-      ...db.meta,
-
-      source:
-        BASE_URL,
-
-      syncedAt:
-        new Date().toISOString(),
-
-      lastSync: {
-        status: 'success',
-        type: firstSync
-          ? 'full'
-          : 'incremental',
-
-        discovered: 0,
-
-        processed: 0
-      }
-    };
-
-    await saveCatalog(db);
-
-    console.log('');
-    console.log(
-      '✅ No hay películas nuevas.'
-    );
-
-    return;
-  }
-
-  /*
-   * -------------------------------------------------------
-   * PROCESAMIENTO PARALELO
-   * -------------------------------------------------------
-   */
-
-  const genreSet =
+  const allGenres =
     new Set(
-      db.genres
+      catalog.genres || []
     );
 
   let cursor = 0;
 
-  let processed = 0;
+  let completed = 0;
 
-  let successful = 0;
+  let success = 0;
+
+  let errors = 0;
+
+  let changed = 0;
+
+  let saveCounter = 0;
 
   async function worker() {
 
@@ -1493,41 +2429,174 @@ async function main() {
         cursor++;
 
       if (
-        index >=
-        discovered.length
+        index >= movieUrls.length
       ) {
-        return;
+        break;
       }
 
       const url =
-        discovered[index];
+        movieUrls[index];
 
-      const ok =
-        await processMovie(
-          url,
-          db,
-          genreSet
+      const slug =
+        slugFromUrl(url);
+
+      console.log(
+        `\n🎬 [${index + 1}/${movieUrls.length}] ${slug}`
+      );
+
+      try {
+
+        const html =
+          await fetchText(url);
+
+        const movie =
+          parseMovie(
+            html,
+            url
+          );
+
+        /*
+         * Si la ficha devuelve HTML
+         * pero no tiene título real,
+         * no la guardamos como película.
+         */
+        if (
+          !movie.title ||
+          movie.title === slug
+        ) {
+          throw new Error(
+            'Ficha sin título válido'
+          );
+        }
+
+        const old =
+          catalog.series.find(
+            item =>
+              item.id ===
+              movie.id
+          );
+
+        const previousEpisode =
+          catalog.episodes.find(
+            episode =>
+              episode.id ===
+              `${movie.slug}-pelicula`
+          );
+
+        const before =
+          JSON.stringify({
+            title:
+              old?.title,
+            image:
+              old?.image,
+            synopsis:
+              old?.synopsis,
+            year:
+              old?.year,
+            servers:
+              previousEpisode?.servers ||
+              []
+          });
+
+        const now =
+          new Date().toISOString();
+
+        const converted =
+          movieToCatalog(
+            movie,
+            old,
+            now
+          );
+
+        upsert(
+          catalog.series,
+          converted.seriesItem
         );
 
-      processed++;
+        upsert(
+          catalog.seasons,
+          converted.season
+        );
 
-      if (ok) {
-        successful++;
-      }
+        upsert(
+          catalog.episodes,
+          converted.episode
+        );
 
-      /*
-       * Checkpoint
-       */
+        movie.genres.forEach(
+          genre =>
+            allGenres.add(genre)
+        );
 
-      if (
-        processed %
-        CONFIG.checkpointEvery ===
-        0
-      ) {
+        const after =
+          JSON.stringify({
+            title:
+              converted.seriesItem.title,
 
-        db.genres =
-          [...genreSet]
-            .sort(
+            image:
+              converted.seriesItem.image,
+
+            synopsis:
+              converted.seriesItem.synopsis,
+
+            year:
+              converted.seriesItem.year,
+
+            servers:
+              converted.episode.servers
+          });
+
+        if (
+          before !== after
+        ) {
+          changed++;
+        }
+
+        success++;
+
+        const serverNames =
+          movie.servers
+            .map(
+              server =>
+                server.lang
+                  ? `${server.name}[${server.lang}]`
+                  : server.name
+            )
+            .join(', ');
+
+        console.log(
+          `   ✅ ${movie.title}`
+        );
+
+        console.log(
+          `   📅 Año: ${movie.year || '—'}`
+        );
+
+        console.log(
+          `   🎭 Géneros: ${movie.genres.join(', ') || '—'}`
+        );
+
+        console.log(
+          `   🎥 Servidores: ${serverNames || 'NINGUNO'}`
+        );
+
+        completed++;
+
+        /*
+         * Checkpoint.
+         */
+        saveCounter++;
+
+        if (
+          saveCounter >= CHECKPOINT_EVERY
+        ) {
+
+          saveCounter = 0;
+
+          catalog.genres =
+            [
+              ...allGenres
+            ].sort(
               (a, b) =>
                 a.localeCompare(
                   b,
@@ -1535,183 +2604,472 @@ async function main() {
                 )
             );
 
-        db.meta = {
-          ...db.meta,
+          await saveCatalog(
+            catalog
+          );
 
-          source:
-            BASE_URL,
+          console.log(
+            `   💾 Checkpoint guardado (${completed}/${movieUrls.length})`
+          );
+        }
 
-          syncedAt:
-            new Date().toISOString(),
+      } catch (error) {
 
-          progress: {
-            processed,
-            total:
-              discovered.length
-          }
-        };
-
-        await saveCatalog(db);
+        errors++;
 
         console.log(
-          `💾 Checkpoint ${
-            processed
-          }/${discovered.length}`
+          `   ❌ Error: ${error.message}`
         );
+
+        /*
+         * Un 403 durante una ficha
+         * NO elimina la película existente.
+         */
+        if (
+          error instanceof HttpError &&
+          error.status === 403
+        ) {
+
+          console.log(
+            '   ⚠️ HTTP 403 en ficha. Se conserva la versión anterior.'
+          );
+        }
+
       }
 
       await sleep(
-        CONFIG.politenessMs
+        POLITENESS_MS
       );
     }
   }
 
-  /*
-   * Lanzar workers
-   */
-
-  const workerCount =
-    Math.min(
-      CONFIG.workers,
-      discovered.length
-    );
-
   await Promise.all(
     Array.from(
       {
-        length: workerCount
+        length: WORKERS
       },
       () => worker()
     )
   );
 
-  /*
-   * -------------------------------------------------------
-   * GUARDADO FINAL
-   * -------------------------------------------------------
-   */
+  catalog.genres =
+    [
+      ...allGenres
+    ].sort(
+      (a, b) =>
+        a.localeCompare(
+          b,
+          'es'
+        )
+    );
 
-  db.genres =
-    [...genreSet]
-      .sort(
-        (a, b) =>
-          a.localeCompare(
-            b,
-            'es'
-          )
-      );
-
-  db.meta = {
-
-    version: 1,
-
-    source:
-      BASE_URL,
-
-    syncedAt:
-      new Date().toISOString(),
-
-    totalMovies:
-      db.movies.length,
-
-    lastSync: {
-
-      status:
-        'success',
-
-      type:
-        firstSync
-          ? 'full'
-          : 'incremental',
-
-      discovered:
-        discovered.length,
-
-      processed,
-
-      successful,
-
-      failed:
-        processed -
-        successful
-    }
-  };
-
-  await saveCatalog(db);
-
-  console.log('');
-  console.log(
-    '══════════════════════════════════════'
+  await saveCatalog(
+    catalog
   );
 
   console.log(
-    `🎬 Películas: ${
-      db.movies.length
-    }`
+    '\n===================================================='
   );
 
   console.log(
-    `🆕 Descubiertas: ${
-      discovered.length
-    }`
+    '📊 RESULTADO DEL PROCESAMIENTO'
   );
 
   console.log(
-    `✅ Procesadas: ${
-      successful
-    }`
+    '===================================================='
   );
 
   console.log(
-    `❌ Fallidas: ${
-      processed -
-      successful
-    }`
+    `📚 Procesadas: ${completed}`
   );
 
   console.log(
-    `🎭 Géneros: ${
-      db.genres.length
-    }`
+    `✅ Correctas: ${success}`
   );
 
   console.log(
-    '══════════════════════════════════════'
+    `🔄 Modificadas/nuevas: ${changed}`
+  );
+
+  console.log(
+    `❌ Errores: ${errors}`
+  );
+
+  console.log(
+    `📦 Películas en catálogo: ${catalog.series.length}`
+  );
+
+  console.log(
+    `🎥 Entradas de reproducción: ${catalog.episodes.length}`
+  );
+
+  console.log(
+    '====================================================\n'
   );
 }
 
-main()
-  .catch(async error => {
 
-    console.error(
-      '💥 ERROR FATAL:',
-      error
+/* =========================================================
+   MAIN
+========================================================= */
+
+async function main() {
+
+  const startedAt =
+    new Date().toISOString();
+
+  console.log(
+    '\n===================================================='
+  );
+
+  console.log(
+    '🎬 PELICINEHD CATALOG SYNC'
+  );
+
+  console.log(
+    '===================================================='
+  );
+
+  console.log(
+    `Fuente: ${BASE_URL}`
+  );
+
+  console.log(
+    `Listado: ${new URL(MOVIES_INDEX, BASE_URL).href}`
+  );
+
+  console.log(
+    `Workers: ${WORKERS}`
+  );
+
+  console.log(
+    `Modo: ${FULL_SYNC ? 'COMPLETO' : 'INCREMENTAL'}`
+  );
+
+  console.log(
+    `Archivo: ${OUT_FILE}`
+  );
+
+  console.log(
+    '====================================================\n'
+  );
+
+
+  const catalog =
+    await loadCatalog();
+
+  const existingMovies =
+    catalog.series.filter(
+      item =>
+        item.contentType === 'movie' ||
+        item.type === CATALOG_TAG ||
+        isMovieUrl(
+          item.sourceUrl || ''
+        )
     );
 
-    try {
 
-      const db =
-        await loadCatalog();
+  console.log(
+    `📦 Catálogo existente: ${existingMovies.length} películas`
+  );
 
-      db.meta = {
-        ...db.meta,
+
+  let movieUrls;
+
+
+  /*
+   * ======================================================
+   * DESCUBRIMIENTO
+   * ======================================================
+   */
+
+  if (
+    FULL_SYNC ||
+    existingMovies.length === 0
+  ) {
+
+    console.log(
+      '\n🆕 Primera sincronización o sincronización completa.'
+    );
+
+    movieUrls =
+      await fullDiscovery();
+
+  } else {
+
+    movieUrls =
+      await incrementalDiscovery(
+        existingMovies
+      );
+  }
+
+
+  /*
+   * ======================================================
+   * PROTECCIÓN CONTRA CATÁLOGO VACÍO
+   * ======================================================
+   */
+
+  if (
+    movieUrls.length === 0
+  ) {
+
+    /*
+     * Si ya había películas,
+     * no hacemos absolutamente nada.
+     */
+    if (
+      existingMovies.length > 0
+    ) {
+
+      console.log(
+        '\n⚠️ No se encontraron nuevas películas.'
+      );
+
+      console.log(
+        '📦 El catálogo existente se conserva.'
+      );
+
+      catalog.meta = {
+        ...(catalog.meta || {}),
+
+        version: 2,
+
+        source:
+          `${BASE_URL}/`,
+
+        syncedAt:
+          new Date().toISOString(),
 
         lastSync: {
-
           status:
-            'error',
+            'success',
+
+          type:
+            FULL_SYNC
+              ? 'full-no-results'
+              : 'incremental-no-results',
+
+          startedAt,
 
           finishedAt:
             new Date().toISOString(),
 
           error:
-            error.message
+            null
         }
       };
 
-      await saveCatalog(db);
+      await saveCatalog(
+        catalog
+      );
 
-    } catch {}
+      return;
+    }
 
-    process.exitCode = 1;
-  });
+    /*
+     * Primera sincronización sin resultados:
+     * esto SÍ es un error.
+     */
+    throw new Error(
+      'La primera sincronización no encontró ninguna película. ' +
+      'El catálogo NO será generado como vacío.'
+    );
+  }
+
+
+  /*
+   * ======================================================
+   * DEDUPLICAR
+   * ======================================================
+   */
+
+  movieUrls =
+    unique(
+      movieUrls
+        .filter(
+          isMovieUrl
+        )
+    );
+
+  console.log(
+    `\n🎯 Fichas únicas a procesar: ${movieUrls.length}`
+  );
+
+
+  /*
+   * ======================================================
+   * PROCESAR
+   * ======================================================
+   */
+
+  await processMovies(
+    catalog,
+    movieUrls
+  );
+
+
+  /*
+   * ======================================================
+   * METADATA FINAL
+   * ======================================================
+ */
+
+  catalog.meta = {
+    ...(catalog.meta || {}),
+
+    version: 2,
+
+    source:
+      `${BASE_URL}/`,
+
+    syncedAt:
+      new Date().toISOString(),
+
+    lastSync: {
+      status:
+        'success',
+
+      type:
+        FULL_SYNC ||
+        existingMovies.length === 0
+          ? 'full'
+          : 'incremental',
+
+      startedAt,
+
+      finishedAt:
+        new Date().toISOString(),
+
+      discovered:
+        movieUrls.length,
+
+      error:
+        null
+    }
+  };
+
+
+  await saveCatalog(
+    catalog
+  );
+
+
+  /*
+   * ======================================================
+   * RESUMEN
+   * ======================================================
+   */
+
+  console.log(
+    '\n===================================================='
+  );
+
+  console.log(
+    '🎉 SINCRONIZACIÓN TERMINADA'
+  );
+
+  console.log(
+    '===================================================='
+  );
+
+  console.log(
+    `🎬 Películas: ${catalog.series.length}`
+  );
+
+  console.log(
+    `📺 Reproducciones: ${catalog.episodes.length}`
+  );
+
+  console.log(
+    `📚 Temporadas: ${catalog.seasons.length}`
+  );
+
+  console.log(
+    `🎭 Géneros: ${catalog.genres.length}`
+  );
+
+  console.log(
+    `💾 Archivo: ${OUT_FILE}`
+  );
+
+  console.log(
+    '====================================================\n'
+  );
+}
+
+
+/* =========================================================
+   ERROR GLOBAL
+========================================================= */
+
+main()
+  .catch(
+    async error => {
+
+      console.error(
+        '\n===================================================='
+      );
+
+      console.error(
+        '💥 SINCRONIZACIÓN FALLIDA'
+      );
+
+      console.error(
+        '===================================================='
+      );
+
+      console.error(
+        error?.message ||
+        error
+      );
+
+      console.error(
+        '\n🛡️ El catálogo existente NO se ha reemplazado por uno vacío.'
+      );
+
+      console.error(
+        '====================================================\n'
+      );
+
+      /*
+       * Intentamos marcar el error
+       * únicamente si el catálogo ya existía.
+       */
+      try {
+
+        const catalog =
+          await loadCatalog();
+
+        if (
+          catalog.series.length > 0
+        ) {
+
+          catalog.meta = {
+            ...(catalog.meta || {}),
+
+            lastSync: {
+              status:
+                'error',
+
+              finishedAt:
+                new Date().toISOString(),
+
+              error:
+                String(
+                  error?.message ||
+                  error
+                )
+            }
+          };
+
+          await saveCatalog(
+            catalog
+          );
+        }
+
+      } catch {}
+
+      process.exitCode = 1;
+    }
+  );
