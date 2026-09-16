@@ -31,7 +31,7 @@ const ALLOW_CROSS_ORIGIN = process.env.ALLOW_CROSS_ORIGIN === '1';
 const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|ver|e|video|reproductor|vidurl)\//i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
-const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder)/i;
+const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder|byse|seeks)/i;
 
 function looksLikePlayer(u) {
   if (!u) return false;
@@ -398,6 +398,7 @@ function parseSeries(html, url) {
     try {
       const p = new URL(full).pathname;
       if (p.startsWith('/doramas/')) return;
+      if (/\/temporada\//i.test(p)) return;   // ← páginas de temporada NO son episodios
       if (/\/(ver|episodios?|capitulos?|watch|play)\//i.test(p) || p.includes(slug)) {
         episodeUrls.push(full);
       }
@@ -882,45 +883,11 @@ async function main() {
         continue;
       }
 
+      let seasonCount = 0;
+
       let mk = null;
       let epNumOf = null;
       let epSeasonOf = null;
-      if (!isMovie) {
-        const urls0 = [...new Set(detail.episodeUrls)];
-        const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
-        const ms = urls0.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
-        const mt = urls0.find(u => /temporada\/(\d+)\/capitulo\/(\d+)/i.test(u));
-        if (mt) {
-          const mm2 = mt.match(/^(.*)\/temporada\/(\d{1,3})\/capitulo\/(\d{1,4})\/?$/i);
-          if (mm2) {
-            const base = mm2[1];
-            mk = (s, n) => `${base}/temporada/${s}/capitulo/${n}/`;
-            epNumOf = (u) => { const x = u.match(/capitulo\/(\d{1,4})/i); return x ? Number(x[1]) : 0; };
-            epSeasonOf = (u) => { const x = u.match(/temporada\/(\d{1,3})/i); return x ? Number(x[1]) : 1; };
-          }
-        } else if (mx) {
-          const m = mx.match(/^(.*)-(\d+)x(\d+)(\/?)$/);
-          mk = (s, n) => `${m[1]}-${s}x${n}${m[4] || ''}`;
-          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
-          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
-        } else if (ms) {
-          mk = (s, n) => { const u = new URL(ms); u.searchParams.set('season', String(s)); u.searchParams.set('ep', String(n)); return u.href; };
-          epNumOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
-          epSeasonOf = (u) => { try { const uu = new URL(u); const s = uu.searchParams.get('season'); return s ? Number(s) : 1; } catch { return 1; } };
-        }
-
-        /*
-           FIX series: si la lista venía vacía (carga dinámica) pero
-           detectamos páginas de temporada, construimos el patrón
-           {slug}-{T}x{E}/ y el sondeo validará cada episodio.
-        */
-        if (!mk && seasonCount > 0) {
-          mk = (s, n) => `${BASE_URL}/episode/${slug}-${s}x${n}/`;
-          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
-          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
-          console.log(`   🧭 Lista dinámica: sondeo por patrón ${slug}-{T}x{E}/ (${seasonCount} temporadas)`);
-        }
-      }
 
       let episodeSource;
       if (isMovie) {
@@ -974,8 +941,8 @@ async function main() {
         }
       } else {
         const crawlRes = await collectAllEpisodeUrls(url);
+        seasonCount = crawlRes.seasonPages || 0;
         const crawled = crawlRes.urls;
-        const seasonCount = crawlRes.seasonPages || 0;
 
         if (!crawled.length) {
           console.log('   🩺 SERIE CON REPRODUCTOR EMBEBIDO — volcando diagnóstico completo…');
@@ -1028,6 +995,44 @@ async function main() {
           .sort((a, b) =>
             ((epSeasonOf && epSeasonOf(a.url)) || 1) - ((epSeasonOf && epSeasonOf(b.url)) || 1) ||
             ((epNumOf && epNumOf(a.url)) || 0) - ((epNumOf && epNumOf(b.url)) || 0));
+
+      if (!isMovie) {
+        const urls0 = [...new Set(detail.episodeUrls)];
+        const mx = urls0.find(u => /(\d+)x(\d+)$/.test(u));
+        const ms = urls0.find(u => /[?&]season=\d+/.test(u) && /[?&]ep=\d+/.test(u));
+        const mt = urls0.find(u => /temporada\/(\d+)\/capitulo\/(\d+)/i.test(u));
+        if (mt) {
+          const mm2 = mt.match(/^(.*)\/temporada\/(\d{1,3})\/capitulo\/(\d{1,4})\/?$/i);
+          if (mm2) {
+            const base = mm2[1];
+            mk = (s, n) => `${base}/temporada/${s}/capitulo/${n}/`;
+            epNumOf = (u) => { const x = u.match(/capitulo\/(\d{1,4})/i); return x ? Number(x[1]) : 0; };
+            epSeasonOf = (u) => { const x = u.match(/temporada\/(\d{1,3})/i); return x ? Number(x[1]) : 1; };
+          }
+        } else if (mx) {
+          const m = mx.match(/^(.*)-(\d+)x(\d+)(\/?)$/);
+          mk = (s, n) => `${m[1]}-${s}x${n}${m[4] || ''}`;
+          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
+        } else if (ms) {
+          mk = (s, n) => { const u = new URL(ms); u.searchParams.set('season', String(s)); u.searchParams.set('ep', String(n)); return u.href; };
+          epNumOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
+          epSeasonOf = (u) => { try { const uu = new URL(u); const s = uu.searchParams.get('season'); return s ? Number(s) : 1; } catch { return 1; } };
+        }
+
+        /*
+           FIX series: si la lista venía vacía (carga dinámica) pero
+           detectamos páginas de temporada, construimos el patrón
+           {slug}-{T}x{E}/ y el sondeo validará cada episodio.
+        */
+        if (!mk && seasonCount > 0) {
+          mk = (s, n) => `${url.replace(/\/+$/, '')}/temporada/${s}/capitulo/${n}/`;
+          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
+          console.log(`   🧭 Lista dinámica: sondeo por patrón ${slug}-{T}x{E}/ (${seasonCount} temporadas)`);
+        }
+      }
+
       }
 
       const seasonIds = new Set();
