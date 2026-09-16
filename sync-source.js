@@ -644,8 +644,18 @@ async function main() {
     ep.servers = ep.servers.filter(s => {
       const u = String(s.url || '');
       if (isBlacklisted(s.name) || isBlacklisted(u)) return false;
-      if (IMAGE_ASSET_RE.test(u)) return false;   // ← FIX: purga miniaturas
+      if (IMAGE_ASSET_RE.test(u)) return false;   // miniaturas
       if (UPLOADS_RE.test(u)) return false;
+      /*
+         URLs de pelisflixhd.blog que NO sean ruta de reproductor
+         (/e/ /embed/ /player/...) eran falsos positivos del barrido
+         antiguo → se purgan. El player real sí conserva su ruta /e/.
+      */
+      if (/pelisflixhd\./i.test(u)) {
+        try {
+          if (!PLAYER_PATH.test(new URL(u).pathname)) return false;
+        } catch { return false; }
+      }
       return true;
     });
     if (ep.servers.length !== before) cleaned++;
