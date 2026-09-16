@@ -449,8 +449,31 @@ async function collectAllEpisodeUrls(firstUrl) {
   };
 
   const basePath = new URL(firstUrl).pathname;
-  const pages = [firstUrl];
-  const visitedPages = new Set([normalizeEpPage(firstUrl)]);
+  const seriesSlug = slugFromUrl(firstUrl);
+
+  /*
+     FIX series: las fichas enlazan páginas de temporada
+     (/temporada/{slug}-{N}/, a veces en dominio espejo)
+     donde vive la lista de episodios. Las recorremos.
+  */
+  const seasonPages = [];
+  try {
+    const html0 = await fetchHtml(firstUrl);
+    const $0 = cheerio.load(html0);
+    $0('a[href*="/temporada/"]').each((_, el) => {
+      const full = absolute($0(el).attr('href'), firstUrl);
+      if (!full) return;
+      if (!full.toLowerCase().includes(seriesSlug.toLowerCase())) return;
+      const rw = rewriteToBase(full) || full;
+      if (!seasonPages.includes(rw)) seasonPages.push(rw);
+    });
+  } catch {}
+  if (seasonPages.length) {
+    console.log(`   📖 Temporadas detectadas: ${seasonPages.length}`);
+  }
+
+  const pages = [firstUrl, ...seasonPages];
+  const visitedPages = new Set(pages.map(normalizeEpPage));
 
   let i = 0;
   while (i < pages.length && i < 30) {
@@ -462,10 +485,14 @@ async function collectAllEpisodeUrls(firstUrl) {
     const $ = cheerio.load(html);
 
     $('a[href]').each((_, el) => {
-      const full = absolute($(el).attr('href'), url);
-      if (!full || !sameOrigin(full)) return;
+      let full = absolute($(el).attr('href'), url);
+      if (!full) return;
+      if (!sameOrigin(full)) {
+        full = rewriteToBase(full);          // dominio espejo → origen base
+        if (!full) return;
+      }
       try {
-        if (/\/(capitulos?|ver|episodios?|watch|play)\//i.test(new URL(full).pathname)) add(full);
+        if (/\/(capitulos?|ver|episodios?|episodio|watch|play)\//i.test(new URL(full).pathname)) add(full);
       } catch {}
     });
 
@@ -478,26 +505,28 @@ async function collectAllEpisodeUrls(firstUrl) {
     }
 
     $('a[href]').each((_, el) => {
-      const full = absolute($(el).attr('href'), url);
-      if (!full || !sameOrigin(full)) return;
+      let full = absolute($(el).attr('href'), url);
+      if (!full) return;
+      if (!sameOrigin(full)) full = rewriteToBase(full);
+      if (!full) return;
       try {
         const u = new URL(full);
-        const pageMatch = u.pathname.match(/^(.*)\/page\/(\d+)\/?$/) || (u.pathname === basePath && u.searchParams.has('page') ? [null, basePath, u.searchParams.get('page')] : null);
-        if (pageMatch && u.origin === new URL(firstUrl).origin) {
-          if (pageMatch[1] === basePath || u.pathname === basePath) {
-            const key = normalizeEpPage(full);
-            if (!visitedPages.has(key)) {
-              visitedPages.add(key);
-              pages.push(full);
-              console.log(`      📄 Página de episodios: ${key}`);
-            }
+        const m = u.pathname.match(/^\/temporada\//);
+        const pageMatch = u.pathname.match(/^(.*)\/page\/(\d+)\/?$/) || (u.searchParams.has('page') ? [null, u.pathname.replace(/\/page\/\d+\/?$/, ''), u.searchParams.get('page')] : null);
+        const pertenece = pageMatch && (pageMatch[1] === basePath || m || u.pathname.startsWith('/temporada/'));
+        if (pertenece) {
+          const key = normalizeEpPage(full);
+          if (!visitedPages.has(key)) {
+            visitedPages.add(key);
+            pages.push(full);
+            console.log(`      📄 Página de episodios: ${key}`);
           }
         }
       } catch {}
     });
   }
 
-  return found;
+  return { urls: found, seasonPages: seasonPages.length };
 }
 
 function parseEpCodeFromUrl(u) {
@@ -792,6 +821,18 @@ async function main() {
           epNumOf = (u) => { try { const uu = new URL(u); const e = uu.searchParams.get('ep'); return e ? Number(e) : 0; } catch { return 0; } };
           epSeasonOf = (u) => { try { const uu = new URL(u); const s = uu.searchParams.get('season'); return s ? Number(s) : 1; } catch { return 1; } };
         }
+
+        /*
+           FIX series: si la lista venía vacía (carga dinámica) pero
+           detectamos páginas de temporada, construimos el patrón
+           {slug}-{T}x{E}/ y el sondeo validará cada episodio.
+        */
+        if (!mk && seasonCount > 0) {
+          mk = (s, n) => `${BASE_URL}/episode/${slug}-${s}x${n}/`;
+          epNumOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[2]) : 0; };
+          epSeasonOf = (u) => { const mm = u.match(/(\d+)x(\d+)\/?$/); return mm ? Number(mm[1]) : 1; };
+          console.log(`   🧭 Lista dinámica: sondeo por patrón ${slug}-{T}x{E}/ (${seasonCount} temporadas)`);
+        }
       }
 
       let episodeSource;
@@ -845,7 +886,9 @@ async function main() {
           if (forms.length) console.log(`   🧪 [${slug}] formularios: ${forms.join(' | ')}`);
         }
       } else {
-        const crawled = await collectAllEpisodeUrls(url);
+        const crawlRes = await collectAllEpisodeUrls(url);
+        const crawled = crawlRes.urls;
+        const seasonCount = crawlRes.seasonPages || 0;
 
         if (!crawled.length) {
           console.log('   🩺 SERIE CON REPRODUCTOR EMBEBIDO — volcando diagnóstico completo…');
@@ -905,6 +948,13 @@ async function main() {
       let missCount = 0;
       const seenEps = new Set(episodeSource.map(e => e.url));
       const queueEps = [...episodeSource];
+      if (!queueEps.length && mk) {
+        const first = mk(1, 1);
+        if (!seenEps.has(first)) {
+          seenEps.add(first);
+          queueEps.push({ url: first, slug: slugFromUrl(first) });
+        }
+      }
       let seasonJumps = 0;
       while (queueEps.length) {
         const ep = queueEps.shift();
