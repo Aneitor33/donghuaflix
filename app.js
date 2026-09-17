@@ -4,11 +4,15 @@ let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
 const CATALOGS = [
-  { id: 'donghua', file: './public/data/catalog.json', label: 'Donghuas' },
-  { id: 'peliculas', file: './public/data/catalog-peliculas.json', label: 'Películas' },
-  { id: 'series', file: './public/data/catalog-series.json', label: 'Series' },
-  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json', label: 'Ultrapeli' }
+  { id: 'donghua',   file: './public/data/catalog.json',            index: './public/data/catalog-index.json',            label: 'Donghuas' },
+  { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
+  { id: 'series',    file: './public/data/catalog-series.json',     index: './public/data/catalog-series-index.json',     label: 'Series' },
+  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json',  index: './public/data/catalog-ultrapeli-index.json',  label: 'Ultrapeli' }
 ];
+
+/* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
+let DETAILS_BASE = {};
+const DETAIL_CACHE = {};
 
 let DB_CACHE = {};
 let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghua';
@@ -74,42 +78,67 @@ async function fetchCatalogFile(file) {
 }
 
 async function ensureCatalog(id) {
-  if (DB_CACHE[id]) {
-    return DB_CACHE[id];
-  }
+  if (DB_CACHE[id]) return DB_CACHE[id];
 
   const cat = CATALOGS.find(c => c.id === id);
+  if (!cat) throw new Error('Catálogo desconocido: ' + id);
 
-  if (!cat) {
-    throw new Error('Catálogo desconocido: ' + id);
+  // ① Intentar el índice LITE (≈1 MB en vez de 15-30 MB)
+  if (cat.index) {
+    try {
+      const lite = await fetchCatalogFile(cat.index);
+      if (lite && Array.isArray(lite.series)) {
+        // El índice viene comprimido (claves cortas + géneros numerados):
+        // lo devolvemos al formato de siempre para no tocar el resto de la app.
+        const gl = lite.genres || [];
+        const ib = lite.imageBase || '';
+        const rows = lite.compact
+          ? lite.series.map(r => ({
+              id: r.i,
+              slug: r.s,
+              title: r.t,
+              image: r.p ? (r.p.startsWith('http') ? r.p : ib + r.p) : null,
+              status: r.st || null,
+              type: r.ty || null,
+              year: r.y || null,
+              country: r.c || null,
+              genres: (r.g || []).map(n => gl[n]).filter(Boolean),
+              totalEpisodes: r.e ?? null,
+              updatedAt: r.u || null
+            }))
+          : lite.series;
+
+        const db = {
+          meta: lite.meta || {},
+          series: rows,
+          seasons: [],
+          episodes: [],
+          genres: lite.genres || [],
+          lite: true
+        };
+        DETAILS_BASE[id] =
+          './public/data/' + (lite.detailsBase || '');
+        DB_CACHE[id] = db;
+        CATALOG_AVAILABLE[id] = true;
+        return db;
+      }
+    } catch { /* sin índice → seguimos con el catálogo completo */ }
   }
 
+  // ② Compatibilidad: catálogo completo / sharded (código original)
   const data = await fetchCatalogFile(cat.file);
-
   let merged = data;
 
-  if (
-    data &&
-    data.sharded &&
-    Array.isArray(data.parts) &&
-    data.parts.length
-  ) {
+  if (data && data.sharded && Array.isArray(data.parts) && data.parts.length) {
     const parts = await Promise.all(
-      data.parts.map(f =>
-        fetchCatalogFile(f).catch(() => null)
-      )
+      data.parts.map(f => fetchCatalogFile(f).catch(() => null))
     );
-
-    if (parts.some(p => p === null)) {
-      throw new Error('Falta alguna parte del catálogo');
-    }
-
+    if (parts.some(p => p === null)) throw new Error('Falta alguna parte del catálogo');
     merged = mergeCatalogParts(data, parts);
   }
 
   DB_CACHE[id] = merged;
   CATALOG_AVAILABLE[id] = true;
-
   return merged;
 }
 
@@ -1222,6 +1251,58 @@ function renderProgressiveGrid({
   );
 }
 
+/* ---------- PAGINACIÓN (20 por página) ---------- */
+const PER_PAGE = 20;
+
+function renderPagedGrid({ container, items, emptyText = 'No hay elementos disponibles.', perPage = PER_PAGE }) {
+  if (!container) return;
+  stopProgressiveGrid();
+
+  if (!items.length) {
+    container.innerHTML = `<p class="muted" style="grid-column:1/-1">${emptyText}</p>`;
+    return;
+  }
+
+  const pages = Math.ceil(items.length / perPage);
+  let page = 0;
+
+  let pager = container.nextElementSibling;
+  if (!pager || !pager.classList.contains('pager')) {
+    pager = document.createElement('nav');
+    pager.className = 'pager';
+    container.after(pager);
+  }
+
+  const draw = () => {
+    container.innerHTML = items
+      .slice(page * perPage, (page + 1) * perPage)
+      .map(card)
+      .join('');
+
+    const win = [];
+    const from = Math.max(0, Math.min(page - 2, pages - 5));
+    for (let i = from; i < Math.min(pages, from + 5); i++) win.push(i);
+
+    pager.innerHTML = `
+      <button class="pg-btn" data-go="${page - 1}" ${page === 0 ? 'disabled' : ''}>‹</button>
+      ${win.map(i => `<button class="pg-btn ${i === page ? 'on' : ''}" data-go="${i}">${i + 1}</button>`).join('')}
+      <button class="pg-btn" data-go="${page + 1}" ${page >= pages - 1 ? 'disabled' : ''}>›</button>
+      <span class="pg-info">Página ${page + 1} de ${pages}</span>`;
+
+    pager.querySelectorAll('.pg-btn').forEach(b => {
+      b.onclick = () => {
+        const go = Number(b.dataset.go);
+        if (isNaN(go) || go < 0 || go >= pages || go === page) return;
+        page = go;
+        draw();
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    });
+  };
+
+  draw();
+}
+
 /* ---------- CARGA ---------- */
 
 async function load() {
@@ -2065,7 +2146,7 @@ function listAllSeries() {
     }
 
     if (el) {
-      renderProgressiveGrid({
+      renderPagedGrid({
         container: el,
         items: list,
         emptyText:
@@ -2272,7 +2353,7 @@ function listByStatus(
 
     </section>`;
 
-  renderProgressiveGrid({
+  renderPagedGrid({
     container:
       document.getElementById(
         'statusGrid'
@@ -2318,7 +2399,7 @@ function listMovies() {
 
     </section>`;
 
-  renderProgressiveGrid({
+  renderPagedGrid({
     container:
       document.getElementById(
         'moviesGrid'
@@ -2403,7 +2484,7 @@ function listByGenre(name) {
 
     </section>`;
 
-  renderProgressiveGrid({
+  renderPagedGrid({
     container:
       document.getElementById(
         'genreGrid'
@@ -2443,7 +2524,7 @@ function listMyList() {
 
     </section>`;
 
-  renderProgressiveGrid({
+  renderPagedGrid({
     container:
       document.getElementById(
         'myListGrid'
@@ -2759,6 +2840,36 @@ function updateSearchResults(
   });
 }
 
+/* Descarga la ficha completa de UN título (sinopsis + temporadas + servidores) */
+async function ensureDetail(slug) {
+  if (!DB.lite) return;                         // catálogo completo: nada que pedir
+  const key = String(slug || '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  const dir = DETAILS_BASE[currentCatalog];
+  if (!key || !dir) return;
+
+  const cacheKey = currentCatalog + '/' + key;
+  if (DETAIL_CACHE[cacheKey]) return;
+
+  try {
+    const d = await fetchCatalogFile(`${dir}/${key}.json`);
+    if (!d || !d.series) return;
+
+    const i = DB.series.findIndex(s => (s.slug || s.id) === (d.series.slug || d.series.id));
+    if (i !== -1) DB.series[i] = { ...DB.series[i], ...d.series };
+    else DB.series.push(d.series);
+
+    const have = new Set(DB.seasons.map(x => x.id));
+    (d.seasons || []).forEach(x => { if (!have.has(x.id)) DB.seasons.push(x); });
+
+    const haveEp = new Set(DB.episodes.map(x => x.id));
+    (d.episodes || []).forEach(x => { if (!haveEp.has(x.id)) DB.episodes.push(x); });
+
+    DETAIL_CACHE[cacheKey] = true;
+  } catch (e) {
+    console.warn('No se pudo cargar la ficha', slug, e);
+  }
+}
+
 /* ---------- DETALLE DE SERIE ---------- */
 
 let detailState = {
@@ -2769,7 +2880,12 @@ let detailState = {
 
 const EPS_PER_PAGE = 50;
 
-function detail(
+async function detail(slug, seasonRef) {
+  await ensureDetail(slug);
+  return detailSync(slug, seasonRef);
+}
+
+function detailSync(
   slug,
   seasonRef
 ) {
