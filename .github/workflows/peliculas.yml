@@ -1,6 +1,7 @@
 # ══════════════════════════════════════════════
 #  PELÍCULAS — pelispedia.mov (SOLO películas)
 #  Catálogo: public/data/catalog-peliculas.json
+#  + índice lite y fichas por película
 # ══════════════════════════════════════════════
 name: Sincronizar películas (Pelispedia)
 
@@ -39,9 +40,14 @@ jobs:
           MOVIE_PREFIXES: '/pelicula/'
           ONLY_MOVIES: '1'
           MAX_DISCOVERY_PAGES: '500'
-          WORKERS: '4'
+          WORKERS: '7'
           POLITENESS_MS: '150'
         run: node sync-source.js
+
+      # ── NUEVO: índice lite + una ficha por película ──
+      - name: Generar índice lite y fichas
+        if: always()
+        run: node split-catalog.js public/data/catalog-peliculas.json
 
       - name: Guardar catálogo
         if: always()
