@@ -479,3 +479,31 @@ footer a.ig-link svg{width:13px;height:13px}
 }
 .filters select:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
 .filters select:focus{outline:0;border-color:rgba(255,255,255,.45)}
+
+
+/* ---------- PAGINADOR (cristal líquido) ---------- */
+.pager{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  margin:28px 0 12px;
+}
+.pg-btn{
+  min-width:40px;height:40px;padding:0 13px;border-radius:999px;cursor:pointer;
+  color:#fff;font-size:13px;font-weight:700;
+  background:var(--glass);backdrop-filter:blur(16px) saturate(1.3);
+  border:1px solid var(--glass-brd);transition:background .2s,transform .2s,color .2s;
+}
+.pg-btn:hover:not(:disabled){background:rgba(255,255,255,.2);transform:translateY(-2px)}
+.pg-btn:active:not(:disabled){transform:scale(.95)}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-btn.on{background:#fff;color:#000;border-color:#fff}
+.pg-info{font-size:12px;color:var(--muted);margin-left:8px;white-space:nowrap}
+
+/* ---------- RETOQUES DE MÁRGENES (nada tapado por las barras) ---------- */
+@media(max-width:900px){
+  /* el paginador no se esconde detrás de la barra inferior */
+  .pager{padding-bottom:8px}
+  /* aire extra tras el último bloque para la bottom-nav */
+  .section:last-of-type{margin-bottom:26px}
+  footer{padding-bottom:calc(34px + env(safe-area-inset-bottom))}
+  .empty{padding-bottom:110px}
+}
