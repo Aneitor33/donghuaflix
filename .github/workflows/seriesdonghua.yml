@@ -1,0 +1,56 @@
+# ══════════════════════════════════════════════
+#  DONGHUAS — multi-fuente
+#  (donghualife + mundodonghua + seriesdonghua + tiodonghua)
+#  Catálogo: public/data/catalog.json
+#  + índice lite y fichas por donghua
+#  Requiere el secreto TMDB_API_KEY (Configuración → Secrets)
+# ══════════════════════════════════════════════
+name: Sincronizar catálogo Donghua (multi-fuente)
+
+on:
+  schedule:
+    - cron: '40 */6 * * *'      # cada 6h, minuto 40
+  workflow_dispatch:
+
+concurrency:
+  group: sync-donghua-multi
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Sincronizar donghuas (4 fuentes, 7 workers)
+        env:
+          WORKERS: '9'
+          POLITENESS_MS: '150'
+          MAX_EPISODE_CRAWLS: '6000'
+          MAX_RUNTIME_MINUTES: '300'
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node syncdonghua.js
+
+      - name: Generar índice lite y fichas
+        if: always()
+        run: node split-catalog.js public/data/catalog.json
+
+      - name: Guardar catálogo
+        if: always()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A public/data/
+          git diff --staged --quiet || git commit -m "sync(donghua): catálogo multi-fuente [skip ci]"
+          git pull --rebase origin main
+          git push
