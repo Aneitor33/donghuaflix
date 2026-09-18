@@ -35,6 +35,7 @@ import * as cheerio from 'cheerio';
 
 const OUT_FILE = path.resolve('public/data/catalog-doramas.json');
 const FAILURES_FILE = path.resolve('public/data/catalog-doramas-failures.json');
+const RAWS_FILE = path.resolve('public/data/catalog-doramas-progress.json');
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
@@ -666,6 +667,22 @@ async function saveFailures(failures) {
 
 const MAX_FAILS = 2;
 
+/* Fichas ya analizadas: se guardan al momento para que una ejecución
+   cortada (o lenta) retome exactamente donde estaba en la siguiente. */
+async function loadRaws() {
+  try {
+    const d = JSON.parse(await fs.readFile(RAWS_FILE, 'utf8'));
+    return Array.isArray(d) ? d : [];
+  } catch { return []; }
+}
+
+async function saveRaws(raws) {
+  await fs.mkdir(path.dirname(RAWS_FILE), { recursive: true });
+  const tmp = `${RAWS_FILE}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(raws), 'utf8');
+  await fs.rename(tmp, RAWS_FILE);
+}
+
 function upsert(array, item, key = 'id') {
   const i = array.findIndex(e => e[key] === item[key]);
   if (i === -1) array.push(item);
@@ -681,7 +698,7 @@ function gitCheckpoint(db) {
     try {
       execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
       execSync('git config --local user.name "github-actions[bot]"');
-      execSync('git add public/data/catalog-doramas.json');
+      execSync('git add public/data/catalog-doramas.json public/data/catalog-doramas-progress.json public/data/catalog-doramas-failures.json');
       execSync('git diff --staged --quiet || git commit -m "sync(doramas): progreso [skip ci]"');
       execSync('git pull --rebase origin main || true');
       execSync('git push');
@@ -817,16 +834,24 @@ async function main() {
   console.log(`\n📚 Total de fichas de serie a analizar: ${tasks.length}`);
 
   /* ── Fase 2a: analizar fichas ── */
-  const raws = [];
-  let done = 0;
-  const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${tasks.length} fichas (${elapsedMin()} min)`), 30000);
-  await runPool(tasks, WORKERS, async ({ source, url }) => {
+  /* Recupera fichas ya analizadas en ejecuciones anteriores */
+  const prevRaws = await loadRaws();
+  const raws = prevRaws.filter(r => urls.includes(r.url));
+  const doneUrls = new Set(raws.map(r => r.url));
+  const pendingTasks = tasks.filter(t => !doneUrls.has(t.url));
+  if (raws.length) console.log(`   ↻ ${raws.length} fichas ya analizadas (se saltan) · ${pendingTasks.length} pendientes`);
+  const total = raws.length + pendingTasks.length;
+  let done = raws.length;
+  const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${total} fichas (${elapsedMin()} min)`), 30000);
+  await runPool(pendingTasks, WORKERS, async ({ source, url }) => {
     const r = await scrapeSeriesPage(source, url);
     raws.push(r);
     done++;
-    if (done % 25 === 0) console.log(`   📄 ${done}/${tasks.length} fichas analizadas (${elapsedMin()} min)`);
+    console.log(`   📄 [${done}/${total}] ${r.slug} (${elapsedMin()} min)`);
+    if (done % 5 === 0) await saveRaws(raws);
   }, timeUp);
   clearInterval(hb);
+  await saveRaws(raws);
 
   console.log(`\n📚 Fichas analizadas OK: ${raws.length}`);
   console.log(`🎴 Candidatos de episodios: ${raws.reduce((a, r) => a + r.candidates.length, 0)}`);
