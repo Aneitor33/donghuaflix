@@ -32,8 +32,8 @@ jobs:
 
       - name: Sincronizar doramas
         env:
-          WORKERS: '3'
-          POLITENESS_MS: '800'
+          WORKERS: '5'
+          POLITENESS_MS: '300'
           MAX_EPISODE_CRAWLS: '20000'
           MAX_RUNTIME_MINUTES: '300'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
