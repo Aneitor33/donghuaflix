@@ -188,16 +188,24 @@ async function fetchHtml(url, attempt = 1) {
       throw new Error(`HTTP ${res.status} en ${url}`);
     }
     try { hostFails.set(new URL(url).hostname, 0); } catch {}
-    return await res.text();
+    const txtPromise = res.text();
+    txtPromise.catch(() => {});
+    return await Promise.race([
+      txtPromise,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout de lectura')), FETCH_TIMEOUT_MS))
+    ]);
   } catch (err) {
     try {
-      const h = new URL(url).hostname;
-      const f = (hostFails.get(h) || 0) + 1;
-      hostFails.set(h, f);
-      if (f >= 4) {
-        console.log(`   🥵 ${h} nos está limitando: pausa de 45s para enfriar…`);
-        await sleep(45000);
-        hostFails.set(h, 0);
+      const msg = String((err && err.message) || '');
+      if (!msg.includes('HTTP 404')) {           // 404 = respuesta legítima, no castigo
+        const h = new URL(url).hostname;
+        const f = (hostFails.get(h) || 0) + 1;
+        hostFails.set(h, f);
+        if (f >= 4) {
+          console.log(`   🥵 ${h} nos está limitando: pausa de 45s para enfriar…`);
+          await sleep(45000);
+          hostFails.set(h, 0);
+        }
       }
     } catch {}
     if (attempt < FETCH_RETRIES) {
@@ -692,14 +700,14 @@ function upsert(array, item, key = 'id') {
 let lastPush = 0;
 function gitCheckpoint(db) {
   const now = Date.now();
-  if (now - lastPush < 120000) return;
+  if (now - lastPush < 600000) return;  // máx. 1 push cada 10 min
   lastPush = now;
   saveCatalog(db).then(() => {
     try {
       execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
       execSync('git config --local user.name "github-actions[bot]"');
       execSync('git add public/data/catalog-doramas.json public/data/catalog-doramas-progress.json public/data/catalog-doramas-failures.json');
-      execSync('git diff --staged --quiet || git commit -m "sync(doramas): progreso [skip ci]"');
+      execSync('git diff --staged --quiet || git commit -m "sync(doramas): progreso"');
       execSync('git pull --rebase origin main || true');
       execSync('git push');
       console.log(`\n🚀 Checkpoint subido al repo (${elapsedMin()} min) — a salvo ante cortes\n`);
@@ -849,6 +857,7 @@ async function main() {
     done++;
     console.log(`   📄 [${done}/${total}] ${r.slug} (${elapsedMin()} min)`);
     if (done % 5 === 0) await saveRaws(raws);
+    if (done % 10 === 0) gitCheckpoint(db);
   }, timeUp);
   clearInterval(hb);
   await saveRaws(raws);
@@ -1035,11 +1044,14 @@ async function main() {
       failures[fk] = (failures[fk] || 0) + 1;
     }
 
-    if (crawled % 500 === 0) {
+    if (crawled % 10 === 0) {
       await saveCatalog(db);
       await saveFailures(failures);
       gitCheckpoint(db);
-      console.log(`\n💾 ${crawled}/${epQueue.length} episodios rastreados · +${newEps} nuevos · ${elapsedMin()} min\n`);
+      console.log(`   📄 ep ${crawled}/${epQueue.length} · +${newEps} · ${elapsedMin()} min`);
+    }
+    if (crawled % 500 === 0) {
+      console.log(`\n💾 checkpoint: ${crawled} episodios rastreados · +${newEps} nuevos\n`);
     }
   }, () => stoppedByBudget);
   clearInterval(hb2);
