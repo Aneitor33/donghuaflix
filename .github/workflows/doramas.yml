@@ -1,50 +1,56 @@
 # ══════════════════════════════════════════════
-#  PELÍCULAS — ultrapeli.com (SOLO películas)
-#  Catálogo: public/data/catalog-ultrapeli.json
+#  DORAMAS — doramasmp4.cyou
+#  Catálogo: public/data/catalog-doramas.json
+#  + índice lite y fichas por dorama
 # ══════════════════════════════════════════════
-name: Sincronizar películas (Ultrapeli)
+name: Sincronizar catálogo Doramas
 
 on:
   schedule:
-    - cron: '50 */6 * * *'
+    - cron: '50 */6 * * *'      # cada 6h, minuto 50
   workflow_dispatch:
 
 concurrency:
-  group: sync-ultrapeli
+  group: sync-doramas
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 360
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Instalar dependencias
         run: npm install
-      - name: Ejecutar sync de películas
+
+      - name: Sincronizar doramas (7 workers)
         env:
-          SOURCE_URL: 'https://ultrapeli.com'
-          OUT_FILE: 'public/data/catalog-ultrapeli.json'
-          CATALOG_TAG: 'ultrapeli'
-          SEEDS: '/movies/'
-          LINK_PREFIXES: '/movies/'
-          MOVIE_PREFIXES: '/movies/'
-          ONLY_MOVIES: '1'
-          MAX_DISCOVERY_PAGES: '50'
-          WORKERS: '4'
+          WORKERS: '7'
           POLITENESS_MS: '150'
-        run: node sync-source.js
+          MAX_EPISODE_CRAWLS: '20000'
+          MAX_RUNTIME_MINUTES: '300'
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          DORAMAS_PROXY_URL: ${{ secrets.DORAMAS_PROXY_URL }}
+          DORAMAS_PROXY_KEY: ${{ secrets.DORAMAS_PROXY_KEY }}
+        run: node syncdoramas.js
+
+      - name: Generar índice lite y fichas
+        if: always()
+        run: node split-catalog.js public/data/catalog-doramas.json
+
       - name: Guardar catálogo
         if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A public/data/
-          git diff --staged --quiet || git commit -m "sync(ultrapeli): actualizar catálogo [skip ci]"
+          git diff --staged --quiet || git commit -m "sync(doramas): actualizar catálogo [skip ci]"
           git pull --rebase origin main
           git push
