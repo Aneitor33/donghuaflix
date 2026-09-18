@@ -54,6 +54,14 @@ const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
+/* Proxy opcional para fuentes que bloquean las IPs de GitHub
+   (p. ej. tiodonghua.lat → 403). Se activa SOLO si defines las
+   variables de entorno; si no, todo funciona como siempre. */
+const PROXY_URL = (process.env.TIODONGHUA_PROXY_URL || '').replace(/\/+$/, '');
+const PROXY_KEY = process.env.TIODONGHUA_PROXY_KEY || '';
+const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'tiodonghua.lat,www.tiodonghua.lat')
+  .split(',').map(s => s.trim()).filter(Boolean);
+
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
 const elapsedMin = () => ((Date.now() - T0) / 60000).toFixed(1);
@@ -78,6 +86,7 @@ const SOURCES = [
     seriesTest: p => /^\/series\/[a-z0-9-]+\/?$/i.test(p),
     seasonTest: p => /^\/season\/[a-z0-9-]+/i.test(p),
     episodeTest: p => /^\/episode\/[a-z0-9-]+/i.test(p),
+    epBelongs: (slug, p, ss) => belongsToSeries(slug, ss),
     pageProbe: (seed, n) => `${seed}?page=${n}`,
     isPageLink: (curPath, url) => {
       try {
@@ -99,6 +108,9 @@ const SOURCES = [
     maxPages: 300,
     seriesTest: p => /^\/donghua\/[a-z0-9-]+\/?$/i.test(p),
     episodeTest: p => /^\/ver\/[a-z0-9-]+\/\d+\/?$/i.test(p),
+    /* el slug del episodio es SOLO el número: la pertenencia se
+       comprueba por el path /ver/{slug-de-la-serie}/{n} */
+    epBelongs: (slug, p, ss) => p.toLowerCase().startsWith('/ver/' + ss.toLowerCase() + '/'),
     pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}/${n}`,
     isPageLink: p => /^\/lista-donghuas(-[a-z]+)?\/\d+\/?$/i.test(p)
   },
@@ -117,6 +129,11 @@ const SOURCES = [
       return true;
     },
     episodeTest: p => /-episodio-\d+/i.test(p),
+    /* la ficha NO lista los episodios en el HTML (los carga con JS):
+       se sintetizan las URLs /{slug}-episodio-{n}/ a partir del
+       "Episodios: N" que sí trae la página */
+    synthesize: true,
+    epBelongs: (slug, p, ss) => slug.toLowerCase().startsWith(ss.toLowerCase()),
     pageProbe: (seed, n) => `${seed}?pag=${n}`,
     isPageLink: (curPath, url) => {
       try {
@@ -133,6 +150,7 @@ const SOURCES = [
     maxPages: 250,
     seriesTest: p => /^\/donghua\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
     episodeTest: p => /^\/episodios\/[a-z0-9-]+/i.test(p),
+    epBelongs: (slug, p, ss) => belongsToSeries(slug, ss),
     pageProbe: (seed, n) => `/donghua/page/${n}/`,
     isPageLink: p => /^\/donghua\/page\/\d+\/?$/i.test(p)
   }
@@ -176,10 +194,19 @@ async function fetchHtml(url, attempt = 1) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    const res = await fetch(url, {
+    let target = url;
+    let proxied = false;
+    try {
+      if (PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname)) {
+        target = `${PROXY_URL}/?u=${encodeURIComponent(url)}`;
+        proxied = true;
+      }
+    } catch {}
+
+    const res = await fetch(target, {
       signal: controller.signal,
       redirect: 'follow',
-      headers: {
+      headers: proxied ? { 'x-proxy-key': PROXY_KEY } : {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6',
@@ -199,6 +226,9 @@ async function fetchHtml(url, attempt = 1) {
         'Connection': 'keep-alive'
       }
     });
+    if (proxied && attempt === 1 && !res.ok) {
+      console.log(`   🔀 Proxy respondió ${res.status} para ${url}`);
+    }
     if (!res.ok) {
       if (res.status === 403) {
         try {
@@ -234,12 +264,28 @@ async function fetchHtml(url, attempt = 1) {
    "Wu Dong Qian Kun 3ra Temporada" → base + offset 3
 ══════════════════════════════════════════════════════════ */
 
-const TITLE_JUNK = /\s*(?:sub espa.?ol|online|gratis|hd|completo)?\s*[|\-–—]\s*(?:donghualife|mundodonghua|seriesdonghua|tiodonghua|tio donghua).*$/i;
+/* Limpia el título de las plantillas de las webs:
+   "Yuan Long Manhua, Novela Ligera 【Sub Español】 | SeriesDonghua"
+   "The Nine Heaven… 🥇 DONGHUA【Sub Español】"  →  título real */
+function cleanTitle(raw) {
+  let t = clean(String(raw || '')).split('|')[0];
+  t = t.replace(/[\[【(][^\]】)]{0,60}[\]】)]/g, ' ');
+  t = t.replace(/\b(?:donghuaflix|donghualife|mundodonghua|seriesdonghua|tiodonghua)\b.*$/i, ' ');
+  t = t.replace(/\b(?:manhua|manhwa|webtoon|novela(?:\s+ligera)?)\b/gi, ' ');
+  let prev;
+  do {
+    prev = t;
+    t = t
+      .replace(/(?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+\s*)*(?:sub\s*)?(?:espa[ñn]ol|online|gratis|hd|completo|subtitulad[oa]|latino|castellano|audio\s+latino|doblado|donghua)\s*$/iu, ' ')
+      .replace(/[\s,·•\-–—]+$/g, '')
+      .trim();
+  } while (t !== prev);
+  return clean(t);
+}
 
 function titleKey(rawTitle) {
-  let t = clean(rawTitle).replace(TITLE_JUNK, '').trim();
-  t = t.replace(/\s+sub espa.?ol.*$/i, '').trim();
-
+  const t0 = cleanTitle(rawTitle);
+  let t = t0;
   let offset = null;
   let m = t.match(/^(.*?)[\s\-–—]+(?:temporada|season|parte|part|cour)\s*(\d{1,2})$/i);
   if (m && m[1].trim().length >= 3) {
@@ -253,7 +299,7 @@ function titleKey(rawTitle) {
     }
   }
   return { base: fold(t), baseTitle: t, offset };
-}
+};
 
 /* Temporada final de un episodio: la variante "Serie 5" lista sus
    caps como temporada 1 → se re-mapea a la temporada 5. Si la URL
@@ -431,12 +477,11 @@ function parseSeries(html, url) {
 
   const slug = slugFromUrl(url);
 
-  let title = clean(
+  let title = cleanTitle(
     $('h1').first().text() ||
     $('meta[property="og:title"]').attr('content') ||
     ''
   );
-  title = title.replace(TITLE_JUNK, '').trim();
   if (!title) {
     title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   }
@@ -601,7 +646,7 @@ async function scrapeSeriesPage(source, url) {
     try { pathname = new URL(rawUrl).pathname; } catch { return; }
     if (!source.episodeTest(pathname)) return;
     const slug = slugFromUrl(rawUrl);
-    if (!belongsToSeries(slug, seriesSlug)) return;   // ← descarta "relacionados"
+    if (!source.epBelongs(slug, pathname, seriesSlug)) return;   // ← descarta "relacionados"
     const code = epCode(slug, pathname);
     if (code.number == null) return;
     const key = `${code.season}|${code.number}`;
@@ -614,6 +659,23 @@ async function scrapeSeriesPage(source, url) {
     const full = absolute($(el).attr('href'), url);
     if (full) addCandidate(full);
   });
+
+  /* seriesdonghua: el listado de episodios se genera con JavaScript;
+     la ficha solo declara "Episodios: N". Sintetizamos las URLs
+     /{slug}-episodio-{n}/ que falten — el rastreo valida cada una. */
+  if (source.synthesize) {
+    const m = clean($('body').text()).match(/episodios?\s*:\s*(\d{1,4})/i);
+    if (m) {
+      const total = Math.min(Number(m[1]), 2000);
+      for (let n = 1; n <= total; n++) {
+        if (candidates.has(`1|${n}`)) continue;
+        candidates.set(`1|${n}`, {
+          season: 1, number: n,
+          urls: [`${source.base}/${seriesSlug}-episodio-${n}/`]
+        });
+      }
+    }
+  }
 
   if (source.seasonTest) {
     const seasonLinks = [];
@@ -778,6 +840,13 @@ function selftest() {
   eq(belongsToSeries('cinderella-chef-3-episodio-8-sub-espanol', 'cinderella-chef-3-sub-espanol'), true, 'tiodonghua: sufijo -sub-espanol gestionado');
   eq(belongsToSeries('beyond-timescape-1x7', 'beyond-timescape'), true, 'propio: formato 1x7 aceptado');
 
+  eq(SOURCES[1].epBelongs('26', '/ver/wu-geng-ji/26', 'wu-geng-ji'), true, 'mundodonghua: /ver/{slug}/{n} aceptado');
+  eq(SOURCES[1].epBelongs('26', '/ver/otra-serie/26', 'wu-geng-ji'), false, 'mundodonghua: episodio ajeno rechazado');
+  eq(SOURCES[2].epBelongs('yuan-long-episodio-12', '/yuan-long-episodio-12/', 'yuan-long'), true, 'seriesdonghua: propio aceptado');
+  eq(SOURCES[2].epBelongs('otro-episodio-12', '/otro-episodio-12/', 'yuan-long'), false, 'seriesdonghua: ajeno rechazado');
+  eq(cleanTitle('The Nine Heaven of the Mistic Emperor \u{1F947} DONGHUA【Sub Español】'), 'The Nine Heaven of the Mistic Emperor', 'limpieza: emoji + 【Sub Español】');
+  eq(cleanTitle('Yuan Long Manhua, Novela Ligera 【Sub Español】 | SeriesDonghua'), 'Yuan Long', 'limpieza: manhua/novela + web');
+
   eq(isPlayableAbs('https://ok.ru/video/123'), true, 'ok.ru');
   eq(isPlayableAbs('https://tiodonghua.lat/player/tio.php?id=88'), true, 'player mismo dominio');
   eq(isPlayableAbs('https://www.mundodonghua.com/donghua/wu-geng-ji'), false, 'enlace normal rechazado');
@@ -812,6 +881,55 @@ async function main() {
   const db = await loadCatalog();
   const failures = await loadFailures();
   const startedAt = new Date().toISOString();
+
+  /* ── Fusión retroactiva: series que ahora comparten clave de título
+     (antes quedaron con basura de las webs: 【Sub Español】, 🥇 DONGHUA…)
+     y remapeo de temporadas/episodios duplicados. */
+  {
+    const byBase = new Map();
+    const remap = new Map();
+    for (const s of db.series) {
+      const k = titleKey(s.title).base;
+      if (!k) continue;
+      if (byBase.has(k)) remap.set(s.id, byBase.get(k));
+      else byBase.set(k, s.id);
+    }
+    if (remap.size) {
+      const keepById = new Map(db.series.map(s => [s.id, s]));
+      for (const s of db.series) {
+        const keepId = remap.get(s.id);
+        if (!keepId) continue;
+        const keep = keepById.get(keepId);
+        if (!keep) continue;
+        if ((!keep.image || !keep.image.includes('image.tmdb.org')) && s.image) keep.image = s.image;
+        if ((!keep.synopsis || keep.synopsis.length < 60) && s.synopsis) keep.synopsis = s.synopsis;
+        if (!keep.status && s.status) keep.status = s.status;
+        if (!keep.year && s.year) keep.year = s.year;
+        keep.genres = keep.genres || [];
+        for (const g of (s.genres || [])) if (!keep.genres.includes(g)) keep.genres.push(g);
+        keep.sourceUrls = keep.sourceUrls || [];
+        for (const u of (s.sourceUrls || [])) if (!keep.sourceUrls.includes(u)) keep.sourceUrls.push(u);
+      }
+      db.series = db.series.filter(s => !remap.has(s.id));
+      for (const seas of db.seasons) if (remap.has(seas.seriesId)) seas.seriesId = remap.get(seas.seriesId);
+      for (const ep of db.episodes) if (remap.has(ep.seriesId)) ep.seriesId = remap.get(ep.seriesId);
+      console.log(`\n🧹 Fusión retroactiva: ${remap.size} series duplicadas unificadas`);
+    }
+
+    const seenSeas = new Map();
+    const remapSeas = new Map();
+    for (const seas of db.seasons) {
+      const num = Number(seas.number);
+      const k2 = `${seas.seriesId}|${num}`;
+      if (seenSeas.has(k2)) remapSeas.set(seas.id, seenSeas.get(k2));
+      else seenSeas.set(k2, seas.id);
+    }
+    if (remapSeas.size) {
+      for (const ep of db.episodes) if (remapSeas.has(ep.seasonId)) ep.seasonId = remapSeas.get(ep.seasonId);
+      db.seasons = db.seasons.filter(s => !remapSeas.has(s.id));
+      console.log(`🧹 Temporadas duplicadas unificadas: ${remapSeas.size}`);
+    }
+  }
 
   /* ── Limpieza: episodios que NO pertenecen a su serie ──
      Ejecuciones anteriores colaron capítulos de "relacionados". */
@@ -858,6 +976,11 @@ async function main() {
   }, timeUp);
 
   console.log(`\n📚 Fichas analizadas OK: ${raws.length}`);
+  {
+    const bySrc = {};
+    for (const r of raws) bySrc[r.src] = (bySrc[r.src] || 0) + r.candidates.length;
+    console.log('🎴 Candidatos por fuente:', JSON.stringify(bySrc));
+  }
 
   /* ── Fase 2b: fusionar duplicados entre webs ── */
   const existingById = new Map(db.series.map(s => [s.id, s]));
@@ -1033,7 +1156,10 @@ async function main() {
       upsert(db.episodes, {
         id: `${job.seasonId}-e${job.number}`,
         slug: `${job.seasonId}-e${job.number}`,
-        title: pageTitle || `Episodio ${job.number}`,
+        title: (() => {
+          const m = pageTitle && pageTitle.match(/(?:episodio|episode|cap[ií]tulo)\s*x?(\d{1,4})/i);
+          return m ? `Episodio ${Number(m[1])}` : (pageTitle ? cleanTitle(pageTitle) : `Episodio ${job.number}`);
+        })(),
         sourceUrl: job.urls[0],
         servers,
         seriesId: job.seriesId,
