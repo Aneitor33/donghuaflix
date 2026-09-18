@@ -36,7 +36,7 @@ jobs:
         env:
           WORKERS: '9'
           POLITENESS_MS: '150'
-          MAX_EPISODE_CRAWLS: '6000'
+          MAX_EPISODE_CRAWLS: '60000'
           MAX_RUNTIME_MINUTES: '300'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: node syncdonghua.js
