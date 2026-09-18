@@ -44,7 +44,7 @@ const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEF
 const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 
-const FETCH_TIMEOUT_MS = 30000;
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
 const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
@@ -498,14 +498,20 @@ async function discoverSource(source) {
     }
 
     /* Sondeo numérico por si la paginación era "invisible" */
+    let probeFails = 0;
     for (let n = 2; n <= source.maxPages; n++) {
       if (timeUp()) break;
       const url = absolute(source.pageProbe(first, n), source.base);
       if (!url || visited.has(url)) continue;
 
       let html;
-      try { html = await fetchHtml(url); }
-      catch { break; }
+      try { html = await fetchHtml(url); probeFails = 0; }
+      catch {
+        probeFails++;
+        if (probeFails >= 3) { console.log(`   🛑 página ${n}: ${probeFails} errores seguidos — se pospone el resto`); break; }
+        await sleep(2000);
+        continue;
+      }
 
       const links = parseSeriesLinks(html, url, source);
       const fresh = links.filter(l => !found.has(l));
