@@ -44,7 +44,7 @@ const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEF
 const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 
-const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 45000);
 const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
@@ -124,7 +124,7 @@ async function fetchHtml(url, attempt = 1) {
       }
     } catch {}
 
-    const res = await fetch(target, {
+    const reqPromise = fetch(target, {
       signal: controller.signal,
       redirect: 'follow',
       headers: proxied ? { 'x-proxy-key': PROXY_KEY } : {
@@ -147,6 +147,11 @@ async function fetchHtml(url, attempt = 1) {
         'Connection': 'keep-alive'
       }
     });
+    reqPromise.catch(() => {});
+    const res = await Promise.race([
+      reqPromise,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout duro')), FETCH_TIMEOUT_MS + 10000))
+    ]);
     if (proxied && attempt === 1 && !res.ok) {
       console.log(`   🔀 Proxy respondió ${res.status} para ${url}`);
     }
@@ -789,12 +794,14 @@ async function main() {
   /* ── Fase 2a: analizar fichas ── */
   const raws = [];
   let done = 0;
+  const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${tasks.length} fichas (${elapsedMin()} min)`), 30000);
   await runPool(tasks, WORKERS, async ({ source, url }) => {
     const r = await scrapeSeriesPage(source, url);
     raws.push(r);
     done++;
     if (done % 25 === 0) console.log(`   📄 ${done}/${tasks.length} fichas analizadas (${elapsedMin()} min)`);
   }, timeUp);
+  clearInterval(hb);
 
   console.log(`\n📚 Fichas analizadas OK: ${raws.length}`);
   console.log(`🎴 Candidatos de episodios: ${raws.reduce((a, r) => a + r.candidates.length, 0)}`);
@@ -928,6 +935,7 @@ async function main() {
   /* ── Fase 3: rastrear episodios ── */
   let newEps = 0, failedEps = 0, crawled = 0;
   let stoppedByBudget = false;
+  const hb2 = setInterval(() => console.log(`   💓 vivo: ${crawled}/${epQueue.length} episodios · +${newEps} (${elapsedMin()} min)`), 60000);
 
   await runPool(epQueue, WORKERS, async (job) => {
     if (timeUp()) { stoppedByBudget = true; return; }
@@ -984,6 +992,7 @@ async function main() {
       console.log(`\n💾 ${crawled}/${epQueue.length} episodios rastreados · +${newEps} nuevos · ${elapsedMin()} min\n`);
     }
   }, () => stoppedByBudget);
+  clearInterval(hb2);
 
   if (stoppedByBudget) {
     console.log(`\n⏱️  Presupuesto de tiempo agotado (${MAX_RUNTIME_MS / 60000} min). Se guarda lo avanzado; la próxima ejecución retoma.`);
