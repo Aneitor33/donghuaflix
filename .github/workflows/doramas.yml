@@ -36,7 +36,7 @@ jobs:
           POLITENESS_MS: '100'
           MAX_EPISODE_CRAWLS: '20000'
           MAX_RUNTIME_MINUTES: '300'
-          FETCH_TIMEOUT_MS: '45000'
+          FETCH_TIMEOUT_MS: '120000'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           DORAMAS_PROXY_URL: ${{ secrets.DORAMAS_PROXY_URL }}
           DORAMAS_PROXY_KEY: ${{ secrets.DORAMAS_PROXY_KEY }}
