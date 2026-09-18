@@ -51,6 +51,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A public/data/
-          git diff --staged --quiet || git commit -m "sync(doramas): actualizar catálogo [skip ci]"
+          git diff --staged --quiet || git commit -m "sync(doramas): actualizar catálogo"
           git pull --rebase origin main
           git push
