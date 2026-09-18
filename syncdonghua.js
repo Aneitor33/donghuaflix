@@ -26,7 +26,7 @@
 //  Uso:
 //    node syncdonghua.js
 //  Variables de entorno:
-//    WORKERS=9                  trabajadores en paralelo
+//    WORKERS=7                  trabajadores en paralelo
 //    POLITENESS_MS=150          pausa entre peticiones
 //    MAX_EPISODE_CRAWLS=6000    tope de episodios nuevos por ejecución
 //    MAX_RUNTIME_MINUTES=300    tope de duración (por debajo del límite de 6h de Actions)
@@ -71,7 +71,7 @@ const SOURCES = [
     id: 'donghualife',
     base: 'https://donghualife.com',
     priority: 0,
-    seeds: ['/series', '/donghuas', '/en-emision', '/finalizado', '/en-pausa'],
+    seeds: ['/series/', '/series', '/donghuas', '/en-emision', '/finalizado', '/en-pausa'],
     maxPages: 250,
     seriesTest: p => /^\/series\/[a-z0-9-]+\/?$/i.test(p),
     seasonTest: p => /^\/season\/[a-z0-9-]+/i.test(p),
@@ -92,8 +92,7 @@ const SOURCES = [
     seeds: [
       '/lista-donghuas',
       '/lista-donghuas-finalizados',
-      '/lista-donghuas-emision',
-      '/lista-donghuas-recopiladas'
+      '/lista-donghuas-emision'
     ],
     maxPages: 300,
     seriesTest: p => /^\/donghua\/[a-z0-9-]+\/?$/i.test(p),
@@ -180,9 +179,22 @@ async function fetchHtml(url, attempt = 1) {
       redirect: 'follow',
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.6',
-        'Referer': 'https://www.google.com/'
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.google.com/',
+        'Origin': 'https://www.google.com',
+        'Upgrade-Insecure-Requests': '1',
+        'Cache-Control': 'max-age=0',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'cross-site',
+        'Sec-Fetch-User': '?1',
+        'sec-ch-ua': '"Chromium";v="126", "Google Chrome";v="126", "Not-A.Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'DNT': '1',
+        'Connection': 'keep-alive'
       }
     });
     if (!res.ok) {
