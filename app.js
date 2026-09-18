@@ -7,7 +7,8 @@ const CATALOGS = [
   { id: 'donghua',   file: './public/data/catalog.json',            index: './public/data/catalog-index.json',            label: 'Donghuas' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'series',    file: './public/data/catalog-series.json',     index: './public/data/catalog-series-index.json',     label: 'Series' },
-  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json',  index: './public/data/catalog-ultrapeli-index.json',  label: 'Ultrapeli' }
+  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json',  index: './public/data/catalog-ultrapeli-index.json',  label: 'Ultrapeli' },
+  { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
 
 /* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
