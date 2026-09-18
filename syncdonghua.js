@@ -40,6 +40,7 @@ import { execSync } from 'node:child_process';
 import * as cheerio from 'cheerio';
 
 const OUT_FILE = path.resolve('public/data/catalog.json');
+const FAILURES_FILE = path.resolve('public/data/catalog-failures.json');
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
@@ -51,6 +52,7 @@ const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 
 const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
+const logged403 = new Set();
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
@@ -198,6 +200,16 @@ async function fetchHtml(url, attempt = 1) {
       }
     });
     if (!res.ok) {
+      if (res.status === 403) {
+        try {
+          const host = new URL(url).hostname;
+          if (!logged403.has(host)) {
+            logged403.add(host);
+            const body = await res.text().catch(() => '');
+            console.log(`   🛡️ 403 en ${host}: ${body.replace(/\s+/g, ' ').replace(/</g, '<').slice(0, 200)}`);
+          }
+        } catch {}
+      }
       if (attempt < FETCH_RETRIES && [408, 425, 429, 500, 502, 503, 504].includes(res.status)) {
         await sleep(1000 * attempt);
         return fetchHtml(url, attempt + 1);
@@ -279,6 +291,31 @@ function epCode(slug, pathname) {
   if (m) return { season: 1, number: Number(m[1]) };
 
   return { season: 1, number: null };
+}
+
+/* ¿Pertenece este episodio a la serie? Evita que las secciones
+   "últimos episodios / relacionados" de las fichas contaminen la
+   serie con capítulos de OTROS donghuas (jugaban el contenido
+   equivocado). */
+function belongsToSeries(epSlug, seriesSlugs) {
+  if (!epSlug) return false;
+  const list = Array.isArray(seriesSlugs) ? seriesSlugs : [seriesSlugs];
+  const es = String(epSlug).toLowerCase();
+  for (const raw of list) {
+    if (!raw) continue;
+    const ss = String(raw).toLowerCase();
+    if (es.startsWith(ss)) return true;
+    /* tiodonghua: la ficha es 'wu-dong-qian-kun-3-sub-espanol' pero
+       sus episodios son 'wu-dong-qian-kun-3-episodio-8-sub-espanol' */
+    const clean = ss.replace(/-(?:sub-espanol|subtitulado|latino|castellano|espanol|en-espanol)$/i, '');
+    if (clean.length >= 4 &&
+        (es.startsWith(clean + '-episodio') || es.startsWith(clean + '-episode'))) return true;
+    if (clean.length >= 4 && es.startsWith(clean + '-')) {
+      const rest = es.slice(clean.length + 1);
+      if (/^\d{1,3}x/i.test(rest)) return true;
+    }
+  }
+  return false;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -555,6 +592,7 @@ async function scrapeSeriesPage(source, url) {
   const html = await fetchHtml(url);
   const parsed = parseSeries(html, url);
   const $ = cheerio.load(html);
+  const seriesSlug = slugFromUrl(url);
 
   const candidates = new Map(); // "season|number" → {season, number, urls:[]}
   const addCandidate = rawUrl => {
@@ -563,6 +601,7 @@ async function scrapeSeriesPage(source, url) {
     try { pathname = new URL(rawUrl).pathname; } catch { return; }
     if (!source.episodeTest(pathname)) return;
     const slug = slugFromUrl(rawUrl);
+    if (!belongsToSeries(slug, seriesSlug)) return;   // ← descarta "relacionados"
     const code = epCode(slug, pathname);
     if (code.number == null) return;
     const key = `${code.season}|${code.number}`;
@@ -582,7 +621,9 @@ async function scrapeSeriesPage(source, url) {
       const full = absolute($(el).attr('href'), url);
       if (!full || !sameOrigin(full, source.base)) return;
       try {
-        if (source.seasonTest(new URL(full).pathname) && !seasonLinks.includes(full)) seasonLinks.push(full);
+        if (source.seasonTest(new URL(full).pathname) &&
+            slugFromUrl(full).startsWith(seriesSlug) &&
+            !seasonLinks.includes(full)) seasonLinks.push(full);
       } catch {}
     });
     for (const sUrl of seasonLinks.slice(0, 12)) {
@@ -630,6 +671,22 @@ async function loadCatalog() {
     return { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
   }
 }
+
+async function loadFailures() {
+  try {
+    const data = JSON.parse(await fs.readFile(FAILURES_FILE, 'utf8'));
+    return (data && typeof data === 'object') ? data : {};
+  } catch { return {}; }
+}
+
+async function saveFailures(failures) {
+  await fs.mkdir(path.dirname(FAILURES_FILE), { recursive: true });
+  const tmp = `${FAILURES_FILE}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(failures), 'utf8');
+  await fs.rename(tmp, FAILURES_FILE);
+}
+
+const MAX_FAILS = 2; // reintentos de un episodio fallido antes de ignorarlo
 
 async function saveCatalog(db) {
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
@@ -713,6 +770,14 @@ function selftest() {
   eq(mapSeason(1, 5), 5, 'variante "Serie 5" temp 1 → temp 5');
   eq(mapSeason(3, 5), 3, 'temp explícita se respeta');
 
+  eq(belongsToSeries('ancient-god-sovereign-1-episodio-x5', 'spirit-realm-walker'), false, 'BASURA: episodio de otro donghua rechazado');
+  eq(belongsToSeries('wan-jie-du-zun-1-x31', 'spirit-realm-walker'), false, 'BASURA: wan-jie-du-zun rechazado');
+  eq(belongsToSeries('spirit-realm-walker-1-episodio-x5', 'spirit-realm-walker'), true, 'propio: spirit-realm-walker aceptado');
+  eq(belongsToSeries('martial-peak-1-x18', 'martial-peak'), true, 'propio: martial-peak-1-x18 aceptado');
+  eq(belongsToSeries('martial-peak-episodio-680', 'martial-peak'), true, 'propio: martial-peak-episodio-680 aceptado');
+  eq(belongsToSeries('cinderella-chef-3-episodio-8-sub-espanol', 'cinderella-chef-3-sub-espanol'), true, 'tiodonghua: sufijo -sub-espanol gestionado');
+  eq(belongsToSeries('beyond-timescape-1x7', 'beyond-timescape'), true, 'propio: formato 1x7 aceptado');
+
   eq(isPlayableAbs('https://ok.ru/video/123'), true, 'ok.ru');
   eq(isPlayableAbs('https://tiodonghua.lat/player/tio.php?id=88'), true, 'player mismo dominio');
   eq(isPlayableAbs('https://www.mundodonghua.com/donghua/wu-geng-ji'), false, 'enlace normal rechazado');
@@ -745,7 +810,29 @@ async function main() {
   console.log('==============================================\n');
 
   const db = await loadCatalog();
+  const failures = await loadFailures();
   const startedAt = new Date().toISOString();
+
+  /* ── Limpieza: episodios que NO pertenecen a su serie ──
+     Ejecuciones anteriores colaron capítulos de "relacionados". */
+  {
+    const seasonsById = new Map(db.seasons.map(s => [s.id, s]));
+    const seriesById = new Map(db.series.map(s => [s.id, s]));
+    const before = db.episodes.length;
+    db.episodes = db.episodes.filter(ep => {
+      const season = seasonsById.get(ep.seasonId);
+      const serie = season && seriesById.get(season.seriesId);
+      if (!serie) return true; // sin referencia: no tocar
+      const allowed = (serie.sourceUrls && serie.sourceUrls.length)
+        ? serie.sourceUrls.map(slugFromUrl)
+        : [serie.id];
+      return belongsToSeries(slugFromUrl(ep.sourceUrl || ''), allowed);
+    });
+    globalThis.__removedJunk = before - db.episodes.length;
+    if (globalThis.__removedJunk) {
+      console.log(`\n🧹 Limpieza: ${globalThis.__removedJunk} episodios ajenos eliminados (pertenecían a otras series)`);
+    }
+  }
 
   /* ── Fase 1: descubrimiento ── */
   const tasks = [];
@@ -846,7 +933,8 @@ async function main() {
 
   /* ── Series + temporadas al catálogo y cola de episodios ── */
   const epQueue = [];
-  let skippedExisting = 0, recrawlEmpty = 0;
+  const createdSeasonIds = new Set();
+  let skippedExisting = 0, recrawlEmpty = 0, skippedFailed = 0;
 
   for (const canon of canons.values()) {
     const S = canon.series;
@@ -871,6 +959,7 @@ async function main() {
           image: S.image || null,
           updatedAt: new Date().toISOString()
         });
+        createdSeasonIds.add(seasonId);
         existingSeasonsByNum.set(`${S.id}|${seasonNum}`, seasonId);
       }
 
@@ -883,6 +972,13 @@ async function main() {
       }
       if (oldEp) recrawlEmpty++;
 
+      /* Episodios que ya fallaron demasiadas veces: se omiten para
+         no quemar el tope en repeticiones inútiles en cada ejecución. */
+      if ((failures[epKey] || 0) >= MAX_FAILS) {
+        skippedFailed++;
+        continue;
+      }
+
       if (epQueue.length >= MAX_EPISODE_CRAWLS) continue;
 
       epQueue.push({
@@ -894,6 +990,7 @@ async function main() {
   }
 
   console.log(`\n🎬 Episodios ya en catálogo (se respetan): ${skippedExisting}`);
+  if (skippedFailed) console.log(`🚫 Episodios omitidos (fallaron ${MAX_FAILS}+ veces): ${skippedFailed}`);
   if (recrawlEmpty) console.log(`↻  Episodios existentes SIN servidores (se reintentan): ${recrawlEmpty}`);
   console.log(`🎬 Episodios a rastrear: ${epQueue.length} (tope ${MAX_EPISODE_CRAWLS})`);
 
@@ -930,6 +1027,9 @@ async function main() {
 
     crawled++;
     if (servers.length) {
+      if (failures[`${job.seasonId}|${job.number}`]) {
+        delete failures[`${job.seasonId}|${job.number}`];
+      }
       upsert(db.episodes, {
         id: `${job.seasonId}-e${job.number}`,
         slug: `${job.seasonId}-e${job.number}`,
@@ -944,10 +1044,13 @@ async function main() {
       newEps++;
     } else {
       failedEps++;
+      const fk = `${job.seasonId}|${job.number}`;
+      failures[fk] = (failures[fk] || 0) + 1;
     }
 
     if (crawled % 500 === 0) {
       await saveCatalog(db);
+      await saveFailures(failures);
       gitCheckpoint(db);
       console.log(`\n💾 ${crawled}/${epQueue.length} episodios rastreados · +${newEps} nuevos · ${elapsedMin()} min\n`);
     }
@@ -964,6 +1067,18 @@ async function main() {
   }
   for (const s of db.seasons) {
     s.episodeCount = countBySeason.get(s.id) || 0;
+  }
+
+  /* Temporadas que se quedaron vacías tras la limpieza (o que nunca
+     tuvieron episodios) y no se han recreado esta ejecución: se
+     eliminan para que no aparezcan en el selector de temporadas. */
+  {
+    const before = db.seasons.length;
+    db.seasons = db.seasons.filter(s => s.episodeCount > 0 || createdSeasonIds.has(s.id));
+    globalThis.__removedSeasons = before - db.seasons.length;
+    if (globalThis.__removedSeasons) {
+      console.log(`🧹 Temporadas vacías eliminadas: ${globalThis.__removedSeasons}`);
+    }
   }
 
   /* ── Fase 4: portadas TMDB ── */
@@ -1004,11 +1119,14 @@ async function main() {
       seasons: db.seasons.length,
       episodes: db.episodes.length,
       newEpisodes: newEps,
-      crawled, failedEps
+      crawled, failedEps,
+      removedJunk: globalThis.__removedJunk || 0,
+      removedSeasons: globalThis.__removedSeasons || 0
     }
   };
 
   await saveCatalog(db);
+  await saveFailures(failures);
   gitCheckpoint(db);
 
   console.log('\n====================================================');
