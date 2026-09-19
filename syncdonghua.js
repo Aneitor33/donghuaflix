@@ -507,7 +507,8 @@ async function postAjax(opt, referer) {
 }
 
 function parseEpisode(html, url) {
-  const $ = cheerio.load(html);
+  const unpacked = unpackPacker(html);
+  const $ = cheerio.load(unpacked);
   const title = clean(
     $('h1').first().text() ||
     $('meta[property="og:title"]').attr('content') ||
@@ -625,7 +626,7 @@ function parseEpisode(html, url) {
 
     /* Todas las URLs entre comillas (dobles o simples) */
     const urlRe = /["']((https?:)?\/\/[^"'\s<>\\]+)["']/g;
-    for (const m of unescaped.match(urlRe) || []) {
+    for (const m of unpacked.match(urlRe) || []) {
       let u = m.slice(1, -1).trim();
       if (u.startsWith('//')) u = 'https:' + u;
       /* Solo servidores: descartar imágenes, CSS, JS de la propia web y dominios de la web */
@@ -1501,7 +1502,8 @@ async function main() {
           try {
             const origin = new URL(u).origin;
             const jsUrl = `${origin}/js/nemonico2048.js?v=1.5`;
-            const js = await fetchHtml(jsUrl);
+            const jsRaw = await fetchHtml(jsUrl);
+            const js = unpackPacker(jsRaw);
             const p2 = parseEpisode(js, jsUrl);
             if (p2.servers.length) {
               parsed = { ...parsed, servers: p2.servers };
