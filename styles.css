@@ -510,3 +510,153 @@ footer a.ig-link svg{width:13px;height:13px}
 
 /* ---------- ETIQUETA DE FUENTE (resultados de búsqueda) ---------- */
 .badge.src{top:34px;background:var(--red);color:#fff;letter-spacing:.4px;text-transform:none;font-weight:700}
+
+/* ═══════════════════════ PACK DE ANIMACIONES ═══════════════════════ */
+
+/* ── HERO: Ken Burns (zoom lento cinematográfico) ── */
+.hero{overflow:hidden;touch-action:pan-y}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background-image:inherit;background-size:cover;background-position:center 15%;
+  animation:kenburns 22s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes kenburns{
+  from{transform:scale(1) translateX(0)}
+  to{transform:scale(1.09) translateX(-1.5%)}
+}
+.hero .hero-content,.hero .hero-dots,.hero .hero-arrow{position:relative;z-index:2}
+.hero .hero-content>*{animation:heroIn .55s cubic-bezier(.2,.7,.25,1) both}
+.hero .hero-content>*:nth-child(1){animation-delay:.02s}
+.hero .hero-content>*:nth-child(2){animation-delay:.07s}
+.hero .hero-content>*:nth-child(3){animation-delay:.12s}
+.hero .hero-content>*:nth-child(4){animation-delay:.17s}
+.hero .hero-content>*:nth-child(5){animation-delay:.22s}
+.hero.slide-l .hero-content>*{animation-name:heroInL}
+.hero.slide-r .hero-content>*{animation-name:heroInR}
+@keyframes heroIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes heroInL{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+@keyframes heroInR{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
+
+/* flechas del hero (escritorio) */
+.hero-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:44px;height:44px;border-radius:50%;cursor:pointer;line-height:1;font-size:24px;
+  border:1px solid var(--glass-brd);background:rgba(0,0,0,.45);backdrop-filter:blur(10px);color:#fff;
+  display:grid;place-items:center;opacity:0;transition:opacity .25s ease,background .2s,transform .2s,border-color .2s;
+}
+.hero:hover .hero-arrow{opacity:.92}
+.hero-arrow:hover{background:var(--red);border-color:var(--red);transform:translateY(-50%) scale(1.1)}
+.hero-arrow.left{left:14px}
+.hero-arrow.right{right:14px}
+@media(hover:none){.hero-arrow{display:none}}
+
+/* dots: pill activa que crece */
+.hero-dots button{transition:width .3s ease,background .3s ease}
+.hero-dots button.active{width:30px}
+
+/* ── ENTRADA ESCALONADA DE TARJETAS ── */
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.grid .card{animation:cardIn .5s cubic-bezier(.2,.7,.25,1) both}
+.grid .card:nth-child(1){animation-delay:.02s}.grid .card:nth-child(2){animation-delay:.05s}
+.grid .card:nth-child(3){animation-delay:.08s}.grid .card:nth-child(4){animation-delay:.11s}
+.grid .card:nth-child(5){animation-delay:.14s}.grid .card:nth-child(6){animation-delay:.17s}
+.grid .card:nth-child(7){animation-delay:.20s}.grid .card:nth-child(8){animation-delay:.23s}
+.grid .card:nth-child(9){animation-delay:.26s}.grid .card:nth-child(10){animation-delay:.29s}
+.grid .card:nth-child(11){animation-delay:.32s}.grid .card:nth-child(12){animation-delay:.35s}
+.grid .card:nth-child(13){animation-delay:.38s}.grid .card:nth-child(14){animation-delay:.41s}
+.grid .card:nth-child(15){animation-delay:.44s}.grid .card:nth-child(16){animation-delay:.47s}
+.grid .card:nth-child(17){animation-delay:.50s}.grid .card:nth-child(18){animation-delay:.53s}
+.rail .rail-item:nth-child(1) .card{animation:cardIn .5s .02s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(2) .card{animation:cardIn .5s .06s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(3) .card{animation:cardIn .5s .10s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(4) .card{animation:cardIn .5s .14s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(5) .card{animation:cardIn .5s .18s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(6) .card{animation:cardIn .5s .22s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(7) .card{animation:cardIn .5s .26s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(8) .card{animation:cardIn .5s .30s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(9) .card{animation:cardIn .5s .34s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(10) .card{animation:cardIn .5s .38s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(11) .card{animation:cardIn .5s .42s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(12) .card{animation:cardIn .5s .46s cubic-bezier(.2,.7,.25,1) both}
+
+/* ── HOVER DE TARJETAS: elevación + brillo que cruza ── */
+.card .poster{transition:box-shadow .3s ease}
+.card .poster::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 48%,transparent 62%);
+  transform:translateX(-130%);transition:transform .65s ease;
+}
+.card:hover{transform:translateY(-6px)}
+.card:hover .poster{box-shadow:0 18px 42px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.07)}
+.card:hover .poster::after{transform:translateX(130%)}
+.card h3{transition:color .2s ease}
+.card:hover h3{color:#fff}
+
+/* corazón y checks: pop al activarse */
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.fav-heart.on{animation:pop .35s ease}
+.watched-btn.on{animation:pop .35s ease}
+
+/* ── BOTONES ── */
+.btn-x{transition:transform .15s ease,filter .2s ease,background .2s,border-color .2s,box-shadow .25s ease}
+.btn-x:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-x:active{transform:scale(.96)}
+.btn-x.play{box-shadow:0 6px 24px rgba(229,9,20,.35)}
+.btn-x.play:hover{box-shadow:0 12px 32px rgba(229,9,20,.55)}
+
+/* ── PÍLDORAS, CHIPS, TABS DE SERVIDORES ── */
+.pill,.chip{transition:transform .15s ease,background .2s}
+.pill:hover,.chip:hover{transform:translateY(-1px) scale(1.05)}
+.pill.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
+.server-tabs button,.lang-tabs button,.type-tabs button{transition:transform .15s ease,background .2s}
+.server-tabs button:hover{transform:translateY(-2px);background:rgba(255,255,255,.22)}
+.server-tabs button.active{box-shadow:0 4px 16px rgba(229,9,20,.45)}
+.lang-tabs button.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
+
+/* ── EPISODIOS: deslizan al pasar el ratón ── */
+.episode{transition:transform .18s ease,border-color .2s,background .2s}
+.episode:hover{transform:translateX(6px)}
+
+/* ─é PAGINADOR ── */
+.pg-btn{transition:transform .15s ease,background .2s,color .2s,box-shadow .2s}
+.pg-btn:hover:not(:disabled){transform:translateY(-3px)}
+.pg-btn.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
+
+/* ── NAV SUPERIOR ── */
+.nav nav a{transition:transform .15s ease,background .2s,color .2s}
+.nav nav a:hover{transform:translateY(-1px)}
+.icon-btn{transition:transform .2s ease,background .2s,border-color .2s}
+.icon-btn:hover{transform:scale(1.1) rotate(5deg)}
+
+/* ── BARRA DE BÚSQUEDA: glow al enfocar ── */
+.searchbar input{transition:border-color .2s ease,box-shadow .2s ease}
+.searchbar input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,9,20,.18)}
+
+/* ── TRANSICIÓN ENTRE PÁGINAS ── */
+#app.page-anim>*{animation:pageIn .38s cubic-bezier(.2,.7,.25,1) both}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── SKELETON: shimmer suave ── */
+.skeleton{background:linear-gradient(100deg,#12141a 30%,#242936 50%,#12141a 70%);background-size:220% 100%;animation:shimmer 1.3s linear infinite}
+@keyframes shimmer{to{background-position:-220% 0}}
+
+/* ── MENÚS DESPLEGABLES ── */
+@keyframes menuIn{from{opacity:0;transform:scale(.92) translateY(-6px)}to{opacity:1;transform:none}}
+.catalog-menu{transform-origin:top right}
+.catalog-menu.open{animation:menuIn .18s ease both}
+.more-menu.open{animation:menuIn .18s ease both}
+
+/* ── REPRODUCTOR: sombra viva ── */
+.player{transition:box-shadow .3s ease}
+.player:hover{box-shadow:0 30px 80px rgba(0,0,0,.75)}
+
+/* ── ACCESIBILIDAD: respetar "reducir movimiento" del sistema ── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
