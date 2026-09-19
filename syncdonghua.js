@@ -143,8 +143,6 @@ const SOURCES = [
       const m = p.match(/^\/([a-z0-9-]+)\/?$/i);
       if (!m) return false;
       const slug = m[1];
-
-const ACTIVE_SOURCES = SOURCES.filter(s => SOURCE_IDS.includes(s.id));
       if (/-episodio-\d+/i.test(slug)) return false;
       if (SD_EXCLUDE.has(slug)) return false;
       return true;
@@ -176,6 +174,8 @@ const ACTIVE_SOURCES = SOURCES.filter(s => SOURCE_IDS.includes(s.id));
     isPageLink: p => /^\/donghua\/page\/\d+\/?$/i.test(p)
   }
 ];
+
+const ACTIVE_SOURCES = SOURCES.filter(s => SOURCE_IDS.includes(s.id));
 
 /* ══════════════════════════════════════════════════════════
    UTILIDADES
