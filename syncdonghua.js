@@ -1495,6 +1495,20 @@ async function main() {
             parsed = { ...parsed, servers: p2.servers, title: parsed.title || p2.title };
           } catch {}
         }
+        /* Tamamo (SeriesDonghua/MundoDonghua): el iframe va vacío y la URL del
+           vídeo está en el JS externo nemonico2048.js. Lo descargamos y extraemos. */
+        if (!parsed.servers.length && /tamamo_player|tamamoplay|nemonico/i.test(html)) {
+          try {
+            const origin = new URL(u).origin;
+            const jsUrl = `${origin}/js/nemonico2048.js?v=1.5`;
+            const js = await fetchHtml(jsUrl);
+            const p2 = parseEpisode(js, jsUrl);
+            if (p2.servers.length) {
+              parsed = { ...parsed, servers: p2.servers };
+              console.log(`      🎬 JS tamamo (${p2.servers.length} servidor(es))`);
+            }
+          } catch {}
+        }
         /* Pestañas de servidor: pedir los vídeos por AJAX (Dooplay) */
         if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
           for (const opt of parsed.playerOpts.slice(0, 6)) {
