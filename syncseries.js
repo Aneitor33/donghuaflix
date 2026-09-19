@@ -2,6 +2,30 @@
 //  syncseries.js — DonghuaFlix
 //  Scraper del catálogo de SERIES (sección aparte):
 //    · gnula (wnv5.gnula.cc)
+//
+//  Con todo lo aprendido en el scraper multi-fuente:
+//   - Descubrimiento con paginación (/page/N/).
+//   - La ficha NO lista episodios en el HTML (JS) → se sintetizan
+//     las URLs /cap/{slug}-capitulo-{n}/ y el rastreo valida cada una.
+//   - Filtro de pertenencia (nada de capítulos de "relacionados").
+//   - Extracción de servidores: iframes + data-* + hosts conocidos
+//     (ok.ru/okcdn, byse, voe, streamtape, multijugadora…).
+//   - Limpieza de títulos con plantilla de la web.
+//   - Portadas vía TMDB.
+//   - Incremental + lista de fallos + checkpoints con push al repo
+//     + tope de tiempo (nunca se acerca a las 6h de GitHub).
+//
+//  Genera public/data/catalog-doramas.json (mismo formato que los
+//  demás catálogos → compatible con split-catalog.js, app.js, sw.js).
+//
+//  Uso:
+//    node syncseries.js
+//  Variables de entorno:
+//    WORKERS=7  POLITENESS_MS=150  MAX_EPISODE_CRAWLS=20000
+//    MAX_RUNTIME_MINUTES=300  SYNTH_DEFAULT_EPS=16
+//    TMDB_API_KEY=...
+//    DORAMAS_PROXY_URL / DORAMAS_PROXY_KEY (opcional, si la web
+//    bloquea las IPs de GitHub con 403)
 // ══════════════════════════════════════════════════════════
 
 import fs from 'node:fs/promises';
@@ -30,11 +54,15 @@ const PROXY_URL = (process.env.SERIES_PROXY_URL || process.env.DORAMAS_PROXY_URL
 const PROXY_KEY = process.env.SERIES_PROXY_KEY || process.env.DORAMAS_PROXY_KEY || '';
 const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'wnv5.gnula.cc')
   .split(',').map(s => s.trim()).filter(Boolean);
-
+/* La web penaliza por concurrencia: máx. 2 peticiones simultáneas
+   al mismo host y, si fallan varias seguidas, una pausa larga para
+   que el servidor "enfríe" la penalización antes de seguir. */
 const hostSem = new Map();
 const hostFails = new Map();
+/* Máximo de conexiones simultáneas a la web. La anterior castigaba
+   por concurrencia (2); si la nueva es tranquila, sube HOST_LIMIT
+   en el workflow (probad de 4 en 4 y mira si salen 🥵 o 429). */
 const HOST_LIMIT = Math.max(1, Math.min(8, Number(process.env.HOST_LIMIT || 2)));
-
 async function withHostLimit(host, fn) {
   let sem = hostSem.get(host);
   if (!sem) { sem = { active: 0, queue: [] }; hostSem.set(host, sem); }
@@ -43,6 +71,7 @@ async function withHostLimit(host, fn) {
   try { return await fn(); }
   finally { sem.active--; const n = sem.queue.shift(); if (n) n(); }
 }
+
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
@@ -63,6 +92,7 @@ const SOURCE = {
   epBelongs: (slug, p, ss) => slug.toLowerCase().startsWith(ss.toLowerCase()),
   pageProbe: (seed, n) => `/ver-serie/page/${n}/`,
   isPageLink: p => /^\/ver-serie\/page\/\d+\/?$/i.test(p),
+  /* la ficha no lista episodios (JS): se sintetizan /ver-episode/{slug}-1x{N}/ */
   synthesize: true,
   synthUrl: (slug, n) => `/ver-episode/${slug}-1x${n}/`
 };
@@ -75,7 +105,7 @@ const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
 
 const fold = s => String(s || '')
   .normalize('NFD')
-  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/[̀-ͯ]/g, '')
   .toLowerCase();
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -101,6 +131,106 @@ function slugFromUrl(raw) {
 
 const uniqueUrls = vals => [...new Set(vals.map(v => absolute(v)).filter(Boolean))];
 
+/* ══ Modo navegador (webs con challenge JS de Cloudflare) ══
+   Requiere en el workflow: npm i --no-save playwright && npx playwright install chromium
+   Se activa con USE_BROWSER=1: un Chromium resuelve el challenge una vez
+   y reutiliza la sesión (cookies) para todo el rastreo, incluido el
+   POST de admin-ajax, que se hace desde dentro de la propia página. */
+const USE_BROWSER = process.env.USE_BROWSER === '1';
+const PW_POOL_SIZE = 3;
+let pwBrowser = null;
+const PW_POOL = [];
+const PW_WAITERS = [];
+
+async function acquirePage() {
+  const free = PW_POOL.find(p => !p.busy);
+  if (free) { free.busy = true; return free.page; }
+  if (PW_POOL.length < PW_POOL_SIZE) {
+    const { chromium } = await import('playwright');
+    if (!pwBrowser) pwBrowser = await chromium.launch({ headless: true });
+    const ctx = await pwBrowser.newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      locale: 'es-ES',
+      viewport: { width: 1366, height: 768 }
+    });
+    const page = await ctx.newPage();
+    PW_POOL.push({ page, busy: true });
+    return page;
+  }
+  return new Promise(r => PW_WAITERS.push(r));
+}
+
+function releasePage(page) {
+  const e = PW_POOL.find(x => x.page === page);
+  if (!e) return;
+  const w = PW_WAITERS.shift();
+  if (w) { w(e.page); } else { e.busy = false; }
+}
+
+async function withPwPage(fn) {
+  const page = await acquirePage();
+  try {
+    return await fn(page);
+  } catch (e) {
+    try { await page.close(); } catch {}
+    const i = PW_POOL.findIndex(x => x.page === page);
+    if (i !== -1) PW_POOL.splice(i, 1);
+    throw e;
+  } finally {
+    releasePage(page);
+  }
+}
+
+async function waitChallenge(page) {
+  for (let i = 0; i < 12; i++) {
+    const title = await page.title().catch(() => '');
+    const html = await page.content().catch(() => '');
+    if (!/just a moment|verificaci[oó]n de seguridad|checking your/i.test(title + ' ' + html.slice(0, 2000))) return;
+    if (i === 3) {
+      /* intentar marcar la casilla del challenge (iframe de Cloudflare) */
+      try {
+        const frame = page.frames().find(f => /challenges\.cloudflare\.com/.test(f.url()));
+        if (frame) {
+          const cb = frame.locator('input[type="checkbox"]');
+          if (await cb.count()) await cb.click({ timeout: 3000 });
+        }
+      } catch {}
+    }
+    await page.waitForTimeout(2000);
+  }
+}
+
+async function browserFetch(url) {
+  return withPwPage(async (page) => {
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await waitChallenge(page);
+    return await page.content();
+  });
+}
+
+async function browserPost(url, body) {
+  return withPwPage(async (page) => {
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await waitChallenge(page);
+    return await page.evaluate(async ({ url, body }) => {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body
+      });
+      return await r.text();
+    }, { url, body });
+  });
+}
+
+function useBrowserFor(url) {
+  if (!USE_BROWSER) return false;
+  try { return PROXY_HOSTS.includes(new URL(url).hostname); } catch { return false; }
+}
+
 function viaProxy(url) {
   try {
     if (PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname)) {
@@ -111,6 +241,17 @@ function viaProxy(url) {
 }
 
 async function fetchHtml(url, attempt = 1) {
+  if (useBrowserFor(url)) {
+    try {
+      return await browserFetch(url);
+    } catch (e) {
+      if (attempt < FETCH_RETRIES) {
+        await sleep(1000 * attempt);
+        return fetchHtml(url, attempt + 1);
+      }
+      throw e;
+    }
+  }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
@@ -120,18 +261,23 @@ async function fetchHtml(url, attempt = 1) {
       signal: controller.signal,
       redirect: 'follow',
       headers: proxied ? { 'x-proxy-key': PROXY_KEY } : {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Accept-Language': 'es-ES,es;q=0.9,en-US;q=0.7,en;q=0.6',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.google.com/',
+        'Origin': 'https://www.google.com',
+        'Upgrade-Insecure-Requests': '1',
         'Cache-Control': 'max-age=0',
         'Sec-Fetch-Dest': 'document',
         'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-Site': 'cross-site',
         'Sec-Fetch-User': '?1',
-        'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+        'sec-ch-ua': '"Chromium";v="126", "Google Chrome";v="126", "Not-A.Brand";v="99"',
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
-        'Upgrade-Insecure-Requests': '1'
+        'DNT': '1',
+        'Connection': 'keep-alive'
       }
     });
     reqPromise.catch(() => {});
@@ -149,7 +295,7 @@ async function fetchHtml(url, attempt = 1) {
           if (!logged403.has(host)) {
             logged403.add(host);
             const body = await res.text().catch(() => '');
-            console.log(`   🛡️ 403 en ${host}: ${body.replace(/\s+/g, ' ').slice(0, 200)}`);
+            console.log(`   🛡️ 403 en ${host}: ${body.replace(/\s+/g, ' ').replace(/</g, '<').slice(0, 200)}`);
           }
         } catch {}
       }
@@ -169,7 +315,7 @@ async function fetchHtml(url, attempt = 1) {
   } catch (err) {
     try {
       const msg = String((err && err.message) || '');
-      if (!msg.includes('HTTP 404')) {
+      if (!msg.includes('HTTP 404')) {           // 404 = respuesta legítima, no castigo
         const h = new URL(url).hostname;
         const f = (hostFails.get(h) || 0) + 1;
         hostFails.set(h, f);
@@ -191,7 +337,9 @@ async function fetchHtml(url, attempt = 1) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   TÍTULOS Y EPISODIOS
+   TÍTULOS — limpieza de las plantillas de la web
+   "Ver Pull Strings Capitulos Online Sub Español - DoramasMP4"
+   → "Pull Strings"
 ══════════════════════════════════════════════════════════ */
 
 function cleanTitle(raw) {
@@ -233,6 +381,11 @@ function titleKey(rawTitle) {
 const mapSeason = (candSeason, offset) =>
   (offset != null && candSeason === 1) ? offset : candSeason;
 
+/* ══════════════════════════════════════════════════════════
+   EPISODIOS — número/temporada desde la URL
+   /cap/pull-strings-capitulo-30/ → { season: 1, number: 30 }
+══════════════════════════════════════════════════════════ */
+
 function epCode(slug, pathname) {
   let m = slug.match(/(\d{1,3})x(\d{1,4})(?:-|$)/i);
   if (m) return { season: Number(m[1]), number: Number(m[2]) };
@@ -265,7 +418,8 @@ function epCode(slug, pathname) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   SERVIDORES Y EXTRACCIÓN
+   SERVIDORES — iframes + data-* + hosts conocidos en el HTML
+   (ok.ru/okcdn, byse, voe, streamtape, multijugadora…)
 ══════════════════════════════════════════════════════════ */
 
 const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidurl|multijugadora|tio)[\/.]/i;
@@ -351,6 +505,8 @@ function parseEpisode(html, url) {
     let host = 'Servidor';
     try { if (raw) host = new URL(absolute(raw, url) || raw).hostname.replace(/^www\./, ''); } catch {}
     addServer(txt && txt.length < 30 ? txt : host, raw, false);
+    /* Pelispedia/dramachino: los iframes viven en la página "Ver Online".
+       Si esta página no trae servidores, seguimos ese enlace. */
     try {
       const full = absolute(raw, url);
       if (full && sameOrigin(full, url) && !watchUrl && raw) {
@@ -378,6 +534,8 @@ function parseEpisode(html, url) {
     addServer(host, m, true);
   }
 
+  /* Pestañas de servidor (patrón Dooplay): la página trae data-post/data-nume
+     y el vídeo se pide por AJAX a admin-ajax.php (action=doo_player_ajax). */
   const playerOpts = [];
   $('[data-post]').each((_, el) => {
     const node = $(el);
@@ -396,6 +554,7 @@ function hostOf(u) {
   try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return 'Servidor'; }
 }
 
+/* Recoge cualquier URL http(s) escondida en un JSON (embed_url, url…) */
 function collectUrlsFromJson(obj, out = []) {
   if (typeof obj === 'string') {
     if (/^https?:\/\//.test(obj)) out.push(obj);
@@ -407,9 +566,16 @@ function collectUrlsFromJson(obj, out = []) {
   return out;
 }
 
+/* Réplica de la llamada AJAX del reproductor (Dooplay y similares) */
 async function postAjax(opt, referer) {
   const origin = new URL(SOURCE.base).origin;
   const url = `${origin}/wp-admin/admin-ajax.php`;
+  const body = new URLSearchParams({ action: 'doo_player_ajax', post: opt.post, type: opt.type, nume: opt.nume }).toString();
+  if (useBrowserFor(url)) {
+    const res = await browserPost(url, body);
+    if (!res) throw new Error('admin-ajax vacío');
+    return res;
+  }
   const { target, proxied } = viaProxy(url);
   const res = await withHostLimit(new URL(url).hostname, () => fetch(target, {
     method: 'POST',
@@ -419,27 +585,29 @@ async function postAjax(opt, referer) {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest'
     } : {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
       'Referer': referer
     },
-    body: new URLSearchParams({ action: 'doo_player_ajax', post: opt.post, type: opt.type, nume: opt.nume }).toString()
+    body
   }));
   if (!res.ok) throw new Error(`admin-ajax HTTP ${res.status}`);
   return await res.text();
 }
 
 /* ══════════════════════════════════════════════════════════
-   PARSER DE SERIE
+   SERIE
 ══════════════════════════════════════════════════════════ */
 
 function parseSeries(html, url) {
   const $ = cheerio.load(html);
+
   const slug = slugFromUrl(url);
 
   let title = cleanTitle(
-    $('h1').first().text() \vert{}\vert{}$('meta[property="og:title"]').attr('content') ||
+    $('h1').first().text() ||
+    $('meta[property="og:title"]').attr('content') ||
     ''
   );
   if (!title) {
@@ -451,7 +619,7 @@ function parseSeries(html, url) {
     image = null;
     $('img').each((_, el) => {
       if (image) return;
-      const src = $(el).attr('data-src') || $(el).attr('data-original') \vert{}\vert{}$(el).attr('src');
+      const src = $(el).attr('data-src') || $(el).attr('data-original') || $(el).attr('src');
       const full = absolute(src, url);
       if (!full) return;
       const low = full.toLowerCase();
@@ -534,7 +702,7 @@ async function discoverSource(source) {
   const found = new Set();
 
   for (const seed of source.seeds) {
-    if (timeUp()) { console.log('⏱️ Presupuesto de tiempo agotado durante el descubrimiento'); break; }
+    if (timeUp()) { console.log('⏱️  Presupuesto de tiempo agotado durante el descubrimiento'); break; }
     const first = absolute(seed, source.base);
     if (!first) continue;
 
@@ -562,6 +730,7 @@ async function discoverSource(source) {
       await sleep(POLITENESS_MS);
     }
 
+    /* Sondeo numérico por si la paginación era "invisible" */
     let probeFails = 0;
     for (let n = 2; n <= source.maxPages; n++) {
       if (timeUp()) break;
@@ -597,13 +766,17 @@ async function discoverSource(source) {
   return [...found];
 }
 
+/* ══════════════════════════════════════════════════════════
+   FICHA DE SERIE + candidatos de episodios
+══════════════════════════════════════════════════════════ */
+
 async function scrapeSeriesPage(source, url) {
   const html = await fetchHtml(url);
   const parsed = parseSeries(html, url);
   const $ = cheerio.load(html);
   const seriesSlug = slugFromUrl(url);
 
-  const candidates = new Map();
+  const candidates = new Map(); // "season|number" → {season, number, urls:[]}
   const addCandidate = rawUrl => {
     if (!sameOrigin(rawUrl, source.base)) return;
     let pathname = '';
@@ -624,6 +797,9 @@ async function scrapeSeriesPage(source, url) {
     if (full) addCandidate(full);
   });
 
+  /* La ficha NO trae la lista de episodios (JavaScript). Se declara
+     "Capitulos: N"; sintetizamos /cap/{slug}-capitulo-{n}/ y el
+     rastreo valida cada URL (las falsas quedan en la lista de fallos). */
   if (source.synthesize) {
     const bodyTxt = clean($('body').text());
     let total = SYNTH_DEFAULT_EPS;
@@ -652,12 +828,8 @@ async function scrapeSeriesPage(source, url) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   GESTIÓN DE CATÁLOGO Y ARCHIVOS
+   CATÁLOGO
 ══════════════════════════════════════════════════════════ */
-
-async function ensureDir(filePath) {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-}
 
 async function loadCatalog() {
   try {
@@ -675,10 +847,8 @@ async function loadCatalog() {
 }
 
 async function saveCatalog(db) {
-  await ensureDir(OUT_FILE);
-  const tmp = `${OUT_FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(db, null, 2), 'utf8');
-  await fs.rename(tmp, OUT_FILE);
+  await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
+  await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
 }
 
 async function loadFailures() {
@@ -689,14 +859,14 @@ async function loadFailures() {
 }
 
 async function saveFailures(failures) {
-  await ensureDir(FAILURES_FILE);
-  const tmp = `${FAILURES_FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(failures, null, 2), 'utf8');
-  await fs.rename(tmp, FAILURES_FILE);
+  await fs.mkdir(path.dirname(FAILURES_FILE), { recursive: true });
+  await fs.writeFile(FAILURES_FILE, JSON.stringify(failures), 'utf8');
 }
 
 const MAX_FAILS = 2;
 
+/* Fichas ya analizadas: se guardan al momento para que una ejecución
+   cortada (o lenta) retome exactamente donde estaba en la siguiente. */
 async function loadRaws() {
   try {
     const d = JSON.parse(await fs.readFile(RAWS_FILE, 'utf8'));
@@ -705,10 +875,8 @@ async function loadRaws() {
 }
 
 async function saveRaws(raws) {
-  await ensureDir(RAWS_FILE);
-  const tmp = `${RAWS_FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(raws, null, 2), 'utf8');
-  await fs.rename(tmp, RAWS_FILE);
+  await fs.mkdir(path.dirname(RAWS_FILE), { recursive: true });
+  await fs.writeFile(RAWS_FILE, JSON.stringify(raws), 'utf8');
 }
 
 function upsert(array, item, key = 'id') {
@@ -720,7 +888,7 @@ function upsert(array, item, key = 'id') {
 let lastPush = 0;
 function gitCheckpoint(db) {
   const now = Date.now();
-  if (now - lastPush < 600000) return;
+  if (now - lastPush < 600000) return;  // máx. 1 push cada 10 min
   lastPush = now;
   saveCatalog(db).then(() => {
     try {
@@ -730,15 +898,15 @@ function gitCheckpoint(db) {
       execSync('git diff --staged --quiet || git commit -m "sync(series): progreso"');
       execSync('git pull --rebase origin main || true');
       execSync('git push');
-      console.log(`\n🚀 Checkpoint subido al repo (${elapsedMin()} min)\n`);
+      console.log(`\n🚀 Checkpoint subido al repo (${elapsedMin()} min) — a salvo ante cortes\n`);
     } catch {
-      console.log('⚠️ Push intermedio falló (se reintenta luego)');
+      console.log('⚠️  Push intermedio falló (se reintenta en el siguiente bloque)');
     }
   });
 }
 
 /* ══════════════════════════════════════════════════════════
-   TMDB Y POOL
+   TMDB
 ══════════════════════════════════════════════════════════ */
 
 async function tmdbFindPoster(title) {
@@ -757,6 +925,36 @@ async function tmdbFindPoster(title) {
   } catch { return null; }
 }
 
+/* ══════════════════════════════════════════════════════════
+   SELFTEST — SYNC_SERIES_SELFTEST=1 node syncdoramas.js
+══════════════════════════════════════════════════════════ */
+
+function selftest() {
+  const eq = (a, b, label) => {
+    const ok = JSON.stringify(a) === JSON.stringify(b);
+    console.log(`${ok ? '✅' : '❌'} ${label}${ok ? '' : ` → ${JSON.stringify(a)}`}`);
+    if (!ok) process.exitCode = 1;
+  };
+  eq(epCode('pull-strings-capitulo-30', '/cap/pull-strings-capitulo-30/'), { season: 1, number: 30 }, 'capítulo básico');
+  eq(epCode('mi-dorama-temporada-2-capitulo-5', '/cap/x'), { season: 2, number: 5 }, 'temporada explícita');
+  eq(epCode('algo-1x7', '/cap/x'), { season: 1, number: 7 }, 'formato 1x7');
+  eq(cleanTitle('Ver Pull Strings Capitulos Online Sub Español - DoramasMP4'), 'Pull Strings', 'título con plantilla de la web');
+  eq(cleanTitle('Lost to B You 【Sub Español】'), 'Lost to B You', 'título con 【Sub Español】');
+  eq(epCode('spring-of-the-blade-1x21', '/episodios/x'), { season: 1, number: 21 }, 'dramachino: 1x21 → T1E21');
+  eq(epCode('the-killing-1x7', '/ver-episode/x'), { season: 1, number: 7 }, 'gnula: 1x7 → T1E7');
+  eq(SOURCE.episodeTest('/ver-episode/the-killing-1x7/'), true, 'gnula: episodeTest');
+  eq(SOURCE.epBelongs('spring-of-the-blade-1x21', '/episodios/spring-of-the-blade-1x21/', 'spring-of-the-blade'), true, 'pertenencia: propio aceptado');
+  eq(cleanTitle('Spring of the Blade » Drama Chino'), 'Spring of the Blade', 'limpieza: separador »');
+  eq(isPlayableAbs('https://pkaa.top/embed.php?id=10425'), true, 'dramachino: embed.php aceptado');
+  eq(collectUrlsFromJson(JSON.parse('[{"embed_url":"https:\/\/x.top\/e.php?id=1","type":"iframe"}]')).length, 1, 'extractor JSON: embed_url con barras escapadas');
+  eq(SOURCE.epBelongs('otro-capitulo-30', '/cap/otro-capitulo-30/', 'pull-strings'), false, 'pertenencia: ajeno rechazado');
+  console.log('\nSelftest terminado.');
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAIN
+══════════════════════════════════════════════════════════ */
+
 async function runPool(items, workers, fn, shouldStop = () => false) {
   let i = 0;
   const worker = async () => {
@@ -769,10 +967,6 @@ async function runPool(items, workers, fn, shouldStop = () => false) {
   await Promise.all(Array.from({ length: workers }, worker));
 }
 
-/* ══════════════════════════════════════════════════════════
-   MAIN
-══════════════════════════════════════════════════════════ */
-
 async function main() {
   console.log('\n==============================================');
   console.log(`🚀 SERIES SYNC — ${SOURCE.base}`);
@@ -783,18 +977,74 @@ async function main() {
   const failures = await loadFailures();
   const startedAt = new Date().toISOString();
 
-  /* ── Fase 1: descubrimiento ── */
-  const urls = await discoverSource(SOURCE);
-
-  if (urls.length === 0) {
-    console.error('\n❌ ERROR CRÍTICO: No se descubrió ninguna serie (posible bloqueo 403 / Cloudflare). Abortando proceso para proteger el catálogo previo.\n');
-    process.exit(1);
+  /* Si cambia la fuente (p. ej. de doramasmp4 a dramachino), el catálogo
+     viejo no sirve: se empieza de cero con aviso en el log. */
+  if ((db.meta && db.meta.source && db.meta.source !== SOURCE.base) ||
+      (db.series.length && !db.episodes.length)) {
+    console.log(`\n🔄 Catálogo de series reiniciado (fuente nueva o catálogo anterior sin episodios).`);
+    db.series = []; db.seasons = []; db.episodes = []; db.genres = [];
   }
 
+  /* ── Fusión retroactiva de series duplicadas ── */
+  {
+    const byBase = new Map();
+    const remap = new Map();
+    for (const s of db.series) {
+      const k = titleKey(s.title).base;
+      if (!k) continue;
+      if (byBase.has(k)) remap.set(s.id, byBase.get(k));
+      else byBase.set(k, s.id);
+    }
+    if (remap.size) {
+      const keepById = new Map(db.series.map(s => [s.id, s]));
+      for (const s of db.series) {
+        const keepId = remap.get(s.id);
+        if (!keepId) continue;
+        const keep = keepById.get(keepId);
+        if (!keep) continue;
+        if ((!keep.image || !keep.image.includes('image.tmdb.org')) && s.image) keep.image = s.image;
+        if ((!keep.synopsis || keep.synopsis.length < 60) && s.synopsis) keep.synopsis = s.synopsis;
+        if (!keep.status && s.status) keep.status = s.status;
+        if (!keep.year && s.year) keep.year = s.year;
+        keep.genres = keep.genres || [];
+        for (const g of (s.genres || [])) if (!keep.genres.includes(g)) keep.genres.push(g);
+        keep.sourceUrls = keep.sourceUrls || [];
+        for (const u of (s.sourceUrls || [])) if (!keep.sourceUrls.includes(u)) keep.sourceUrls.push(u);
+      }
+      db.series = db.series.filter(s => !remap.has(s.id));
+      for (const seas of db.seasons) if (remap.has(seas.seriesId)) seas.seriesId = remap.get(seas.seriesId);
+      for (const ep of db.episodes) if (remap.has(ep.seriesId)) ep.seriesId = remap.get(ep.seriesId);
+      console.log(`\n🧹 Fusión retroactiva: ${remap.size} series duplicadas unificadas`);
+    }
+  }
+
+  /* ── Limpieza: episodios que NO pertenecen a su serie ── */
+  {
+    const seasonsById = new Map(db.seasons.map(s => [s.id, s]));
+    const seriesById = new Map(db.series.map(s => [s.id, s]));
+    const before = db.episodes.length;
+    db.episodes = db.episodes.filter(ep => {
+      const season = seasonsById.get(ep.seasonId);
+      const serie = season && seriesById.get(season.seriesId);
+      if (!serie) return true;
+      const allowed = (serie.sourceUrls && serie.sourceUrls.length)
+        ? serie.sourceUrls.map(slugFromUrl)
+        : [serie.id];
+      const epSlug = slugFromUrl(ep.sourceUrl || '');
+      return allowed.some(ss => epSlug.toLowerCase().startsWith(String(ss).toLowerCase()));
+    });
+    if (before - db.episodes.length) {
+      console.log(`🧹 Limpieza: ${before - db.episodes.length} episodios ajenos eliminados`);
+    }
+  }
+
+  /* ── Fase 1: descubrimiento ── */
+  const urls = await discoverSource(SOURCE);
   const tasks = urls.map(u => ({ source: SOURCE, url: u }));
   console.log(`\n📚 Total de fichas de serie a analizar: ${tasks.length}`);
 
   /* ── Fase 2a: analizar fichas ── */
+  /* Recupera fichas ya analizadas en ejecuciones anteriores */
   const prevRaws = await loadRaws();
   const raws = prevRaws.filter(r => urls.includes(r.url));
   const doneUrls = new Set(raws.map(r => r.url));
@@ -803,7 +1053,6 @@ async function main() {
   const total = raws.length + pendingTasks.length;
   let done = raws.length;
   const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${total} fichas (${elapsedMin()} min)`), 30000);
-  
   await runPool(pendingTasks, WORKERS, async ({ source, url }) => {
     const r = await scrapeSeriesPage(source, url);
     raws.push(r);
@@ -935,6 +1184,11 @@ async function main() {
     }
   }
 
+  console.log(`\n🎬 Episodios ya en catálogo (se respetan): ${skippedExisting}`);
+  if (recrawlEmpty) console.log(`↻  Episodios existentes SIN servidores (se reintentan): ${recrawlEmpty}`);
+  if (skippedFailed) console.log(`🚫 Episodios omitidos (fallaron ${MAX_FAILS}+ veces): ${skippedFailed}`);
+  console.log(`🎬 Episodios a rastrear: ${epQueue.length} (tope ${MAX_EPISODE_CRAWLS})`);
+
   await saveCatalog(db);
   await saveFailures(failures);
   gitCheckpoint(db);
@@ -969,9 +1223,12 @@ async function main() {
             const parsed2 = parseEpisode(html2, parsed.watchUrl);
             parsed = { ...parsed, servers: parsed2.servers, title: parsed.title || parsed2.title };
             if (parsed2.title && !pageTitle) pageTitle = parsed2.title;
+            console.log(`      📺 Ver Online → ${parsed.watchUrl}`);
           } catch (e2) { lastErr = e2.message; }
         }
         if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
+          /* Cada pestaña de servidor (OK, BYSE, VOE…) es una opción:
+             las probamos todas y sumamos los embed_url de cada respuesta. */
           for (const opt of parsed.playerOpts.slice(0, 6)) {
             try {
               const resp = await postAjax(opt, u);
@@ -987,6 +1244,7 @@ async function main() {
                 for (const s of parsed2.servers) added.push(s);
                 if (added.length) {
                   parsed = { ...parsed, servers: [...parsed.servers, ...added] };
+                  console.log(`      ⚡ AJAX reproductor (post ${opt.post} · nume ${opt.nume}) → +${added.length} servidor(es)`);
                 }
               }
             } catch (e3) { lastErr = e3.message; }
@@ -1029,20 +1287,50 @@ async function main() {
       failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
+      if (diagCount < 4) {
+        diagCount++;
+        let snippet;
+        if (lastHtml) {
+          const kws = ['admin-ajax', 'dooplay', 'playeroptions', 'data-post', 'data-nume', 'data-episode', 'ajaxurl', 'action=', 'nonce', 'iframe', 'tremble'];
+          const hits = [];
+          for (const kw of kws) {
+            const i = lastHtml.indexOf(kw);
+            if (i !== -1) hits.push(`[${kw}] …${lastHtml.slice(Math.max(0, i - 80), i + 240).replace(/\s+/g, ' ').replace(/</g, '<')}…`);
+            if (hits.length >= 2) break;
+          }
+          snippet = hits.length
+            ? hits.join('  |  ')
+            : `HTTP 200 sin servidores ni pistas. Muestra: ${lastHtml.replace(/\s+/g, ' ').slice(0, 300)}`;
+        } else {
+          snippet = `no se pudo descargar (${lastErr || 'error desconocido'})`;
+        }
+        console.log(`   🔎 DIAG [${diagCount}/4] ${job.seasonId} e${job.number}: ${snippet}`);
+      }
     }
 
+    /* Cortacircuitos: si los 30 primeros episodios fallan todos, la web
+       está bloqueando las páginas de episodio o cambió su estructura.
+       Mejor parar y mirar el DIAG que quemar miles de intentos. */
     if (crawled >= 30 && newEps === 0 && !stoppedByCircuit) {
       stoppedByCircuit = true;
-      console.log('\n⛔ Cortacircuito: los 30 primeros episodios dieron 0 servidores.\n');
+      console.log('\n⛔ Cortacircuito: los 30 primeros episodios dieron 0 servidores. La web está bloqueando /episodios/ o cambió su estructura. Revisa las líneas 🔎 DIAG de arriba. Si es un bloqueo, activa el proxy (DORAMAS_PROXY_URL/KEY).\n');
     }
 
     if (crawled % 10 === 0) {
       await saveCatalog(db);
       await saveFailures(failures);
       gitCheckpoint(db);
+      console.log(`   📄 ep ${crawled}/${epQueue.length} · +${newEps} · ${elapsedMin()} min`);
+    }
+    if (crawled % 500 === 0) {
+      console.log(`\n💾 checkpoint: ${crawled} episodios rastreados · +${newEps} nuevos\n`);
     }
   }, () => stoppedByBudget || stoppedByCircuit);
   clearInterval(hb2);
+
+  if (stoppedByBudget) {
+    console.log(`\n⏱️  Presupuesto de tiempo agotado (${MAX_RUNTIME_MS / 60000} min). Se guarda lo avanzado; la próxima ejecución retoma.`);
+  }
 
   /* Contadores por temporada */
   const countBySeason = new Map();
@@ -1053,18 +1341,30 @@ async function main() {
     s.episodeCount = countBySeason.get(s.id) || 0;
   }
 
-  /* Limpieza de fuentes y temporadas vacías */
-  db.series = db.series.filter(s => {
-    const urls = s.sourceUrls || [];
-    if (!urls.length) return true;
-    return urls.some(u => u.includes('gnula.cc'));
-  });
+  /* Series de fuentes antiguas (p. ej. doramasmp4) que ya no se
+     rastrean: se eliminan para no dejar basura en el catálogo. */
+  {
+    const before = db.series.length;
+    db.series = db.series.filter(s => {
+      const urls = s.sourceUrls || [];
+      if (!urls.length) return true;
+      return urls.some(u => u.includes('gnula.cc'));
+    });
+    const removedSeries = before - db.series.length;
+    if (removedSeries) console.log(`🧹 Series de fuentes antiguas eliminadas: ${removedSeries}`);
+  }
 
-  db.seasons = db.seasons.filter(s => s.episodeCount > 0 || createdSeasonIds.has(s.id));
+  /* Temporadas vacías */
+  {
+    const before = db.seasons.length;
+    db.seasons = db.seasons.filter(s => s.episodeCount > 0 || createdSeasonIds.has(s.id));
+    const removedSeasons = before - db.seasons.length;
+    if (removedSeasons) console.log(`🧹 Temporadas vacías eliminadas: ${removedSeasons}`);
+  }
 
   /* ── Fase 4: portadas TMDB ── */
   if (TMDB_API_KEY && !timeUp()) {
-    console.log('\n🖼️ Buscando portadas en TMDB…');
+    console.log('\n🖼️  Buscando portadas en TMDB…');
     let posters = 0;
     for (const s of db.series) {
       if (timeUp()) break;
@@ -1073,9 +1373,13 @@ async function main() {
       if (poster) {
         s.image = poster;
         posters++;
+        if (posters % 25 === 0) console.log(`   🖼️ ${posters} portadas TMDB…`);
       }
       await sleep(150);
     }
+    console.log(`🖼️  Portadas TMDB asignadas: ${posters}`);
+  } else if (!TMDB_API_KEY) {
+    console.log('\n⚠️  TMDB_API_KEY no definido: se conservan las portadas de la web.');
   }
 
   db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
@@ -1090,6 +1394,8 @@ async function main() {
       status: 'success',
       type: 'full',
       startedAt, finishedAt, error: null,
+      stoppedByBudget,
+      stoppedByCircuit,
       series: db.series.length,
       seasons: db.seasons.length,
       episodes: db.episodes.length,
@@ -1103,12 +1409,33 @@ async function main() {
   gitCheckpoint(db);
 
   console.log('\n====================================================');
-  console.log('🎉 SYNC DORAMAS TERMINADO CON ÉXITO');
+  console.log('🎉 SYNC DORAMAS TERMINADO');
+  console.log('====================================================');
+  console.log(`📚 Series: ${db.series.length}`);
+  console.log(`📖 Temporadas: ${db.seasons.length}`);
+  console.log(`🎬 Episodios: ${db.episodes.length} (+${newEps} nuevos, ${failedEps} sin servidores)`);
+  console.log(`⏱️  Duración: ${elapsedMin()} min`);
   console.log('====================================================\n');
 }
 
 /* ── Arranque ── */
-main().catch(async e => {
-  console.error('\n💥 ERROR FATAL:', e);
-  process.exitCode = 1;
-});
+if (process.env.SYNC_SERIES_SELFTEST === '1') {
+  selftest();
+} else {
+  main().catch(async e => {
+    console.error('\n💥 ERROR FATAL:', e);
+    try {
+      const db = await loadCatalog();
+      db.meta = {
+        ...(db.meta || {}),
+        lastSync: {
+          status: 'error',
+          finishedAt: new Date().toISOString(),
+          error: e.message
+        }
+      };
+      await saveCatalog(db);
+    } catch {}
+    process.exitCode = 1;
+  });
+}
