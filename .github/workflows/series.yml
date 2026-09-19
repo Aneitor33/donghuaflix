@@ -32,7 +32,7 @@ jobs:
 
       - name: Instalar navegador (Playwright) y Xvfb
         run: |
-          npm i --no-save playwright
+          npm i --no-save playwright playwright-extra playwright-extra-plugin-stealth
           npx playwright install chromium --with-deps
           sudo apt-get update && sudo apt-get install -y xvfb
 
