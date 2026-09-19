@@ -32,8 +32,8 @@ jobs:
       - name: Sincronizar SeriesDonghua
         env:
           ONLY_SOURCE: 'seriesdonghua'
-          WORKERS: '10'
-          POLITENESS_MS: '300'
+          WORKERS: '8'
+          POLITENESS_MS: '400'
           MAX_EPISODE_CRAWLS: '20000'
           MAX_RUNTIME_MINUTES: '330'
           FETCH_TIMEOUT_MS: '45000'
