@@ -1575,8 +1575,38 @@ function top10Rail(items) {
 let heroItems = [];
 let heroIdx = 0;
 let heroTimer = null;
+let heroTouchX = null;
+let heroMouseX = null;
+let heroHold = false;
 
-function renderHero() {
+const HERO_INTERVAL = 5000;
+
+function heroGo(dir) {
+  if (!heroItems.length) return;
+  heroIdx =
+    (heroIdx + dir + heroItems.length) %
+    heroItems.length;
+  renderHero(dir);
+}
+
+function heroGoTo(i) {
+  if (!heroItems.length || i === heroIdx) return;
+  const dir = i > heroIdx ? 1 : -1;
+  heroIdx = i;
+  renderHero(dir);
+}
+
+function heroRestartTimer() {
+  clearInterval(heroTimer);
+  if (heroItems.length > 1 && !heroHold) {
+    heroTimer = setInterval(
+      () => heroGo(1),
+      HERO_INTERVAL
+    );
+  }
+}
+
+function renderHero(dir = 0) {
   const hero =
     heroItems[heroIdx];
 
@@ -1628,14 +1658,14 @@ function renderHero() {
         '#/episode/' +
         qs(
           ep.slug ||
-          ep.id
+            ep.id
         );
     } else {
       location.hash =
         '#/series/' +
         qs(
           hero.slug ||
-          hero.id
+            hero.id
         );
     }
   };
@@ -1678,6 +1708,18 @@ function renderHero() {
           i === heroIdx
         )
     );
+
+  /* animación direccional del contenido */
+  sec.classList.remove(
+    'slide-l',
+    'slide-r'
+  );
+  if (dir) {
+    void sec.offsetWidth;
+    sec.classList.add(
+      dir > 0 ? 'slide-l' : 'slide-r'
+    );
+  }
 }
 
 function mountHero(items) {
@@ -1689,18 +1731,126 @@ function mountHero(items) {
     items.slice(0, 5);
 
   heroIdx = 0;
+  heroHold = false;
+
+  renderHero();
+  heroRestartTimer();
+
+  const heroEl =
+    document.getElementById(
+      'hero'
+    );
 
   if (
-    heroItems.length > 1
+    heroEl &&
+    !heroEl.dataset
+      .swipeBound
   ) {
-    heroTimer =
-      setInterval(() => {
-        heroIdx =
-          (heroIdx + 1) %
-          heroItems.length;
+    heroEl.dataset.swipeBound =
+      '1';
 
-        renderHero();
-      }, 7000);
+    /* táctil: deslizar izquierda/derecha */
+    heroEl.addEventListener(
+      'touchstart',
+      e => {
+        heroTouchX =
+          e.touches[0].clientX;
+        heroHold = true;
+        clearInterval(
+          heroTimer
+        );
+      },
+      { passive: true }
+    );
+
+    heroEl.addEventListener(
+      'touchend',
+      e => {
+        if (
+          heroTouchX !=
+          null
+        ) {
+          const dx =
+            e.changedTouches[0]
+              .clientX -
+            heroTouchX;
+          if (
+            Math.abs(dx) >
+            45
+          ) {
+            heroGo(
+              dx < 0
+                ? 1
+                : -1
+            );
+          }
+        }
+        heroTouchX = null;
+        heroHold = false;
+        heroRestartTimer();
+      },
+      { passive: true }
+    );
+
+    /* ratón: arrastrar en escritorio */
+    heroEl.addEventListener(
+      'mousedown',
+      e => {
+        heroMouseX =
+          e.clientX;
+      }
+    );
+
+    window.addEventListener(
+      'mouseup',
+      e => {
+        if (
+          heroMouseX ==
+          null
+        ) {
+          return;
+        }
+        const dx =
+          e.clientX -
+          heroMouseX;
+        if (
+          Math.abs(dx) >
+          70
+        ) {
+          heroGo(
+            dx < 0
+              ? 1
+              : -1
+          );
+        }
+        heroMouseX = null;
+      }
+    );
+
+    /* teclado: flechas izquierda/derecha */
+    document.addEventListener(
+      'keydown',
+      e => {
+        if (
+          !document.getElementById(
+            'hero'
+          )
+        ) {
+          return;
+        }
+        if (
+          e.key ===
+          'ArrowRight'
+        ) {
+          heroGo(1);
+        } else if (
+          e.key ===
+          'ArrowLeft'
+        ) {
+          heroGo(-1);
+        }
+      }
+    );
   }
 }
 
@@ -1796,8 +1946,27 @@ function home() {
   const top10 =
     bySize.slice(0, 10);
 
+  /* Hero ALEATORIO del catálogo activo (sin mezclar catálogos):
+     prioriza títulos con portada y sinopsis para que quede bonito */
+  const heroCandidates =
+    DB.series.filter(
+      s =>
+        getSeriesImage(s) &&
+        (s.synopsis || '')
+          .length > 40
+    );
+  const heroSource =
+    heroCandidates.length >= 5
+      ? heroCandidates
+      : DB.series;
   const heroPool =
-    recent;
+    heroSource
+      .slice()
+      .sort(
+        () =>
+          Math.random() - 0.5
+      )
+      .slice(0, 5);
 
   const sections = [];
 
@@ -1921,6 +2090,163 @@ function home() {
     </section>`);
   }
 
+  /* ── Nuevos episodios: series con capítulos recién actualizados ── */
+  {
+    const epLatest =
+      new Map();
+    for (const e of DB.episodes) {
+      const t =
+        Date.parse(
+          e.updatedAt || 0
+        ) || 0;
+      if (
+        t &&
+        (!epLatest.has(
+          e.seriesId
+        ) ||
+          t >
+            epLatest.get(
+              e.seriesId
+            ))
+      ) {
+        epLatest.set(
+          e.seriesId,
+          t
+        );
+      }
+    }
+    const freshEps =
+      DB.series
+        .filter(
+          s =>
+            epLatest.has(
+              s.id
+            )
+        )
+        .sort(
+          (a, b) =>
+            epLatest.get(
+              b.id
+            ) -
+            epLatest.get(
+              a.id
+            )
+        )
+        .slice(0, 14);
+    if (freshEps.length) {
+      sections.push(`
+      <section class="section">
+        <div class="section-head">
+          <h2>🔥 Nuevos episodios</h2>
+          <span class="muted">${freshEps.length}</span>
+        </div>
+        ${rail(freshEps)}
+      </section>`);
+    }
+  }
+
+  /* ── Para maratonear: los títulos más largos ── */
+  {
+    const marathon =
+      DB.series
+        .slice()
+        .sort(
+          (a, b) =>
+            seriesEpisodeCount(
+              b
+            ) -
+            seriesEpisodeCount(
+              a
+            )
+        )
+        .filter(
+          s =>
+            seriesEpisodeCount(
+              s
+            ) >= 50
+        )
+        .slice(0, 12);
+    if (marathon.length) {
+      sections.push(`
+      <section class="section">
+        <div class="section-head">
+          <h2>🏃 Para maratonear</h2>
+          <span class="muted">${marathon.length}</span>
+        </div>
+        ${rail(marathon)}
+      </section>`);
+    }
+  }
+
+  /* ── Raíles por género: los 3 géneros con más títulos ── */
+  {
+    const genreCount =
+      new Map();
+    for (const s of DB.series) {
+      for (const g of seriesGenres(
+        s
+      )) {
+        const k =
+          fold(g);
+        genreCount.set(
+          k,
+          (genreCount.get(
+            k
+          ) || 0) + 1
+        );
+      }
+    }
+    const topGenres =
+      [
+        ...genreCount.entries()
+      ]
+        .sort(
+          (a, b) =>
+            b[1] - a[1]
+        )
+        .slice(0, 3);
+    for (const [
+      gKey
+    ] of topGenres) {
+      const inGenre =
+        DB.series
+          .filter(
+            s =>
+              seriesGenres(
+                s
+              ).some(
+                g =>
+                  fold(
+                    g
+                  ) ===
+                  gKey
+              )
+          )
+          .slice(0, 14);
+      if (
+        inGenre.length < 4
+      ) {
+        continue;
+      }
+      const gName =
+        seriesGenres(
+          inGenre[0]
+        ).find(
+          g =>
+            fold(g) ===
+            gKey
+        ) || gKey;
+      sections.push(`
+      <section class="section">
+        <div class="section-head">
+          <h2>${esc(gName)}</h2>
+          <span class="muted">${inGenre.length}</span>
+        </div>
+        ${rail(inGenre)}
+      </section>`);
+    }
+  }
+
   /*
    * Importante:
    * Esta sección puede contener miles de películas.
@@ -2004,11 +2330,13 @@ function home() {
             .slice(0, 5)
             .map(
               (_, i) =>
-                `<button onclick="clearInterval(heroTimer);heroIdx=${i};renderHero()" aria-label="Hero ${
+                `<button onclick="heroGoTo(${i})" aria-label="Hero ${
                   i + 1
-                }"></button>`
+                }" ${i === heroIdx ? 'class="active"' : ''}></button>`
             )
             .join('')}
+          <button class="hero-arrow left" onclick="heroGo(-1)" aria-label="Anterior">‹</button>
+          <button class="hero-arrow right" onclick="heroGo(1)" aria-label="Siguiente">›</button>
         </div>`
         : ''
     }
@@ -4239,10 +4567,21 @@ function highlightNav() {
     });
 }
 
+function pageTransition() {
+  app.classList.remove(
+    'page-anim'
+  );
+  void app.offsetWidth;
+  app.classList.add(
+    'page-anim'
+  );
+}
+
 function route() {
   clearInterval(
     heroTimer
   );
+  heroHold = false;
 
   stopProgressiveGrid();
 
@@ -4359,6 +4698,8 @@ function route() {
   }
 
   highlightNav();
+
+  pageTransition();
 
   window.scrollTo({
     top: 0
