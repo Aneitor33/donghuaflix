@@ -611,7 +611,7 @@ function parseEpisode(html, url) {
      #vhide), ocultos con display:none; el JS solo muestra el del hash.
      Extraemos cada iframe dentro de su div[id] correspondiente. */
   {
-    const TAB_IDS = ['tamamo', 'amagi', 'fmoon', 'proteja', 'vhide', 'voe', 'ok', 'rumble', 'daily', 'stream'];
+    const TAB_IDS = ['tamamo', 'amagi', 'fmoon', 'proteja', 'vhide', 'tape', 'fembed', 'skadi', 'asura', 'voe', 'ok', 'rumble', 'daily', 'stream', 'moon', 'magi'];
     for (const tab of TAB_IDS) {
       const $div = $(`#${tab}`);
       if (!$div.length) continue;
