@@ -59,10 +59,14 @@ const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'dramachino.com,www.dramachino.c
    que el servidor "enfríe" la penalización antes de seguir. */
 const hostSem = new Map();
 const hostFails = new Map();
+/* Máximo de conexiones simultáneas a la web. La anterior castigaba
+   por concurrencia (2); si la nueva es tranquila, sube HOST_LIMIT
+   en el workflow (probad de 4 en 4 y mira si salen 🥵 o 429). */
+const HOST_LIMIT = Math.max(1, Math.min(8, Number(process.env.HOST_LIMIT || 2)));
 async function withHostLimit(host, fn) {
   let sem = hostSem.get(host);
   if (!sem) { sem = { active: 0, queue: [] }; hostSem.set(host, sem); }
-  if (sem.active >= 2) await new Promise(r => sem.queue.push(r));
+  if (sem.active >= HOST_LIMIT) await new Promise(r => sem.queue.push(r));
   sem.active++;
   try { return await fn(); }
   finally { sem.active--; const n = sem.queue.shift(); if (n) n(); }
@@ -379,12 +383,28 @@ function parseEpisode(html, url) {
     addServer(host, raw, true, currentLang);
   });
 
+  let watchUrl = null;
+  let selfPath = '';
+  try { selfPath = new URL(url).pathname; } catch {}
   $('a[href]').each((_, el) => {
     const raw = $(el).attr('href');
     const txt = clean($(el).text());
     let host = 'Servidor';
     try { if (raw) host = new URL(absolute(raw, url) || raw).hostname.replace(/^www\./, ''); } catch {}
     addServer(txt && txt.length < 30 ? txt : host, raw, false);
+    /* Pelispedia/dramachino: los iframes viven en la página "Ver Online".
+       Si esta página no trae servidores, seguimos ese enlace. */
+    try {
+      const full = absolute(raw, url);
+      if (full && sameOrigin(full, url) && !watchUrl && raw) {
+        const pp = new URL(full).pathname;
+        if (pp !== selfPath &&
+            (/\/(ver|reproducir|mirar|play|online|video)\//i.test(pp) ||
+             /ver online|reproducir|ver ahora|mirar ahora|watch now/i.test(txt))) {
+          watchUrl = full;
+        }
+      }
+    } catch {}
   });
 
   const directRe = /https?:\/\/[^\s"'<>\\]+\.(?:mp4|webm|m3u8)(\?[^\s"'<>\\]*)?/gi;
@@ -401,7 +421,7 @@ function parseEpisode(html, url) {
     addServer(host, m, true);
   }
 
-  return { title, servers };
+  return { title, servers, watchUrl };
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1007,6 +1027,8 @@ async function main() {
   /* ── Fase 3: rastrear episodios ── */
   let newEps = 0, failedEps = 0, crawled = 0;
   let stoppedByBudget = false;
+  let stoppedByCircuit = false;
+  let diagCount = 0;
   const hb2 = setInterval(() => console.log(`   💓 vivo: ${crawled}/${epQueue.length} episodios · +${newEps} (${elapsedMin()} min)`), 60000);
 
   await runPool(epQueue, WORKERS, async (job) => {
@@ -1015,19 +1037,32 @@ async function main() {
     const servers = [];
     const seenSrv = new Set();
     let pageTitle = null;
+    let lastErr = null;
+    let lastHtml = null;
 
     for (const u of job.urls) {
       if (timeUp()) { stoppedByBudget = true; break; }
       try {
         const html = await fetchHtml(u);
-        const parsed = parseEpisode(html, u);
+        lastHtml = html;
+        let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
+        if (!parsed.servers.length && parsed.watchUrl) {
+          try {
+            const html2 = await fetchHtml(parsed.watchUrl);
+            lastHtml = html2;
+            const parsed2 = parseEpisode(html2, parsed.watchUrl);
+            parsed = { ...parsed, servers: parsed2.servers, title: parsed.title || parsed2.title };
+            if (parsed2.title && !pageTitle) pageTitle = parsed2.title;
+            console.log(`      📺 Ver Online → ${parsed.watchUrl}`);
+          } catch (e2) { lastErr = e2.message; }
+        }
         for (const s of parsed.servers) {
           if (seenSrv.has(s.url)) continue;
           seenSrv.add(s.url);
           servers.push(s);
         }
-      } catch {}
+      } catch (e) { lastErr = e.message; }
       await sleep(POLITENESS_MS);
     }
 
@@ -1058,6 +1093,21 @@ async function main() {
       failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
+      if (diagCount < 3) {
+        diagCount++;
+        const snippet = lastHtml
+          ? `HTTP 200 sin servidores. Muestra: ${lastHtml.replace(/\s+/g, ' ').replace(/</g, '<').slice(0, 350)}`
+          : `no se pudo descargar (${lastErr || 'error desconocido'})`;
+        console.log(`   🔎 DIAG [${diagCount}/3] ${job.seasonId} e${job.number}: ${snippet}`);
+      }
+    }
+
+    /* Cortacircuitos: si los 30 primeros episodios fallan todos, la web
+       está bloqueando las páginas de episodio o cambió su estructura.
+       Mejor parar y mirar el DIAG que quemar miles de intentos. */
+    if (crawled >= 30 && newEps === 0 && !stoppedByCircuit) {
+      stoppedByCircuit = true;
+      console.log('\n⛔ Cortacircuito: los 30 primeros episodios dieron 0 servidores. La web está bloqueando /episodios/ o cambió su estructura. Revisa las líneas 🔎 DIAG de arriba. Si es un bloqueo, activa el proxy (DORAMAS_PROXY_URL/KEY).\n');
     }
 
     if (crawled % 10 === 0) {
@@ -1069,7 +1119,7 @@ async function main() {
     if (crawled % 500 === 0) {
       console.log(`\n💾 checkpoint: ${crawled} episodios rastreados · +${newEps} nuevos\n`);
     }
-  }, () => stoppedByBudget);
+  }, () => stoppedByBudget || stoppedByCircuit);
   clearInterval(hb2);
 
   if (stoppedByBudget) {
@@ -1126,6 +1176,7 @@ async function main() {
       type: 'full',
       startedAt, finishedAt, error: null,
       stoppedByBudget,
+      stoppedByCircuit,
       series: db.series.length,
       seasons: db.seasons.length,
       episodes: db.episodes.length,
