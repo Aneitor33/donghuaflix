@@ -506,6 +506,25 @@ async function postAjax(opt, referer) {
   return await res.text();
 }
 
+/* Descompresor del packer "eval(function(p,a,c,k,e,d){...})": el JS
+   de mundodonghua/seriesdonghua lleva las URLs de VOE/Amagi/etc. en este
+   formato. Se descomprime evaluando la función de desempaquetado. */
+function unpackPacker(js) {
+  const re = /eval\(function\(p,a,c,k,e,d\)\{[\s\S]*?\}\(([^)]+)\)\)/;
+  const m = js.match(re);
+  if (!m) return js;
+  try {
+    // Extraer los argumentos: p,a,c,k,e,d
+    const argsSrc = m[1];
+    const fnBody = m[0].slice(5, -1); // quitar "eval(" y ")"
+    // Construir la función y obtener el resultado (p modificado)
+    const unpack = new Function(`return (${fnBody})`)();
+    return unpack || js;
+  } catch {
+    return js;
+  }
+}
+
 function parseEpisode(html, url) {
   const unpacked = unpackPacker(html);
   const $ = cheerio.load(unpacked);
@@ -605,6 +624,22 @@ function parseEpisode(html, url) {
       playerOpts.push({ post, nume, type });
     }
   });
+
+  /* 2b) Packer: si el JS trae eval(function(p,a,c,k,e,d){...}) y no
+     encontramos servidores, descomprimimos y buscamos URLs de VOE/Amagi/etc. */
+  if (!servers.length && /eval\(function\(p,a,c,k,e,d\)/.test(html)) {
+    try {
+      const unpacked = unpackPacker(html);
+      const urlRe = /["']((https?:)?\/\/[^"'\s<>]+)["']/g;
+      for (const m2 of unpacked.match(urlRe) || []) {
+        let u = m2.slice(1, -1);
+        if (u.startsWith('//')) u = 'https:' + u;
+        if (/voe|amagi|fmoon|proteja|tamamo|byse|moon|magi|ok\.ru|dailymotion|rumble|streamtape|fembed|skadi|asura|tape/i.test(u)) {
+          addServer('Servidor', u, true);
+        }
+      }
+    } catch {}
+  }
 
   /* 3) Pestañas de servidor por ID (MundoDonghua/SeriesDonghua): el episodio
      trae TODOS los ifranes (uno por #id: #tamamo, #amagi, #fmoon, #proteja,
