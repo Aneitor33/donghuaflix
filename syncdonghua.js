@@ -313,8 +313,11 @@ async function fetchHtml(url, attempt = 1) {
    "Yuan Long Manhua, Novela Ligera 【Sub Español】 | SeriesDonghua"
    "The Nine Heaven… 🥇 DONGHUA【Sub Español】"  →  título real */
 function cleanTitle(raw) {
-  let t = clean(String(raw || '')).split('|')[0];
+  let t = clean(String(raw || '')).split('|')[0].split('»')[0];
+  t = t.replace(/^(?:donghua|dorama|manhua)\s*:\s*/i, ' ');
+  t = t.replace(/^donghua\s+(?=\S)/i, ' ');
   t = t.replace(/[\[【(][^\]】)]{0,60}[\]】)]/g, ' ');
+  t = t.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+/gu, ' ');
   t = t.replace(/\b(?:donghuaflix|donghualife|mundodonghua|seriesdonghua|tiodonghua)\b.*$/i, ' ');
   t = t.replace(/\b(?:manhua|manhwa|webtoon|novela(?:\s+ligera)?)\b/gi, ' ');
   let prev;
@@ -927,6 +930,32 @@ function gitCheckpoint(db) {
   });
 }
 
+/* AniList: portadas de animación asiática. Gratuito, sin API key,
+   y con mejor cobertura de donghua que TMDB. */
+async function anilistFindPoster(title) {
+  if (!title) return null;
+  try {
+    const res = await fetch('https://graphql.anilist.co', {
+      method: 'POST',
+      signal: AbortSignal.timeout(15000),
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        query: `query ($search: String) {
+          Media(search: $search, type: ANIME) {
+            coverImage { extraLarge }
+          }
+        }`,
+        variables: { search: title }
+      })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data && data.data && data.data.Media &&
+            data.data.Media.coverImage &&
+            data.data.Media.coverImage.extraLarge) || null;
+  } catch { return null; }
+}
+
 /* ══════════════════════════════════════════════════════════
    TMDB — buscar portada por título
 ══════════════════════════════════════════════════════════ */
@@ -994,6 +1023,9 @@ function selftest() {
   eq(isPlayableAbs('https://www.mundodonghua.com/donghua/wu-geng-ji'), false, 'enlace normal rechazado');
   eq(isPlayableAbs('https://tiodonghua.lat/wp-content/uploads/poster.jpg'), false, 'imagen rechazada');
   eq(isPlayableAbs('https://fembed.com/v/abc'), true, 'fembed');
+  eq(cleanTitle('DONGHUA: Swallowed Star'), 'Swallowed Star', 'limpieza: prefijo DONGHUA:');
+  eq(cleanTitle('Donghua \u{1F947} Link Click'), 'Link Click', 'limpieza: prefijo Donghua + emoji');
+
   console.log('\nSelftest terminado.');
 }
 
@@ -1324,6 +1356,7 @@ async function main() {
 
   /* ── Fase 3: rastrear episodios nuevos (paralelo) ── */
   let newEps = 0, failedEps = 0, crawled = 0;
+  let diagCount = 0;
   let stoppedByBudget = false;
 
   await runPool(epQueue, WORKERS, async (job) => {
@@ -1332,11 +1365,14 @@ async function main() {
     const servers = [];
     const seenSrv = new Set();
     let pageTitle = null;
+    let lastErr = null;
+    let lastHtml = null;
 
     for (const u of job.urls) {
       if (timeUp()) { stoppedByBudget = true; break; }
       try {
         const html = await fetchHtml(u);
+        lastHtml = html;
         let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
         /* El reproductor vive en la página "Ver Online" */
@@ -1406,6 +1442,25 @@ async function main() {
       failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
+      if (diagCount < 4) {
+        diagCount++;
+        let snippet;
+        if (lastHtml) {
+          const kws = ['admin-ajax', 'data-post', 'data-server', 'data-embed', 'data-link', 'selectServer', 'playeroptions', 'dooplay', 'iframe', 'ok.ru', 'rumble', 'dailymotion', 'voe', 'tamamo', 'streamtape', 'option value', 'ajax'];
+          const hits = [];
+          for (const kw of kws) {
+            const i = lastHtml.indexOf(kw);
+            if (i !== -1) hits.push(`[${kw}] …${lastHtml.slice(Math.max(0, i - 60), i + 200).replace(/\s+/g, ' ')}…`);
+            if (hits.length >= 2) break;
+          }
+          snippet = hits.length
+            ? hits.join('  |  ')
+            : `HTTP OK sin pistas. Muestra: ${lastHtml.replace(/\s+/g, ' ').slice(0, 280)}`;
+        } else {
+          snippet = `no se pudo descargar (${lastErr || 'error'})`;
+        }
+        console.log(`   🔎 DIAG [${diagCount}/4] ${job.seasonId} e${job.number}: ${snippet}`);
+      }
     }
 
     if (crawled % 10 === 0) {
@@ -1458,24 +1513,28 @@ async function main() {
     globalThis.__removedEmpty = removedEmpty;
   }
 
-  /* ── Fase 4: portadas TMDB ── */
-  if (TMDB_API_KEY && !timeUp()) {
-    console.log('\n🖼️  Buscando portadas en TMDB…');
+  /* ── Fase 4: portadas ── AniList primero (gratis y pensado para
+     animación asiática); TMDB como respaldo si hay API key. ── */
+  if (!timeUp()) {
+    console.log('\n🖼️  Buscando portadas (AniList' + (TMDB_API_KEY ? ' + TMDB' : '') + ')…');
     let posters = 0;
     for (const s of db.series) {
       if (timeUp()) break;
-      if (s.image && s.image.includes('image.tmdb.org')) continue;
-      const poster = await tmdbFindPoster(s.title);
+      if (s.image &&
+          (s.image.includes('image.tmdb.org') || s.image.includes('anilist.co'))) continue;
+      let poster = await anilistFindPoster(s.title);
+      await sleep(700); /* AniList: ~90 peticiones/minuto como máximo */
+      if (!poster && TMDB_API_KEY) {
+        poster = await tmdbFindPoster(s.title);
+        await sleep(150);
+      }
       if (poster) {
         s.image = poster;
         posters++;
-        if (posters % 25 === 0) console.log(`   🖼️ ${posters} portadas TMDB…`);
+        if (posters % 25 === 0) console.log(`   🖼️ ${posters} portadas…`);
       }
-      await sleep(150);
     }
-    console.log(`🖼️  Portadas TMDB asignadas: ${posters}`);
-  } else if (!TMDB_API_KEY) {
-    console.log('\n⚠️  TMDB_API_KEY no definido: se conservan las portadas de las webs.');
+    console.log(`🖼️  Portadas asignadas: ${posters}`);
   }
 
   /* ── Guardado final ── */
