@@ -527,8 +527,23 @@ function parseSeries(html, url) {
     $('meta[property="og:title"]').attr('content') ||
     ''
   );
-  if (!title) {
-    title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  /* Las webs ponen a veces un <h1> genérico ("Temporadas", "Episodios"…).
+     Si eso ocurre, el nombre real se saca del slug de la URL. */
+  if (
+    !title ||
+    /^(temporadas?|episodios?|cap[ií]tulos?|series?|seasons?|lista)$/i.test(
+      title
+    )
+  ) {
+    title = slug
+      .split('-')
+      .filter(Boolean)
+      .map(
+        w =>
+          w.charAt(0).toUpperCase() +
+          w.slice(1)
+      )
+      .join(' ');
   }
 
   let image = absolute($('meta[property="og:image"]').attr('content'), url);
