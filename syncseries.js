@@ -49,10 +49,18 @@ const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 120000);
 const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
+/* ── Fuente configurable por entorno (cambiar de web sin tocar código) ──
+   Ejemplo alternativo (series24): SOURCE_BASE=https://www.series24.sbs
+   y EP_PATH=ver-episodio  (ojo: lleva "o" al final) */
+const SOURCE_BASE = (process.env.SOURCE_BASE || 'https://wnv5.gnula.cc').replace(/\/+$/, '');
+const LIST_PATH = process.env.LIST_PATH || 'ver-serie';
+const EP_PATH = process.env.EP_PATH || 'ver-episode';
+const SOURCE_HOST = new URL(SOURCE_BASE).hostname;
+
 /* Proxy opcional si la web bloquea las IPs de GitHub (403) */
 const PROXY_URL = (process.env.SERIES_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
 const PROXY_KEY = process.env.SERIES_PROXY_KEY || process.env.DORAMAS_PROXY_KEY || '';
-const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'wnv5.gnula.cc')
+const PROXY_HOSTS = (process.env.PROXY_HOSTS || SOURCE_HOST)
   .split(',').map(s => s.trim()).filter(Boolean);
 /* La web penaliza por concurrencia: máx. 2 peticiones simultáneas
    al mismo host y, si fallan varias seguidas, una pausa larga para
@@ -82,19 +90,19 @@ const elapsedMin = () => ((Date.now() - T0) / 60000).toFixed(1);
 ══════════════════════════════════════════════════════════ */
 
 const SOURCE = {
-  id: 'gnula',
-  base: 'https://wnv5.gnula.cc',
+  id: 'fuente',
+  base: SOURCE_BASE,
   priority: 0,
-  seeds: ['/ver-serie/', '/ver-serie/page/1/'],
-  maxPages: 50,
-  seriesTest: p => /^\/ver-serie\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
-  episodeTest: p => /^\/ver-episode\/[a-z0-9-]+/i.test(p),
+  seeds: [`/${LIST_PATH}/`, `/${LIST_PATH}/page/1/`],
+  maxPages: Math.max(1, Number(process.env.MAX_PAGES || 50)),
+  seriesTest: p => new RegExp(`^\\/${LIST_PATH}\\/(?!page\\/)[a-z0-9-]+\\/?$`, 'i').test(p),
+  episodeTest: p => new RegExp(`^\\/${EP_PATH}\\/[a-z0-9-]+`, 'i').test(p),
   epBelongs: (slug, p, ss) => slug.toLowerCase().startsWith(ss.toLowerCase()),
-  pageProbe: (seed, n) => `/ver-serie/page/${n}/`,
-  isPageLink: p => /^\/ver-serie\/page\/\d+\/?$/i.test(p),
-  /* la ficha no lista episodios (JS): se sintetizan /ver-episode/{slug}-1x{N}/ */
+  pageProbe: (seed, n) => `/${LIST_PATH}/page/${n}/`,
+  isPageLink: p => new RegExp(`^\\/${LIST_PATH}\\/page\\/\\d+\\/?$`, 'i').test(p),
+  /* la ficha no lista episodios (JS): se sintetizan /{EP_PATH}/{slug}-1x{N}/ */
   synthesize: true,
-  synthUrl: (slug, n) => `/ver-episode/${slug}-1x${n}/`
+  synthUrl: (slug, n) => `/${EP_PATH}/${slug}-1x${n}/`
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -1384,7 +1392,7 @@ async function main() {
     db.series = db.series.filter(s => {
       const urls = s.sourceUrls || [];
       if (!urls.length) return true;
-      return urls.some(u => u.includes('gnula.cc'));
+      return urls.some(u => u.includes(SOURCE_HOST));
     });
     const removedSeries = before - db.series.length;
     if (removedSeries) console.log(`🧹 Series de fuentes antiguas eliminadas: ${removedSeries}`);
