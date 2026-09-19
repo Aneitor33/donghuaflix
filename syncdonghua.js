@@ -927,8 +927,7 @@ async function main() {
     const byBase = new Map();
     const remap = new Map();
     for (const s of db.series) {
-      const k = titleKey(s.title).base;
-      if (!k) continue;
+      const k = `${s.src || 'legacy'}|${titleKey(s.title).base}`;
       if (byBase.has(k)) remap.set(s.id, byBase.get(k));
       else byBase.set(k, s.id);
     }
@@ -1024,7 +1023,7 @@ async function main() {
   const existingById = new Map(db.series.map(s => [s.id, s]));
   const existingByBase = new Map();
   for (const s of db.series) {
-    const k = titleKey(s.title).base;
+    const k = `${s.src || 'legacy'}|${titleKey(s.title).base}`;
     if (!existingByBase.has(k)) existingByBase.set(k, s.id);
   }
   const existingSeasonsByNum = new Map();
@@ -1047,9 +1046,11 @@ async function main() {
     const { base, baseTitle, offset } = r.key;
     if (!base) continue;
 
-    let canon = canons.get(base);
+    /* Cada web tiene su PROPIA ficha: no se fusionan entre fuentes */
+    const ck = `${r.src}|${base}`;
+    let canon = canons.get(ck);
     if (!canon) {
-      const exId = existingByBase.get(base) || (existingById.has(r.slug) ? r.slug : null);
+      const exId = existingByBase.get(`${r.src}|${base}`) || (existingById.has(r.slug) ? r.slug : null);
       canon = {
         id: exId || r.slug,
         hasPlainTitle: offset == null,
@@ -1059,11 +1060,12 @@ async function main() {
           title: baseTitle,
           image: null, synopsis: null, status: null,
           year: null, genres: [], type: 'donghua',
+          src: r.src,
           sourceUrls: [], updatedAt: new Date().toISOString()
         },
         epMap: new Map() // "seasonFinal|number" → {season, number, urls:[]}
       };
-      canons.set(base, canon);
+      canons.set(ck, canon);
     }
 
     /* Si llega una variante sin número ("Martial Peak") su título
@@ -1090,7 +1092,7 @@ async function main() {
     }
   }
 
-  console.log(`\n🧩 Series únicas tras fusionar: ${canons.size} (de ${raws.length} fichas)`);
+  console.log(`\n🧩 Fichas de serie (una por web, sin fusionar): ${canons.size} (de ${raws.length} fichas)`);
 
   /* ── Series + temporadas al catálogo y cola de episodios ── */
   const epQueue = [];
@@ -1150,6 +1152,51 @@ async function main() {
     }
   }
 
+  /* ── Re-verificación retroactiva ("lookback") ──
+     En donghualife los últimos capítulos a veces son VIP y se abren a
+     todos con el tiempo. Re-rastreamos los últimos LOOKBACK_EPS con
+     servidores de cada temporada (priorizando las series activas) y
+     SUMAMOS los servidores que se hayan liberado. */
+  const LOOKBACK = Math.max(0, Number(process.env.LOOKBACK_EPS || 10));
+  const LOOKBACK_MAX = Math.max(0, Number(process.env.LOOKBACK_MAX || 400));
+  if (LOOKBACK && LOOKBACK_MAX) {
+    const bySeason = new Map();
+    for (const e of db.episodes) {
+      if (!(e.servers || []).length || !e.sourceUrl) continue;
+      const t = Date.parse(e.updatedAt || 0) || 0;
+      if (!bySeason.has(e.seasonId)) bySeason.set(e.seasonId, { latest: t, eps: [] });
+      const info = bySeason.get(e.seasonId);
+      info.eps.push(e);
+      if (t > info.latest) info.latest = t;
+    }
+    const ordered = [...bySeason.entries()].sort((a, b) => b[1].latest - a[1].latest);
+    let lookbackCount = 0;
+    for (const [seasonId, info] of ordered) {
+      if (lookbackCount >= LOOKBACK_MAX) break;
+      const tail = info.eps
+        .sort((a, b) => (Number(a.number) || 0) - (Number(b.number) || 0))
+        .slice(-LOOKBACK);
+      for (const e of tail) {
+        if (lookbackCount >= LOOKBACK_MAX) break;
+        if (epQueue.length >= MAX_EPISODE_CRAWLS) break;
+        const num = Number(e.number);
+        if (epQueue.some(j => j.seasonId === seasonId && j.number === num)) continue;
+        epQueue.push({
+          seriesId: e.seriesId,
+          seasonId,
+          number: num,
+          urls: [e.sourceUrl],
+          lookback: true,
+          oldServers: e.servers || []
+        });
+        lookbackCount++;
+      }
+    }
+    if (lookbackCount) {
+      console.log(`↩  Re-verificación retroactiva: ${lookbackCount} episodios (últimos ${LOOKBACK} por temporada, tope ${LOOKBACK_MAX})`);
+    }
+  }
+
   console.log(`\n🎬 Episodios ya en catálogo (se respetan): ${skippedExisting}`);
   if (skippedFailed) console.log(`🚫 Episodios omitidos (fallaron ${MAX_FAILS}+ veces): ${skippedFailed}`);
   if (recrawlEmpty) console.log(`↻  Episodios existentes SIN servidores (se reintentan): ${recrawlEmpty}`);
@@ -1191,6 +1238,11 @@ async function main() {
       if (failures[`${job.seasonId}|${job.number}`]) {
         delete failures[`${job.seasonId}|${job.number}`];
       }
+      /* lookback: sumar a los servidores que ya tenía (nunca perder) */
+      const finalServers = job.lookback
+        ? [...(job.oldServers || []), ...servers]
+            .filter((s, i, arr) => arr.findIndex(x => x.url === s.url) === i)
+        : servers;
       upsert(db.episodes, {
         id: `${job.seasonId}-e${job.number}`,
         slug: `${job.seasonId}-e${job.number}`,
@@ -1199,7 +1251,7 @@ async function main() {
           return m ? `Episodio ${Number(m[1])}` : (pageTitle ? cleanTitle(pageTitle) : `Episodio ${job.number}`);
         })(),
         sourceUrl: job.urls[0],
-        servers,
+        servers: finalServers,
         seriesId: job.seriesId,
         seasonId: job.seasonId,
         number: job.number,
@@ -1248,6 +1300,17 @@ async function main() {
     }
   }
 
+  /* Series sin NINGÚN episodio: el usuario prefiere que no aparezcan
+     en la web. Vuelven solas cuando alguna fuente aporte capítulos. */
+  {
+    const withEps = new Set(db.episodes.map(e => e.seriesId));
+    const before = db.series.length;
+    db.series = db.series.filter(s => withEps.has(s.id));
+    const removedEmpty = before - db.series.length;
+    if (removedEmpty) console.log(`🧹 Series sin episodios eliminadas: ${removedEmpty}`);
+    globalThis.__removedEmpty = removedEmpty;
+  }
+
   /* ── Fase 4: portadas TMDB ── */
   if (TMDB_API_KEY && !timeUp()) {
     console.log('\n🖼️  Buscando portadas en TMDB…');
@@ -1275,7 +1338,7 @@ async function main() {
   db.meta = {
     ...(db.meta || {}),
     version: 5,
-    source: 'multi:' + SOURCES.map(s => s.id).join('+'),
+    source: 'multi-v2:' + SOURCES.map(s => s.id).join('+'),
     syncedAt: finishedAt,
     lastSync: {
       status: 'success',
