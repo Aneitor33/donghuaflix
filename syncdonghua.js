@@ -41,8 +41,11 @@ import * as cheerio from 'cheerio';
 
 /* Un archivo de catálogo POR WEB: catalog-donghualife.json,
    catalog-mundodonghua.json, catalog-seriesdonghua.json… */
-const SOURCE_IDS = (process.env.SOURCES_ENABLED || 'donghualife,mundodonghua,seriesdonghua')
-  .split(',').map(s => s.trim()).filter(Boolean);
+const ONLY_SOURCE = (process.env.ONLY_SOURCE || '').trim();
+const SOURCE_IDS = (ONLY_SOURCE
+  ? [ONLY_SOURCE]
+  : (process.env.SOURCES_ENABLED || 'donghualife,mundodonghua,seriesdonghua')
+      .split(',').map(s => s.trim()).filter(Boolean));
 const catalogFile = (srcId) => path.resolve(`public/data/catalog-${srcId}.json`);
 const OUT_FILE = catalogFile(SOURCE_IDS[0]); // compat (referencia para otras rutinas)
 const FAILURES_FILE = path.resolve('public/data/catalog-failures.json');
@@ -1059,12 +1062,27 @@ async function main() {
   /* ── Reinicio de estructura: el catálogo se reconstruye desde cero
      una vez (los datos antiguos venían de la estructura fusionada y
      no son compatibles con "una ficha por web"). */
-  if (!db.meta || !String(db.meta.source || '').startsWith('multi-v2')) {
-    console.log('\n🔄 Estructura multi-v2: se reconstruye el catálogo de donghuas desde cero.');
+  if (!db.meta || db.meta.reset !== 'multi-v4') {
+    console.log('\n🔄 Reinicio estructural (una sola vez): se reconstruye este catálogo desde cero.');
     db.series = [];
     db.seasons = [];
     db.episodes = [];
     db.genres = [];
+  }
+
+  /* Filtro de contención: en un sync independiente solo puede quedar
+     contenido de la(s) fuente(s) activas. Descarta restos de otras webs. */
+  {
+    const keepSrc = new Set(SOURCE_IDS);
+    const keepSeries = db.series.filter(s => keepSrc.has(s.src));
+    if (keepSeries.length !== db.series.length) {
+      console.log(`🧹 Se descartan ${db.series.length - keepSeries.length} series de otras webs (sync independiente)`);
+      db.series = keepSeries;
+      const ids = new Set(keepSeries.map(s => s.id));
+      db.seasons = db.seasons.filter(s => ids.has(s.seriesId));
+      const sids = new Set(db.seasons.map(s => s.id));
+      db.episodes = db.episodes.filter(e => sids.has(e.seasonId));
+    }
   }
 
   /* ── Fusión retroactiva: series que ahora comparten clave de título
@@ -1544,7 +1562,8 @@ async function main() {
   db.meta = {
     ...(db.meta || {}),
     version: 5,
-    source: 'multi-v3:' + ACTIVE_SOURCES.map(s => s.id).join('+'),
+    source: 'multi-v4:' + ACTIVE_SOURCES.map(s => s.id).join('+'),
+    reset: 'multi-v4',
     syncedAt: finishedAt,
     lastSync: {
       status: 'success',
