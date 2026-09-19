@@ -421,7 +421,39 @@ function parseEpisode(html, url) {
     addServer(host, m, true);
   }
 
-  return { title, servers, watchUrl };
+  /* Pestañas de servidor (patrón Dooplay): la página trae data-post/data-nume
+     y el vídeo se pide por AJAX a admin-ajax.php (action=doo_player_ajax). */
+  const playerOpts = [];
+  $('[data-post]').each((_, el) => {
+    const node = $(el);
+    const post = node.attr('data-post');
+    const nume = node.attr('data-nume') || '1';
+    const type = node.attr('data-type') || 'tv';
+    if (post && !playerOpts.some(o => o.post === post && o.nume === nume && o.type === type)) {
+      playerOpts.push({ post, nume, type });
+    }
+  });
+
+  return { title, servers, watchUrl, playerOpts };
+}
+
+/* Réplica de la llamada AJAX del reproductor (Dooplay y similares) */
+async function postAjax(opt, referer) {
+  const origin = new URL(SOURCE.base).origin;
+  const url = `${origin}/wp-admin/admin-ajax.php`;
+  const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
+    method: 'POST',
+    signal: AbortSignal.timeout(20000),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': referer
+    },
+    body: new URLSearchParams({ action: 'doo_player_ajax', post: opt.post, type: opt.type, nume: opt.nume }).toString()
+  }));
+  if (!res.ok) throw new Error(`admin-ajax HTTP ${res.status}`);
+  return await res.text();
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -801,7 +833,7 @@ async function runPool(items, workers, fn, shouldStop = () => false) {
 
 async function main() {
   console.log('\n==============================================');
-  console.log('🚀 DORAMAS SYNC — doramasmp4.cyou');
+  console.log(`🚀 DORAMAS SYNC — ${SOURCE.base}`);
   console.log(`   workers: ${WORKERS} · tope episodios: ${MAX_EPISODE_CRAWLS} · tope tiempo: ${MAX_RUNTIME_MS / 60000} min`);
   console.log('==============================================\n');
 
@@ -1057,6 +1089,23 @@ async function main() {
             console.log(`      📺 Ver Online → ${parsed.watchUrl}`);
           } catch (e2) { lastErr = e2.message; }
         }
+        if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
+          for (const opt of parsed.playerOpts.slice(0, 3)) {
+            if (parsed.servers.length) break;
+            try {
+              const resp = await postAjax(opt, u);
+              if (resp) {
+                lastHtml = resp;
+                const parsed2 = parseEpisode(resp, u);
+                if (parsed2.servers.length) {
+                  parsed = { ...parsed, servers: parsed2.servers };
+                  console.log(`      ⚡ AJAX reproductor (post ${opt.post} · nume ${opt.nume}) → ${parsed2.servers.length} servidor(es)`);
+                }
+              }
+            } catch (e3) { lastErr = e3.message; }
+            await sleep(POLITENESS_MS);
+          }
+        }
         for (const s of parsed.servers) {
           if (seenSrv.has(s.url)) continue;
           seenSrv.add(s.url);
@@ -1093,12 +1142,24 @@ async function main() {
       failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
-      if (diagCount < 3) {
+      if (diagCount < 4) {
         diagCount++;
-        const snippet = lastHtml
-          ? `HTTP 200 sin servidores. Muestra: ${lastHtml.replace(/\s+/g, ' ').replace(/</g, '<').slice(0, 350)}`
-          : `no se pudo descargar (${lastErr || 'error desconocido'})`;
-        console.log(`   🔎 DIAG [${diagCount}/3] ${job.seasonId} e${job.number}: ${snippet}`);
+        let snippet;
+        if (lastHtml) {
+          const kws = ['admin-ajax', 'dooplay', 'playeroptions', 'data-post', 'data-nume', 'data-episode', 'ajaxurl', 'action=', 'nonce', 'iframe', 'tremble'];
+          const hits = [];
+          for (const kw of kws) {
+            const i = lastHtml.indexOf(kw);
+            if (i !== -1) hits.push(`[${kw}] …${lastHtml.slice(Math.max(0, i - 80), i + 240).replace(/\s+/g, ' ').replace(/</g, '<')}…`);
+            if (hits.length >= 2) break;
+          }
+          snippet = hits.length
+            ? hits.join('  |  ')
+            : `HTTP 200 sin servidores ni pistas. Muestra: ${lastHtml.replace(/\s+/g, ' ').slice(0, 300)}`;
+        } else {
+          snippet = `no se pudo descargar (${lastErr || 'error desconocido'})`;
+        }
+        console.log(`   🔎 DIAG [${diagCount}/4] ${job.seasonId} e${job.number}: ${snippet}`);
       }
     }
 
@@ -1133,6 +1194,19 @@ async function main() {
   }
   for (const s of db.seasons) {
     s.episodeCount = countBySeason.get(s.id) || 0;
+  }
+
+  /* Series de fuentes antiguas (p. ej. doramasmp4) que ya no se
+     rastrean: se eliminan para no dejar basura en el catálogo. */
+  {
+    const before = db.series.length;
+    db.series = db.series.filter(s => {
+      const urls = s.sourceUrls || [];
+      if (!urls.length) return true;
+      return urls.some(u => u.includes('dramachino.com'));
+    });
+    const removedSeries = before - db.series.length;
+    if (removedSeries) console.log(`🧹 Series de fuentes antiguas eliminadas: ${removedSeries}`);
   }
 
   /* Temporadas vacías */
