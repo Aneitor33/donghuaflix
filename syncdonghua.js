@@ -440,6 +440,41 @@ const SERVER_BLACKLIST = (process.env.SERVER_BLACKLIST ||
 const isBlacklisted = host =>
   SERVER_BLACKLIST.some(b => String(host).toLowerCase().includes(b));
 
+function hostOf(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return 'Servidor'; }
+}
+
+function collectUrlsFromJson(obj, out = []) {
+  if (typeof obj === 'string') {
+    if (/^https?:\/\//.test(obj)) out.push(obj);
+  } else if (Array.isArray(obj)) {
+    for (const v of obj) collectUrlsFromJson(v, out);
+  } else if (obj && typeof obj === 'object') {
+    for (const v of Object.values(obj)) collectUrlsFromJson(v, out);
+  }
+  return out;
+}
+
+/* Réplica del AJAX del reproductor (Dooplay): las pestañas de servidor
+   piden el vídeo a admin-ajax.php con data-post/data-nume. */
+async function postAjax(opt, referer) {
+  const origin = new URL(referer).origin;
+  const url = `${origin}/wp-admin/admin-ajax.php`;
+  const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
+    method: 'POST',
+    signal: AbortSignal.timeout(20000),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': referer
+    },
+    body: new URLSearchParams({ action: 'doo_player_ajax', post: opt.post, type: opt.type, nume: opt.nume }).toString()
+  }));
+  if (!res.ok) throw new Error(`admin-ajax HTTP ${res.status}`);
+  return await res.text();
+}
+
 function parseEpisode(html, url) {
   const $ = cheerio.load(html);
   const title = clean(
@@ -488,12 +523,27 @@ function parseEpisode(html, url) {
     addServer(host, raw, true, currentLang);
   });
 
+  let watchUrl = null;
+  let selfPath = '';
+  try { selfPath = new URL(url).pathname; } catch {}
   $('a[href]').each((_, el) => {
     const raw = $(el).attr('href');
     const txt = clean($(el).text());
     let host = 'Servidor';
     try { if (raw) host = new URL(absolute(raw, url) || raw).hostname.replace(/^www\./, ''); } catch {}
     addServer(txt && txt.length < 30 ? txt : host, raw, false);
+    /* Pelispedia/Gnula: los iframes viven en la página "Ver Online" */
+    try {
+      const full = absolute(raw, url);
+      if (full && sameOrigin(full, url) && !watchUrl && raw) {
+        const pp = new URL(full).pathname;
+        if (pp !== selfPath &&
+            (/\/(ver|reproducir|mirar|play|online|video)\//i.test(pp) ||
+             /ver online|reproducir|ver ahora|mirar ahora|watch now/i.test(txt))) {
+          watchUrl = full;
+        }
+      }
+    } catch {}
   });
 
   const directRe = /https?:\/\/[^\s"'<>\\]+\.(?:mp4|webm|m3u8)(\?[^\s"'<>\\]*)?/gi;
@@ -510,7 +560,20 @@ function parseEpisode(html, url) {
     addServer(host, m, true);
   }
 
-  return { title, servers };
+  /* Pestañas de servidor (Dooplay): data-post / data-nume en el HTML;
+     el vídeo se pide después por AJAX. */
+  const playerOpts = [];
+  $('[data-post]').each((_, el) => {
+    const node = $(el);
+    const post = node.attr('data-post');
+    const nume = node.attr('data-nume') || '1';
+    const type = node.attr('data-type') || 'tv';
+    if (post && !playerOpts.some(o => o.post === post && o.nume === nume && o.type === type)) {
+      playerOpts.push({ post, nume, type });
+    }
+  });
+
+  return { title, servers, watchUrl, playerOpts };
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -808,7 +871,7 @@ async function saveFailures(failures) {
   await fs.rename(tmp, FAILURES_FILE);
 }
 
-const MAX_FAILS = 2; // reintentos de un episodio fallido antes de ignorarlo
+const MAX_FAILS = Number(process.env.MAX_FAILS || 4); // reintentos de un episodio fallido antes de ignorarlo
 
 async function saveCatalog(db) {
   for (const srcId of SOURCE_IDS) {
@@ -1274,8 +1337,37 @@ async function main() {
       if (timeUp()) { stoppedByBudget = true; break; }
       try {
         const html = await fetchHtml(u);
-        const parsed = parseEpisode(html, u);
+        let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
+        /* El reproductor vive en la página "Ver Online" */
+        if (!parsed.servers.length && parsed.watchUrl) {
+          try {
+            const html2 = await fetchHtml(parsed.watchUrl);
+            const p2 = parseEpisode(html2, parsed.watchUrl);
+            parsed = { ...parsed, servers: p2.servers, title: parsed.title || p2.title };
+          } catch {}
+        }
+        /* Pestañas de servidor: pedir los vídeos por AJAX (Dooplay) */
+        if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
+          for (const opt of parsed.playerOpts.slice(0, 6)) {
+            if (parsed.servers.length) break;
+            try {
+              const resp = await postAjax(opt, u);
+              if (resp) {
+                const added = [];
+                try {
+                  for (const u2 of collectUrlsFromJson(JSON.parse(resp))) {
+                    if (isPlayableAbs(u2)) added.push({ name: hostOf(u2), url: u2, embed: true });
+                  }
+                } catch {}
+                const p2 = parseEpisode(resp.replace(/\\\//g, '/'), u);
+                for (const s of p2.servers) added.push(s);
+                if (added.length) parsed = { ...parsed, servers: added };
+              }
+            } catch {}
+            await sleep(POLITENESS_MS);
+          }
+        }
         for (const s of parsed.servers) {
           if (seenSrv.has(s.url)) continue;
           seenSrv.add(s.url);
