@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════
 //  syncdoramas.js — DonghuaFlix
 //  Scraper del catálogo de DORAMAS (sección aparte):
-//    · doramasmp4.cyou
+//    · dramachino.com
 //
 //  Con todo lo aprendido en el scraper multi-fuente:
 //   - Descubrimiento con paginación (/page/N/).
@@ -41,7 +41,7 @@ const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 20000));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
-const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEFAULT_EPS || 16)));
+const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEFAULT_EPS || 24)));
 const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 
@@ -52,7 +52,7 @@ const logged403 = new Set();
 /* Proxy opcional si la web bloquea las IPs de GitHub (403) */
 const PROXY_URL = (process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
 const PROXY_KEY = process.env.DORAMAS_PROXY_KEY || '';
-const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'doramasmp4.cyou,www.doramasmp4.cyou')
+const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'dramachino.com,www.dramachino.com')
   .split(',').map(s => s.trim()).filter(Boolean);
 /* La web penaliza por concurrencia: máx. 2 peticiones simultáneas
    al mismo host y, si fallan varias seguidas, una pausa larga para
@@ -78,18 +78,19 @@ const elapsedMin = () => ((Date.now() - T0) / 60000).toFixed(1);
 ══════════════════════════════════════════════════════════ */
 
 const SOURCE = {
-  id: 'doramasmp4',
-  base: 'https://doramasmp4.cyou',
+  id: 'dramachino',
+  base: 'https://dramachino.com',
   priority: 0,
-  seeds: ['/'],
-  maxPages: 500,
-  seriesTest: p => /^\/series\/[a-z0-9-]+\/?$/i.test(p),
-  episodeTest: p => /^\/cap\/[a-z0-9-]+/i.test(p),
+  seeds: ['/drama/'],
+  maxPages: 20,
+  seriesTest: p => /^\/drama\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
+  episodeTest: p => /^\/episodios\/[a-z0-9-]+/i.test(p),
   epBelongs: (slug, p, ss) => slug.toLowerCase().startsWith(ss.toLowerCase()),
-  pageProbe: (seed, n) => `/page/${n}/`,
-  isPageLink: p => /^\/page\/\d+\/?$/i.test(p),
-  /* la ficha no lista episodios (JS): se sintetizan */
-  synthesize: true
+  pageProbe: (seed, n) => `/drama/page/${n}/`,
+  isPageLink: p => /^\/drama\/page\/\d+\/?$/i.test(p),
+  /* la ficha no lista episodios (JS): se sintetizan /episodios/{slug}-1x{N}/ */
+  synthesize: true,
+  synthUrl: (slug, n) => `/episodios/${slug}-1x${n}/`
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -225,7 +226,7 @@ async function fetchHtml(url, attempt = 1) {
 ══════════════════════════════════════════════════════════ */
 
 function cleanTitle(raw) {
-  let t = clean(String(raw || '')).split('|')[0];
+  let t = clean(String(raw || '')).split('|')[0].split('»')[0];
   t = t.replace(/^ver\s+/i, ' ');
   t = t.replace(/[\[【(][^\]】)]{0,60}[\]】)]/g, ' ');
   t = t.replace(/\s+capitulos?\s+(?:online|gratis|sub\s+espa.*)$/i, ' ');
@@ -234,7 +235,8 @@ function cleanTitle(raw) {
   do {
     prev = t;
     t = t
-      .replace(/(?:[-\uFFFF-\uFFFF]+\s*)*(?:sub\s*)?(?:espa[ñn]ol|online|gratis|hd|completo|subtitulad[oa]|latino|castellano|audio\s+latino|doblado|dorama|capitulos?)\s*$/i, ' ')
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+/gu, ' ')
+      .replace(/(?:sub\s*)?(?:espa[ñn]ol|online|gratis|hd|completo|subtitulad[oa]|latino|castellano|audio\s+latino|doblado|dorama|capitulos?)\s*$/i, ' ')
       .replace(/[\s,·•\-–—]+$/g, '')
       .trim();
   } while (t !== prev);
@@ -468,6 +470,7 @@ function parseSeries(html, url) {
     id: slug, slug, title, image,
     synopsis: synopsis || null,
     status, year, genres,
+    country: 'China',
     type: 'dorama'
   };
 }
@@ -615,7 +618,7 @@ async function scrapeSeriesPage(source, url) {
       if (candidates.has(`1|${n}`)) continue;
       candidates.set(`1|${n}`, {
         season: 1, number: n,
-        urls: [`${source.base}/cap/${seriesSlug}-capitulo-${n}/`]
+        urls: [`${source.base}${source.synthUrl(seriesSlug, n)}`]
       });
     }
   }
@@ -752,7 +755,10 @@ function selftest() {
   eq(epCode('algo-1x7', '/cap/x'), { season: 1, number: 7 }, 'formato 1x7');
   eq(cleanTitle('Ver Pull Strings Capitulos Online Sub Español - DoramasMP4'), 'Pull Strings', 'título con plantilla de la web');
   eq(cleanTitle('Lost to B You 【Sub Español】'), 'Lost to B You', 'título con 【Sub Español】');
-  eq(SOURCE.epBelongs('pull-strings-capitulo-30', '/cap/pull-strings-capitulo-30/', 'pull-strings'), true, 'pertenencia: propio aceptado');
+  eq(epCode('spring-of-the-blade-1x21', '/episodios/x'), { season: 1, number: 21 }, 'dramachino: 1x21 → T1E21');
+  eq(SOURCE.episodeTest('/episodios/spring-of-the-blade-1x21/'), true, 'dramachino: episodeTest');
+  eq(SOURCE.epBelongs('spring-of-the-blade-1x21', '/episodios/spring-of-the-blade-1x21/', 'spring-of-the-blade'), true, 'pertenencia: propio aceptado');
+  eq(cleanTitle('Spring of the Blade » Drama Chino'), 'Spring of the Blade', 'limpieza: separador »');
   eq(SOURCE.epBelongs('otro-capitulo-30', '/cap/otro-capitulo-30/', 'pull-strings'), false, 'pertenencia: ajeno rechazado');
   console.log('\nSelftest terminado.');
 }
@@ -782,6 +788,13 @@ async function main() {
   const db = await loadCatalog();
   const failures = await loadFailures();
   const startedAt = new Date().toISOString();
+
+  /* Si cambia la fuente (p. ej. de doramasmp4 a dramachino), el catálogo
+     viejo no sirve: se empieza de cero con aviso en el log. */
+  if (db.meta && db.meta.source && db.meta.source !== SOURCE.base) {
+    console.log(`\n🔄 Fuente cambiada (${db.meta.source} → ${SOURCE.base}): se reinicia el catálogo de doramas.`);
+    db.series = []; db.seasons = []; db.episodes = []; db.genres = [];
+  }
 
   /* ── Fusión retroactiva de series duplicadas ── */
   {
@@ -1028,7 +1041,10 @@ async function main() {
         slug: `${job.seasonId}-e${job.number}`,
         title: (() => {
           const m = pageTitle && pageTitle.match(/(?:cap[ií]tulo|episodio|episode)\s*x?(\d{1,4})/i);
-          return m ? `Capítulo ${Number(m[1])}` : (pageTitle ? cleanTitle(pageTitle) : `Capítulo ${job.number}`);
+          if (m) return `Capítulo ${Number(m[1])}`;
+          const x = pageTitle && pageTitle.match(/(\d{1,3})x(\d{1,4})\s*$/);
+          if (x) return `Capítulo ${Number(x[2])}`;
+          return pageTitle ? cleanTitle(pageTitle) : `Capítulo ${job.number}`;
         })(),
         sourceUrl: job.urls[0],
         servers,
@@ -1103,7 +1119,7 @@ async function main() {
   db.meta = {
     ...(db.meta || {}),
     version: 1,
-    source: 'doramasmp4.cyou',
+    source: SOURCE.base,
     syncedAt: finishedAt,
     lastSync: {
       status: 'success',
