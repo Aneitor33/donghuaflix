@@ -50,7 +50,7 @@ const MAX_URLS_PER_EP = Math.max(1, Math.min(4, Number(process.env.MAX_URLS_PER_
 const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 
-const FETCH_TIMEOUT_MS = 30000;
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 120000);
 const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
@@ -61,6 +61,20 @@ const PROXY_URL = (process.env.TIODONGHUA_PROXY_URL || '').replace(/\/+$/, '');
 const PROXY_KEY = process.env.TIODONGHUA_PROXY_KEY || '';
 const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'tiodonghua.lat,www.tiodonghua.lat')
   .split(',').map(s => s.trim()).filter(Boolean);
+/* La web penaliza por concurrencia: máx. 2 peticiones simultáneas
+   al mismo host y, si fallan varias seguidas, una pausa larga para
+   que el servidor "enfríe" la penalización antes de seguir. */
+const hostSem = new Map();
+const hostFails = new Map();
+async function withHostLimit(host, fn) {
+  let sem = hostSem.get(host);
+  if (!sem) { sem = { active: 0, queue: [] }; hostSem.set(host, sem); }
+  if (sem.active >= 2) await new Promise(r => sem.queue.push(r));
+  sem.active++;
+  try { return await fn(); }
+  finally { sem.active--; const n = sem.queue.shift(); if (n) n(); }
+}
+
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
@@ -203,7 +217,7 @@ async function fetchHtml(url, attempt = 1) {
       }
     } catch {}
 
-    const res = await fetch(target, {
+    const reqPromise = fetch(target, {
       signal: controller.signal,
       redirect: 'follow',
       headers: proxied ? { 'x-proxy-key': PROXY_KEY } : {
@@ -226,6 +240,11 @@ async function fetchHtml(url, attempt = 1) {
         'Connection': 'keep-alive'
       }
     });
+    reqPromise.catch(() => {});
+    const res = await withHostLimit(new URL(url).hostname, () => Promise.race([
+      reqPromise,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout duro')), FETCH_TIMEOUT_MS + 10000))
+    ]));
     if (proxied && attempt === 1 && !res.ok) {
       console.log(`   🔀 Proxy respondió ${res.status} para ${url}`);
     }
@@ -246,8 +265,27 @@ async function fetchHtml(url, attempt = 1) {
       }
       throw new Error(`HTTP ${res.status} en ${url}`);
     }
-    return await res.text();
+    try { hostFails.set(new URL(url).hostname, 0); } catch {}
+    const txtPromise = res.text();
+    txtPromise.catch(() => {});
+    return await Promise.race([
+      txtPromise,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout de lectura')), FETCH_TIMEOUT_MS))
+    ]);
   } catch (err) {
+    try {
+      const msg = String((err && err.message) || '');
+      if (!msg.includes('HTTP 404')) {           // 404 = respuesta legítima, no castigo
+        const h = new URL(url).hostname;
+        const f = (hostFails.get(h) || 0) + 1;
+        hostFails.set(h, f);
+        if (f >= 4) {
+          console.log(`   🥵 ${h} nos está limitando: pausa de 45s para enfriar…`);
+          await sleep(45000);
+          hostFails.set(h, 0);
+        }
+      }
+    } catch {}
     if (attempt < FETCH_RETRIES) {
       await sleep(1000 * attempt);
       return fetchHtml(url, attempt + 1);
@@ -768,14 +806,14 @@ function upsert(array, item, key = 'id') {
 let lastPush = 0;
 function gitCheckpoint(db) {
   const now = Date.now();
-  if (now - lastPush < 120000) return; // máx 1 push cada 2 min
+  if (now - lastPush < 600000) return;  // máx. 1 push cada 10 min // máx 1 push cada 2 min
   lastPush = now;
   saveCatalog(db).then(() => {
     try {
       execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
       execSync('git config --local user.name "github-actions[bot]"');
       execSync('git add public/data/catalog.json');
-      execSync('git diff --staged --quiet || git commit -m "sync(donghua): progreso [skip ci]"');
+      execSync('git diff --staged --quiet || git commit -m "sync(donghua): progreso"');
       execSync('git pull --rebase origin main || true');
       execSync('git push');
       console.log(`\n🚀 Checkpoint subido al repo (${elapsedMin()} min) — a salvo ante cortes\n`);
@@ -1174,11 +1212,14 @@ async function main() {
       failures[fk] = (failures[fk] || 0) + 1;
     }
 
-    if (crawled % 500 === 0) {
+    if (crawled % 10 === 0) {
       await saveCatalog(db);
       await saveFailures(failures);
       gitCheckpoint(db);
-      console.log(`\n💾 ${crawled}/${epQueue.length} episodios rastreados · +${newEps} nuevos · ${elapsedMin()} min\n`);
+      console.log(`   📄 ep ${crawled}/${epQueue.length} · +${newEps} · ${elapsedMin()} min`);
+    }
+    if (crawled % 500 === 0) {
+      console.log(`\n💾 checkpoint: ${crawled} episodios rastreados · +${newEps} nuevos\n`);
     }
   }, () => stoppedByBudget);
 
