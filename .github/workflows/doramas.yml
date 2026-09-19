@@ -32,7 +32,7 @@ jobs:
 
       - name: Sincronizar doramas
         env:
-          WORKERS: '1'
+          WORKERS: '5'
           POLITENESS_MS: '1500'
           MAX_EPISODE_CRAWLS: '20000'
           MAX_RUNTIME_MINUTES: '330'
