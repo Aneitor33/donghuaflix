@@ -137,8 +137,10 @@ const uniqueUrls = vals => [...new Set(vals.map(v => absolute(v)).filter(Boolean
    y reutiliza la sesión (cookies) para todo el rastreo, incluido el
    POST de admin-ajax, que se hace desde dentro de la propia página. */
 const USE_BROWSER = process.env.USE_BROWSER === '1';
+const HEADFUL = process.env.HEADFUL === '1';
 const PW_POOL_SIZE = 3;
 let pwBrowser = null;
+let pwCtx = null;
 const PW_POOL = [];
 const PW_WAITERS = [];
 
@@ -147,13 +149,22 @@ async function acquirePage() {
   if (free) { free.busy = true; return free.page; }
   if (PW_POOL.length < PW_POOL_SIZE) {
     const { chromium } = await import('playwright');
-    if (!pwBrowser) pwBrowser = await chromium.launch({ headless: true });
-    const ctx = await pwBrowser.newContext({
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-      locale: 'es-ES',
-      viewport: { width: 1366, height: 768 }
-    });
-    const page = await ctx.newPage();
+    if (!pwBrowser) {
+      pwBrowser = await chromium.launch({
+        headless: !HEADFUL,
+        ignoreDefaultArgs: ['--enable-automation'],
+        args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-dev-shm-usage']
+      });
+      /* un solo contexto: el challenge se resuelve UNA vez y las
+         cookies (cf_clearance) sirven para todas las pestañas */
+      pwCtx = await pwBrowser.newContext({
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        locale: 'es-ES',
+        viewport: { width: 1366, height: 768 },
+        ignoreHTTPSErrors: true
+      });
+    }
+    const page = await pwCtx.newPage();
     PW_POOL.push({ page, busy: true });
     return page;
   }
@@ -181,29 +192,36 @@ async function withPwPage(fn) {
   }
 }
 
+const CHALLENGE_RE = /just a moment|un momento|verificaci[oó]n|comprobando|checking your|attention required|soy humano|desaf[ií]o de seguridad/i;
+
+/* Espera a que el challenge de Cloudflare se resuelva (devuelve true) */
 async function waitChallenge(page) {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 20; i++) {
     const title = await page.title().catch(() => '');
     const html = await page.content().catch(() => '');
-    if (!/just a moment|verificaci[oó]n de seguridad|checking your/i.test(title + ' ' + html.slice(0, 2000))) return;
-    if (i === 3) {
-      /* intentar marcar la casilla del challenge (iframe de Cloudflare) */
+    if (!CHALLENGE_RE.test(title) && !CHALLENGE_RE.test(html.slice(0, 2000))) return true;
+    /* intentar marcar la casilla (Turnstile) cada ~7s */
+    if (i % 3 === 2) {
       try {
         const frame = page.frames().find(f => /challenges\.cloudflare\.com/.test(f.url()));
         if (frame) {
           const cb = frame.locator('input[type="checkbox"]');
-          if (await cb.count()) await cb.click({ timeout: 3000 });
+          if (await cb.count()) await cb.click({ timeout: 3000 }).catch(() => {});
         }
       } catch {}
     }
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(2500);
   }
+  return false;
 }
 
 async function browserFetch(url) {
   return withPwPage(async (page) => {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await waitChallenge(page);
+    const resolved = await waitChallenge(page);
+    if (!resolved) {
+      try { await page.reload({ waitUntil: 'domcontentloaded', timeout: 30000 }); } catch {}
+    }
     return await page.content();
   });
 }
@@ -211,7 +229,10 @@ async function browserFetch(url) {
 async function browserPost(url, body) {
   return withPwPage(async (page) => {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await waitChallenge(page);
+    const resolved = await waitChallenge(page);
+    if (!resolved) {
+      try { await page.reload({ waitUntil: 'domcontentloaded', timeout: 30000 }); } catch {}
+    }
     return await page.evaluate(async ({ url, body }) => {
       const r = await fetch(url, {
         method: 'POST',
