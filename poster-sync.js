@@ -1,16 +1,22 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+/* Catálogos actuales de DonghuaFlix (uno por web + películas + doramas) */
 const FILES = [
-  path.resolve('public/data/catalog.json'),
+  path.resolve('public/data/catalog-donghualife.json'),
+  path.resolve('public/data/catalog-mundodonghua.json'),
+  path.resolve('public/data/catalog-seriesdonghua.json'),
   path.resolve('public/data/catalog-peliculas.json'),
-  path.resolve('public/data/catalog-series.json')
+  path.resolve('public/data/catalog-doramas.json')
 ];
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
 // Fallo permanente: si no se encuentra, no se vuelve a intentar nunca
 // (salvo FORCE_POSTERS=1). Así el repaso de catálogos grandes tarda segundos.
+
+/* Portadas que YA son buenas (las de estas fuentes no se reemplazan) */
+const GOOD_POSTER = /image\.tmdb\.org|anilist\.co/i;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -106,17 +112,18 @@ async function processFile(OUT_FILE) {
   try {
     db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
   } catch {
-    console.log(`⏭️  No existe ${OUT_FILE}, se omite`);
+    console.log(`⏭️  No existe ${path.basename(OUT_FILE)}, se omite`);
     return;
   }
   let ok = 0, skip = 0, fail = 0, sinceSave = 0;
 
   for (const s of db.series) {
     const slug = s.slug || s.id;
-    // Si ya tiene portada (local o de la ficha original) y no forzamos, saltar.
-    // Las fuentes tipo lamovie/pelisplay traen pósters de TMDB: no hace falta re-descargar.
-    const hasSourceImage = s.image && !/icoprueba|no-disponible|placeholder/i.test(s.image);
-    if (!FORCE && (s.posterLocal || hasSourceImage)) { skip++; continue; }
+    /* Saltar si ya tiene portada LOCAL o una ya verificada como buena
+       (TMDB/AniList). Las portadas que vienen de las webs SÍ se
+       reemplazan: son de baja calidad. */
+    const isGood = s.image && GOOD_POSTER.test(s.image);
+    if (!FORCE && (s.posterLocal || isGood)) { skip++; continue; }
 
     // Fallida en un intento anterior: no se repite (salvo FORCE)
     if (!FORCE && s.posterFailed) { skip++; continue; }
@@ -124,12 +131,11 @@ async function processFile(OUT_FILE) {
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
-    // Búsqueda única: nombre visible y nombre original, una vez por fuente
     const candidates = [...new Set([title, s.originalTitle].filter(Boolean))];
     let hit = null;
 
     for (const c of candidates) {
-      hit = await searchTmdb(c, 'es-ES');
+      hit = await searchTmdb(c, 'es-ES') || await searchTmdbMovie(c, 'en-US');
       if (hit) { console.log(`   · TMDB "${c}" → ✅ ${hit.match}`); break; }
       await sleep(150);
     }
@@ -137,6 +143,7 @@ async function processFile(OUT_FILE) {
       for (const c of candidates) {
         hit = await searchAnilist(c);
         if (hit) { console.log(`   · AniList "${c}" → ✅ ${hit.match}`); break; }
+        await sleep(650); // AniList: ~90 peticiones/minuto
       }
     }
     if (!hit) {
@@ -150,10 +157,9 @@ async function processFile(OUT_FILE) {
 
     const local = await downloadPoster(hit.poster, slug);
     if (!local) {
-      console.log('   ❌ No se pudo descargar');
+      console.log('   ❌ Descarga fallida (no se reintentará)');
       s.posterFailed = true;
       fail++; sinceSave++;
-      console.log('   ❌ Descarga fallida (no se reintentará)');
       if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8'); sinceSave = 0; }
       await sleep(400);
       continue;
@@ -164,13 +170,12 @@ async function processFile(OUT_FILE) {
     console.log(`   ✅ ${hit.match} → ${local}`);
     ok++;
     sinceSave++;
-    // Checkpoint: guardar cada 10 portadas para no perder progreso
     if (sinceSave >= 10) {
       await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
       sinceSave = 0;
       console.log('   💾 Checkpoint de portadas guardado');
     }
-    await sleep(400); // respetar rate limits
+    await sleep(400);
   }
 
   await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
