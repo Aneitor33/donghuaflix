@@ -1,0 +1,45 @@
+# ══════════════════════════════════════════════
+#  PORTADAS — descarga local de pósters
+#  (TMDB si hay API key; AniList gratis como respaldo)
+#  Se ejecuta 1 vez al día. Sin dependencias npm.
+#  Para reintentar los fallidos: lanzar con
+#  FORCE_POSTERS=1 en los env del step.
+# ══════════════════════════════════════════════
+name: Sincronizar portadas
+
+on:
+  schedule:
+    - cron: '15 3 * * *'      # cada día a las 3:15
+  workflow_dispatch:
+
+concurrency:
+  group: sync-posters
+  cancel-in-progress: false
+
+jobs:
+  posters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Buscar y descargar portadas
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node poster-sync.js
+
+      - name: Guardar portadas
+        if: always()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A 'public/img/posters' 'public/data/catalog-donghualife.json' 'public/data/catalog-mundodonghua.json' 'public/data/catalog-seriesdonghua.json' 'public/data/catalog-peliculas.json' 'public/data/catalog-doramas.json'
+          git diff --staged --quiet || git commit -m "posters: actualizar portadas"
+          git pull --rebase --autostash origin main
+          git push
