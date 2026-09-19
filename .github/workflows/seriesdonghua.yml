@@ -1,0 +1,57 @@
+# ══════════════════════════════════════════════
+#  SERIESDONGHUA — sync independiente (1 web = 1 catálogo)
+#  Catálogo: public/data/catalog-seriesdonghua.json
+# ══════════════════════════════════════════════
+name: Sincronizar SeriesDonghua
+
+on:
+  schedule:
+    - cron: '50 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-donghua-seriesdonghua
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Sincronizar SeriesDonghua
+        env:
+          ONLY_SOURCE: 'seriesdonghua'
+          WORKERS: '10'
+          POLITENESS_MS: '300'
+          MAX_EPISODE_CRAWLS: '20000'
+          MAX_RUNTIME_MINUTES: '330'
+          FETCH_TIMEOUT_MS: '45000'
+          LOOKBACK_EPS: '10'
+          LOOKBACK_MAX: '400'
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node syncdonghua.js
+
+      - name: Generar índice lite y fichas
+        if: always()
+        run: node split-catalog.js public/data/catalog-seriesdonghua.json
+
+      - name: Guardar catálogo
+        if: always()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A 'public/data/catalog-seriesdonghua*' 'public/data/catalog-failures*' || true
+          git diff --staged --quiet || git commit -m "sync(seriesdonghua): actualizar catálogo"
+          git pull --rebase --autostash origin main
+          git push
