@@ -34,7 +34,7 @@ import { execSync } from 'node:child_process';
 import * as cheerio from 'cheerio';
 
 const OUT_FILE = path.resolve('public/data/catalog-doramas.json');
-const FAILURES_FILE = path.resolve('public/data/catalog-doramas-failures.json');
+const FAILURES_FILE = path.resolve('public/data/catalog-doramas-failures-v2.json');
 const RAWS_FILE = path.resolve('public/data/catalog-doramas-progress.json');
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
@@ -309,7 +309,7 @@ function epCode(slug, pathname) {
    (ok.ru/okcdn, byse, voe, streamtape, multijugadora…)
 ══════════════════════════════════════════════════════════ */
 
-const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidurl|multijugadora|tio)\//i;
+const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidurl|multijugadora|tio)[\/.]/i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
 const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn\.ru|byse|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder|byse|seeks|fastream|luluvdo|voe\.sx|netu\.tv|tamamo|tioplayer|fcdn|streamlare|slmaxed|sltube|playhydrax|hydrax|moviebox|mp4upload|krakenfiles|filelions|lulustream|streamtape)/i;
@@ -435,6 +435,22 @@ function parseEpisode(html, url) {
   });
 
   return { title, servers, watchUrl, playerOpts };
+}
+
+function hostOf(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return 'Servidor'; }
+}
+
+/* Recoge cualquier URL http(s) escondida en un JSON (embed_url, url…) */
+function collectUrlsFromJson(obj, out = []) {
+  if (typeof obj === 'string') {
+    if (/^https?:\/\//.test(obj)) out.push(obj);
+  } else if (Array.isArray(obj)) {
+    for (const v of obj) collectUrlsFromJson(v, out);
+  } else if (obj && typeof obj === 'object') {
+    for (const v of Object.values(obj)) collectUrlsFromJson(v, out);
+  }
+  return out;
 }
 
 /* Réplica de la llamada AJAX del reproductor (Dooplay y similares) */
@@ -811,6 +827,8 @@ function selftest() {
   eq(SOURCE.episodeTest('/episodios/spring-of-the-blade-1x21/'), true, 'dramachino: episodeTest');
   eq(SOURCE.epBelongs('spring-of-the-blade-1x21', '/episodios/spring-of-the-blade-1x21/', 'spring-of-the-blade'), true, 'pertenencia: propio aceptado');
   eq(cleanTitle('Spring of the Blade » Drama Chino'), 'Spring of the Blade', 'limpieza: separador »');
+  eq(isPlayableAbs('https://pkaa.top/embed.php?id=10425'), true, 'dramachino: embed.php aceptado');
+  eq(collectUrlsFromJson(JSON.parse('[{"embed_url":"https:\/\/x.top\/e.php?id=1","type":"iframe"}]')).length, 1, 'extractor JSON: embed_url con barras escapadas');
   eq(SOURCE.epBelongs('otro-capitulo-30', '/cap/otro-capitulo-30/', 'pull-strings'), false, 'pertenencia: ajeno rechazado');
   console.log('\nSelftest terminado.');
 }
@@ -1090,16 +1108,24 @@ async function main() {
           } catch (e2) { lastErr = e2.message; }
         }
         if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
-          for (const opt of parsed.playerOpts.slice(0, 3)) {
-            if (parsed.servers.length) break;
+          /* Cada pestaña de servidor (OK, BYSE, VOE…) es una opción:
+             las probamos todas y sumamos los embed_url de cada respuesta. */
+          for (const opt of parsed.playerOpts.slice(0, 6)) {
             try {
               const resp = await postAjax(opt, u);
               if (resp) {
                 lastHtml = resp;
-                const parsed2 = parseEpisode(resp, u);
-                if (parsed2.servers.length) {
-                  parsed = { ...parsed, servers: parsed2.servers };
-                  console.log(`      ⚡ AJAX reproductor (post ${opt.post} · nume ${opt.nume}) → ${parsed2.servers.length} servidor(es)`);
+                const added = [];
+                try {
+                  for (const u2 of collectUrlsFromJson(JSON.parse(resp))) {
+                    if (isPlayableAbs(u2)) added.push({ name: hostOf(u2), url: u2, embed: true });
+                  }
+                } catch {}
+                const parsed2 = parseEpisode(resp.replace(/\\\//g, '/'), u);
+                for (const s of parsed2.servers) added.push(s);
+                if (added.length) {
+                  parsed = { ...parsed, servers: [...parsed.servers, ...added] };
+                  console.log(`      ⚡ AJAX reproductor (post ${opt.post} · nume ${opt.nume}) → +${added.length} servidor(es)`);
                 }
               }
             } catch (e3) { lastErr = e3.message; }
