@@ -35,7 +35,7 @@ jobs:
 
       - name: Sincronizar donghuas (4 fuentes)
         env:
-          WORKERS: '8'
+          WORKERS: '10'
           POLITENESS_MS: '150'
           MAX_EPISODE_CRAWLS: '60000'
           MAX_RUNTIME_MINUTES: '300'
