@@ -38,13 +38,17 @@ jobs:
 
       - name: Sincronizar series
         env:
-          WORKERS: '8'
-          HOST_LIMIT: '7'
+          WORKERS: '5'
+          HOST_LIMIT: '4'
           POLITENESS_MS: '500'
           MAX_EPISODE_CRAWLS: '20000'
           MAX_RUNTIME_MINUTES: '330'
           FETCH_TIMEOUT_MS: '120000'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          SOURCE_BASE: 'https://www.series24.sbs'
+          LIST_PATH: 'ver-serie'
+          EP_PATH: 'ver-episodio'
+          MAX_PAGES: '50'
           USE_BROWSER: '1'
           HEADFUL: '1'
           SERIES_PROXY_URL: ${{ secrets.DORAMAS_PROXY_URL }}
