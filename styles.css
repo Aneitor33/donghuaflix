@@ -507,3 +507,6 @@ footer a.ig-link svg{width:13px;height:13px}
   footer{padding-bottom:calc(34px + env(safe-area-inset-bottom))}
   .empty{padding-bottom:110px}
 }
+
+/* ---------- ETIQUETA DE FUENTE (resultados de búsqueda) ---------- */
+.badge.src{top:34px;background:var(--red);color:#fff;letter-spacing:.4px;text-transform:none;font-weight:700}
