@@ -51,7 +51,7 @@ const OUT_FILE = catalogFile(SOURCE_IDS[0]); // compat (referencia para otras ru
 const FAILURES_FILE = path.resolve('public/data/catalog-failures.json');
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
-const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || (process.env.ONLY_SOURCE === 'donghualife' ? 1500 : 300));
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 6000));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_URLS_PER_EP = Math.max(1, Math.min(4, Number(process.env.MAX_URLS_PER_EP || 3)));
@@ -428,6 +428,31 @@ const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
 const KNOWN_VIDEO_HOST = /(?:ok\.ru|streamtape|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|fembad|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|vox|1fichier|johnfullwonder|byse|seeks|fastream|luluvdo|voe\.sx|netu\.tv|tamamo|tioplayer|fcdn|streamlare|slmaxed|sltube|playhydrax|hydrax|moviebox)/i;
 const DIRECT_MEDIA_RE = /\.(?:mp4|webm|m3u8)(\?|#|$)/i;
 
+/* Los dominios de MundoDonghua van rotados/encubiertos en el JS:
+   sckqvgjgae7.com, p7eozcer1na.sx, nyvdkqai8yjk.com… Se normalizan
+   detectando el patrón del host y reconstruyendo el servidor real. */
+const OBFUSCATED_HOST = /^[a-z0-9]{9,14}\.(com|sx|net|xyz|top|cc)$/i;
+const KNOWN_PLAYER_BY_HINT = /voe|byse|moon|magi|play|stream|tape|fembed|ok\.ru|dood|tape/i;
+
+function deobfuscateUrl(u) {
+  try {
+    const url = new URL(u);
+    if (!OBFUSCATED_HOST.test(url.hostname)) return u;
+    const path = url.pathname || '';
+    const hint = (path + url.search).toLowerCase();
+    if (/voe|sx\/e\//i.test(hint)) {
+      return 'https://voe.sx' + path + url.search;
+    }
+    if (/byse|moon|magi|play/i.test(hint)) {
+      return 'https://byse.to' + path + url.search;
+    }
+    if (KNOWN_PLAYER_BY_HINT.test(hint)) {
+      return 'https://' + url.hostname + path + url.search;
+    }
+  } catch {}
+  return u;
+}
+
 function isPlayableAbs(u) {
   if (!u) return false;
   if (IMAGE_ASSET_RE.test(u)) return false;
@@ -492,7 +517,8 @@ function parseEpisode(html, url) {
   const servers = [];
   const seen = new Set();
   const addServer = (name, raw, embed = false, lang = null) => {
-    const u = absolute(raw, url);
+    let u = absolute(raw, url);
+    if (u) u = deobfuscateUrl(u);
     if (!u || !isPlayableAbs(u)) return;
     if (seen.has(u)) return;
     let host = name;
@@ -578,6 +604,24 @@ function parseEpisode(html, url) {
       playerOpts.push({ post, nume, type });
     }
   });
+
+  /* 3) Iframes embebidos en el JS de la página (SeriesDonghua/Tamamo):
+     el <div id="tamamo_player"> se rellena por JS; el código lleva la URL
+     del iframe como string. */
+  {
+    const ifrRe = /["'\s=]((?:https?:)?\/\/[^"'\s<>\\]+\/e(?:mbed)?\/[A-Za-z0-9]{6,30})["'\s&]/g;
+    for (const m of html.match(ifrRe) || []) {
+      let u = m.slice(1, -1);
+      if (u.startsWith('//')) u = 'https:' + u;
+      addServer('Servidor', u, true);
+    }
+    const genRe = /["'\s=]((?:https?:)?\/\/[^"'\s<>\\]+\/(?:player|embed|e|tamamo|asura)\/[A-Za-z0-9=?_-]{4,80})["'\s&]/g;
+    for (const m of html.match(genRe) || []) {
+      let u = m.slice(1, -1);
+      if (u.startsWith('//')) u = 'https:' + u;
+      addServer('Servidor', u, true);
+    }
+  }
 
   return { title, servers, watchUrl, playerOpts };
 }
