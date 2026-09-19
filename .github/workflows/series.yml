@@ -30,6 +30,11 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
+      - name: Instalar navegador (Playwright)
+        run: |
+          npm i --no-save playwright
+          npx playwright install chromium --with-deps
+
       - name: Sincronizar series
         env:
           WORKERS: '5'
@@ -39,18 +44,21 @@ jobs:
           MAX_RUNTIME_MINUTES: '330'
           FETCH_TIMEOUT_MS: '120000'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          USE_BROWSER: '1'
           SERIES_PROXY_URL: ${{ secrets.DORAMAS_PROXY_URL }}
           SERIES_PROXY_KEY: ${{ secrets.DORAMAS_PROXY_KEY }}
         run: node syncseries.js
 
       - name: Generar índice lite y fichas
+        if: always()
         run: node split-catalog.js public/data/catalog-series.json
 
       - name: Guardar catálogo
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A 'public/data/catalog-series.json' 'public/data/catalog-series-index.json' 'public/data/catalog-series-details' 'public/data/catalog-series-progress.json' 'public/data/catalog-series-failures-v2.json'
+          git add -A 'public/data/catalog-series*' || true
           git diff --staged --quiet || git commit -m "sync(series): actualizar catálogo"
           git pull --rebase origin main
           git push
