@@ -156,12 +156,15 @@ async function acquirePage() {
   const free = PW_POOL.find(p => !p.busy);
   if (free) { free.busy = true; return free.page; }
   if (PW_POOL.length < PW_POOL_SIZE) {
-    const { chromium } = await import('playwright');
+    const pwMod = await import('playwright-extra');
+    const stMod = await import('playwright-extra-plugin-stealth');
+    const chromium = pwMod.default?.chromium || pwMod.chromium;
+    const StealthPlugin = stMod.default || stMod;
     if (!pwBrowser) {
+      chromium.use(StealthPlugin());
       pwBrowser = await chromium.launch({
         headless: !HEADFUL,
-        ignoreDefaultArgs: ['--enable-automation'],
-        args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-dev-shm-usage']
+        args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1366,768']
       });
       /* un solo contexto: el challenge se resuelve UNA vez y las
          cookies (cf_clearance) sirven para todas las pestañas */
@@ -758,7 +761,7 @@ async function discoverSource(source) {
         const all = [];
         $d('a[href]').each((_, el) => {
           const h = $d(el).attr('href') || '';
-          if (h.includes('gnula')) all.push(h);
+          if (/^https?:/.test(h)) all.push(h);
         });
         const sample = [...new Set(all)].slice(0, 8).join(' | ');
         console.log(`   🔎 DIAG listado: título="${clean($d('title').text()).slice(0, 90)}" · enlaces internos: ${all.length}`);
