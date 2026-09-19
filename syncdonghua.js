@@ -120,7 +120,7 @@ const SOURCES = [
   },
   {
     id: 'mundodonghua',
-    base: 'https://www.mundodonghua.com',
+    base: 'https://www.mundodonghua.xyz',
     priority: 1,
     seeds: [
       '/lista-donghuas',
@@ -606,55 +606,27 @@ function parseEpisode(html, url) {
     }
   });
 
-  /* 3) Tamamo (SeriesDonghua/MundoDonghua): el <iframe id="tamamo_player">
-     está vacío en el HTML (se rellena por JS al hacer clic en
-     <img id="tamamoplay">), pero la URL del iframe va embebida en el
-     JS como &quot;https://tamamo...&quot;. La extraemos desescapando
-     las entidades y buscando URLs tamamo en el documento. */
-  /* Tamamo (SeriesDonghua/MundoDonghua): el <iframe id="tamamo_player"> está
-     vacío y se rellena por JS al hacer clic en <div class="play-btn-wrapper">.
-     La URL del servidor va embebida en el JS como &quot;https://...&quot;.
-     Extraemos TODAS las URLs https que hay en el documento desescapado
-     (dentro de comillas) y nos quedamos con las que parecen un servidor. */
+  /* 3) Pestañas de servidor por ID (MundoDonghua/SeriesDonghua): el episodio
+     trae TODOS los ifranes (uno por #id: #tamamo, #amagi, #fmoon, #proteja,
+     #vhide), ocultos con display:none; el JS solo muestra el del hash.
+     Extraemos cada iframe dentro de su div[id] correspondiente. */
   {
-    const unescaped = html
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>');
-
-    /* Todas las URLs entre comillas (dobles o simples) */
-    const urlRe = /["']((https?:)?\/\/[^"'\s<>\\]+)["']/g;
-    for (const m of unpacked.match(urlRe) || []) {
-      let u = m.slice(1, -1).trim();
-      if (u.startsWith('//')) u = 'https:' + u;
-      /* Solo servidores: descartar imágenes, CSS, JS de la propia web y dominios de la web */
-      if (/\.(jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i.test(u)) continue;
-      if (/\.(googleapis|gstatic|jquery|bootstrap|fontawesome)/i.test(u)) continue;
-      const host = (() => { try { return new URL(u).hostname; } catch { return ''; } })();
-      if (host.includes('seriesdonghua') || host.includes('mundodonghua') || host.includes('googleapis')) continue;
-      if (/player|embed|\/e\/|tamamo|asura|video|stream|play|moon|magi|voe|byse|ok\.ru|dailymotion|rumble|fembed|tape|dood/i.test(u)) {
-        addServer('Servidor', u, true);
+    const TAB_IDS = ['tamamo', 'amagi', 'fmoon', 'proteja', 'vhide', 'voe', 'ok', 'rumble', 'daily', 'stream'];
+    for (const tab of TAB_IDS) {
+      const $div = $(`#${tab}`);
+      if (!$div.length) continue;
+      $div.find('iframe').each((_, ifr) => {
+        const s = $(ifr).attr('src') || $(ifr).attr('data-src') || $(ifr).attr('data-url');
+        if (s) addServer(tab === 'tamamo' ? 'Tamamo' : tab, s, true);
+      });
+      const txt = $div.html() || '';
+      const m = txt.match(/["']((https?:)?\/\/[^"'\s<>]*(?:tamamo|amagi|fmoon|proteja|voe|byse|ok\.ru|dailymotion|rumble)[^"'\s<>]*)["']/i);
+      if (m) {
+        let u = m[1];
+        if (u.startsWith('//')) u = 'https:' + u;
+        addServer(tab === 'tamamo' ? 'Tamamo' : tab, u, true);
       }
     }
-
-    /* El iframe tamamo_player puede llevar data-src aunque src esté vacío */
-    const tpSrc = $('#tamamo_player').attr('data-src') ||
-                  $('iframe[id*="tamamo"]').attr('data-src') ||
-                  $('iframe[src*="tamamo"]').attr('src');
-    if (tpSrc) addServer('Tamamo', tpSrc, true);
-
-    /* El botón play-btn-wrapper suele tener el enlace del servidor */
-    $('.play-btn-wrapper').each((_, el) => {
-      const $btn = $(el);
-      const href = $btn.closest('a').attr('href') ||
-                   $btn.parent('a').attr('href') ||
-                   $btn.find('a').attr('href');
-      if (href && /http|player|embed|tamamo|video/i.test(href)) addServer('Tamamo', href, true);
-      const dataUrl = $btn.attr('data-url') || $btn.attr('data-href') || $btn.attr('data-src');
-      if (dataUrl) addServer('Tamamo', dataUrl, true);
-    });
   }
 
   /* 4) Iframes embebidos en el JS de la página (genérico): el código
