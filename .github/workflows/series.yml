@@ -39,6 +39,8 @@ jobs:
           MAX_RUNTIME_MINUTES: '330'
           FETCH_TIMEOUT_MS: '120000'
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          SERIES_PROXY_URL: ${{ secrets.DORAMAS_PROXY_URL }}
+          SERIES_PROXY_KEY: ${{ secrets.DORAMAS_PROXY_KEY }}
         run: node syncseries.js
 
       - name: Generar índice lite y fichas
