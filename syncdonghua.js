@@ -39,7 +39,12 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import * as cheerio from 'cheerio';
 
-const OUT_FILE = path.resolve('public/data/catalog.json');
+/* Un archivo de catálogo POR WEB: catalog-donghualife.json,
+   catalog-mundodonghua.json, catalog-seriesdonghua.json… */
+const SOURCE_IDS = (process.env.SOURCES_ENABLED || 'donghualife,mundodonghua,seriesdonghua')
+  .split(',').map(s => s.trim()).filter(Boolean);
+const catalogFile = (srcId) => path.resolve(`public/data/catalog-${srcId}.json`);
+const OUT_FILE = catalogFile(SOURCE_IDS[0]); // compat (referencia para otras rutinas)
 const FAILURES_FILE = path.resolve('public/data/catalog-failures.json');
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 7)));
@@ -138,6 +143,8 @@ const SOURCES = [
       const m = p.match(/^\/([a-z0-9-]+)\/?$/i);
       if (!m) return false;
       const slug = m[1];
+
+const ACTIVE_SOURCES = SOURCES.filter(s => SOURCE_IDS.includes(s.id));
       if (/-episodio-\d+/i.test(slug)) return false;
       if (SD_EXCLUDE.has(slug)) return false;
       return true;
@@ -758,18 +765,18 @@ async function scrapeSeriesPage(source, url) {
 ══════════════════════════════════════════════════════════ */
 
 async function loadCatalog() {
-  try {
-    const db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
-    return {
-      meta: db.meta || {},
-      series: Array.isArray(db.series) ? db.series : [],
-      seasons: Array.isArray(db.seasons) ? db.seasons : [],
-      episodes: Array.isArray(db.episodes) ? db.episodes : [],
-      genres: Array.isArray(db.genres) ? db.genres : []
-    };
-  } catch {
-    return { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
+  const db = { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
+  for (const srcId of SOURCE_IDS) {
+    try {
+      const d = JSON.parse(await fs.readFile(catalogFile(srcId), 'utf8'));
+      db.series.push(...(Array.isArray(d.series) ? d.series : []));
+      db.seasons.push(...(Array.isArray(d.seasons) ? d.seasons : []));
+      db.episodes.push(...(Array.isArray(d.episodes) ? d.episodes : []));
+      db.genres.push(...(Array.isArray(d.genres) ? d.genres : []));
+      if (d.meta) db.meta = d.meta;
+    } catch {}
   }
+  return db;
 }
 
 async function loadFailures() {
@@ -789,10 +796,29 @@ async function saveFailures(failures) {
 const MAX_FAILS = 2; // reintentos de un episodio fallido antes de ignorarlo
 
 async function saveCatalog(db) {
-  await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
-  const tmp = `${OUT_FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(db), 'utf8');
-  await fs.rename(tmp, OUT_FILE);
+  for (const srcId of SOURCE_IDS) {
+    const sSeries = db.series.filter(s => s.src === srcId);
+    if (!sSeries.length) continue; // no pisa el archivo si la fuente no dio nada
+    const ids = new Set(sSeries.map(s => s.id));
+    const sSeasons = db.seasons.filter(s => ids.has(s.seriesId));
+    const sIds = new Set(sSeasons.map(s => s.id));
+    const sEps = db.episodes.filter(e => sIds.has(e.seasonId));
+    const out = catalogFile(srcId);
+    await fs.mkdir(path.dirname(out), { recursive: true });
+    await fs.writeFile(out, JSON.stringify({
+      meta: {
+        ...(db.meta || {}),
+        source: srcId,
+        series: sSeries.length,
+        seasons: sSeasons.length,
+        episodes: sEps.length
+      },
+      series: sSeries,
+      seasons: sSeasons,
+      episodes: sEps,
+      genres: db.genres || []
+    }), 'utf8');
+  }
 }
 
 function upsert(array, item, key = 'id') {
@@ -812,7 +838,7 @@ function gitCheckpoint(db) {
     try {
       execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
       execSync('git config --local user.name "github-actions[bot]"');
-      execSync('git add public/data/catalog.json');
+      execSync(`git add -A ${SOURCE_IDS.map(x => `'public/data/catalog-${x}*'`).join(' ')} 'public/data/catalog-failures*'`);
       execSync('git diff --staged --quiet || git commit -m "sync(donghua): progreso"');
       execSync('git pull --rebase origin main || true');
       execSync('git push');
@@ -912,13 +938,24 @@ async function runPool(items, workers, fn, shouldStop = () => false) {
 async function main() {
   console.log('\n==============================================');
   console.log('🚀 DONGHUA SYNC MULTI-FUENTE');
-  console.log(`   fuentes: ${SOURCES.map(s => s.id).join(', ')}`);
+  console.log(`   fuentes: ${ACTIVE_SOURCES.map(s => s.id).join(', ')}`);
   console.log(`   workers: ${WORKERS} · tope episodios: ${MAX_EPISODE_CRAWLS} · tope tiempo: ${MAX_RUNTIME_MS / 60000} min`);
   console.log('==============================================\n');
 
   const db = await loadCatalog();
   const failures = await loadFailures();
   const startedAt = new Date().toISOString();
+
+  /* ── Reinicio de estructura: el catálogo se reconstruye desde cero
+     una vez (los datos antiguos venían de la estructura fusionada y
+     no son compatibles con "una ficha por web"). */
+  if (!db.meta || !String(db.meta.source || '').startsWith('multi-v2')) {
+    console.log('\n🔄 Estructura multi-v2: se reconstruye el catálogo de donghuas desde cero.');
+    db.series = [];
+    db.seasons = [];
+    db.episodes = [];
+    db.genres = [];
+  }
 
   /* ── Fusión retroactiva: series que ahora comparten clave de título
      (antes quedaron con basura de las webs: 【Sub Español】, 🥇 DONGHUA…)
@@ -991,7 +1028,7 @@ async function main() {
 
   /* ── Fase 1: descubrimiento ── */
   const tasks = [];
-  for (const source of SOURCES) {
+  for (const source of ACTIVE_SOURCES) {
     if (timeUp()) { console.log('⏱️  Presupuesto agotado antes del descubrimiento'); break; }
     console.log(`\n🔎 Descubriendo [${source.id}]…`);
     let urls = [];
@@ -1307,7 +1344,10 @@ async function main() {
     const before = db.series.length;
     db.series = db.series.filter(s => withEps.has(s.id));
     const removedEmpty = before - db.series.length;
-    if (removedEmpty) console.log(`🧹 Series sin episodios eliminadas: ${removedEmpty}`);
+    if (removedEmpty) {
+      console.log(`🧹 Series sin episodios eliminadas: ${removedEmpty}`);
+      console.log(`   (se conservan ${db.series.length}: ${db.series.slice(0, 5).map(s => s.title).join(' · ')}…)`);
+    }
     globalThis.__removedEmpty = removedEmpty;
   }
 
@@ -1338,7 +1378,7 @@ async function main() {
   db.meta = {
     ...(db.meta || {}),
     version: 5,
-    source: 'multi-v2:' + SOURCES.map(s => s.id).join('+'),
+    source: 'multi-v3:' + ACTIVE_SOURCES.map(s => s.id).join('+'),
     syncedAt: finishedAt,
     lastSync: {
       status: 'success',
