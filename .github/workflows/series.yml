@@ -1,0 +1,56 @@
+# ══════════════════════════════════════════════
+#  SERIES — wnv5.gnula.cc
+#  Catálogo: public/data/catalog-series.json
+#  + índice lite y fichas por serie
+# ══════════════════════════════════════════════
+name: Sincronizar catálogo Series
+
+on:
+  schedule:
+    - cron: '30 */6 * * *'      # cada 6h, minuto 30
+  workflow_dispatch:
+
+concurrency:
+  group: sync-series
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Sincronizar series
+        env:
+          WORKERS: '5'
+          HOST_LIMIT: '4'
+          POLITENESS_MS: '500'
+          MAX_EPISODE_CRAWLS: '20000'
+          MAX_RUNTIME_MINUTES: '330'
+          FETCH_TIMEOUT_MS: '120000'
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node syncseries.js
+
+      - name: Generar índice lite y fichas
+        if: always()
+        run: node split-catalog.js public/data/catalog-series.json
+
+      - name: Guardar catálogo
+        if: always()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A 'public/data/catalog-series.json' 'public/data/catalog-series-index.json' 'public/data/catalog-series-details' 'public/data/catalog-series-progress.json' 'public/data/catalog-series-failures-v2.json'
+          git diff --staged --quiet || git commit -m "sync(series): actualizar catálogo"
+          git pull --rebase origin main
+          git push
