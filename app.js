@@ -3,20 +3,30 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
+const DONGHUA_CATS = ['donghualife', 'mundodonghua', 'seriesdonghua'];
 const CATALOGS = [
-  { id: 'donghua',   file: './public/data/catalog.json',            index: './public/data/catalog-index.json',            label: 'Donghuas' },
+  { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
+  { id: 'mundodonghua',  file: './public/data/catalog-mundodonghua.json',  index: './public/data/catalog-mundodonghua-index.json',  label: 'MundoDonghua' },
+  { id: 'seriesdonghua', file: './public/data/catalog-seriesdonghua.json', index: './public/data/catalog-seriesdonghua-index.json', label: 'SeriesDonghua' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
-  { id: 'series',    file: './public/data/catalog-series.json',     index: './public/data/catalog-series-index.json',     label: 'Series' },
-  { id: 'ultrapeli', file: './public/data/catalog-ultrapeli.json',  index: './public/data/catalog-ultrapeli-index.json',  label: 'Ultrapeli' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
+const SRC_LABEL = {
+  donghualife: 'DonghuaLife',
+  mundodonghua: 'MundoDonghua',
+  seriesdonghua: 'SeriesDonghua',
+  tiodonghua: 'TioDonghua',
+  peliculas: 'Películas',
+  doramas: 'Doramas'
+};
 
 /* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
 let DETAILS_BASE = {};
 const DETAIL_CACHE = {};
 
 let DB_CACHE = {};
-let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghua';
+let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghualife';
+if (!CATALOGS.some(c => c.id === currentCatalog)) currentCatalog = 'donghualife';
 const CATALOG_AVAILABLE = { donghua: true };
 
 /* Une las partes de un catálogo dividido */
@@ -569,6 +579,25 @@ function getWatched() {
 function isWatched(seasonId, num) {
   return Boolean(
     getWatched()[seasonId]?.[num]
+  );
+}
+
+/* Marca SOLO el episodio que se está viendo */
+function markWatchedSingle(
+  seasonId,
+  num
+) {
+  const all = getWatched();
+
+  all[seasonId] =
+    all[seasonId] || {};
+
+  all[seasonId][num] =
+    Date.now();
+
+  localStorage.setItem(
+    'donghuaflix_watched',
+    JSON.stringify(all)
   );
 }
 
@@ -1394,6 +1423,16 @@ function card(s) {
         s.status ||
           'DONGHUA'
       )}</span>
+
+      ${
+        s._cat || s.src
+          ? `<span class="badge src">${esc(
+              SRC_LABEL[s._cat || s.src] ||
+                s.src ||
+                ''
+            )}</span>`
+          : ''
+      }
 
       <button
         class="fav-heart ${
@@ -2541,7 +2580,8 @@ function listMyList() {
 let searchState = {
   genre: '',
   year: '',
-  country: ''
+  country: '',
+  pool: null
 };
 
 function search(q = '') {
@@ -2553,7 +2593,8 @@ function search(q = '') {
     searchState = {
       genre: '',
       year: '',
-      country: ''
+      country: '',
+      pool: null
     };
 
     const genres =
@@ -2744,9 +2785,12 @@ function search(q = '') {
   updateSearchResults(q);
 }
 
-function updateSearchResults(
+async function updateSearchResults(
   q = ''
 ) {
+  if (!searchState.pool) {
+    searchState.pool = await getSearchPool();
+  }
   const container =
     document.getElementById(
       'results'
@@ -2767,7 +2811,7 @@ function updateSearchResults(
   }
 
   let list =
-    DB.series.filter(
+    (searchState.pool || DB.series).filter(
       s => {
         const title =
           cleanTitle(
@@ -2839,6 +2883,91 @@ function updateSearchResults(
     emptyText:
       'No se encontraron donghuas con ese nombre.'
   });
+
+  /* Cada resultado abre su catálogo de origen */
+  const cardsEl =
+    container.querySelectorAll(
+      '.card'
+    );
+  list.forEach((s, i) => {
+    const el = cardsEl[i];
+    if (el) {
+      el.onclick = () =>
+        openSeries(s);
+    }
+  });
+}
+
+/* Búsqueda conjunta: los 3 catálogos de donghua a la vez
+   (más el catálogo activo si es otro). Cada resultado lleva
+   _cat = su catálogo de origen. */
+async function getSearchPool() {
+  const pool = [];
+
+  for (const id of DONGHUA_CATS) {
+    try {
+      const d =
+        await ensureCatalog(id);
+      CATALOG_AVAILABLE[id] = true;
+      for (const s of d.series || []) {
+        pool.push({
+          ...s,
+          _cat: id
+        });
+      }
+    } catch {}
+  }
+
+  if (
+    !DONGHUA_CATS.includes(
+      currentCatalog
+    )
+  ) {
+    try {
+      const d =
+        await ensureCatalog(
+          currentCatalog
+        );
+      for (const s of d.series || []) {
+        pool.push({
+          ...s,
+          _cat: currentCatalog
+        });
+      }
+    } catch {}
+  }
+
+  renderCatBar();
+  return pool;
+}
+
+/* Abre una serie cambiando antes a su catálogo si hace falta */
+async function openSeries(s) {
+  if (
+    s._cat &&
+    s._cat !== currentCatalog
+  ) {
+    try {
+      DB =
+        await ensureCatalog(s._cat);
+      currentCatalog = s._cat;
+      localStorage.setItem(
+        'donghuaflix_catalog',
+        s._cat
+      );
+      setAmbience('');
+      renderCatBar();
+    } catch {
+      showToast(
+        'Catálogo no disponible todavía'
+      );
+      return;
+    }
+  }
+
+  location.hash =
+    '#/series/' +
+    qs(s.slug || s.id);
 }
 
 /* Descarga la ficha completa de UN título (sinopsis + temporadas + servidores) */
@@ -3590,7 +3719,8 @@ function episode(slug) {
     e
   );
 
-  markWatchedUpTo(
+  /* Marca solo ESTE episodio (antes se marcaban del 1 al N) */
+  markWatchedSingle(
     e.seasonId,
     e.number
   );
