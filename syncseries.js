@@ -50,8 +50,8 @@ const FETCH_RETRIES = 3;
 const logged403 = new Set();
 
 /* Proxy opcional si la web bloquea las IPs de GitHub (403) */
-const PROXY_URL = (process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
-const PROXY_KEY = process.env.DORAMAS_PROXY_KEY || '';
+const PROXY_URL = (process.env.SERIES_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
+const PROXY_KEY = process.env.SERIES_PROXY_KEY || process.env.DORAMAS_PROXY_KEY || '';
 const PROXY_HOSTS = (process.env.PROXY_HOSTS || 'wnv5.gnula.cc')
   .split(',').map(s => s.trim()).filter(Boolean);
 /* La web penaliza por concurrencia: máx. 2 peticiones simultáneas
@@ -131,18 +131,20 @@ function slugFromUrl(raw) {
 
 const uniqueUrls = vals => [...new Set(vals.map(v => absolute(v)).filter(Boolean))];
 
+function viaProxy(url) {
+  try {
+    if (PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname)) {
+      return { target: `${PROXY_URL}/?u=${encodeURIComponent(url)}`, proxied: true };
+    }
+  } catch {}
+  return { target: url, proxied: false };
+}
+
 async function fetchHtml(url, attempt = 1) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    let target = url;
-    let proxied = false;
-    try {
-      if (PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname)) {
-        target = `${PROXY_URL}/?u=${encodeURIComponent(url)}`;
-        proxied = true;
-      }
-    } catch {}
+    const { target, proxied } = viaProxy(url);
 
     const reqPromise = fetch(target, {
       signal: controller.signal,
@@ -457,10 +459,15 @@ function collectUrlsFromJson(obj, out = []) {
 async function postAjax(opt, referer) {
   const origin = new URL(SOURCE.base).origin;
   const url = `${origin}/wp-admin/admin-ajax.php`;
-  const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
+  const { target, proxied } = viaProxy(url);
+  const res = await withHostLimit(new URL(url).hostname, () => fetch(target, {
     method: 'POST',
     signal: AbortSignal.timeout(20000),
-    headers: {
+    headers: proxied ? {
+      'x-proxy-key': PROXY_KEY,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest'
+    } : {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-Requested-With': 'XMLHttpRequest',
