@@ -85,7 +85,7 @@ const SOURCE = {
   id: 'gnula',
   base: 'https://wnv5.gnula.cc',
   priority: 0,
-  seeds: ['/ver-serie/'],
+  seeds: ['/ver-serie/', '/ver-serie/page/1/'],
   maxPages: 50,
   seriesTest: p => /^\/ver-serie\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
   episodeTest: p => /^\/ver-episode\/[a-z0-9-]+/i.test(p),
@@ -708,6 +708,7 @@ async function discoverSource(source) {
 
     const queue = [first];
     const visited = new Set();
+    let diagShown = false;
 
     while (queue.length && visited.size < source.maxPages) {
       const pageUrl = queue.shift();
@@ -720,6 +721,20 @@ async function discoverSource(source) {
 
       const series = parseSeriesLinks(html, pageUrl, source);
       series.forEach(u => found.add(u));
+
+      /* Si la primera página no da enlaces, mostrar la estructura real */
+      if (visited.size === 1 && !series.length && !found.size && !diagShown) {
+        diagShown = true;
+        const $d = cheerio.load(html);
+        const all = [];
+        $d('a[href]').each((_, el) => {
+          const h = $d(el).attr('href') || '';
+          if (h.includes('gnula')) all.push(h);
+        });
+        const sample = [...new Set(all)].slice(0, 8).join(' | ');
+        console.log(`   🔎 DIAG listado: título="${clean($d('title').text()).slice(0, 90)}" · enlaces internos: ${all.length}`);
+        console.log(`   🔎 DIAG muestra: ${sample || '(ninguno con gnula)'}`);
+      }
 
       for (const next of parsePageLinks(html, pageUrl, source)) {
         if (!visited.has(next) && !queue.includes(next)) queue.push(next);
@@ -896,7 +911,7 @@ function gitCheckpoint(db) {
       execSync('git config --local user.name "github-actions[bot]"');
       execSync('git add public/data/catalog-series.json public/data/catalog-series-progress.json public/data/catalog-series-failures-v2.json');
       execSync('git diff --staged --quiet || git commit -m "sync(series): progreso"');
-      execSync('git pull --rebase origin main || true');
+      execSync('git pull --rebase --autostash origin main || true');
       execSync('git push');
       console.log(`\n🚀 Checkpoint subido al repo (${elapsedMin()} min) — a salvo ante cortes\n`);
     } catch {
@@ -1409,7 +1424,7 @@ async function main() {
   gitCheckpoint(db);
 
   console.log('\n====================================================');
-  console.log('🎉 SYNC DORAMAS TERMINADO');
+  console.log('🎉 SYNC SERIES TERMINADO');
   console.log('====================================================');
   console.log(`📚 Series: ${db.series.length}`);
   console.log(`📖 Temporadas: ${db.seasons.length}`);
