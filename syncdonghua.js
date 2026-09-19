@@ -610,21 +610,50 @@ function parseEpisode(html, url) {
      <img id="tamamoplay">), pero la URL del iframe va embebida en el
      JS como &quot;https://tamamo...&quot;. La extraemos desescapando
      las entidades y buscando URLs tamamo en el documento. */
+  /* Tamamo (SeriesDonghua/MundoDonghua): el <iframe id="tamamo_player"> está
+     vacío y se rellena por JS al hacer clic en <div class="play-btn-wrapper">.
+     La URL del servidor va embebida en el JS como &quot;https://...&quot;.
+     Extraemos TODAS las URLs https que hay en el documento desescapado
+     (dentro de comillas) y nos quedamos con las que parecen un servidor. */
   {
-    const unescaped = html.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
-    const tamRe = /["'\s=]((?:https?:)?\/\/[^"'\s<>]*tamamo[^"'\s<>]*)["'\s&]/gi;
-    for (const m of unescaped.match(tamRe) || []) {
-      let u = m.trim().replace(/^["'\s=]+|["'\s&]+$/g, '');
+    const unescaped = html
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+
+    /* Todas las URLs entre comillas (dobles o simples) */
+    const urlRe = /["']((https?:)?\/\/[^"'\s<>\\]+)["']/g;
+    for (const m of unescaped.match(urlRe) || []) {
+      let u = m.slice(1, -1).trim();
       if (u.startsWith('//')) u = 'https:' + u;
-      if (/tamamo|player|embed/i.test(u)) addServer('Tamamo', u, true);
+      /* Solo servidores: descartar imágenes, CSS, JS de la propia web y dominios de la web */
+      if (/\.(jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i.test(u)) continue;
+      if (/\.(googleapis|gstatic|jquery|bootstrap|fontawesome)/i.test(u)) continue;
+      const host = (() => { try { return new URL(u).hostname; } catch { return ''; } })();
+      if (host.includes('seriesdonghua') || host.includes('mundodonghua') || host.includes('googleapis')) continue;
+      if (/player|embed|\/e\/|tamamo|asura|video|stream|play|moon|magi|voe|byse|ok\.ru|dailymotion|rumble|fembed|tape|dood/i.test(u)) {
+        addServer('Servidor', u, true);
+      }
     }
+
+    /* El iframe tamamo_player puede llevar data-src aunque src esté vacío */
     const tpSrc = $('#tamamo_player').attr('data-src') ||
                   $('iframe[id*="tamamo"]').attr('data-src') ||
                   $('iframe[src*="tamamo"]').attr('src');
     if (tpSrc) addServer('Tamamo', tpSrc, true);
-    const tpImg = $('#tamamoplay').closest('a').attr('href') ||
-                  $('a:has(#tamamoplay)').attr('href');
-    if (tpImg && /tamamo|player|embed|video|http/i.test(tpImg)) addServer('Tamamo', tpImg, true);
+
+    /* El botón play-btn-wrapper suele tener el enlace del servidor */
+    $('.play-btn-wrapper').each((_, el) => {
+      const $btn = $(el);
+      const href = $btn.closest('a').attr('href') ||
+                   $btn.parent('a').attr('href') ||
+                   $btn.find('a').attr('href');
+      if (href && /http|player|embed|tamamo|video/i.test(href)) addServer('Tamamo', href, true);
+      const dataUrl = $btn.attr('data-url') || $btn.attr('data-href') || $btn.attr('data-src');
+      if (dataUrl) addServer('Tamamo', dataUrl, true);
+    });
   }
 
   /* 4) Iframes embebidos en el JS de la página (genérico): el código
