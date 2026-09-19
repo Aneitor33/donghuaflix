@@ -605,9 +605,30 @@ function parseEpisode(html, url) {
     }
   });
 
-  /* 3) Iframes embebidos en el JS de la página (SeriesDonghua/Tamamo):
-     el <div id="tamamo_player"> se rellena por JS; el código lleva la URL
-     del iframe como string. */
+  /* 3) Tamamo (SeriesDonghua/MundoDonghua): el <iframe id="tamamo_player">
+     está vacío en el HTML (se rellena por JS al hacer clic en
+     <img id="tamamoplay">), pero la URL del iframe va embebida en el
+     JS como &quot;https://tamamo...&quot;. La extraemos desescapando
+     las entidades y buscando URLs tamamo en el documento. */
+  {
+    const unescaped = html.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+    const tamRe = /["'\s=]((?:https?:)?\/\/[^"'\s<>]*tamamo[^"'\s<>]*)["'\s&]/gi;
+    for (const m of unescaped.match(tamRe) || []) {
+      let u = m.trim().replace(/^["'\s=]+|["'\s&]+$/g, '');
+      if (u.startsWith('//')) u = 'https:' + u;
+      if (/tamamo|player|embed/i.test(u)) addServer('Tamamo', u, true);
+    }
+    const tpSrc = $('#tamamo_player').attr('data-src') ||
+                  $('iframe[id*="tamamo"]').attr('data-src') ||
+                  $('iframe[src*="tamamo"]').attr('src');
+    if (tpSrc) addServer('Tamamo', tpSrc, true);
+    const tpImg = $('#tamamoplay').closest('a').attr('href') ||
+                  $('a:has(#tamamoplay)').attr('href');
+    if (tpImg && /tamamo|player|embed|video|http/i.test(tpImg)) addServer('Tamamo', tpImg, true);
+  }
+
+  /* 4) Iframes embebidos en el JS de la página (genérico): el código
+     lleva la URL del iframe como string. */
   {
     const ifrRe = /["'\s=]((?:https?:)?\/\/[^"'\s<>\\]+\/e(?:mbed)?\/[A-Za-z0-9]{6,30})["'\s&]/g;
     for (const m of html.match(ifrRe) || []) {
