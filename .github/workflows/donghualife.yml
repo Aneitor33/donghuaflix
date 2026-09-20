@@ -1,16 +1,16 @@
 # ══════════════════════════════════════════════
-#  DONGHUALIFE — sync independiente (1 web = 1 catálogo)
+#  DONGHUALIFE — donghualife.com
 #  Catálogo: public/data/catalog-donghualife.json
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaLife
 
 on:
   schedule:
-    - cron: '40 */6 * * *'
+    - cron: '40 */6 * * *'      # cada 6h, minuto 40
   workflow_dispatch:
 
 concurrency:
-  group: sync-donghua-donghualife
+  group: sync-donghualife
   cancel-in-progress: false
 
 jobs:
@@ -32,14 +32,9 @@ jobs:
       - name: Sincronizar DonghuaLife
         env:
           ONLY_SOURCE: 'donghualife'
-          WORKERS: '9'
-          POLITENESS_MS: '1500'
-          MAX_EPISODE_CRAWLS: '20000'
+          POLITENESS_MS: '500'
+          MAX_EPISODE_CRAWLS: '10000'
           MAX_RUNTIME_MINUTES: '330'
-          FETCH_TIMEOUT_MS: '45000'
-          LOOKBACK_EPS: '10'
-          LOOKBACK_MAX: '400'
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: node syncdonghua.js
 
       - name: Generar índice lite y fichas
@@ -51,7 +46,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A 'public/data/catalog-donghualife*' 'public/data/catalog-failures*' || true
+          git add -A 'public/data/catalog-donghualife*'
           git diff --staged --quiet || git commit -m "sync(donghualife): actualizar catálogo"
           git pull --rebase --autostash origin main
           git push
