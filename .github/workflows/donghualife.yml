@@ -1,5 +1,6 @@
 # ══════════════════════════════════════════════
 #  DONGHUALIFE — donghualife.com
+#  Usa el código ORIGINAL completo (syncdonghualife.js)
 #  Catálogo: public/data/catalog-donghualife.json
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaLife
@@ -31,12 +32,8 @@ jobs:
 
       - name: Sincronizar DonghuaLife
         env:
-          WORKERS: '8'
-          ONLY_SOURCE: 'donghualife'
-          POLITENESS_MS: '500'
-          MAX_EPISODE_CRAWLS: '10000'
-          MAX_RUNTIME_MINUTES: '330'
-        run: node syncdonghua.js
+          OUT_FILE: 'public/data/catalog-donghualife.json'
+        run: node syncdonghualife.js
 
       - name: Generar índice lite y fichas
         if: always()
