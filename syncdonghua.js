@@ -530,6 +530,35 @@ function unpackPacker(js) {
 function parseEpisode(html, url) {
   const unpacked = unpackPacker(html);
   const $ = cheerio.load(unpacked);
+
+  /* Dooplay mirror select: los servidores van en <select name="mirror">
+     con valores base64 que decodifican a <iframe src="..."> (patrón
+     de anichin-api). */
+  $('select[name="mirror"] option').each((_, opt) => {
+    const val = $(opt).attr('value');
+    if (!val) return;
+    try {
+      const decoded = Buffer.from(val, 'base64').toString('utf-8');
+      const m = decoded.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+      if (m) {
+        const name = $(opt).text().trim() || 'Servidor';
+        addServer(name, m[1], true);
+      }
+    } catch {}
+  });
+  /* También select class="mirror" */
+  $('select.mirror option').each((_, opt) => {
+    const val = $(opt).attr('value');
+    if (!val || val.length < 20) return;
+    try {
+      const decoded = Buffer.from(val, 'base64').toString('utf-8');
+      const m = decoded.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+      if (m) {
+        const name = $(opt).text().trim() || 'Servidor';
+        addServer(name, m[1], true);
+      }
+    } catch {}
+  });
   const title = clean(
     $('h1').first().text() ||
     $('meta[property="og:title"]').attr('content') ||
