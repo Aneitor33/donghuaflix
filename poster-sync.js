@@ -4,8 +4,8 @@ import path from 'node:path';
 /* Catálogos actuales de DonghuaFlix (uno por web + películas + doramas) */
 const FILES = [
   path.resolve('public/data/catalog-donghualife.json'),
-  path.resolve('public/data/catalog-mundodonghua.json'),
-  path.resolve('public/data/catalog-seriesdonghua.json'),
+  path.resolve('public/data/catalog-donghuasub.json'),
+  path.resolve('public/data/catalog-donghuaworld.json'),
   path.resolve('public/data/catalog-peliculas.json'),
   path.resolve('public/data/catalog-doramas.json')
 ];
