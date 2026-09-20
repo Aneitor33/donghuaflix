@@ -108,7 +108,7 @@ async function ensureCatalog(id) {
               id: r.i,
               slug: r.s,
               title: r.t,
-              image: r.p ? (r.p.startsWith('http') ? r.p : ib + r.p) : null,
+              image: r.p ? (r.p.startsWith('http') || r.p.startsWith('./') || r.p.startsWith('/') ? r.p : ib + r.p) : null,
               status: r.st || null,
               type: r.ty || null,
               year: r.y || null,
