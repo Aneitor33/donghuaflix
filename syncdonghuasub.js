@@ -15,7 +15,7 @@ const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
 const BASE_URL = 'https://donghuasub.com';
 
 // Configuración
-const WORKERS = Math.max(1, Math.min(10, Number(process.env.WORKERS || 9))); // Workers paralelos (navegador compartido)
+const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || 6))); // Workers paralelos (navegador compartido)
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 300);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
