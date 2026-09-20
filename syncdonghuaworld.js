@@ -1,21 +1,25 @@
 // ══════════════════════════════════════════════════════════
-//  syncdonghuaworld.js — DonghuaFlix
-//  Scraper para DONGHUAWORLD.COM
-//  Usa la MISMA lógica de extracción que donghualife (iframes, enlaces, data-*)
+//  syncdonghuasub.js — DonghuaFlix
+//  Scraper para DONGHUASUB.COM
+//  Estructura:
+//    - Directorio: /directorio?page=N
+//    - Serie: /donghua/slug
+//    - Episodio: /donghua/slug/N
 // ══════════════════════════════════════════════════════════
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import * as cheerio from 'cheerio';
 
-const OUT_FILE = path.resolve('public/data/catalog-donghuaworld.json');
-const BASE_URL = 'https://donghuaworld.com';
+const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
+const BASE_URL = 'https://donghuasub.com';
 
 // 8 workers como en donghualife
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 8)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 300);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
-const FETCH_TIMEOUT_MS = 30000;
+const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 20000));
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 30000);
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
@@ -60,7 +64,7 @@ function canonical(raw) {
   } catch { return null; }
 }
 
-/* Pool de workers */
+/* Pool de workers (8 workers) */
 async function runPool(items, workers, fn) {
   let i = 0;
   const worker = async () => {
@@ -81,8 +85,9 @@ async function fetchHtml(url, attempt = 1) {
       signal: controller.signal,
       redirect: 'follow',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9'
       }
     });
     if (!response.ok) {
@@ -104,30 +109,29 @@ async function fetchHtml(url, attempt = 1) {
   }
 }
 
-/* Descubrir series desde /page/N/ */
+/* Descubrir series desde /directorio?page=N */
 async function discoverSeries() {
   const found = new Set();
 
-  // Sondeo forzado: páginas 1 a 50 (donghuaworld tiene al menos 31)
-  // No para hasta encontrar 5 páginas vacías seguidas (después de la página 5)
-  // FORZAR sondeo de todas las páginas 1-31 (o hasta 50) sin parar por "vacías"
-  // La web tiene 31 páginas según confirmación del usuario
-  for (let page = 1; page <= 31; page++) {
+  // Sondeo páginas 1-50 (o hasta que no haya más)
+  for (let page = 1; page <= 50; page++) {
     if (timeUp()) break;
 
-    // URL exacta según la estructura de donghuaworld
-    const url = page === 1 ? BASE_URL : `${BASE_URL}/page/${page}/`;
+    const url = page === 1 ? `${BASE_URL}/directorio` : `${BASE_URL}/directorio?page=${page}`;
 
     try {
       const html = await fetchHtml(url);
       const $ = cheerio.load(html);
       let count = 0;
 
-      // Buscar TODOS los enlaces que contengan /anime/ (más flexible)
-      $('a[href]').each((_, el) => {
-        const href = $(el).attr('href') || '';
-        // Aceptar cualquier enlace que contenga /anime/ o /series/
-        if (href.includes('/anime/') || href.includes('/series/')) {
+      // Buscar enlaces /donghua/ (fichas de series)
+      $('a[href*="/donghua/"]').each((_, el) => {
+        const href = $(el).attr('href');
+        if (!href) return;
+
+        // Filtrar: debe ser /donghua/slug (sin número al final = no es episodio)
+        const match = href.match(/\/donghua\/([a-z0-9-]+)\/?$/i);
+        if (match) {
           const full = canonical(absolute(href, url));
           if (full && sameOrigin(full) && !found.has(full)) {
             found.add(full);
@@ -136,30 +140,12 @@ async function discoverSeries() {
         }
       });
 
-      // ESTRATEGIA 2: Si no encontramos nada con /anime/, buscar slugs largos
-      if (count === 0) {
-        $('a[href]').each((_, el) => {
-          const href = $(el).attr('href') || '';
-          // Slugs de series: /nombre-de-la-serie/ (3+ palabras)
-          if (href.match(/^\/[a-z0-9]+(-[a-z0-9]+){2,}\/?$/i) && 
-              !href.includes('/page/') && 
-              !href.includes('/genre/') &&
-              !href.includes('/category/') &&
-              !href.includes('/episode/')) {
-            const full = canonical(absolute(href, url));
-            if (full && sameOrigin(full) && !found.has(full)) {
-              found.add(full);
-              count++;
-            }
-          }
-        });
-      }
-
       console.log(`📄 Página ${page}: ${count} series (total: ${found.size})`);
 
-      // Si la página 2 da 0 pero la 1 dio 10, algo va mal con el selector, pero seguimos
+      // Si no hay nuevas en esta página y no es la primera, puede ser el final
       if (page > 1 && count === 0) {
-        console.log(`   ⚠️ Página ${page} sin resultados (posible bloqueo o cambio de estructura)`);
+        console.log(`🛑 Fin del directorio (página ${page})`);
+        break;
       }
 
     } catch (e) {
@@ -173,7 +159,7 @@ async function discoverSeries() {
   return [...found];
 }
 
-/* Parsear episodio (MISMA lógica que donghualife) */
+/* Parsear episodio (extraer video) - MISMA LÓGICA QUE DONGHUALIFE */
 function parseEpisode(html, episodeUrl) {
   const $ = cheerio.load(html);
 
@@ -184,60 +170,59 @@ function parseEpisode(html, episodeUrl) {
   );
 
   const servers = [];
+  const seen = new Set();
 
-  const addServer = (name, raw, embed = false) => {
-    const url = absolute(raw, episodeUrl);
-    if (!url || sameOrigin(url)) return;
-
-    const key = `${name}|${url}`.toLowerCase();
-    if (servers.some(item => `${item.name}|${item.url}`.toLowerCase() === key)) return;
-
-    servers.push({
-      name: clean(name) || 'Servidor',
-      url,
-      embed: Boolean(embed)
-    });
+  const addServer = (name, url, embed = true) => {
+    if (!url || seen.has(url)) return;
+    seen.add(url);
+    servers.push({ name, url, embed });
   };
 
-  // 1. Enlaces a servidores conocidos
-  $('a[href]').each((_, el) => {
-    const href = $(el).attr('href');
-    const text = clean($(el).text());
-    if (!href) return;
-
-    const lower = href.toLowerCase();
-    if (/dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|mega|youtube|fembed|skadi|asura/.test(lower)) {
-      let hostname = 'Servidor';
-      try { hostname = new URL(href, episodeUrl).hostname; } catch {}
-      addServer(text || hostname, href, false);
-    }
-  });
-
-  // 2. Iframes y videos embebidos
-  $('iframe[src], video[src], source[src]').each((_, el) => {
+  // 1. Iframes embebidos (cualquier iframe que no sea de la propia web)
+  $('iframe[src]').each((_, el) => {
     const src = $(el).attr('src');
     if (!src) return;
 
-    const full = absolute(src, episodeUrl);
-    if (!full) return;
+    // Ignorar iframes de la propia web (banners, anuncios)
+    if (src.includes('donghuasub.com')) return;
 
-    const lower = full.toLowerCase();
-    if (/dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|youtube|fembed|skadi|asura/.test(lower)) {
-      try { addServer(new URL(full).hostname, full, true); } catch {}
+    // Si es un iframe externo, es probablemente el video
+    if (src.startsWith('http')) {
+      let name = 'Servidor';
+      try {
+        const hostname = new URL(src).hostname;
+        name = hostname.replace('www.', '').split('.')[0];
+        // Capitalizar primera letra
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+      } catch {}
+      addServer(name, src, true);
     }
   });
 
-  // 3. Atributos data-*
-  $('[data-src], [data-embed], [data-url], [data-video]').each((_, el) => {
-    const raw = $(el).attr('data-src') || $(el).attr('data-embed') || 
-                $(el).attr('data-url') || $(el).attr('data-video');
-    if (!raw) return;
+  // 2. Videos embebidos en scripts (JSON o JavaScript)
+  $('script').each((_, el) => {
+    const txt = $(el).html() || '';
+    // Buscar URLs de video en el script
+    const patterns = [
+      /["'](https?:\/\/[^"']*(?:dailymotion|youtube|vimeo|ok\.ru|streamtape|fembed|voe|vidmoly|rumble|mp4upload)[^"']*)["']/gi,
+      /["'](https?:\/\/[^"']*\.mp4[^"']*)["']/gi,
+      /["'](https?:\/\/[^"']*\.m3u8[^"']*)["']/gi
+    ];
 
-    const full = absolute(raw, episodeUrl);
-    if (!full) return;
+    for (const pattern of patterns) {
+      let match;
+      while ((match = pattern.exec(txt)) !== null) {
+        addServer('Video', match[1], true);
+      }
+    }
+  });
 
-    if (/dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|youtube|fembed|skadi|asura/i.test(full)) {
-      try { addServer(new URL(full).hostname, full, true); } catch {}
+  // 3. Atributos data-* (por si acaso)
+  $('[data-src], [data-embed], [data-url], [data-video], [data-player]').each((_, el) => {
+    const url = $(el).attr('data-src') || $(el).attr('data-embed') || 
+                $(el).attr('data-url') || $(el).attr('data-video') || $(el).attr('data-player');
+    if (url && url.startsWith('http') && !url.includes('donghuasub.com')) {
+      addServer('Servidor', url, true);
     }
   });
 
@@ -255,77 +240,44 @@ function parseSeries(html, url) {
     slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   );
 
-  // Limpiar " - DonghuaWorld" del título
-  title = title.replace(/\s*[-|]\s*DonghuaWorld.*$/i, '').trim();
+  // Limpiar sufijos
+  title = title.replace(/\s*[-|]\s*DonghuaSub.*$/i, '').trim();
 
   const synopsis = clean(
     $('meta[name="description"]').attr('content') ||
     $('[class*="description"], [class*="synopsis"]').first().text()
   );
 
-  // Detectar episodios: LÓGICA FLEXIBLE
-  // 1. El enlace debe contener el nombre de la serie (slug)
-  // 2. Debe tener "episode" o "ep" seguido de números
-  // 3. Extraer el número inicial y final (si es rango)
+  // Detectar episodios: buscar enlaces /donghua/slug/N
   const episodes = [];
-  const baseSlug = slug.replace(/^anime-/, '').toLowerCase();
 
   $('a[href]').each((_, el) => {
     const href = $(el).attr('href');
-    const full = canonical(absolute(href, url));
-    if (!full || !sameOrigin(full)) return;
+    if (!href) return;
 
-    try {
-      const epSlug = slugFromUrl(full).toLowerCase();
-
-      // REGLA 1: Debe empezar con el nombre de la serie (o contenerlo al inicio)
-      if (!epSlug.startsWith(baseSlug)) return;
-
-      // REGLA 2: Debe contener "episode" o "-ep-" después del nombre
-      const afterSeries = epSlug.slice(baseSlug.length);
-      if (!afterSeries.match(/^-(episode|ep)-/i)) return;
-
-      // REGLA 3: Extraer números (cualquier combinación: 1, 1-10, 1-10-20, etc)
-      const numMatch = afterSeries.match(/^(?:-episode|-ep)-(\d+)(?:-(\d+))?(?:-(\d+))?/i);
-      if (!numMatch) return;
-
-      const from = parseInt(numMatch[1], 10);
-      // Si hay segundo número, es el final del rango (o parte de él)
-      const to = numMatch[2] ? parseInt(numMatch[2], 10) : from;
-
-      // Título legible
-      let title;
-      if (from === to) {
-        title = `Episode ${from}`;
-      } else {
-        title = `Episode ${from}-${to}`;
+    // Patrón: /donghua/slug/N (donde N es el número de episodio)
+    const match = href.match(/\/donghua\/([a-z0-9-]+)\/(\d+)\/?$/i);
+    if (match && match[1] === slug) {
+      const num = parseInt(match[2], 10);
+      const full = canonical(absolute(href, url));
+      if (full && sameOrigin(full)) {
+        episodes.push({
+          url: full,
+          number: num,
+          title: `Episodio ${num}`
+        });
       }
-
-      episodes.push({
-        url: full,
-        slug: epSlug,
-        from,
-        to,
-        isRange: from !== to,
-        title
-      });
-    } catch {}
+    }
   });
 
-  // Ordenar: primero por número inicial, luego rangos después de individuales
-  episodes.sort((a, b) => {
-    if (a.from !== b.from) return a.from - b.from;
-    // Si empiezan igual, individuales antes que rangos
-    if (a.isRange && !b.isRange) return 1;
-    if (!a.isRange && b.isRange) return -1;
-    return a.to - b.to;
-  });
+  // Ordenar por número
+  episodes.sort((a, b) => a.number - b.number);
 
   // Eliminar duplicados
   const seen = new Set();
   const unique = episodes.filter(ep => {
-    if (seen.has(ep.slug)) return false;
-    seen.add(ep.slug);
+    if (seen.has(ep.number)) return false;
+    seen.add(ep.number);
     return true;
   });
 
@@ -353,7 +305,7 @@ async function processSeries(db, seriesUrl) {
     synopsis: series.synopsis,
     image: series.image,
     type: 'donghua',
-    src: 'donghuaworld',
+    src: 'donghuasub',
     sourceUrls: [seriesUrl],
     updatedAt: new Date().toISOString()
   };
@@ -369,7 +321,7 @@ async function processSeries(db, seriesUrl) {
   for (const ep of series.episodes) {
     if (timeUp()) break;
 
-    const epId = `${slug}-e${ep.from}${ep.to !== ep.from ? '-' + ep.to : ''}`;
+    const epId = `${slug}-e${ep.number}`;
 
     // Verificar si ya existe
     if (db.episodes.some(e => e.id === epId)) {
@@ -399,15 +351,13 @@ async function processSeries(db, seriesUrl) {
 
       db.episodes.push({
         id: epId,
-        slug: ep.slug,
+        slug: epId,
         title: parsed.title || ep.title,
         sourceUrl: ep.url,
         servers: parsed.servers,
         seriesId: slug,
         seasonId,
-        number: ep.from,
-        rangeFrom: ep.from,
-        rangeTo: ep.to,
+        number: ep.number,
         updatedAt: new Date().toISOString()
       });
 
@@ -422,7 +372,7 @@ async function processSeries(db, seriesUrl) {
 
 /* Main */
 async function main() {
-  console.log('🚀 DONGHUAWORLD SYNC');
+  console.log('🚀 DONGHUASUB SYNC');
   console.log(`   workers: ${WORKERS} | tope tiempo: ${MAX_RUNTIME_MS/60000} min\n`);
 
   // Cargar catálogo
@@ -434,11 +384,11 @@ async function main() {
   }
 
   // Descubrir series
-  console.log('🔍 Descubriendo series...');
+  console.log('🔍 Descubriendo series en /directorio...');
   const seriesUrls = await discoverSeries();
   console.log(`\n📚 Total series: ${seriesUrls.length}`);
 
-  // Procesar con pool de workers
+  // Procesar con pool de workers (8 workers)
   let done = 0;
   await runPool(seriesUrls, WORKERS, async (url) => {
     const i = ++done;
@@ -473,7 +423,7 @@ async function main() {
   await fs.writeFile(OUT_FILE, JSON.stringify(db));
 
   console.log('\n═══════════════════════════════════════');
-  console.log('🎉 DONGHUAWORLD TERMINADO');
+  console.log('🎉 DONGHUASUB TERMINADO');
   console.log(`📚 Series: ${db.series.length}`);
   console.log(`🎬 Episodios: ${db.episodes.length}`);
   console.log(`⏱️ Duración: ${elapsedMin()} min`);
