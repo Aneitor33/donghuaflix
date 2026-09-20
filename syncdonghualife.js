@@ -20,6 +20,23 @@ const MAX_EPISODES_PER_SEASON_SAFETY = 100000;
 const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
 
+// WORKERS: 8 en paralelo (configurable)
+const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 8)));
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
+
+/* Pool simple de workers */
+async function runPool(items, workers, fn) {
+  let i = 0;
+  const worker = async () => {
+    while (i < items.length) {
+      const it = items[i++];
+      try { await fn(it); } catch (e) { console.log(`   ⚠️ ${e.message}`); }
+      await sleep(POLITENESS_MS);
+    }
+  };
+  await Promise.all(Array.from({ length: workers }, worker));
+}
+
 /*
    Mínimo de páginas que queremos comprobar
    por temporada.
@@ -4947,14 +4964,9 @@ async function runFullSync() {
      SERIES
   ===================================================== */
 
-  for (
-    let i = 0;
-    i < discovered.length;
-    i++
-  ) {
-
-    const seriesUrl =
-      discovered[i];
+  let idx = 0;
+  await runPool(discovered, WORKERS, async (seriesUrl) => {
+    const i = idx++;
 
 
     const slug =
@@ -5167,7 +5179,7 @@ async function runFullSync() {
 
     }
 
-  }
+  }); // Fin runPool
 
 
   /* =====================================================
