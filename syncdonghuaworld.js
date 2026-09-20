@@ -63,10 +63,11 @@ async function discoverSeries() {
   console.log('🔍 Descubriendo series en /anime/...');
 
   // Sondeo páginas 1-31 (según confirmación del usuario)
+  // Estructura real: página 1 es la home, luego /page/N/
   for (let page = 1; page <= 31; page++) {
     if (timeUp()) break;
 
-    const url = page === 1 ? `${BASE_URL}/anime/` : `${BASE_URL}/anime/page/${page}/`;
+    const url = page === 1 ? `${BASE_URL}/` : `${BASE_URL}/page/${page}/`;
 
     try {
       // Esperar a que cargue el listado
