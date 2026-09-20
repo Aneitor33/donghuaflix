@@ -15,8 +15,8 @@ const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
 const BASE_URL = 'https://donghuasub.com';
 
 // Configuración
-const WORKERS = Math.max(1, Math.min(4, Number(process.env.WORKERS || 3))); // Menos workers por ser navegador
-const POLITENESS_MS = Number(process.env.POLITENESS_MS || 500);
+const WORKERS = Math.max(1, Math.min(10, Number(process.env.WORKERS || 9))); // Workers paralelos (navegador compartido)
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || 300);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
 /* ══════════════════════════════════════════════════════════
@@ -47,6 +47,37 @@ function enqueueSave(db) {
     .then(() => fs.writeFile(CHAIN_SAVE_PATH, JSON.stringify(db)))
     .catch(e => console.log(`⚠️ Error guardando catálogo: ${e.message}`));
   return saveQueue;
+}
+
+/* Comprueba existencia por HTTP ligero (SIN navegador):
+   muchísimo más rápido que abrir una página de Playwright.
+   - Debe responder 200
+   - El HTML debe mencionar el slug (evita falsos positivos
+     si el servidor devuelve 200 para todo) */
+async function urlExists(url, slug) {
+  try {
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(15000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36' }
+    });
+    if (!res.ok) return false;
+    const text = await res.text();
+    return text.includes(slug);
+  } catch { return false; }
+}
+
+/* Pool de workers: procesa varias series A LA VEZ,
+   cada worker toma la siguiente serie libre. */
+async function runPool(items, workers, fn) {
+  let i = 0;
+  const worker = async () => {
+    while (i < items.length) {
+      const it = items[i++];
+      if (timeUp()) break;
+      try { await fn(it); } catch (e) { console.log(`⚠️ ${e.message}`); }
+    }
+  };
+  await Promise.all(Array.from({ length: workers }, worker));
 }
 
 /* Localiza el enlace "Siguiente" en el HTML ya renderizado:
@@ -97,8 +128,10 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
     const candidate = `${seriesUrl}/${target}`;
     if (visited.has(candidate)) return null;
     try {
-      const html = await fetchPage(candidate, 'a');
-      if (!html.includes(slug)) return null;
+      // ANTES: fetchPage(candidate, 'a') → doble carga de navegador
+      // AHORA: check HTTP ligero; la página se abrirá en el
+      // siguiente paso de la cadena de todos modos.
+      if (!(await urlExists(candidate, slug))) return null;
       patternRecoveries++;
       console.log(`      🔄 Alternando a patrón: episodio ${target} existe — se reanuda la cadena`);
       return candidate;
@@ -471,25 +504,29 @@ async function main() {
   const seriesUrls = await discoverSeries();
   console.log(`\n📚 Total series: ${seriesUrls.length}`);
 
-  // Procesar series (con límite de concurrencia por ser navegador)
+  // Procesar series EN PARALELO: varias a la vez, cada worker
+  // toma la siguiente serie libre. El navegador es compartido.
   let done = 0;
-  for (const url of seriesUrls) {
-    if (timeUp()) break;
+  await runPool(seriesUrls, WORKERS, async (url) => {
+    const n = ++done;
 
-    console.log(`\n[${++done}/${seriesUrls.length}] ${url.split('/').pop()}`);
+    console.log(`\n[${n}/${seriesUrls.length}] ${url.split('/').pop()}`);
 
     try {
       await processSeries(db, url);
 
-      // Checkpoint cada 3 series
-      if (done % 3 === 0) {
-        await fs.writeFile(OUT_FILE, JSON.stringify(db));
-        console.log(`💾 Checkpoint (${done}/${seriesUrls.length})`);
+      // Checkpoint informativo (el guardado real es por serie,
+      // encolado, dentro de processSeries)
+      if (n % 3 === 0) {
+        console.log(`💾 Checkpoint (${n}/${seriesUrls.length})`);
       }
     } catch (e) {
       console.log(`   ❌ Error: ${e.message}`);
+
+      // Guardar el progreso igualmente para no perder nada
+      await enqueueSave(db);
     }
-  }
+  });
 
   // Guardar final
   db.meta = {
