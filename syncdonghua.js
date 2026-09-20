@@ -510,16 +510,18 @@ async function postAjax(opt, referer) {
    de mundodonghua/seriesdonghua lleva las URLs de VOE/Amagi/etc. en este
    formato. Se descomprime evaluando la función de desempaquetado. */
 function unpackPacker(js) {
-  const re = /eval\(function\(p,a,c,k,e,d\)\{[\s\S]*?\}\(([^)]+)\)\)/;
+  /* Dean Edwards packer: eval(function(p,a,c,k,e,d){...}(args))
+     El algoritmo: k es un array de strings, e es base36, y se va
+     reemplazando cada índice por su palabra. */
+  const re = /eval\(function\(p,a,c,k,e,d\)\{([\s\S]*?)\}\((.+)\)\);?\s*$/;
   const m = js.match(re);
   if (!m) return js;
   try {
-    // Extraer los argumentos: p,a,c,k,e,d
-    const argsSrc = m[1];
-    const fnBody = m[0].slice(5, -1); // quitar "eval(" y ")"
-    // Construir la función y obtener el resultado (p modificado)
-    const unpack = new Function(`return (${fnBody})`)();
-    return unpack || js;
+    const body = m[1];
+    const argsSrc = m[2];
+    const fn = new Function('p', 'a', 'c', 'k', 'e', 'd', body);
+    const args = eval(`[${argsSrc}]`);
+    return fn(...args) || js;
   } catch {
     return js;
   }
@@ -1515,6 +1517,35 @@ async function main() {
             if (p2.servers.length) {
               parsed = { ...parsed, servers: p2.servers };
               console.log(`      🎬 JS tamamo (${p2.servers.length} servidor(es))`);
+            }
+          } catch {}
+        }
+        /* Dooplay: si hay tamamo_player/fmoon pero no data-post, el ID
+           del post está en la URL o en el HTML; probamos con el número
+           de episodio y con el post de la página. */
+        if (!parsed.servers.length && /tamamo_player|fmoon|amagi|proteja/i.test(html)) {
+          const postId = (() => {
+            const m = html.match(/data-post=["'](\d+)["']/);
+            if (m) return m[1];
+            const m2 = html.match(/postid-(\d+)/);
+            if (m2) return m2[1];
+            return job.number || '1';
+          })();
+          try {
+            const resp = await postAjax({ post: postId, nume: '1', type: 'tv' }, u);
+            if (resp) {
+              const added = [];
+              try {
+                for (const u2 of collectUrlsFromJson(JSON.parse(resp))) {
+                  if (isPlayableAbs(u2)) added.push({ name: hostOf(u2), url: u2, embed: true });
+                }
+              } catch {}
+              const p2 = parseEpisode(resp.replace(/\\\//g, '/'), u);
+              for (const s of p2.servers) added.push(s);
+              if (added.length) {
+                parsed = { ...parsed, servers: added };
+                console.log(`      ⚡ AJAX Dooplay (post ${postId}) → +${added.length} servidor(es)`);
+              }
             }
           } catch {}
         }
