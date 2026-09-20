@@ -3549,6 +3549,7 @@ async function crawlEpisodeUrls(
     );
 
 
+  let lastSave = 0;
   for (
     let i = 0;
     i < sortedUrls.length;
@@ -3588,8 +3589,10 @@ async function crawlEpisodeUrls(
     }
 
 
+    // LOG LIMPIO: solo muestra el número y nombre, no la URL larga
+    const epSlugClean = slugFromUrl(currentUrl);
     console.log(
-      `      ▶ Episodio ${i + 1}/${sortedUrls.length}: ${currentUrl}`
+      `      ▶ Episodio ${i + 1}/${sortedUrls.length}: ${epSlugClean}`
     );
 
 
