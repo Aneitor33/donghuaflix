@@ -15,7 +15,7 @@ import * as cheerio from 'cheerio';
 ══════════════════════════════════════════════════════════ */
 const ONLY_SOURCE = process.env.ONLY_SOURCE || ''; // 'donghualife', 'donghuaworld', o '' (ambas)
 
-const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 8))); // 8 workers por defecto (DonghuaLife)
+const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 8))); // 8 workers por defecto // 8 workers por defecto (DonghuaLife)
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150); // 150ms original
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 20000));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
