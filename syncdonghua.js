@@ -120,7 +120,7 @@ const SOURCES = [
   },
   {
     id: 'mundodonghua',
-    base: 'https://www.mundodonghua.xyz',
+    base: 'https://www.mundodonghua.com',
     priority: 1,
     seeds: [
       '/lista-donghuas',
@@ -488,6 +488,31 @@ function collectUrlsFromJson(obj, out = []) {
 
 /* Réplica del AJAX del reproductor (Dooplay): las pestañas de servidor
    piden el vídeo a admin-ajax.php con data-post/data-nume. */
+/* Simula el clic en el botón Tamamo: envía POST a admin-ajax.php
+   con el ID del post/episodio y recibe el iframe del servidor. */
+async function fetchTamamo(postId, referer) {
+  const origin = new URL(referer).origin;
+  const url = `${origin}/wp-admin/admin-ajax.php`;
+  const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
+    method: 'POST',
+    signal: AbortSignal.timeout(20000),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': referer
+    },
+    body: new URLSearchParams({
+      action: 'doo_player_ajax',
+      post: String(postId),
+      type: 'tv',
+      nume: '1'
+    }).toString()
+  }));
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.text();
+}
+
 async function postAjax(opt, referer) {
   const origin = new URL(referer).origin;
   const url = `${origin}/wp-admin/admin-ajax.php`;
@@ -530,6 +555,25 @@ function unpackPacker(js) {
 function parseEpisode(html, url) {
   const unpacked = unpackPacker(html);
   const $ = cheerio.load(unpacked);
+
+  /* Tamamo (DailyMotion): el "Ad Console" que aparece al cargar el
+     servidor muestra "View ID: XXXXX" que es el ID del video de
+     Dailymotion. Lo extraemos y construimos la URL del embed. */
+  const bodyText = $('body').text();
+  const viewIdMatch = bodyText.match(/View ID[:\s]+([a-zA-Z0-9]{10,25})/i);
+  if (viewIdMatch) {
+    const videoId = viewIdMatch[1];
+    addServer('DailyMotion', `https://www.dailymotion.com/embed/video/${videoId}`, true);
+  }
+  /* También buscar en scripts por si está en JSON */
+  $('script').each((_, el) => {
+    const txt = $(el).html() || '';
+    const m = txt.match(/["']video["']:\s*["']([a-zA-Z0-9]{10,25})["']/i) ||
+              txt.match(/dailymotion.*?(?:video|id)[^a-zA-Z0-9]([a-zA-Z0-9]{10,25})/i);
+    if (m && m[1].length > 8) {
+      addServer('DailyMotion', `https://www.dailymotion.com/embed/video/${m[1]}`, true);
+    }
+  });
 
   /* Dooplay mirror select: los servidores van en <select name="mirror">
      con valores base64 que decodifican a <iframe src="..."> (patrón
