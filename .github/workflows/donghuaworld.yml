@@ -32,11 +32,9 @@ jobs:
       - name: Sincronizar DonghuaWorld
         env:
           WORKERS: '8'
-          ONLY_SOURCE: 'donghuaworld'
-          POLITENESS_MS: '800'
-          MAX_EPISODE_CRAWLS: '5000'
+          POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '330'
-        run: node syncdonghua.js
+        run: node syncdonghuaworld.js
 
       - name: Generar índice lite y fichas
         if: always()
