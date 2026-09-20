@@ -33,10 +33,13 @@ jobs:
       - name: Sincronizar DonghuaLife
         env:
           OUT_FILE: 'public/data/catalog-donghualife.json'
+          WORKERS: '10'              # ← 10 workers en paralelo
         run: node syncdonghualife.js
 
       - name: Generar índice lite y fichas
         if: always()
+        env:
+          WORKERS: '10'              # ← por si split-catalog.js también lo usa
         run: node split-catalog.js public/data/catalog-donghualife.json
 
       - name: Guardar catálogo
