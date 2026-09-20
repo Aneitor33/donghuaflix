@@ -110,10 +110,9 @@ async function discoverSeries() {
 
   // Sondeo forzado: páginas 1 a 50 (donghuaworld tiene al menos 31)
   // No para hasta encontrar 5 páginas vacías seguidas (después de la página 5)
-  let emptyStreak = 0;
-  const MAX_EMPTY = 5;
-
-  for (let page = 1; page <= 50; page++) {
+  // FORZAR sondeo de todas las páginas 1-31 (o hasta 50) sin parar por "vacías"
+  // La web tiene 31 páginas según confirmación del usuario
+  for (let page = 1; page <= 31; page++) {
     if (timeUp()) break;
 
     // URL exacta según la estructura de donghuaworld
@@ -124,40 +123,47 @@ async function discoverSeries() {
       const $ = cheerio.load(html);
       let count = 0;
 
-      // Buscar enlaces /anime/ (fichas de series)
+      // Buscar TODOS los enlaces que contengan /anime/ (más flexible)
       $('a[href]').each((_, el) => {
-        const href = $(el).attr('href');
-        const full = canonical(absolute(href, url));
-        if (!full || !sameOrigin(full)) return;
+        const href = $(el).attr('href') || '';
+        // Aceptar cualquier enlace que contenga /anime/ o /series/
+        if (href.includes('/anime/') || href.includes('/series/')) {
+          const full = canonical(absolute(href, url));
+          if (full && sameOrigin(full) && !found.has(full)) {
+            found.add(full);
+            count++;
+          }
+        }
+      });
 
-        try {
-          const p = new URL(full).pathname;
-          if (/^\/anime\/[a-z0-9-]+\/?$/i.test(p)) {
-            if (!found.has(full)) {
+      // ESTRATEGIA 2: Si no encontramos nada con /anime/, buscar slugs largos
+      if (count === 0) {
+        $('a[href]').each((_, el) => {
+          const href = $(el).attr('href') || '';
+          // Slugs de series: /nombre-de-la-serie/ (3+ palabras)
+          if (href.match(/^\/[a-z0-9]+(-[a-z0-9]+){2,}\/?$/i) && 
+              !href.includes('/page/') && 
+              !href.includes('/genre/') &&
+              !href.includes('/category/') &&
+              !href.includes('/episode/')) {
+            const full = canonical(absolute(href, url));
+            if (full && sameOrigin(full) && !found.has(full)) {
               found.add(full);
               count++;
             }
           }
-        } catch {}
-      });
+        });
+      }
 
       console.log(`📄 Página ${page}: ${count} series (total: ${found.size})`);
 
-      // Solo contar vacías después de la página 5 (para no parar por errores temporales al inicio)
-      if (page > 5 && count === 0) {
-        emptyStreak++;
-        console.log(`   ⚠️ Página vacía (${emptyStreak}/${MAX_EMPTY})`);
-        if (emptyStreak >= MAX_EMPTY) {
-          console.log(`🛑 ${MAX_EMPTY} páginas vacías seguidas, fin del sondeo`);
-          break;
-        }
-      } else {
-        emptyStreak = 0; // Reset si encontramos algo
+      // Si la página 2 da 0 pero la 1 dio 10, algo va mal con el selector, pero seguimos
+      if (page > 1 && count === 0) {
+        console.log(`   ⚠️ Página ${page} sin resultados (posible bloqueo o cambio de estructura)`);
       }
 
     } catch (e) {
       console.log(`⚠️ Error página ${page}: ${e.message}`);
-      // No contamos errores como vacías, solo logueamos y seguimos
     }
 
     await sleep(POLITENESS_MS);
