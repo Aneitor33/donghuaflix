@@ -77,7 +77,11 @@ for (const s of series) {
   // ── Índice LITE: sólo lo que pinta una tarjeta o se usa al buscar ──
   // Los géneros se guardan como números (diccionario) y el póster sin el
   // prefijo de TMDB: así el índice pesa una fracción.
-  const img = s.image || '';
+  //
+  // CORREGIDO: se prioriza la portada LOCAL descargada por poster-sync.js
+  // (posterLocal). Si no hay, se usa la remota como antes. Las rutas
+  // locales ('./public/...') viajan tal cual y la app las detecta.
+  const img = s.posterLocal || s.image || '';
   const row = {
     i: s.id,
     s: s.slug || s.id,
@@ -85,6 +89,7 @@ for (const s of series) {
     p: img.startsWith(IMG_BASE) ? img.slice(IMG_BASE.length) : img || null,
     g: (s.genres || []).map(gid),
   };
+  if (s.posterLocal) row.pl = 1;   // marca informativa: portada local
   if (s.status) row.st = s.status;
   if (s.type) row.ty = s.type;
   if (s.year) row.y = s.year;
