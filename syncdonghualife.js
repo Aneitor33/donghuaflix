@@ -3,7 +3,7 @@ import path from 'node:path';
 import * as cheerio from 'cheerio';
 
 const BASE_URL = 'https://donghualife.com';
-const OUT_FILE = path.resolve('public/data/catalog.json');
+const OUT_FILE = path.resolve(process.env.OUT_FILE || 'public/data/catalog-donghualife.json');
 
 const SEEDS = [
   '/series',
@@ -21,7 +21,7 @@ const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
 
 // WORKERS: 8 en paralelo (configurable)
-const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 8)));
+const WORKERS = Math.max(1, Math.min(20, Number(process.env.WORKERS || 10)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 150);
 
 /* Pool simple de workers */
@@ -52,6 +52,44 @@ const MIN_SEASON_PAGE_PROBES = 5;
    huecos mediante el patrón aprendido.
 */
 const MAX_INFERRED_EPISODE_ATTEMPTS = 20;
+
+/*
+   Límite de pasos de la cadena "Siguiente episodio".
+   2000 es más que de sobra para las temporadas más largas.
+*/
+const MAX_CHAIN_STEPS = 2000;
+
+
+/* =========================================================
+   COLA DE GUARDADO
+
+   Con 10 workers en paralelo NO podemos escribir el
+   catálogo a la vez: encolamos los guardados para que
+   se ejecuten de uno en uno, siempre con el estado
+   más reciente de la base de datos.
+========================================================= */
+
+let saveQueue =
+  Promise.resolve();
+
+
+function enqueueSave(db) {
+  saveQueue =
+    saveQueue
+      .then(
+        () =>
+          saveCatalog(db)
+      )
+      .catch(
+        error =>
+          console.log(
+            `⚠️ Error guardando catálogo: ${error.message}`
+          )
+      );
+
+
+  return saveQueue;
+}
 
 // Bloqueo global para evitar ejecuciones simultáneas (Mejora 16)
 let isSyncRunning = false;
@@ -3498,13 +3536,741 @@ function parseEpisode(
 
 
 /* =========================================================
+   DESCUBRIMIENTO EN CADENA — "Siguiente episodio"
+
+   Entramos en el primer episodio de la temporada y
+   vamos pulsando "Siguiente" página a página hasta
+   llegar al final, SIN depender de:
+
+     - números de episodio
+     - patrones de URL
+     - paginación
+
+   Esto captura las variaciones reales entre episodios
+   (p. ej. ...-x18 conviviendo con ...-episodio-x142).
+
+   - Los enlaces sueltos de la página se aceptan solo
+     si pertenecen a la temporada.
+
+   - Los episodios alcanzados mediante el botón
+     "Siguiente" se aceptan siempre que sigan
+     siendo /episode/ del mismo origen y de esta
+     temporada; cuando el "Siguiente" ya no apunta a
+     un episodio de la temporada, la cadena termina.
+========================================================= */
+
+async function discoverEpisodesByChain(
+  seasonUrl,
+  startUrls
+) {
+
+  const found =
+    new Set();
+
+
+  const chainVisited =
+    new Set();
+
+
+  const failed =
+    new Set();
+
+
+  /*
+     Números para los que YA intentamos la
+     recuperación mediante el método antiguo.
+     Evita bucles infinitos alternando métodos.
+  */
+  const recoveryAttempted =
+    new Set();
+
+
+  const MAX_PATTERN_RECOVERIES =
+    200;
+
+
+  let patternRecoveries =
+    0;
+
+
+  let steps =
+    0;
+
+
+  let exhausted =
+    true;
+
+
+  /*
+     MÉTODO ALTERNO (el de siempre):
+
+     Cuando la cadena "Siguiente" se rompe,
+     aprendemos los patrones de URL de los
+     episodios ya visitados e intentamos
+     construir el siguiente número. Si existe,
+     la cadena se reanuda desde ahí.
+
+     Así ambos métodos se ALTERNAN:
+
+       Siguiente → fallo → patrón → Siguiente → ...
+  */
+  const tryPatternRecovery =
+    async fromUrl => {
+
+      const fromNumber =
+        episodeNumber(
+          fromUrl
+        );
+
+
+      if (
+        fromNumber == null ||
+        patternRecoveries >=
+          MAX_PATTERN_RECOVERIES
+      ) {
+
+        return null;
+
+      }
+
+
+      const target =
+        fromNumber + 1;
+
+
+      if (
+        recoveryAttempted.has(
+          target
+        )
+      ) {
+
+        return null;
+
+      }
+
+
+      recoveryAttempted.add(
+        target
+      );
+
+
+      const patterns =
+        learnEpisodeUrlPatterns(
+          [
+            ...found,
+            ...chainVisited
+          ].slice(
+            0,
+            20
+          )
+        );
+
+
+      for (
+        const pattern
+        of patterns
+      ) {
+
+        const candidate =
+          pattern.build(
+            target
+          );
+
+
+        if (
+          !candidate ||
+          !sameOrigin(
+            candidate
+          ) ||
+          chainVisited.has(
+            candidate
+          ) ||
+          found.has(
+            candidate
+          )
+        ) {
+          continue;
+        }
+
+
+        try {
+
+          const html =
+            await fetchHtml(
+              candidate
+            );
+
+
+          /*
+             Validación: debe pertenecer a
+             esta temporada.
+          */
+
+          if (
+            !episodeBelongsToSeason(
+              candidate,
+              seasonUrl
+            )
+          ) {
+
+            continue;
+
+          }
+
+
+          /*
+             Validación blanda de título:
+             si la página declara un número
+             de episodio, debe coincidir.
+          */
+
+          const $ =
+            cheerio.load(
+              html
+            );
+
+
+          const title =
+            clean(
+
+              $('h1')
+                .first()
+                .text() ||
+
+              $('title')
+                .text()
+
+            );
+
+
+          const titleNumber =
+            episodeNumber(
+              title
+            );
+
+
+          if (
+            titleNumber != null &&
+            titleNumber !==
+              target
+          ) {
+
+            continue;
+
+          }
+
+
+          patternRecoveries++;
+
+
+          console.log(
+            `      🔄 Alternando a método de patrón: episodio ${target} recuperado (${slugFromUrl(candidate)}) — se reanuda la cadena`
+          );
+
+
+          return candidate;
+
+
+        } catch {
+
+          /*
+             404 u otro error:
+             probamos el siguiente patrón.
+          */
+
+          continue;
+
+        }
+
+      }
+
+
+      return null;
+
+    };
+
+
+  /*
+     Semillas: las URLs que ya tengamos, o si no hay
+     ninguna, cualquier enlace /episode/ crudo de la
+     página de la temporada (sin filtrar: "sin
+     importar nada").
+  */
+
+  let seeds =
+    (startUrls || [])
+      .map(canonical)
+      .filter(Boolean);
+
+
+  if (
+    !seeds.length
+  ) {
+
+    try {
+
+      const seasonHtml =
+        await fetchHtml(
+          seasonUrl
+        );
+
+
+      seeds =
+        collectEpisodeUrlsFromSeason(
+          seasonHtml,
+          seasonUrl
+        );
+
+
+      console.log(
+        `      🔗 Cadena: sembrando con ${seeds.length} enlaces crudos de la página de temporada`
+      );
+
+    } catch {
+
+      /* noop */
+
+    }
+
+  }
+
+
+  if (
+    !seeds.length
+  ) {
+
+    return {
+
+      episodeUrls: [],
+
+      chainSteps: 0,
+
+      failedPages: 0,
+
+      recoveries: 0,
+
+      exhausted: true
+
+    };
+
+  }
+
+
+  /*
+     Empezamos por el episodio de menor número
+     cuando se pueda deducir.
+  */
+
+  seeds.sort(
+    (a, b) =>
+      (
+        episodeNumber(a) ??
+        999999999
+      ) -
+      (
+        episodeNumber(b) ??
+        999999999
+      )
+  );
+
+
+  const queue =
+    [seeds[0]];
+
+
+  /*
+     Última página que respondió bien:
+     sirve de ancla para la recuperación
+     por patrón cuando la cadena se rompe.
+  */
+
+  let lastGoodUrl =
+    seeds[0];
+
+
+  while (
+    queue.length &&
+    steps < MAX_CHAIN_STEPS
+  ) {
+
+    const currentUrl =
+      canonical(
+        queue.shift()
+      );
+
+
+    if (
+      !currentUrl ||
+      chainVisited.has(
+        currentUrl
+      )
+    ) {
+      continue;
+    }
+
+
+    chainVisited.add(
+      currentUrl
+    );
+
+
+    steps++;
+
+
+    console.log(
+      `      🔗 Cadena paso ${steps}: ${slugFromUrl(currentUrl)}`
+    );
+
+
+    let chainResumed =
+      false;
+
+
+    try {
+
+      const html =
+        await fetchHtml(
+          currentUrl
+        );
+
+
+      lastGoodUrl =
+        currentUrl;
+
+
+      const $ =
+        cheerio.load(html);
+
+
+      /*
+         1) Cualquier enlace de episodio de ESTA
+            temporada presente en la página.
+      */
+
+      for (
+        const url
+        of collectEpisodeUrlsFromSeason(
+          html,
+          currentUrl
+        )
+      ) {
+
+        if (
+          episodeBelongsToSeason(
+            url,
+            seasonUrl
+          )
+        ) {
+
+          found.add(
+            url
+          );
+
+        }
+
+      }
+
+
+      /*
+         2) Botón "Siguiente episodio".
+      */
+
+      let nextUrl =
+        extractEpisodeNav(
+          $,
+          'siguiente',
+          currentUrl,
+          seasonUrl
+        ) ||
+
+        extractEpisodeNav(
+          $,
+          'next',
+          currentUrl,
+          seasonUrl
+        );
+
+
+      const relNext =
+        normalizeCandidate(
+          $('link[rel="next"]')
+            .attr('href'),
+
+          currentUrl
+        );
+
+
+      if (
+        !nextUrl &&
+        relNext &&
+        sameOrigin(relNext)
+      ) {
+
+        nextUrl =
+          relNext;
+
+      }
+
+
+      const nextCanonical =
+        canonical(
+          nextUrl
+        );
+
+
+      if (
+        nextCanonical &&
+        !chainVisited.has(
+          nextCanonical
+        )
+      ) {
+
+        try {
+
+          const isEpisodePath =
+            /\/episode\//i
+              .test(
+                new URL(
+                  nextCanonical
+                ).pathname
+              );
+
+
+          if (
+            isEpisodePath &&
+            sameOrigin(
+              nextCanonical
+            )
+          ) {
+
+            if (
+              episodeBelongsToSeason(
+                nextCanonical,
+                seasonUrl
+              )
+            ) {
+
+              queue.push(
+                nextCanonical
+              );
+
+
+              found.add(
+                nextCanonical
+              );
+
+
+              chainResumed =
+                true;
+
+            }
+
+          }
+
+        } catch {
+
+          /* noop */
+
+        }
+
+      }
+
+
+      /*
+         3) ¿Cadena rota?
+
+            - El episodio cargó bien pero no hay
+              "Siguiente" útil.
+
+            → alternamos al método antiguo
+              (patrón) y, si recupera el
+              episodio, la cadena continúa.
+      */
+
+      if (
+        !chainResumed
+      ) {
+
+        const recovered =
+          await tryPatternRecovery(
+            currentUrl
+          );
+
+
+        if (
+          recovered
+        ) {
+
+          queue.push(
+            recovered
+          );
+
+
+          found.add(
+            recovered
+          );
+
+
+          chainResumed =
+            true;
+
+        } else {
+
+          console.log(
+            `      🔗 Cadena: fin — "Siguiente" no disponible y el patrón no recuperó el episodio ${(episodeNumber(currentUrl) ?? '?') + 1}`
+          );
+
+        }
+
+      }
+
+    } catch (error) {
+
+      /*
+         4) La página del episodio NO carga.
+
+            → alternamos al método antiguo
+              desde el último episodio bueno.
+      */
+
+      failed.add(
+        currentUrl
+      );
+
+
+      console.log(
+        `         ⚠️ Cadena: no se pudo leer (${error.message}) — probando método de patrón...`
+      );
+
+
+      const recovered =
+        await tryPatternRecovery(
+          lastGoodUrl
+        );
+
+
+      if (
+        recovered
+      ) {
+
+        queue.push(
+          recovered
+        );
+
+
+        found.add(
+          recovered
+        );
+
+
+        chainResumed =
+          true;
+
+      }
+
+    }
+
+
+    if (
+      !chainResumed &&
+      !queue.length
+    ) {
+
+      exhausted =
+        true;
+
+
+      /*
+         Cadena terminada (natural o por
+         agotar la recuperación).
+      */
+
+      break;
+
+    }
+
+
+    if (
+      found.size >=
+        MAX_EPISODES_PER_SEASON_SAFETY
+    ) {
+
+      exhausted =
+        false;
+
+
+      console.log(
+        '      🛑 Cadena: límite de seguridad de episodios.'
+      );
+
+
+      break;
+
+    }
+
+  }
+
+
+  if (
+    steps >= MAX_CHAIN_STEPS
+  ) {
+
+    exhausted =
+      false;
+
+  }
+
+
+  const all =
+    new Set([
+      ...found,
+      ...chainVisited
+    ]);
+
+
+  const episodeUrls =
+    [...all].sort(
+      (a, b) =>
+        (
+          episodeNumber(a) ??
+          Number.MAX_SAFE_INTEGER
+        ) -
+        (
+          episodeNumber(b) ??
+          Number.MAX_SAFE_INTEGER
+        )
+    );
+
+
+  return {
+
+    episodeUrls,
+
+    chainSteps: steps,
+
+    failedPages:
+      failed.size,
+
+    recoveries:
+      patternRecoveries,
+
+    exhausted
+
+  };
+
+}
+
+
+
+/* =========================================================
    PROCESAR TODOS LOS EPISODIOS DESCUBIERTOS
 ========================================================= */
 
 async function crawlEpisodeUrls(
   season,
   episodeUrls,
-  previousEpisodes = []
+  previousEpisodes = [],
+  allowUrls = null
 ) {
 
   const results =
@@ -3573,6 +4339,12 @@ async function crawlEpisodeUrls(
       !linkIsEpisodeOfSeason(
         currentUrl,
         season.sourceUrl
+      ) &&
+      !(
+        allowUrls &&
+        allowUrls.has(
+          currentUrl
+        )
       )
     ) {
 
@@ -4091,6 +4863,115 @@ async function processFullSeason(
 
 
   /*
+     2b. CADENA "Siguiente episodio".
+
+         Entramos en el primer episodio y pulsamos
+         "Siguiente" hasta el final, sin depender de
+         números ni patrones. Captura las variaciones
+         reales de URL entre episodios.
+  */
+  const chainAllow =
+    new Set();
+
+
+  {
+    const chain =
+      await discoverEpisodesByChain(
+        seasonUrl,
+        episodeUrls
+      );
+
+
+    if (
+      chain.episodeUrls.length
+    ) {
+
+      const before =
+        new Set(
+          episodeUrls
+        );
+
+
+      const merged =
+        [];
+
+
+      const seenMerge =
+        new Set();
+
+
+      for (
+        const url
+        of [
+          ...episodeUrls,
+          ...chain.episodeUrls
+        ]
+      ) {
+
+        if (
+          seenMerge.has(
+            url
+          )
+        ) {
+          continue;
+        }
+
+
+        seenMerge.add(
+          url
+        );
+
+
+        merged.push(
+          url
+        );
+
+
+        if (
+          !before.has(
+            url
+          )
+        ) {
+
+          chainAllow.add(
+            url
+          );
+
+        }
+
+      }
+
+
+      episodeUrls =
+        merged.sort(
+          (a, b) =>
+            (
+              episodeNumber(a) ??
+              Number.MAX_SAFE_INTEGER
+            ) -
+            (
+              episodeNumber(b) ??
+              Number.MAX_SAFE_INTEGER
+            )
+        );
+
+
+      console.log(
+        `   🔗 Cadena "Siguiente": ${chain.chainSteps} pasos · total ${episodeUrls.length}` +
+        ` · ${chain.recoveries} recuperación(es) por método de patrón` +
+        (
+          chain.exhausted
+            ? ' · fin de cadena alcanzado ✅'
+            : ' · cadena truncada por límite ⚠️'
+        )
+      );
+
+    }
+
+  }
+
+
+  /*
      3. Analizamos lo descubierto.
   */
 
@@ -4185,7 +5066,8 @@ async function processFullSeason(
         ...seasonItem
       },
       episodeUrls,
-      oldEpisodes
+      oldEpisodes,
+      chainAllow
     );
 
 
@@ -4519,6 +5401,80 @@ async function incrementalSeasonSync(
 
         }
       );
+
+
+  /*
+     CADENA "Siguiente episodio":
+
+     desde el último episodio conocido pulsamos
+     "Siguiente" hasta el final. Captura los
+     episodios nuevos aunque su URL varíe.
+  */
+  try {
+
+    const lastEp =
+      [...oldEpisodes].sort(
+        (a, b) =>
+          (Number(b.number) || 0) -
+          (Number(a.number) || 0)
+      )[0];
+
+
+    if (
+      lastEp &&
+      lastEp.sourceUrl
+    ) {
+
+      const chain =
+        await discoverEpisodesByChain(
+          season.sourceUrl,
+          [lastEp.sourceUrl]
+        );
+
+
+      for (
+        const url
+        of chain.episodeUrls
+      ) {
+
+        const n =
+          episodeNumber(url);
+
+
+        if (
+          n != null &&
+          n > lastEpisode &&
+          !newUrls.includes(
+            url
+          )
+        ) {
+
+          newUrls.push(
+            url
+          );
+
+        }
+
+      }
+
+
+      if (
+        chain.chainSteps > 1
+      ) {
+
+        console.log(
+          `      🔗 Cadena incremental: ${chain.chainSteps} pasos seguidos`
+        );
+
+      }
+
+    }
+
+  } catch {
+
+    /* noop */
+
+  }
 
 
   /*
@@ -5040,7 +5996,7 @@ async function runFullSync() {
         (i + 1) % 10 === 0
       ) {
 
-        await saveCatalog(
+        await enqueueSave(
           db
         );
 
@@ -5172,6 +6128,22 @@ async function runFullSync() {
         }
 
       }
+
+
+      /* =================================================
+         💾 GUARDADO POR SERIE
+
+         Encolado: con 10 workers en paralelo los
+         guardados se ejecutan de uno en uno para
+         no corromper el JSON.
+      ================================================= */
+
+      await enqueueSave(db);
+
+
+      console.log(
+        `💾 Catálogo guardado tras completar la serie: ${slug}`
+      );
 
 
     } catch (error) {
