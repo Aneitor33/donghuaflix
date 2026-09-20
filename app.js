@@ -3,18 +3,18 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'mundodonghua', 'seriesdonghua'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
-  { id: 'mundodonghua',  file: './public/data/catalog-mundodonghua.json',  index: './public/data/catalog-mundodonghua-index.json',  label: 'MundoDonghua' },
-  { id: 'seriesdonghua', file: './public/data/catalog-seriesdonghua.json', index: './public/data/catalog-seriesdonghua-index.json', label: 'SeriesDonghua' },
+  { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
+  { id: 'donghuaworld',  file: './public/data/catalog-donghuaworld.json',  index: './public/data/catalog-donghuaworld-index.json',  label: 'DonghuaWorld' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
 const SRC_LABEL = {
   donghualife: 'DonghuaLife',
-  mundodonghua: 'MundoDonghua',
-  seriesdonghua: 'SeriesDonghua',
+  donghuasub: 'DonghuaSub',
+  donghuaworld: 'DonghuaWorld',
   tiodonghua: 'TioDonghua',
   peliculas: 'Películas',
   doramas: 'Doramas'
