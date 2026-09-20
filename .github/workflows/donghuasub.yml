@@ -1,12 +1,18 @@
 # ══════════════════════════════════════════════
-#  DONGHUASUB — donghuasub.com (con Playwright)
-#  Requiere navegador para JavaScript
+#  DONGHUASUB — donghuasub.com
+#  Usa syncdonghuasub.js (versión Playwright +
+#  cadena "Siguiente" + workers paralelos)
+#  Catálogo: public/data/catalog-donghuasub.json
+#
+#  WORKERS: series en paralelo (techo 8 en el script)
+#  POLITENESS_MS: pausa entre peticiones
+#  MAX_RUNTIME_MINUTES: tope de duración del propio script
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaSub
 
 on:
   schedule:
-    - cron: '55 */6 * * *'      # cada 6h, minuto 55
+    - cron: '20 */6 * * *'      # cada 6h, minuto 20
   workflow_dispatch:
 
 concurrency:
@@ -16,7 +22,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 330
     permissions:
       contents: write
     steps:
@@ -26,18 +32,19 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Instalar dependencias y Playwright
-        run: |
-          npm install
-          npm i --no-save playwright
-          npx playwright install chromium --with-deps
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Instalar Playwright (Chromium)
+        run: npx playwright install --with-deps chromium
 
       - name: Sincronizar DonghuaSub
         env:
-          WORKERS: '3'
-          POLITENESS_MS: '500'
-          MAX_EPISODE_CRAWLS: '5000'
-          MAX_RUNTIME_MINUTES: '330'
+          OUT_FILE: 'public/data/catalog-donghuasub.json'
+          WORKERS: 9
+          POLITENESS_MS: 150
+          MAX_RUNTIME_MINUTES: 300
+          MAX_CHAIN_STEPS: 2000
         run: node syncdonghuasub.js
 
       - name: Generar índice lite y fichas
