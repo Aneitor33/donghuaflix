@@ -660,3 +660,49 @@ footer a.ig-link svg{width:13px;height:13px}
     scroll-behavior:auto !important;
   }
 }
+
+/* ═══════════════════════ OPTIMIZACIÓN DE FLUIDEZ ═══════════════════════ */
+
+/* Reducir el blur del fondo en móvil (es lo que más lag produce) */
+@media(max-width:900px){
+  .bg-ambience{
+    filter:blur(40px) saturate(1.3) brightness(.35);
+    /* Reducir tamaño para que ocupe menos memoria GPU */
+    inset:-40px;
+  }
+
+  /* Desactivar animaciones pesadas en móvil si el usuario prefiere fluidez */
+  .hero::before{
+    animation:none !important;
+  }
+
+  /* Reducir sombras complejas que causan repintado */
+  .card:hover .poster{
+    box-shadow:0 8px 24px rgba(0,0,0,.5);
+  }
+}
+
+/* Optimización general: usar transform y opacity que son más baratos que filter */
+.card, .btn-x, .episode, .pg-btn {
+  will-change: transform;
+}
+
+/* Reducir el blur en el hero en móvil */
+@media(max-width:900px){
+  .hero{
+    /* Usar imagen estática sin animación en móvil para ahorrar batería */
+    background-attachment: scroll;
+  }
+}
+
+/* Forzar aceleración por hardware en elementos animados */
+.hero-content, .rail, .grid .card {
+  transform: translateZ(0);
+}
+
+/* Reducir la frecuencia de animaciones en dispositivos de gama baja */
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none !important;
+  }
+}
