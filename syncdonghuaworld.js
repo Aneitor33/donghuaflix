@@ -108,8 +108,15 @@ async function fetchHtml(url, attempt = 1) {
 async function discoverSeries() {
   const found = new Set();
 
+  // Sondeo forzado: páginas 1 a 50 (donghuaworld tiene al menos 31)
+  // No para hasta encontrar 5 páginas vacías seguidas (después de la página 5)
+  let emptyStreak = 0;
+  const MAX_EMPTY = 5;
+
   for (let page = 1; page <= 50; page++) {
     if (timeUp()) break;
+
+    // URL exacta según la estructura de donghuaworld
     const url = page === 1 ? BASE_URL : `${BASE_URL}/page/${page}/`;
 
     try {
@@ -117,6 +124,7 @@ async function discoverSeries() {
       const $ = cheerio.load(html);
       let count = 0;
 
+      // Buscar enlaces /anime/ (fichas de series)
       $('a[href]').each((_, el) => {
         const href = $(el).attr('href');
         const full = canonical(absolute(href, url));
@@ -124,7 +132,6 @@ async function discoverSeries() {
 
         try {
           const p = new URL(full).pathname;
-          // Patrón: /anime/nombre-de-la-serie/
           if (/^\/anime\/[a-z0-9-]+\/?$/i.test(p)) {
             if (!found.has(full)) {
               found.add(full);
@@ -136,15 +143,27 @@ async function discoverSeries() {
 
       console.log(`📄 Página ${page}: ${count} series (total: ${found.size})`);
 
-      if (count === 0 && page > 1) break; // No hay más
+      // Solo contar vacías después de la página 5 (para no parar por errores temporales al inicio)
+      if (page > 5 && count === 0) {
+        emptyStreak++;
+        console.log(`   ⚠️ Página vacía (${emptyStreak}/${MAX_EMPTY})`);
+        if (emptyStreak >= MAX_EMPTY) {
+          console.log(`🛑 ${MAX_EMPTY} páginas vacías seguidas, fin del sondeo`);
+          break;
+        }
+      } else {
+        emptyStreak = 0; // Reset si encontramos algo
+      }
+
     } catch (e) {
       console.log(`⚠️ Error página ${page}: ${e.message}`);
-      break;
+      // No contamos errores como vacías, solo logueamos y seguimos
     }
 
     await sleep(POLITENESS_MS);
   }
 
+  console.log(`\n🎯 Total series descubiertas: ${found.size}`);
   return [...found];
 }
 
