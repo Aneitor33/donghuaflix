@@ -31,6 +31,7 @@ jobs:
 
       - name: Sincronizar DonghuaLife
         env:
+          WORKERS: '8'
           ONLY_SOURCE: 'donghualife'
           POLITENESS_MS: '500'
           MAX_EPISODE_CRAWLS: '10000'
