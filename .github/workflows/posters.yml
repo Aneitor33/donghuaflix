@@ -4,6 +4,8 @@
 #  Se ejecuta 1 vez al día. Sin dependencias npm.
 #  Para reintentar los fallidos: lanzar con
 #  FORCE_POSTERS=1 en los env del step.
+#  CORREGIDO: tras descargar, regenera los índices lite
+#  para que la app vea las portadas locales de inmediato.
 # ══════════════════════════════════════════════
 name: Sincronizar portadas
 
@@ -34,12 +36,21 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: node poster-sync.js
 
+      - name: Regenerar índices lite y fichas
+        if: always()
+        run: |
+          node split-catalog.js public/data/catalog-donghualife.json
+          node split-catalog.js public/data/catalog-donghuasub.json
+          node split-catalog.js public/data/catalog-donghuaworld.json
+          node split-catalog.js public/data/catalog-peliculas.json
+          node split-catalog.js public/data/catalog-doramas.json
+
       - name: Guardar portadas
         if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A 'public/img/posters' 'public/data/catalog-donghualife.json' 'public/data/catalog-mundodonghua.json' 'public/data/catalog-seriesdonghua.json' 'public/data/catalog-peliculas.json' 'public/data/catalog-doramas.json'
-          git diff --staged --quiet || git commit -m "posters: actualizar portadas"
+          git add -A 'public/img/posters' 'public/data/catalog-donghualife*' 'public/data/catalog-donghuasub*' 'public/data/catalog-donghuaworld*' 'public/data/catalog-peliculas*' 'public/data/catalog-doramas*'
+          git diff --staged --quiet || git commit -m "posters: actualizar portadas e índices"
           git pull --rebase --autostash origin main
           git push
