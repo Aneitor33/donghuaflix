@@ -19,6 +19,146 @@ const WORKERS = Math.max(1, Math.min(4, Number(process.env.WORKERS || 3))); // M
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 500);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
+/* ══════════════════════════════════════════════════════════
+   AÑADIDO — Lógica de episodios estilo DonghuaLife
+   (cadena "Siguiente" + alternancia con el método de patrón)
+   Nada de lo anterior se modifica: solo bloques nuevos.
+══════════════════════════════════════════════════════════ */
+
+const MAX_CHAIN_STEPS = Math.max(100, Number(process.env.MAX_CHAIN_STEPS || 2000));
+const MAX_PATTERN_RECOVERIES = 200;
+
+/* Ruta de guardado: respeta OUT_FILE del workflow si existe */
+const CHAIN_SAVE_PATH = path.resolve(process.env.OUT_FILE || OUT_FILE);
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* Número de episodio al final del path: /donghua/slug/12 -> 12 */
+const epNumOf = u => {
+  const m = String(u || '').match(/\/(\d+)(?:[/?#]|$)/);
+  return m ? parseInt(m[1], 10) : null;
+};
+
+/* Cola de guardado: los guardados por serie se encolan para
+   nunca escribir el JSON dos veces a la vez */
+let saveQueue = Promise.resolve();
+function enqueueSave(db) {
+  saveQueue = saveQueue
+    .then(() => fs.writeFile(CHAIN_SAVE_PATH, JSON.stringify(db)))
+    .catch(e => console.log(`⚠️ Error guardando catálogo: ${e.message}`));
+  return saveQueue;
+}
+
+/* Localiza el enlace "Siguiente" en el HTML ya renderizado:
+   1) <link rel="next">
+   2) anchors cuyo texto/clase indique siguiente (siguiente, next, », →) */
+function findNextEpisodeUrl(html, slug) {
+  let m = html.match(/<link[^>]*rel=["']next["'][^>]*href=["']([^"']+)["']/i) ||
+          html.match(/<link[^>]*href=["']([^"']+)["'][^>]*rel=["']next["']/i);
+  if (m) return m[1];
+
+  const re = /<a\b([^>]*)href=["']([^"']+)["']([^>]*)>([\s\S]*?)<\/a>/gi;
+  while ((m = re.exec(html)) !== null) {
+    const attrs = (m[1] + ' ' + m[3]).toLowerCase();
+    const text = m[4].replace(/<[^>]+>/g, '').trim().toLowerCase();
+    const href = m[2];
+    if (!new RegExp(`/donghua/${slug}/\\d+`).test(href)) continue;
+    if (/siguiente|next|pr[oó]ximo/.test(text) || /class=["'][^"']*next/.test(attrs) || /[»→]/.test(text)) {
+      return href;
+    }
+  }
+  return null;
+}
+
+/* Cadena "Siguiente episodio" con alternancia al método de patrón:
+   sigue el botón Siguiente uno a uno hasta el final; si la cadena
+   se rompe (sin botón, enlace roto o página caída) alterna al
+   método de siempre — aquí el patrón numérico /donghua/slug/N —
+   y si el episodio existe, reanuda la cadena desde ahí. */
+async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
+  const found = new Set(knownEpisodes);
+  const visited = new Set();
+  const recoveryAttempted = new Set();
+  let patternRecoveries = 0;
+  let steps = 0;
+  let exhausted = true;
+
+  const abs = h => { try { return new URL(h, BASE_URL).href.split('#')[0]; } catch { return null; } };
+  const epRe = new RegExp(`href="/donghua/${slug}/(\\d+)"`, 'gi');
+
+  const seed = knownEpisodes.length ? Math.min(...knownEpisodes) : 1;
+  const queue = [`${seriesUrl}/${seed}`];
+  let lastGood = seed;
+
+  const tryPatternRecovery = async fromNum => {
+    const target = fromNum + 1;
+    if (fromNum == null || recoveryAttempted.has(target) || patternRecoveries >= MAX_PATTERN_RECOVERIES) return null;
+    recoveryAttempted.add(target);
+    const candidate = `${seriesUrl}/${target}`;
+    if (visited.has(candidate)) return null;
+    try {
+      const html = await fetchPage(candidate, 'a');
+      if (!html.includes(slug)) return null;
+      patternRecoveries++;
+      console.log(`      🔄 Alternando a patrón: episodio ${target} existe — se reanuda la cadena`);
+      return candidate;
+    } catch { return null; }
+  };
+
+  while (queue.length && steps < MAX_CHAIN_STEPS) {
+    if (timeUp()) { exhausted = false; break; }
+
+    const currentUrl = abs(queue.shift());
+    if (!currentUrl || visited.has(currentUrl)) continue;
+    visited.add(currentUrl);
+    steps++;
+    const currentNum = epNumOf(currentUrl);
+    console.log(`      🔗 Cadena paso ${steps}: E${currentNum}`);
+
+    let resumed = false;
+
+    try {
+      const html = await fetchPage(currentUrl, 'a');
+      if (currentNum != null) lastGood = currentNum;
+
+      // recolectar todos los enlaces numéricos de la página (por si hay lista)
+      for (const mm of html.matchAll(epRe)) found.add(parseInt(mm[1], 10));
+
+      // 1) botón "Siguiente"
+      const nextHref = findNextEpisodeUrl(html, slug);
+      const nextUrl = nextHref ? abs(nextHref) : null;
+      const nextNum = nextUrl ? epNumOf(nextUrl) : null;
+      if (nextUrl && nextNum != null && !visited.has(nextUrl) && nextNum !== currentNum) {
+        queue.push(nextUrl);
+        resumed = true;
+      }
+
+      // 2) cadena rota -> método de patrón y reanudar
+      if (!resumed) {
+        const rec = await tryPatternRecovery(currentNum ?? lastGood);
+        if (rec) { queue.push(rec); resumed = true; }
+        else console.log(`      🔗 Cadena: fin tras E${currentNum} (el patrón no recuperó E${(currentNum ?? lastGood) + 1})`);
+      }
+    } catch (e) {
+      console.log(`         ⚠️ Cadena: no se pudo leer E${currentNum} (${e.message}) — probando método de patrón...`);
+      const rec = await tryPatternRecovery(lastGood);
+      if (rec) { queue.push(rec); resumed = true; }
+    }
+
+    if (!resumed && !queue.length) break;
+    await sleep(POLITENESS_MS);
+  }
+
+  if (steps >= MAX_CHAIN_STEPS) exhausted = false;
+
+  return {
+    episodeNumbers: [...found].sort((a, b) => a - b),
+    chainSteps: steps,
+    recoveries: patternRecoveries,
+    exhausted
+  };
+}
+
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
@@ -186,6 +326,82 @@ async function processSeries(db, seriesUrl) {
   const episodes = [...new Set(epMatches.map(m => parseInt(m[1], 10)))].sort((a, b) => a - b);
 
   console.log(`   🎬 ${episodes.length} episodios detectados`);
+
+  /* ══════════ AÑADIDO: cadena "Siguiente" estilo DonghuaLife ══════════
+     Recorre episodio a episodio con el botón "Siguiente" hasta el
+     final (alternando con el patrón numérico cuando la cadena se
+     rompe) y procesa SOLO los episodios que la detección clásica
+     no había encontrado. Luego guarda el catálogo por serie. */
+  try {
+    const chain = await discoverEpisodesByChain(seriesUrl, slug, episodes);
+
+    console.log(
+      `   🔗 Cadena "Siguiente": ${chain.chainSteps} pasos · ${chain.episodeNumbers.length} episodios vistos` +
+      ` · ${chain.recoveries} recuperación(es) por patrón` +
+      (chain.exhausted ? ' · fin de cadena alcanzado ✅' : ' · cadena truncada ⚠️')
+    );
+
+    const already = new Set([
+      ...episodes,
+      ...db.episodes.filter(e => e.seriesId === slug).map(e => e.number)
+    ]);
+    const fromChain = chain.episodeNumbers.filter(n => !already.has(n));
+
+    for (const epNum of fromChain) {
+      if (timeUp()) break;
+
+      const epId = `${slug}-e${epNum}`;
+      if (db.episodes.some(e => e.id === epId)) continue;
+
+      const epUrl = `${seriesUrl}/${epNum}`;
+
+      try {
+        const servers = await extractVideo(epUrl);
+
+        if (servers.length === 0) {
+          console.log(`      ⚠️ Episodio ${epNum} (cadena): sin servidores`);
+          continue;
+        }
+
+        const seasonId = `${slug}-t1`;
+        if (!db.seasons.some(s => s.id === seasonId)) {
+          db.seasons.push({
+            id: seasonId,
+            slug: seasonId,
+            seriesId: slug,
+            number: 1,
+            updatedAt: new Date().toISOString()
+          });
+        }
+
+        db.episodes.push({
+          id: epId,
+          slug: epId,
+          title: `Episodio ${epNum}`,
+          sourceUrl: epUrl,
+          servers,
+          seriesId: slug,
+          seasonId,
+          number: epNum,
+          updatedAt: new Date().toISOString()
+        });
+
+        console.log(`      ✅ Episodio ${epNum} (cadena) (${servers.length} servidor)`);
+      } catch (e) {
+        console.log(`      ❌ Episodio ${epNum} (cadena): ${e.message}`);
+      }
+
+      await sleep(POLITENESS_MS);
+    }
+
+    // 💾 Guardado del catálogo tras completar CADA serie (encolado)
+    await enqueueSave(db);
+    console.log(`💾 Catálogo guardado tras completar la serie: ${slug}`);
+  } catch (e) {
+    console.log(`   ⚠️ Cadena no disponible, se conserva la detección clásica: ${e.message}`);
+  }
+  /* ═══════════════════════ FIN AÑADIDO ═══════════════════════ */
+
 
   // Procesar cada episodio
   for (const epNum of episodes) {
