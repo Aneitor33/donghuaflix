@@ -1,12 +1,12 @@
 # ══════════════════════════════════════════════
-#  DONGHUAWORLD — donghuaworld.com
-#  Catálogo: public/data/catalog-donghuaworld.json
+#  DONGHUAWORLD — donghuaworld.com (con Playwright)
+#  Requiere navegador para JavaScript
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaWorld
 
 on:
   schedule:
-    - cron: '55 */6 * * *'      # cada 6h, minuto 55
+    - cron: '50 */6 * * *'      # cada 6h, minuto 50
   workflow_dispatch:
 
 concurrency:
@@ -26,13 +26,17 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Instalar dependencias
-        run: npm install
+      - name: Instalar dependencias y Playwright
+        run: |
+          npm install
+          npm i --no-save playwright
+          npx playwright install chromium --with-deps
 
       - name: Sincronizar DonghuaWorld
         env:
-          WORKERS: '8'
-          POLITENESS_MS: '300'
+          WORKERS: '3'
+          POLITENESS_MS: '500'
+          MAX_EPISODE_CRAWLS: '5000'
           MAX_RUNTIME_MINUTES: '330'
         run: node syncdonghuaworld.js
 
