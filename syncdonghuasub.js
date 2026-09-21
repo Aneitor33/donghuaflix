@@ -15,7 +15,7 @@ const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
 const BASE_URL = 'https://donghuasub.com';
 
 // Configuración
-const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || (process.env.SAFE_MODE ? 1 : 3)))); // Workers paralelos (navegador compartido)
+const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || (process.env.SAFE_MODE ? 1 : 2)))); // Workers paralelos (navegador compartido)
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || (process.env.SAFE_MODE ? 800 : 400));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
@@ -127,15 +127,12 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
     recoveryAttempted.add(target);
     const candidate = `${seriesUrl}/${target}`;
     if (visited.has(candidate)) return null;
-    try {
-      // ANTES: fetchPage(candidate, 'a') → doble carga de navegador
-      // AHORA: check HTTP ligero; la página se abrirá en el
-      // siguiente paso de la cadena de todos modos.
-      if (!(await urlExists(candidate, slug))) return null;
-      patternRecoveries++;
-      console.log(`      🔄 Alternando a patrón: episodio ${target} existe — se reanuda la cadena`);
-      return candidate;
-    } catch { return null; }
+    // SIN COMPROBACIÓN: el candidato se encola tal cual y la propia
+    // cadena lo cargará en el siguiente paso. Si no existiera, ese
+    // paso fallaría y 'recoveryAttempted' impide reintentarlo en bucle.
+    patternRecoveries++;
+    console.log(`      🔄 Alternando a patrón: episodio ${target} — se reanuda la cadena (sin comprobación previa)`);
+    return candidate;
   };
 
   while (queue.length && steps < MAX_CHAIN_STEPS) {
