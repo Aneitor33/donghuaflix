@@ -1,11 +1,6 @@
 // ══════════════════════════════════════════════════════════
-//  syncdonghuasub.js — DonghuaFlix (VERSIÓN PLAYWRIGHT)
-//  Scraper para DONGHUASUB.COM con navegador (JavaScript)
-//  Estructura:
-//    - Directorio: /directorio?page=N (se carga por JS)
-//    - Serie: /donghua/slug
-//    - Episodio: /donghua/slug/N (videos cargan por JS)
-//  Requiere: PLAYWRIGHT instalado en el workflow
+//  syncdonghuasub.js — DonghuaFlix (VERSIÓN FETCH RÁPIDA)
+//  Scraper para DONGHUASUB.COM con HTTP puro (sin Playwright)
 // ══════════════════════════════════════════════════════════
 
 import fs from 'node:fs/promises';
@@ -14,24 +9,33 @@ import path from 'node:path';
 const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
 const BASE_URL = 'https://donghuasub.com';
 
-// Configuración
-const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || (process.env.SAFE_MODE ? 1 : 2)))); // Workers paralelos (navegador compartido)
-const POLITENESS_MS = Number(process.env.POLITENESS_MS || (process.env.SAFE_MODE ? 800 : 400));
+// Configuración (Con fetch podemos subir workers a 8-10 sin despeinar la CPU)
+const WORKERS = Math.max(1, Math.min(10, Number(process.env.WORKERS || 6))); 
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || 50);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
-/* ══════════════════════════════════════════════════════════
-   AÑADIDO — Lógica de episodios estilo DonghuaLife
-   (cadena "Siguiente" + alternancia con el método de patrón)
-   Nada de lo anterior se modifica: solo bloques nuevos.
-══════════════════════════════════════════════════════════ */
 
 const MAX_CHAIN_STEPS = Math.max(100, Number(process.env.MAX_CHAIN_STEPS || 2000));
 const MAX_PATTERN_RECOVERIES = 200;
 
-/* Ruta de guardado: respeta OUT_FILE del workflow si existe */
+/* Ruta de guardado */
 const CHAIN_SAVE_PATH = path.resolve(process.env.OUT_FILE || OUT_FILE);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* Headers para simular un navegador real */
+const HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8'
+};
+
+/* Petición HTTP ultrarrápida */
+async function fetchPage(url) {
+  const res = await fetch(url, { headers: HEADERS });
+  if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+  return await res.text();
+}
 
 /* Número de episodio al final del path: /donghua/slug/12 -> 12 */
 const epNumOf = u => {
@@ -39,8 +43,7 @@ const epNumOf = u => {
   return m ? parseInt(m[1], 10) : null;
 };
 
-/* Cola de guardado: los guardados por serie se encolan para
-   nunca escribir el JSON dos veces a la vez */
+/* Cola de guardado */
 let saveQueue = Promise.resolve();
 function enqueueSave(db) {
   saveQueue = saveQueue
@@ -49,40 +52,7 @@ function enqueueSave(db) {
   return saveQueue;
 }
 
-/* Comprueba existencia por HTTP ligero (SIN navegador):
-   muchísimo más rápido que abrir una página de Playwright.
-   - Debe responder 200
-   - El HTML debe mencionar el slug (evita falsos positivos
-     si el servidor devuelve 200 para todo) */
-async function urlExists(url, slug) {
-  try {
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(15000),
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36' }
-    });
-    if (!res.ok) return false;
-    const text = await res.text();
-    return text.includes(slug);
-  } catch { return false; }
-}
-
-/* Pool de workers: procesa varias series A LA VEZ,
-   cada worker toma la siguiente serie libre. */
-async function runPool(items, workers, fn) {
-  let i = 0;
-  const worker = async () => {
-    while (i < items.length) {
-      const it = items[i++];
-      if (timeUp()) break;
-      try { await fn(it); } catch (e) { console.log(`⚠️ ${e.message}`); }
-    }
-  };
-  await Promise.all(Array.from({ length: workers }, worker));
-}
-
-/* Localiza el enlace "Siguiente" en el HTML ya renderizado:
-   1) <link rel="next">
-   2) anchors cuyo texto/clase indique siguiente (siguiente, next, », →) */
+/* Localiza el enlace "Siguiente" */
 function findNextEpisodeUrl(html, slug) {
   let m = html.match(/<link[^>]*rel=["']next["'][^>]*href=["']([^"']+)["']/i) ||
           html.match(/<link[^>]*href=["']([^"']+)["'][^>]*rel=["']next["']/i);
@@ -101,11 +71,7 @@ function findNextEpisodeUrl(html, slug) {
   return null;
 }
 
-/* Cadena "Siguiente episodio" con alternancia al método de patrón:
-   sigue el botón Siguiente uno a uno hasta el final; si la cadena
-   se rompe (sin botón, enlace roto o página caída) alterna al
-   método de siempre — aquí el patrón numérico /donghua/slug/N —
-   y si el episodio existe, reanuda la cadena desde ahí. */
+/* Cadena "Siguiente episodio" */
 async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
   const found = new Set(knownEpisodes);
   const visited = new Set();
@@ -127,12 +93,13 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
     recoveryAttempted.add(target);
     const candidate = `${seriesUrl}/${target}`;
     if (visited.has(candidate)) return null;
-    // SIN COMPROBACIÓN: el candidato se encola tal cual y la propia
-    // cadena lo cargará en el siguiente paso. Si no existiera, ese
-    // paso fallaría y 'recoveryAttempted' impide reintentarlo en bucle.
-    patternRecoveries++;
-    console.log(`      🔄 Alternando a patrón: episodio ${target} — se reanuda la cadena (sin comprobación previa)`);
-    return candidate;
+    try {
+      const html = await fetchPage(candidate);
+      if (!html.includes(slug)) return null;
+      patternRecoveries++;
+      console.log(`      🔄 Alternando a patrón: episodio ${target} existe — se reanuda la cadena`);
+      return candidate;
+    } catch { return null; }
   };
 
   while (queue.length && steps < MAX_CHAIN_STEPS) {
@@ -148,13 +115,11 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
     let resumed = false;
 
     try {
-      const html = await fetchPage(currentUrl, 'a');
+      const html = await fetchPage(currentUrl);
       if (currentNum != null) lastGood = currentNum;
 
-      // recolectar todos los enlaces numéricos de la página (por si hay lista)
       for (const mm of html.matchAll(epRe)) found.add(parseInt(mm[1], 10));
 
-      // 1) botón "Siguiente"
       const nextHref = findNextEpisodeUrl(html, slug);
       const nextUrl = nextHref ? abs(nextHref) : null;
       const nextNum = nextUrl ? epNumOf(nextUrl) : null;
@@ -163,7 +128,6 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
         resumed = true;
       }
 
-      // 2) cadena rota -> método de patrón y reanudar
       if (!resumed) {
         const rec = await tryPatternRecovery(currentNum ?? lastGood);
         if (rec) { queue.push(rec); resumed = true; }
@@ -189,79 +153,22 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
   };
 }
 
-
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
 const elapsedMin = () => ((Date.now() - T0) / 60000).toFixed(1);
 
-// Navegador global
-let browser = null;
-let context = null;
-
-async function getBrowser() {
-  if (browser && !browser.isConnected()) {
-    console.log('🔄 Navegador desconectado, relanzando...');
-    try { await browser.close(); } catch {}
-    browser = null;
-    context = null;
-  }
-  if (!browser) {
-    const { chromium } = await import('playwright');
-    browser = await chromium.launch({ headless: true });
-    context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-      viewport: { width: 1366, height: 768 }
-    });
-  }
-  return { browser, context };
-}
-
-async function fetchPage(url, waitSelector = null, attempt = 1) {
-  const { context } = await getBrowser();
-  const page = await context.newPage();
-
-  try {
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
-
-    // Si se especifica un selector, esperar a que aparezca
-    if (waitSelector) {
-      await page.waitForSelector(waitSelector, { timeout: 10000 });
-    }
-
-    // Extraer el HTML renderizado
-    const html = await page.content();
-    return html;
-  } catch (e) {
-    // Reintento: las páginas que fallan por timeout o cuelgue
-    // se reintentan 2 veces antes de darlas por perdidas.
-    if (attempt < 3) {
-      console.log(`   🔁 Reintento ${attempt}/2 de ${String(url).split('/').pop()}: ${e.message}`);
-      await new Promise(r => setTimeout(r, 2000 * attempt));
-      return fetchPage(url, waitSelector, attempt + 1);
-    }
-    throw e;
-  } finally {
-    await page.close().catch(() => {});
-  }
-}
-
-/* Descubrir series desde /directorio (con JS) */
+/* Descubrir series desde /directorio */
 async function discoverSeries() {
   const found = new Set();
+  console.log('🔍 Descubriendo series (vía HTTP Directo)...');
 
-  console.log('🔍 Descubriendo series (esperando JavaScript)...');
-
-  // Sondeo páginas 1-10 (o hasta que no haya más)
   for (let page = 1; page <= 10; page++) {
     if (timeUp()) break;
 
     const url = page === 1 ? `${BASE_URL}/directorio` : `${BASE_URL}/directorio?page=${page}`;
 
     try {
-      // Esperar a que cargue el listado de series
-      const html = await fetchPage(url, 'a[href*="/donghua/"]');
-
-      // Extraer enlaces de series
+      const html = await fetchPage(url);
       const regex = /href="\/donghua\/([a-z0-9-]+)"/gi;
       let match;
       let count = 0;
@@ -286,69 +193,52 @@ async function discoverSeries() {
       console.log(`⚠️ Error página ${page}: ${e.message}`);
     }
 
-    await new Promise(r => setTimeout(r, POLITENESS_MS));
+    await sleep(POLITENESS_MS);
   }
 
   return [...found];
 }
 
-/* Extraer video de un episodio (haciendo clic en los botones) */
+/* Extraer video de un episodio analizando el HTML crudo */
 async function extractVideo(episodeUrl) {
-  const { context } = await getBrowser();
-  const page = await context.newPage();
-
   try {
-    await page.goto(episodeUrl, { waitUntil: 'networkidle', timeout: 30000 });
+    const html = await fetchPage(episodeUrl);
+    const servers = [];
 
-    // Esperar a que cargue el reproductor
-    await page.waitForSelector('iframe, [class*="player"], [class*="video"]', { timeout: 10000 });
+    // Extraer todos los iframes embed
+    const iframeRegex = /<iframe[^>]+src=["']([^"']+)["']/gi;
+    let match;
 
-    // Intentar hacer clic en "DM Player" o "Dark Server" para cargar el video
-    const buttons = await page.$$('button, a[class*="server"], [class*="tab"]');
-    for (const btn of buttons) {
-      const text = await btn.textContent();
-      if (text && (text.includes('DM') || text.includes('Dark') || text.includes('Server'))) {
-        await btn.click();
-        await page.waitForTimeout(2000); // Esperar a que cargue el iframe
-        break;
+    while ((match = iframeRegex.exec(html)) !== null) {
+      const src = match[1];
+      if (src && !src.includes('donghuasub.com')) {
+        servers.push({ name: 'Video', url: src, embed: true });
       }
     }
 
-    // Extraer el iframe del video
-    const iframeSrc = await page.evaluate(() => {
-      const iframes = document.querySelectorAll('iframe');
-      for (const iframe of iframes) {
-        const src = iframe.src;
-        if (src && !src.includes('donghuasub.com')) {
-          return src;
-        }
+    // Extraer URLs en atributos data-video / data-player
+    const dataPlayerRegex = /data-(?:video|player|src)=["']([^"']+)["']/gi;
+    while ((match = dataPlayerRegex.exec(html)) !== null) {
+      const src = match[1];
+      if (src && !src.includes('donghuasub.com') && !servers.some(s => s.url === src)) {
+        servers.push({ name: 'Server', url: src, embed: true });
       }
-      return null;
-    });
-
-    if (iframeSrc) {
-      return [{ name: 'Video', url: iframeSrc, embed: true }];
     }
 
+    return servers;
+  } catch (e) {
     return [];
-
-  } finally {
-    await page.close();
   }
 }
 
 /* Procesar una serie */
 async function processSeries(db, seriesUrl) {
   const slug = seriesUrl.split('/').pop();
-
-  // Obtener HTML de la serie
   const html = await fetchPage(seriesUrl);
 
-  // Extraer título
   const titleMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
   const title = titleMatch ? titleMatch[1].trim() : slug;
 
-  // Guardar serie
   const seriesData = {
     id: slug,
     slug,
@@ -365,18 +255,12 @@ async function processSeries(db, seriesUrl) {
 
   console.log(`   📝 ${title}`);
 
-  // Extraer episodios (enlaces /donghua/slug/N)
   const epRegex = new RegExp(`href="/donghua/${slug}/(\\d+)"`, 'gi');
   const epMatches = [...html.matchAll(epRegex)];
   const episodes = [...new Set(epMatches.map(m => parseInt(m[1], 10)))].sort((a, b) => a - b);
 
   console.log(`   🎬 ${episodes.length} episodios detectados`);
 
-  /* ══════════ AÑADIDO: cadena "Siguiente" estilo DonghuaLife ══════════
-     Recorre episodio a episodio con el botón "Siguiente" hasta el
-     final (alternando con el patrón numérico cuando la cadena se
-     rompe) y procesa SOLO los episodios que la detección clásica
-     no había encontrado. Luego guarda el catálogo por serie. */
   try {
     const chain = await discoverEpisodesByChain(seriesUrl, slug, episodes);
 
@@ -439,16 +323,12 @@ async function processSeries(db, seriesUrl) {
       await sleep(POLITENESS_MS);
     }
 
-    // 💾 Guardado del catálogo tras completar CADA serie (encolado)
     await enqueueSave(db);
     console.log(`💾 Catálogo guardado tras completar la serie: ${slug}`);
   } catch (e) {
     console.log(`   ⚠️ Cadena no disponible, se conserva la detección clásica: ${e.message}`);
   }
-  /* ═══════════════════════ FIN AÑADIDO ═══════════════════════ */
 
-
-  // Procesar cada episodio
   for (const epNum of episodes) {
     if (timeUp()) break;
 
@@ -465,7 +345,6 @@ async function processSeries(db, seriesUrl) {
         continue;
       }
 
-      // Crear temporada
       const seasonId = `${slug}-t1`;
       if (!db.seasons.some(s => s.id === seasonId)) {
         db.seasons.push({
@@ -495,16 +374,15 @@ async function processSeries(db, seriesUrl) {
       console.log(`      ❌ Episodio ${epNum}: ${e.message}`);
     }
 
-    await new Promise(r => setTimeout(r, POLITENESS_MS));
+    await sleep(POLITENESS_MS);
   }
 }
 
 /* Main */
 async function main() {
-  console.log('🚀 DONGHUASUB SYNC (Playwright)');
+  console.log('🚀 DONGHUASUB SYNC (HTTP Directo - Ultra Rápido)');
   console.log(`   workers: ${WORKERS} | tope tiempo: ${MAX_RUNTIME_MS/60000} min\n`);
 
-  // Cargar catálogo
   let db;
   try {
     db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
@@ -512,35 +390,27 @@ async function main() {
     db = { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
   }
 
-  // Descubrir series
   const seriesUrls = await discoverSeries();
   console.log(`\n📚 Total series: ${seriesUrls.length}`);
 
-  // Procesar series EN PARALELO: varias a la vez, cada worker
-  // toma la siguiente serie libre. El navegador es compartido.
   let done = 0;
-  await runPool(seriesUrls, WORKERS, async (url) => {
-    const n = ++done;
+  for (const url of seriesUrls) {
+    if (timeUp()) break;
 
-    console.log(`\n[${n}/${seriesUrls.length}] ${url.split('/').pop()}`);
+    console.log(`\n[${++done}/${seriesUrls.length}] ${url.split('/').pop()}`);
 
     try {
       await processSeries(db, url);
 
-      // Checkpoint informativo (el guardado real es por serie,
-      // encolado, dentro de processSeries)
-      if (n % 3 === 0) {
-        console.log(`💾 Checkpoint (${n}/${seriesUrls.length})`);
+      if (done % 3 === 0) {
+        await fs.writeFile(OUT_FILE, JSON.stringify(db));
+        console.log(`💾 Checkpoint (${done}/${seriesUrls.length})`);
       }
     } catch (e) {
       console.log(`   ❌ Error: ${e.message}`);
-
-      // Guardar el progreso igualmente para no perder nada
-      await enqueueSave(db);
     }
-  });
+  }
 
-  // Guardar final
   db.meta = {
     source: BASE_URL,
     syncedAt: new Date().toISOString(),
@@ -555,13 +425,9 @@ async function main() {
   console.log(`📚 Series: ${db.series.length}`);
   console.log(`🎬 Episodios: ${db.episodes.length}`);
   console.log(`⏱️ Duración: ${elapsedMin()} min`);
-
-  // Cerrar navegador
-  if (browser) await browser.close();
 }
 
 main().catch(async e => {
   console.error('💥 FATAL:', e);
-  if (browser) await browser.close();
   process.exit(1);
 });
