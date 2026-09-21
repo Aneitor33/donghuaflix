@@ -15,8 +15,8 @@ const OUT_FILE = path.resolve('public/data/catalog-donghuasub.json');
 const BASE_URL = 'https://donghuasub.com';
 
 // Configuración
-const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || 6))); // Workers paralelos (navegador compartido)
-const POLITENESS_MS = Number(process.env.POLITENESS_MS || 300);
+const WORKERS = Math.max(1, Math.min(8, Number(process.env.WORKERS || (process.env.SAFE_MODE ? 1 : 3)))); // Workers paralelos (navegador compartido)
+const POLITENESS_MS = Number(process.env.POLITENESS_MS || (process.env.SAFE_MODE ? 800 : 400));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
 /* ══════════════════════════════════════════════════════════
@@ -202,6 +202,12 @@ let browser = null;
 let context = null;
 
 async function getBrowser() {
+  if (browser && !browser.isConnected()) {
+    console.log('🔄 Navegador desconectado, relanzando...');
+    try { await browser.close(); } catch {}
+    browser = null;
+    context = null;
+  }
   if (!browser) {
     const { chromium } = await import('playwright');
     browser = await chromium.launch({ headless: true });
@@ -213,7 +219,7 @@ async function getBrowser() {
   return { browser, context };
 }
 
-async function fetchPage(url, waitSelector = null) {
+async function fetchPage(url, waitSelector = null, attempt = 1) {
   const { context } = await getBrowser();
   const page = await context.newPage();
 
@@ -228,8 +234,17 @@ async function fetchPage(url, waitSelector = null) {
     // Extraer el HTML renderizado
     const html = await page.content();
     return html;
+  } catch (e) {
+    // Reintento: las páginas que fallan por timeout o cuelgue
+    // se reintentan 2 veces antes de darlas por perdidas.
+    if (attempt < 3) {
+      console.log(`   🔁 Reintento ${attempt}/2 de ${String(url).split('/').pop()}: ${e.message}`);
+      await new Promise(r => setTimeout(r, 2000 * attempt));
+      return fetchPage(url, waitSelector, attempt + 1);
+    }
+    throw e;
   } finally {
-    await page.close();
+    await page.close().catch(() => {});
   }
 }
 
