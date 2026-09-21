@@ -96,13 +96,12 @@ async function discoverEpisodesByChain(seriesUrl, slug, knownEpisodes) {
     recoveryAttempted.add(target);
     const candidate = `${seriesUrl}/${target}`;
     if (visited.has(candidate)) return null;
-    try {
-      const html = await fetchPage(candidate, 'a');
-      if (!html.includes(slug)) return null;
-      patternRecoveries++;
-      console.log(`      🔄 Alternando a patrón: episodio ${target} existe — se reanuda la cadena`);
-      return candidate;
-    } catch { return null; }
+    // SIN COMPROBACIÓN: el candidato se encola tal cual y la propia
+    // cadena lo cargará en el siguiente paso. Si no existiera, ese
+    // paso fallaría y 'recoveryAttempted' impide reintentarlo en bucle.
+    patternRecoveries++;
+    console.log(`      🔄 Alternando a patrón: episodio ${target} — se reanuda la cadena (sin comprobación previa)`);
+    return candidate;
   };
 
   while (queue.length && steps < MAX_CHAIN_STEPS) {
