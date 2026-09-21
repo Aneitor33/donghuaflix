@@ -41,7 +41,7 @@ jobs:
       - name: Sincronizar DonghuaSub
         env:
           OUT_FILE: 'public/data/catalog-donghuasub.json'
-          WORKERS: 3
+          WORKERS: 2
           POLITENESS_MS: 400
           # Si la web bloquea/banea el runner, descomenta la siguiente línea:
           # SAFE_MODE: 1
