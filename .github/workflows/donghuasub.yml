@@ -9,10 +9,26 @@ on:
   schedule:
     - cron: '20 */6 * * *'      # cada 6h, minuto 20
   workflow_dispatch:
+    inputs:
+      max_runtime_minutes:
+        description: 'Tiempo máximo (minutos)'
+        required: false
+        default: '300'
+      workers:
+        description: 'Workers (1-4)'
+        required: false
+        default: '3'
 
 concurrency:
   group: sync-donghuasub
   cancel-in-progress: false
+
+env:
+  OUT_FILE: 'public/data/catalog-donghuasub.json'
+  WORKERS: ${{ github.event.inputs.workers || '3' }}
+  POLITENESS_MS: '500'
+  MAX_RUNTIME_MINUTES: ${{ github.event.inputs.max_runtime_minutes || '300' }}
+  MAX_EPISODE_CRAWLS: '5000'
 
 jobs:
   sync:
@@ -31,11 +47,11 @@ jobs:
         run: npm install
 
       - name: Instalar Playwright (Chromium)
-        run: npx playwright install --with-deps chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
 
       - name: Sincronizar DonghuaSub
-        env:
-          OUT_FILE: 'public/data/catalog-donghuasub.json'
         run: node syncdonghuasub.js
 
       - name: Generar índice lite y fichas
