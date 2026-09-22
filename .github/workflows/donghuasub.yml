@@ -1,64 +1,77 @@
-# ══════════════════════════════════════════════
-#  DONGHUASUB — donghuasub.com
-#  Usa syncdonghuasub.js (versión Playwright +
-#  cadena "Siguiente" + workers paralelos)
-#  Catálogo: public/data/catalog-donghuasub.json
-#
-#  WORKERS: series en paralelo (techo 8 en el script)
-#  POLITENESS_MS: pausa entre peticiones
-#  MAX_RUNTIME_MINUTES: tope de duración del propio script
-# ══════════════════════════════════════════════
-name: Sincronizar DonghuaSub
+name: Sync DonghuaSub Catalog
 
 on:
-  schedule:
-    - cron: '20 */6 * * *'      # cada 6h, minuto 20
   workflow_dispatch:
+    inputs:
+      max_runtime_minutes:
+        description: 'Tiempo máximo de ejecución (minutos)'
+        required: false
+        default: '300'
+        type: string
+      workers:
+        description: 'Workers concurrentes (1-4)'
+        required: false
+        default: '3'
+        type: string
+  schedule:
+    - cron: '0 */6 * * *'  # Cada 6 horas
 
-concurrency:
-  group: sync-donghuasub
-  cancel-in-progress: false
+env:
+  OUT_FILE: public/data/catalog-donghuasub.json
+  WORKERS: ${{ github.event.inputs.workers || '3' }}
+  POLITENESS_MS: '500'
+  MAX_RUNTIME_MINUTES: ${{ github.event.inputs.max_runtime_minutes || '300' }}
+  MAX_EPISODE_CRAWLS: '5000'
+
+permissions:
+  contents: write
 
 jobs:
   sync:
+    name: Scrape DonghuaSub (Playwright)
     runs-on: ubuntu-latest
-    timeout-minutes: 330
-    permissions:
-      contents: write
+    timeout-minutes: 350
+
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repositorio
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: 📥 Restaurar catálogo previo (artifact)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
-          node-version: '20'
+          name: donghuasub-catalog
+          path: public/data
 
-      - name: Instalar dependencias
-        run: npm install
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Instalar Playwright (Chromium)
-        run: npx playwright install --with-deps chromium
-
-      - name: Sincronizar DonghuaSub
-        env:
-          OUT_FILE: 'public/data/catalog-donghuasub.json'
-          WORKERS: 2
-          POLITENESS_MS: 400
-          # Si la web bloquea/banea el runner, descomenta la siguiente línea:
-          # SAFE_MODE: 1
-          MAX_RUNTIME_MINUTES: 300
-          MAX_CHAIN_STEPS: 2000
-        run: node syncdonghuasub.js
-
-      - name: Generar índice lite y fichas
-        if: always()
-        run: node split-catalog.js public/data/catalog-donghuasub.json
-
-      - name: Guardar catálogo
-        if: always()
+      - name: 🎭 Instalar Playwright + Chromium
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A 'public/data/catalog-donghuasub*'
-          git diff --staged --quiet || git commit -m "sync(donghuasub): actualizar catálogo"
-          git pull --rebase --autostash origin main
-          git push
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: 🚀 Ejecutar scraper DonghuaSub
+        run: node scripts/syncdonghuasub.js
+
+      - name: 💾 Subir catálogo como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: donghuasub-catalog
+          path: ${{ env.OUT_FILE }}
+          retention-days: 7
+
+      - name: 📤 Commit del catálogo al repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.OUT_FILE }}
+          if git diff --staged --quiet; then
+            echo "Sin cambios en el catálogo"
+          else
+            git commit -m "chore(sync): actualiza catálogo DonghuaSub [skip ci]"
+            git push
+          fi
