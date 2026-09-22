@@ -60,6 +60,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "Sin cambios en el catálogo"
           else
-            git commit -m "chore(sync): actualiza catálogo DonghuaSub"
+            git commit -m "chore(sync): actualiza catálogo DonghuaSub [skip ci]"
             git push
           fi
