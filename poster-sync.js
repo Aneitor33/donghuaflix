@@ -12,8 +12,9 @@ const FILES = [
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
-// Fallo permanente: si no se encuentra, no se vuelve a intentar nunca
-// (salvo FORCE_POSTERS=1). Así el repaso de catálogos grandes tarda segundos.
+// Fallo con reintento: si no se encuentra, se vuelve a intentar a los
+// RETRY_DAYS días (los catálogos de TMDB/AniList mejoran con el tiempo).
+const RETRY_MS = 30 * 24 * 3600 * 1000; // 30 días
 
 /* Portadas que YA son buenas (las de estas fuentes no se reemplazan) */
 const GOOD_POSTER = /image\.tmdb\.org|anilist\.co/i;
@@ -125,13 +126,24 @@ async function processFile(OUT_FILE) {
     const isGood = s.image && GOOD_POSTER.test(s.image);
     if (!FORCE && (s.posterLocal || isGood)) { skip++; continue; }
 
-    // Fallida en un intento anterior: no se repite (salvo FORCE)
-    if (!FORCE && s.posterFailed) { skip++; continue; }
+    // Fallida en un intento anterior: se reintenta tras RETRY_MS
+    // (salvo FORCE_POSTERS=1, que lo fuerza todo)
+    if (!FORCE && s.posterFailed) {
+      const failedAt = Date.parse(s.posterFailedAt || 0) || 0;
+      if ((Date.now() - failedAt) < RETRY_MS) { skip++; continue; }
+    }
 
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
+    /* Candidatos: título en español + título original + TÍTULO TRADUCIDO
+       (es→en). La traducción es clave: AniList/TMDB indexan en inglés
+       y muchos títulos de las webs solo existen en español. */
     const candidates = [...new Set([title, s.originalTitle].filter(Boolean))];
+    const translated = await translateTitle(title);
+    if (translated && !candidates.some(c => c.toLowerCase() === translated.toLowerCase())) {
+      candidates.push(translated);
+    }
     let hit = null;
 
     for (const c of candidates) {
@@ -147,8 +159,9 @@ async function processFile(OUT_FILE) {
       }
     }
     if (!hit) {
-      console.log('   ❌ Sin resultados (no se reintentará)');
+      console.log('   ❌ Sin resultados (se reintentará en 30 días)');
       s.posterFailed = true;
+      s.posterFailedAt = new Date().toISOString();
       fail++; sinceSave++;
       if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8'); sinceSave = 0; }
       await sleep(400);
@@ -157,14 +170,16 @@ async function processFile(OUT_FILE) {
 
     const local = await downloadPoster(hit.poster, slug);
     if (!local) {
-      console.log('   ❌ Descarga fallida (no se reintentará)');
+      console.log('   ❌ Descarga fallida (se reintentará en 30 días)');
       s.posterFailed = true;
+      s.posterFailedAt = new Date().toISOString();
       fail++; sinceSave++;
       if (sinceSave >= 10) { await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8'); sinceSave = 0; }
       await sleep(400);
       continue;
     }
     delete s.posterFailed;
+    delete s.posterFailedAt;
 
     s.posterLocal = local;
     console.log(`   ✅ ${hit.match} → ${local}`);
