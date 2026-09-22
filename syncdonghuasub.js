@@ -19,10 +19,10 @@ const WORKERS = Math.max(1, Math.min(4, Number(process.env.WORKERS || 3))); // M
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 500);
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 5000));
-
 /* ══════════════════════════════════════════════════════════
-   LÓGICA DE EPISODIOS ESTILO DonghuaLife
+   AÑADIDO — Lógica de episodios estilo DonghuaLife
    (cadena "Siguiente" + alternancia con el método de patrón)
+   Nada de lo anterior se modifica: solo bloques nuevos.
 ══════════════════════════════════════════════════════════ */
 
 const MAX_CHAIN_STEPS = Math.max(100, Number(process.env.MAX_CHAIN_STEPS || 2000));
@@ -240,7 +240,7 @@ async function discoverSeries() {
       console.log(`⚠️ Error página ${page}: ${e.message}`);
     }
 
-    await sleep(POLITENESS_MS);
+    await new Promise(r => setTimeout(r, POLITENESS_MS));
   }
 
   return [...found];
@@ -319,19 +319,18 @@ async function processSeries(db, seriesUrl) {
 
   console.log(`   📝 ${title}`);
 
-  // ══════════ DETECCIÓN CLÁSICA ══════════
   // Extraer episodios (enlaces /donghua/slug/N)
   const epRegex = new RegExp(`href="/donghua/${slug}/(\\d+)"`, 'gi');
   const epMatches = [...html.matchAll(epRegex)];
   const episodes = [...new Set(epMatches.map(m => parseInt(m[1], 10)))].sort((a, b) => a - b);
 
-  console.log(`   🎬 ${episodes.length} episodios detectados (regex clásico)`);
+  console.log(`   🎬 ${episodes.length} episodios detectados`);
 
-  // ══════════ CADENA "SIGUIENTE" + PATRÓN ══════════
-  // Recorre episodio a episodio con el botón "Siguiente" hasta el
-  // final (alternando con el patrón numérico cuando la cadena se
-  // rompe) y procesa SOLO los episodios que la detección clásica
-  // no había encontrado. Luego guarda el catálogo por serie.
+  /* ══════════ AÑADIDO: cadena "Siguiente" estilo DonghuaLife ══════════
+     Recorre episodio a episodio con el botón "Siguiente" hasta el
+     final (alternando con el patrón numérico cuando la cadena se
+     rompe) y procesa SOLO los episodios que la detección clásica
+     no había encontrado. Luego guarda el catálogo por serie. */
   try {
     const chain = await discoverEpisodesByChain(seriesUrl, slug, episodes);
 
@@ -400,8 +399,10 @@ async function processSeries(db, seriesUrl) {
   } catch (e) {
     console.log(`   ⚠️ Cadena no disponible, se conserva la detección clásica: ${e.message}`);
   }
+  /* ═══════════════════════ FIN AÑADIDO ═══════════════════════ */
 
-  // Procesar episodios detectados por la regex clásica
+
+  // Procesar cada episodio
   for (const epNum of episodes) {
     if (timeUp()) break;
 
@@ -448,7 +449,7 @@ async function processSeries(db, seriesUrl) {
       console.log(`      ❌ Episodio ${epNum}: ${e.message}`);
     }
 
-    await sleep(POLITENESS_MS);
+    await new Promise(r => setTimeout(r, POLITENESS_MS));
   }
 }
 
@@ -469,7 +470,7 @@ async function main() {
   const seriesUrls = await discoverSeries();
   console.log(`\n📚 Total series: ${seriesUrls.length}`);
 
-  // Procesar series
+  // Procesar series (con límite de concurrencia por ser navegador)
   let done = 0;
   for (const url of seriesUrls) {
     if (timeUp()) break;
