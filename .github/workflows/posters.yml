@@ -1,18 +1,23 @@
 # ══════════════════════════════════════════════
-#  PORTADAS — descarga local de pósters
-#  (TMDB si hay API key; AniList gratis como respaldo)
-#  Se ejecuta 1 vez al día. Sin dependencias npm.
-#  Para reintentar los fallidos: lanzar con
-#  FORCE_POSTERS=1 en los env del step.
-#  CORREGIDO: tras descargar, regenera los índices lite
-#  para que la app vea las portadas locales de inmediato.
+#  PORTADAS — descarga pósters de TMDB/AniList
+#  Usa poster-sync.js (uno por serie, con traducción es→en)
+#  Requiere opcional: secret TMDB_API_KEY
 # ══════════════════════════════════════════════
 name: Sincronizar portadas
 
 on:
   schedule:
-    - cron: '15 3 * * *'      # cada día a las 3:15
+    - cron: '0 3 * * 0'      # cada domingo a las 03:00 UTC
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Forzar re-descarga de todas las portadas (1 = sí)'
+        required: false
+        default: '0'
+
+env:
+  TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+  FORCE_POSTERS: ${{ github.event.inputs.force || '0' }}
 
 concurrency:
   group: sync-posters
@@ -21,7 +26,7 @@ concurrency:
 jobs:
   posters:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
@@ -31,26 +36,22 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Buscar y descargar portadas
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      - name: Sincronizar portadas
         run: node poster-sync.js
 
-      - name: Regenerar índices lite y fichas
-        if: always()
-        run: |
-          node split-catalog.js public/data/catalog-donghualife.json
-          node split-catalog.js public/data/catalog-donghuasub.json
-          node split-catalog.js public/data/catalog-donghuaworld.json
-          node split-catalog.js public/data/catalog-peliculas.json
-          node split-catalog.js public/data/catalog-doramas.json
-
       - name: Guardar portadas
-        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A 'public/img/posters' 'public/data/catalog-donghualife*' 'public/data/catalog-donghuasub*' 'public/data/catalog-donghuaworld*' 'public/data/catalog-peliculas*' 'public/data/catalog-doramas*'
-          git diff --staged --quiet || git commit -m "posters: actualizar portadas e índices"
-          git pull --rebase --autostash origin main
-          git push
+          git add -A public/data public/img/posters
+          git diff --staged --quiet && { echo "Sin cambios"; exit 0; }
+          git commit -m "sync(posters): actualizar portadas e indices"
+          for i in 1 2 3 4 5 6; do
+            git fetch origin main
+            if git merge origin/main -m "merge origin/main" -X ours --no-edit && git push; then
+              echo "✅ Push OK"; exit 0
+            fi
+            echo "⚠️ Intento $i fallido, reintentando en 30s..."
+            sleep 30
+          done
+          echo "❌ No se pudo subir tras varios intentos"; exit 1
