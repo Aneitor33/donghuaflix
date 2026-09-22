@@ -50,12 +50,14 @@ jobs:
 
       - name: 🎭 Instalar Playwright + Chromium
         run: |
-          npm init -y
-          npm install playwright
+          npm install --no-save playwright
           npx playwright install chromium --with-deps
 
+      - name: ✅ Verificar que Playwright resuelve
+        run: node -e "import('playwright').then(() => console.log('OK: playwright resuelve'))"
+
       - name: 🚀 Ejecutar scraper DonghuaSub
-        run: node scripts/syncdonghuasub.js
+        run: node syncdonghuasub.js
 
       - name: 💾 Subir catálogo como artifact
         uses: actions/upload-artifact@v4
