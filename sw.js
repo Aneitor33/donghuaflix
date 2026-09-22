@@ -1,5 +1,5 @@
 /* DonghuaFlix Service Worker — App offline */
-const CACHE = 'donghuaflix-v6';
+const CACHE = 'donghuaflix-v7';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest',
   './icon-192.png', './icon-256.png', './icon-512.png'];
 
