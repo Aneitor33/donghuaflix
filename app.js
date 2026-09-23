@@ -213,6 +213,24 @@ function renderCatBar() {
     b.style.display =
       CATALOG_AVAILABLE[id] ? '' : 'none';
   });
+
+  /* etiqueta del selector integrado en la navbar (escritorio) */
+  const catLbl =
+    document.getElementById(
+      'catFabLabel'
+    );
+  if (catLbl) {
+    const cur =
+      CATALOGS.find(
+        c =>
+          c.id ===
+          currentCatalog
+      );
+    catLbl.textContent =
+      cur
+        ? cur.label
+        : currentCatalog;
+  }
 }
 
 function toggleCatalogMenu() {
@@ -1631,12 +1649,29 @@ function renderHero(dir = 0) {
   ).textContent =
     cleanTitle(hero);
 
+  const heroMetaBits = [];
+  if (hero.status) {
+    heroMetaBits.push(
+      hero.status
+    );
+  }
+  const heroYear =
+    getYear(hero);
+  if (heroYear) {
+    heroMetaBits.push(
+      String(heroYear)
+    );
+  }
+  heroMetaBits.push(
+    ...seriesGenres(hero).slice(
+      0,
+      2
+    )
+  );
   document.getElementById(
     'heroMeta'
   ).textContent =
-    seriesGenres(hero)
-      .slice(0, 3)
-      .join(' · ');
+    heroMetaBits.join(' · ');
 
   document.getElementById(
     'heroSyn'
@@ -1658,20 +1693,46 @@ function renderHero(dir = 0) {
       .catch(() => {});
   }
 
+  const heroEp =
+    lastWatchedEpisode(hero);
+
+  const heroBtnLabel =
+    document.getElementById(
+      'heroBtnLabel'
+    );
+
+  if (heroBtnLabel) {
+    if (heroEp) {
+      const hSeason =
+        DB.seasons.find(
+          x =>
+            x.id ===
+            heroEp.seasonId
+        );
+      const hSn =
+        hSeason &&
+        Number.isFinite(
+          hSeason.number
+        )
+          ? hSeason.number
+          : 1;
+      heroBtnLabel.textContent =
+        `Continuar · T${hSn}:E${heroEp.number}`;
+    } else {
+      heroBtnLabel.textContent =
+        'Ver serie';
+    }
+  }
+
   document.getElementById(
     'heroBtn'
   ).onclick = () => {
-    const ep =
-      lastWatchedEpisode(
-        hero
-      );
-
-    if (ep) {
+    if (heroEp) {
       location.hash =
         '#/episode/' +
         qs(
-          ep.slug ||
-            ep.id
+          heroEp.slug ||
+            heroEp.id
         );
     } else {
       location.hash =
@@ -1959,27 +2020,42 @@ function home() {
   const top10 =
     bySize.slice(0, 10);
 
-  /* Hero ALEATORIO del catálogo activo (sin mezclar catálogos):
-     prioriza títulos con portada y sinopsis para que quede bonito */
-  const heroCandidates =
-    DB.series.filter(
-      s =>
-        getSeriesImage(s) &&
-        (s.synopsis || '')
-          .length > 40
+  /* Hero contextual: si hay historial, el primer título es el
+     último que viste; el resto se rellena al azar con títulos
+     que tienen portada. */
+  const heroPool = [];
+  if (
+    historyList.length &&
+    getSeriesImage(
+      historyList[0]
+    )
+  ) {
+    heroPool.push(
+      historyList[0]
     );
-  const heroSource =
-    heroCandidates.length >= 5
-      ? heroCandidates
-      : DB.series;
-  const heroPool =
-    heroSource
-      .slice()
+  }
+  const shuffledHero =
+    DB.series
+      .filter(
+        s =>
+          getSeriesImage(s)
+      )
       .sort(
         () =>
           Math.random() - 0.5
-      )
-      .slice(0, 5);
+      );
+  for (const s of shuffledHero) {
+    if (
+      heroPool.length >= 5
+    ) {
+      break;
+    }
+    if (
+      !heroPool.includes(s)
+    ) {
+      heroPool.push(s);
+    }
+  }
 
   const sections = [];
 
@@ -2018,6 +2094,110 @@ function home() {
     </section>`);
   }
 
+  /* ── Recomendado para ti: géneros de lo que ves/sigues ──
+     Solo aparece si hay señal real (favoritos o historial);
+     sin ella, no se muestra nada. */
+  {
+    const followRec =
+      new Set([
+        ...getFavs(),
+        ...Object.keys(
+          historyData
+        )
+      ]);
+    const genreW =
+      new Map();
+    for (const s of DB.series) {
+      if (
+        !followRec.has(
+          s.id
+        )
+      ) {
+        continue;
+      }
+      for (const g of seriesGenres(
+        s
+      )) {
+        const k =
+          fold(g);
+        genreW.set(
+          k,
+          (genreW.get(
+            k
+          ) || 0) + 1
+        );
+      }
+    }
+    if (
+      genreW.size
+    ) {
+      const recScored =
+        DB.series
+          .filter(
+            s =>
+              !followRec.has(
+                s.id
+              )
+          )
+          .map(
+            s => ({
+              s,
+              score:
+                seriesGenres(
+                  s
+                ).reduce(
+                  (
+                    acc,
+                    g
+                  ) =>
+                    acc +
+                    (genreW.get(
+                      fold(
+                        g
+                      )
+                    ) || 0),
+                  0
+                )
+            })
+          )
+          .filter(
+            x =>
+              x.score > 0
+          )
+          .sort(
+            (
+              a,
+              b
+            ) =>
+              b.score -
+                a.score ||
+              (
+                b.s.updatedAt ||
+                ''
+              ).localeCompare(
+                a.s.updatedAt ||
+                  ''
+              )
+          )
+          .slice(0, 14)
+          .map(
+            x => x.s
+          );
+      if (
+        recScored.length
+      ) {
+        sections.push(`
+        <section class="section">
+          <div class="section-head">
+            <h2>Recomendado para ti</h2>
+            <span class="muted">${recScored.length}</span>
+          </div>
+          ${rail(recScored)}
+        </section>`);
+      }
+    }
+  }
+
   /* En Cine */
   if (
     currentCatalog ===
@@ -2043,7 +2223,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🎬 Películas</h2>
+          <h2>Películas</h2>
           <span class="muted">${cineMovies.length}</span>
         </div>
 
@@ -2055,7 +2235,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>📺 Series</h2>
+          <h2>Series</h2>
           <span class="muted">${cineSeries.length}</span>
         </div>
 
@@ -2128,29 +2308,64 @@ function home() {
         );
       }
     }
+    /* Prioridad: series seguidas (favoritas o con historial)
+       primero; como señal de fecha vale el episodio más
+       reciente Y, con índice LITE, el updatedAt de la serie. */
+    const followHome =
+      new Set([
+        ...getFavs(),
+        ...Object.keys(
+          historyData
+        )
+      ]);
+    const tsOf =
+      s =>
+        epLatest.get(
+          s.id
+        ) ||
+        Date.parse(
+          s.updatedAt || 0
+        ) ||
+        0;
     const freshEps =
       DB.series
         .filter(
           s =>
-            epLatest.has(
-              s.id
-            )
+            tsOf(s) > 0
         )
         .sort(
-          (a, b) =>
-            epLatest.get(
-              b.id
-            ) -
-            epLatest.get(
-              a.id
-            )
+          (a, b) => {
+            const fa =
+              followHome.has(
+                a.id
+              )
+                ? 1
+                : 0;
+            const fb =
+              followHome.has(
+                b.id
+              )
+                ? 1
+                : 0;
+            if (
+              fa !== fb
+            ) {
+              return (
+                fb - fa
+              );
+            }
+            return (
+              tsOf(b) -
+              tsOf(a)
+            );
+          }
         )
         .slice(0, 14);
     if (freshEps.length) {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🔥 Nuevos episodios</h2>
+          <h2>Nuevos episodios</h2>
           <span class="muted">${freshEps.length}</span>
         </div>
         ${rail(freshEps)}
@@ -2183,7 +2398,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🏃 Para maratonear</h2>
+          <h2>Para maratonear</h2>
           <span class="muted">${marathon.length}</span>
         </div>
         ${rail(marathon)}
@@ -2323,7 +2538,7 @@ function home() {
           id="heroBtn"
         >
           ${ICONS.play}
-          <span>Ver serie</span>
+          <span id="heroBtnLabel">Ver serie</span>
         </button>
 
         <button
