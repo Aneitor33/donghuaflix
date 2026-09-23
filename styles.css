@@ -1,4 +1,5 @@
 :root{
+  /* ── tokens base (originales — no renombrar, se usan en todo el CSS) ── */
   --bg:#000;
   --surface:#14161c;
   --surface2:#1c1f27;
@@ -10,6 +11,12 @@
   --glass-brd:rgba(255,255,255,.22);
   --radius:8px;
   --shadow:0 22px 70px rgba(0,0,0,.55);
+  /* ── tokens Fase 1 ── */
+  --elevated:#1b1e26;      /* superficie elevada: hovers, episodios */
+  --accent:var(--red);     /* acento unificado (rojo) */
+  --text-2:#c9ccd2;        /* texto secundario */
+  --dur:.2s;               /* transición estándar */
+  --dur-slow:.35s;         /* transición lenta */
 }
 *{box-sizing:border-box}
 html{background:#000;scroll-behavior:smooth}
@@ -706,8 +713,6 @@ footer a.ig-link svg{width:13px;height:13px}
     animation: none !important;
   }
 }
-
-
 /* ══════════════════════════════════════════════════════════
    DONGHUAFLIX PRO — capa visual (OPTIMIZADA: sin animaciones
    de entrada que congelan el móvil)
@@ -774,4 +779,59 @@ body.dfx-no-motion *{animation-duration:.01ms!important;transition-duration:.01m
   .hero h1{letter-spacing:-1.4px}
   .hero-btns .btn-x{flex:1;padding:10px 8px;font-size:12.5px}
   .detail-actions .btn-x.big{flex:1;padding:12px 14px;font-size:13.5px}
+}
+/* ── extras consolidados desde la antigua hoja dfx (eliminada) ── */
+.detail-v2 .detail-hero,.player,.episode-list,#dfsSheet,.dfxCalDay{box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.empty .dfxBig{font-size:42px;display:block;margin-bottom:10px;opacity:.65}
+/* ══════════════════════════════════════════════════════════
+   FASE 1 — Sistema visual: tokens extendidos, foco visible,
+   estados vacíos con acción, selección y botón de cine oculto.
+   (Las reglas anteriores NO se han modificado: esta sección
+   solo AÑADE. El cascade sigue siendo el de siempre.)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── tokens Fase 1 (alias y utilidades; los originales siguen arriba) ── */
+:root{
+  --elevated:#1b1e26;      /* superficie elevada: hovers, episodios */
+  --accent:var(--red);     /* acento unificado (rojo) */
+  --text-2:#c9ccd2;        /* texto secundario */
+  --dur:.2s;               /* transición estándar */
+  --dur-slow:.35s;         /* transición lenta */
+}
+
+/* ── foco visible (teclado) ── */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+  border-radius:6px;
+}
+
+/* ── color de selección ── */
+::selection{background:var(--accent);color:#fff}
+
+/* ── estado vacío con acción (usa .empty-state generado por app.js) ── */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;
+  padding:44px 20px;
+  border:1px dashed var(--glass-brd);
+  border-radius:14px;
+  background:rgba(255,255,255,.02);
+}
+.empty-state p{color:var(--muted);margin:0 0 14px;font-size:14px;line-height:1.6}
+.empty-state .btn-x{margin-top:2px}
+
+/* ── ocultar el botón de modo cine (dfx-boot.js también lo elimina del DOM;
+      el modo cine sigue disponible con la tecla C) ── */
+#dfxCineBtn{display:none!important}
+
+/* ── FASE 1b — Móvil: el FAB de catálogos es vital (esquina inferior
+      derecha). El botón "volver arriba" y los toasts no deben taparlo. ── */
+@media(max-width:900px){
+  #toTop{display:none!important}
+  #toast{
+    left:14px;right:86px;      /* deja hueco al FAB en la esquina */
+    bottom:calc(84px + env(safe-area-inset-bottom));
+    text-align:center;
+  }
 }
