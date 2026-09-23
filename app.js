@@ -163,17 +163,13 @@ async function probeCatalogs() {
     }
 
     try {
-      /* HEAD: no descarga nada (el GET antiguo bajaba hasta
-         17 MB por catálogo para solo comprobar existencia). */
+      /* GET del índice LITE (pequeño): el GET antiguo bajaba el
+         catálogo completo (hasta 17 MB) solo para comprobar. */
       if (c.index) {
         const ri = await fetch(
           c.index,
-          {
-            method: 'HEAD',
-            cache: 'default'
-          }
+          { cache: 'default' }
         );
-
         if (ri.ok) {
           CATALOG_AVAILABLE[c.id] = true;
           continue;
@@ -187,13 +183,9 @@ async function probeCatalogs() {
           cache: 'default'
         }
       );
-
-      CATALOG_AVAILABLE[c.id] =
-        r.ok;
+      CATALOG_AVAILABLE[c.id] = r.ok;
     } catch {
-      /* Fallo DE RED: no marcar como no disponible;
-         se reintenta a los 15 s. Así el selector no
-         desaparece por una conexión floja. */
+      /* fallo de red: reintentar, no dar por perdido el catálogo */
       netFail = true;
     }
   }
@@ -201,11 +193,7 @@ async function probeCatalogs() {
   renderCatBar();
 
   if (netFail) {
-    setTimeout(
-      () =>
-        probeCatalogs(),
-      15000
-    );
+    setTimeout(() => probeCatalogs(), 15000);
   }
 }
 
@@ -1652,24 +1640,10 @@ function renderHero(dir = 0) {
     cleanTitle(hero);
 
   const heroMetaBits = [];
-  if (hero.status) {
-    heroMetaBits.push(
-      hero.status
-    );
-  }
-  const heroYear =
-    getYear(hero);
-  if (heroYear) {
-    heroMetaBits.push(
-      String(heroYear)
-    );
-  }
-  heroMetaBits.push(
-    ...seriesGenres(hero).slice(
-      0,
-      2
-    )
-  );
+  if (hero.status) heroMetaBits.push(hero.status);
+  const heroYear = getYear(hero);
+  if (heroYear) heroMetaBits.push(String(heroYear));
+  heroMetaBits.push(...seriesGenres(hero).slice(0, 2));
   document.getElementById(
     'heroMeta'
   ).textContent =
@@ -1688,41 +1662,28 @@ function renderHero(dir = 0) {
     ensureDetail(hero.slug || hero.id)
       .then(() => {
         const el = document.getElementById('heroSyn');
-        if (el && hero.synopsis) {
-          el.textContent = hero.synopsis;
-        }
+        if (el && hero.synopsis) el.textContent = hero.synopsis;
       })
       .catch(() => {});
   }
 
-  const heroEp =
-    lastWatchedEpisode(hero);
+  const heroEp = lastWatchedEpisode(hero);
 
   const heroBtnLabel =
-    document.getElementById(
-      'heroBtnLabel'
-    );
-
+    document.getElementById('heroBtnLabel');
   if (heroBtnLabel) {
     if (heroEp) {
-      const hSeason =
-        DB.seasons.find(
-          x =>
-            x.id ===
-            heroEp.seasonId
-        );
+      const hSeason = DB.seasons.find(
+        x => x.id === heroEp.seasonId
+      );
       const hSn =
-        hSeason &&
-        Number.isFinite(
-          hSeason.number
-        )
+        hSeason && Number.isFinite(hSeason.number)
           ? hSeason.number
           : 1;
       heroBtnLabel.textContent =
         `Continuar · T${hSn}:E${heroEp.number}`;
     } else {
-      heroBtnLabel.textContent =
-        'Ver serie';
+      heroBtnLabel.textContent = 'Ver serie';
     }
   }
 
@@ -1732,17 +1693,11 @@ function renderHero(dir = 0) {
     if (heroEp) {
       location.hash =
         '#/episode/' +
-        qs(
-          heroEp.slug ||
-            heroEp.id
-        );
+        qs(heroEp.slug || heroEp.id);
     } else {
       location.hash =
         '#/series/' +
-        qs(
-          hero.slug ||
-            hero.id
-        );
+        qs(hero.slug || hero.id);
     }
   };
 
@@ -2023,40 +1978,21 @@ function home() {
     bySize.slice(0, 10);
 
   /* Hero contextual: si hay historial, el primer título es el
-     último que viste; el resto se rellena al azar con títulos
-     que tienen portada. */
+     último visto; el resto se rellena al azar con portada. */
   const heroPool = [];
   if (
     historyList.length &&
-    getSeriesImage(
-      historyList[0]
-    )
+    getSeriesImage(historyList[0])
   ) {
-    heroPool.push(
-      historyList[0]
-    );
+    heroPool.push(historyList[0]);
   }
   const shuffledHero =
     DB.series
-      .filter(
-        s =>
-          getSeriesImage(s)
-      )
-      .sort(
-        () =>
-          Math.random() - 0.5
-      );
+      .filter(s => getSeriesImage(s))
+      .sort(() => Math.random() - 0.5);
   for (const s of shuffledHero) {
-    if (
-      heroPool.length >= 5
-    ) {
-      break;
-    }
-    if (
-      !heroPool.includes(s)
-    ) {
-      heroPool.push(s);
-    }
+    if (heroPool.length >= 5) break;
+    if (!heroPool.includes(s)) heroPool.push(s);
   }
 
   const sections = [];
@@ -2096,96 +2032,38 @@ function home() {
     </section>`);
   }
 
-  /* ── Recomendado para ti: géneros de lo que ves/sigues ── */
+  /* Recomendado para ti: géneros de lo que ves/sigues */
   {
-    const followRec =
-      new Set([
-        ...getFavs(),
-        ...Object.keys(
-          historyData
-        )
-      ]);
-    const genreW =
-      new Map();
+    const followRec = new Set([
+      ...getFavs(),
+      ...Object.keys(historyData)
+    ]);
+    const genreW = new Map();
     for (const s of DB.series) {
-      if (
-        !followRec.has(
-          s.id
-        )
-      ) {
-        continue;
-      }
-      for (const g of seriesGenres(
-        s
-      )) {
-        const k =
-          fold(g);
-        genreW.set(
-          k,
-          (genreW.get(
-            k
-          ) || 0) + 1
-        );
+      if (!followRec.has(s.id)) continue;
+      for (const g of seriesGenres(s)) {
+        const k = fold(g);
+        genreW.set(k, (genreW.get(k) || 0) + 1);
       }
     }
-    if (
-      genreW.size
-    ) {
-      const recScored =
-        DB.series
-          .filter(
-            s =>
-              !followRec.has(
-                s.id
-              )
+    if (genreW.size) {
+      const recScored = DB.series
+        .filter(s => !followRec.has(s.id))
+        .map(s => ({
+          s,
+          score: seriesGenres(s).reduce(
+            (acc, g) => acc + (genreW.get(fold(g)) || 0),
+            0
           )
-          .map(
-            s => ({
-              s,
-              score:
-                seriesGenres(
-                  s
-                ).reduce(
-                  (
-                    acc,
-                    g
-                  ) =>
-                    acc +
-                    (genreW.get(
-                      fold(
-                        g
-                      )
-                    ) || 0),
-                  0
-                )
-            })
-          )
-          .filter(
-            x =>
-              x.score > 0
-          )
-          .sort(
-            (
-              a,
-              b
-            ) =>
-              b.score -
-                a.score ||
-              (
-                b.s.updatedAt ||
-                ''
-              ).localeCompare(
-                a.s.updatedAt ||
-                  ''
-              )
-          )
-          .slice(0, 14)
-          .map(
-            x => x.s
-          );
-      if (
-        recScored.length
-      ) {
+        }))
+        .filter(x => x.score > 0)
+        .sort((a, b) =>
+          b.score - a.score ||
+          (b.s.updatedAt || '').localeCompare(a.s.updatedAt || '')
+        )
+        .slice(0, 14)
+        .map(x => x.s);
+      if (recScored.length) {
         sections.push(`
         <section class="section">
           <div class="section-head">
@@ -2308,58 +2186,23 @@ function home() {
         );
       }
     }
-    /* Prioridad: series seguidas primero; como señal de fecha
-       vale el episodio más reciente Y, con índice LITE, el
-       updatedAt de la serie. */
-    const followHome =
-      new Set([
-        ...getFavs(),
-        ...Object.keys(
-          historyData
-        )
-      ]);
-    const tsOf =
-      s =>
-        epLatest.get(
-          s.id
-        ) ||
-        Date.parse(
-          s.updatedAt || 0
-        ) ||
-        0;
+    const followHome = new Set([
+      ...getFavs(),
+      ...Object.keys(historyData)
+    ]);
+    const tsOf = s =>
+      epLatest.get(s.id) ||
+      Date.parse(s.updatedAt || 0) ||
+      0;
     const freshEps =
       DB.series
-        .filter(
-          s =>
-            tsOf(s) > 0
-        )
-        .sort(
-          (a, b) => {
-            const fa =
-              followHome.has(
-                a.id
-              )
-                ? 1
-                : 0;
-            const fb =
-              followHome.has(
-                b.id
-              )
-                ? 1
-                : 0;
-            if (
-              fa !== fb
-            ) {
-              return (
-                fb - fa
-              );
-            }
-            return (
-              tsOf(b) -
-              tsOf(a)
-            );
-          }
-        )
+        .filter(s => tsOf(s) > 0)
+        .sort((a, b) => {
+          const fa = followHome.has(a.id) ? 1 : 0;
+          const fb = followHome.has(b.id) ? 1 : 0;
+          if (fa !== fb) return fb - fa;
+          return tsOf(b) - tsOf(a);
+        })
         .slice(0, 14);
     if (freshEps.length) {
       sections.push(`
@@ -4262,57 +4105,32 @@ function gotoPage(p) {
 
 /* ---------- REPRODUCTOR ---------- */
 
-/* Entrada a episodio con carga bajo demanda: con índice LITE los
-   episodios solo viven en memoria tras abrir la ficha de la
-   serie. Si no se encuentra, se detecta la serie propietaria del
-   slug (el más largo gana) y se reintenta tras cargarla. */
+/* Con índice LITE los episodios solo están en memoria tras abrir
+   la ficha de la serie: si no se encuentra, se carga y se reintenta. */
 async function episodeRoute(ref) {
-  let e =
-    findEpisode(ref);
+  let e = findEpisode(ref);
 
   if (!e) {
-    const owner =
-      DB.series
-        .filter(
-          x =>
-            ref.startsWith(
-              (x.slug || x.id) +
-                '-'
-            )
-        )
-        .sort(
-          (a, b) =>
-            (b.slug || b.id).length -
-            (a.slug || a.id).length
-        )[0];
+    const owner = DB.series
+      .filter(x => ref.startsWith((x.slug || x.id) + '-'))
+      .sort((a, b) =>
+        (b.slug || b.id).length - (a.slug || a.id).length
+      )[0];
 
     if (owner) {
       app.innerHTML =
         '<section class="section page-top"><div class="grid">' +
-        Array(8)
-          .fill(
-            '<div class="skeleton"></div>'
-          )
-          .join('') +
+        Array(8).fill('<div class="skeleton"></div>').join('') +
         '</div></section>';
 
-      await ensureDetail(
-        owner.slug ||
-          owner.id
-      );
-
-      e =
-        findEpisode(ref);
+      await ensureDetail(owner.slug || owner.id);
+      e = findEpisode(ref);
     }
   }
 
-  if (!e) {
-    return notfound();
-  }
+  if (!e) return notfound();
 
-  episode(
-    e.slug || e.id
-  );
+  episode(e.slug || e.id);
 }
 
 function episode(slug) {
@@ -5068,22 +4886,13 @@ document.addEventListener(
           })
       );
 
-    /* SW desactivado temporalmente: se desregistra cualquier
-       worker viejo. El modo offline vuelve en la Fase 8. */
     if (
       'serviceWorker' in
       navigator
     ) {
       navigator.serviceWorker
-        .getRegistrations()
-        .then(
-          rs =>
-            Promise.all(
-              rs.map(
-                r =>
-                  r.unregister()
-              )
-            )
+        .register(
+          'sw.js'
         )
         .catch(
           () => {}
@@ -5095,6 +4904,7 @@ document.addEventListener(
 
 /* =========================================================
    CONTRATO GLOBAL — expone el estado interno a las capas Pro
+   (dfx-core.js / dfx-polish.js lo leen desde window)
    ========================================================= */
 const __expose = (k, get, set) => {
   try {
@@ -5106,16 +4916,12 @@ __expose('DB', () => DB);
 __expose('DB_CACHE', () => DB_CACHE);
 __expose('currentEpisode', () => currentEpisode);
 __expose('detailState', () => detailState);
-
-/* autoNextEnabled necesita setter: los ajustes Pro escriben
-   window.autoNextEnabled y antes no surtía efecto en caliente */
 __expose('autoNextEnabled', () => autoNextEnabled, v => {
   autoNextEnabled = !!v;
   localStorage.setItem('donghuaflix_autonext', autoNextEnabled ? 'on' : 'off');
   const b = document.getElementById('autoNextBtn');
   if (b) b.innerHTML = `${ICONS.repeat}<span>Auto: ${autoNextEnabled ? 'ON' : 'OFF'}</span>`;
 });
-
 __expose('SRC_LABEL', () => SRC_LABEL);
 __expose('ICONS', () => ICONS);
 __expose('esc', () => esc);
@@ -5134,7 +4940,7 @@ __expose('isFav', () => isFav);
 __expose('lastWatchedEpisode', () => lastWatchedEpisode);
 __expose('getRecommendedSeries', () => getRecommendedSeries);
 
-/* Estado vacío con acción: caja .empty-state (admite HTML/CTA) */
+/* Estado vacío con acción (admite HTML/CTA) */
 function emptyStateHTML(msg) {
   return (
     '<div class="empty-state"><p>' + msg + '</p></div>'
