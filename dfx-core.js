@@ -229,9 +229,7 @@
   }
 
   /* Cambio de perfil real: guarda el actual en su prefijo,
-     conmuta y restaura los datos del perfil destino. Antes,
-     afterChange() guardaba los datos del perfil VIEJO con el
-     prefijo del NUEVO (destruyéndolo) y nunca restauraba. */
+     conmuta y restaura los datos del perfil destino. */
   function switchProfile(newId) {
     if (!DFX.profiles.some(p => p.id === newId) || newId === DFX.current) return;
     const USER_KEYS = {
@@ -240,27 +238,23 @@
       history: 'donghuaflix_history',
       autonext: 'donghuaflix_autonext'
     };
-    /* 1) persistir el perfil actual en su prefijo (y en la nube) */
     save(prefix() + 'favs', window.getFavs ? window.getFavs() : []);
     save(prefix() + 'watched', window.getWatched ? window.getWatched() : {});
     save(prefix() + 'history', window.getHistory ? window.getHistory() : {});
     save(prefix() + 'autonext', window.autoNextEnabled !== false);
     cloudSave();
-    /* 2) conmutar */
     DFX.current = newId;
     save('dfx_current', DFX.current);
-    /* 3) restaurar los datos del perfil destino (vacío = defaults) */
     const restore = (k, fb) => {
       const v = load(prefix() + k, null);
       localStorage.setItem(USER_KEYS[k], JSON.stringify(v == null ? fb : v));
     };
     restore('favs', []);
     restore('watched', {});
-    restore('history', {});
+    restore('history', []);
     const an = load(prefix() + 'autonext', true);
     localStorage.setItem('donghuaflix_autonext', an === false ? 'off' : 'on');
     window.autoNextEnabled = an !== false;
-    /* 4) refrescar UI, insignias, radar y nube */
     applySettings();
     checkBadges();
     injectRadar();
@@ -886,9 +880,8 @@
   }
 
   /* ---------- barra de estado global (contador) ----------
-     Fase 1: la píldora flotante tapaba la bottom-nav en móvil.
-     Las estadísticas tendrán su sitio en "Tu DonghuaFlix" (perfil).
-     Se conserva checkBadges() para no perder desbloqueos. */
+     La píldora flotante tapaba la bottom-nav en móvil: se elimina.
+     Las estadísticas vivirán en el perfil. Se conserva checkBadges(). */
   function injectGlobalStats() {
     checkBadges();
   }
