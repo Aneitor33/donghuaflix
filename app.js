@@ -128,7 +128,7 @@ async function ensureCatalog(id) {
           lite: true
         };
         DETAILS_BASE[id] =
-          './public/data/' + (lite.detailsBase || '');
+          './public/data/' + (lite.detailsBase || '').replace(/\/?$/, '/');
         DB_CACHE[id] = db;
         CATALOG_AVAILABLE[id] = true;
         return db;
@@ -3356,11 +3356,16 @@ async function ensureDetail(s, id) {
     const d =
       await r.json();
 
+    /* Los ficheros de detalle envuelven la serie en d.series */
+    const meta =
+      (d && d.series) || {};
+
     s.seasons =
       d.seasons || [];
     s.episodes =
       d.episodes || [];
     s.synopsis =
+      meta.synopsis ||
       d.synopsis ||
       s.synopsis ||
       '';
@@ -3960,9 +3965,47 @@ function renderEpisodePage(
 
 /* ---------- PÁGINA DE EPISODIO ---------- */
 
-function episode(ref) {
-  const e =
+async function episode(ref) {
+  let e =
     findEpisode(ref);
+
+  /* Con índice LITE los episodios solo viven en memoria tras abrir
+     la ficha de la serie. Si entramos directos (continuar viendo,
+     radar, episodio aleatorio), cargamos la ficha bajo demanda. */
+  if (!e) {
+    const owner =
+      DB.series
+        .filter(
+          x =>
+            ref.startsWith(
+              (x.slug || x.id) + '-'
+            )
+        )
+        .sort(
+          (a, b) =>
+            (b.slug || b.id).length -
+            (a.slug || a.id).length
+        )[0];
+
+    if (owner) {
+      app.innerHTML =
+        '<section class="section page-top"><div class="grid">' +
+        Array(8)
+          .fill(
+            '<div class="skeleton"></div>'
+          )
+          .join('') +
+        '</div></section>';
+
+      await ensureDetail(
+        owner,
+        currentCatalog
+      );
+
+      e =
+        findEpisode(ref);
+    }
+  }
 
   if (!e) {
     app.innerHTML = `
