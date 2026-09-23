@@ -4,7 +4,12 @@
 //
 //  · Se carga como <script type="module"> DESPUÉS de app.js.
 //  · NO modifica app.js: envuelve toggleFav / toggleWatched /
-//    saveHistory y añade un botón "Entrar" + modal de cuenta.
+//    saveHistory y añade los controles de cuenta.
+//  · Ubicación de los controles:
+//      - Escritorio: icono de usuario (estilo Netflix) en la barra
+//        superior, junto a la lupita y el botón de actualizar.
+//      - Móvil: entrada "👤 Mi cuenta" dentro del menú "Más"
+//        (los 3 puntitos de la barra inferior).
 //  · Favoritos, vistos e historial se guardan en Firestore
 //    (colección "users", un documento por usuario) y se fusionan
 //    con lo local al iniciar sesión: nada se pierde.
@@ -53,8 +58,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+/* Icono "persona" estilo Netflix (mismo trazo que los iconos de la web) */
+const USER_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.8 3.9-5.7 7.5-5.7s6.7 1.9 7.5 5.7"/></svg>`;
+
 /* ════════════════ LECTURA / ESCRITURA LOCAL ════════════════ */
-/* Mismas claves que usa app.js, para que la app entera lo vea. */
 
 const readLS = (key, fb) => {
   try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fb)); }
@@ -72,7 +79,6 @@ const getHistoryL = () => readLS(LS_HISTORY, {});
 function mergeAll(cloud) {
   let changed = false;
 
-  // Favoritos: unión de ambos lados
   const localFavs = new Set(getFavsL());
   const cloudFavs = Array.isArray(cloud.favs) ? cloud.favs : [];
   const union = [...new Set([...localFavs, ...cloudFavs])];
@@ -82,23 +88,23 @@ function mergeAll(cloud) {
     changed = true;
   }
 
-  // Vistos e historial: gana el timestamp más reciente por clave
   for (const [lsKey, cloudVal] of [[LS_WATCHED, cloud.watched], [LS_HISTORY, cloud.history]]) {
     const local = readLS(lsKey, {});
     const remote = cloudVal && typeof cloudVal === 'object' ? cloudVal : {};
     const out = { ...local };
+    let keyChanged = false;
     for (const [k, v] of Object.entries(remote)) {
       const rt = (v && (v.timestamp || v.ts)) || 0;
       const lt = (out[k] && (out[k].timestamp || out[k].ts)) || 0;
-      if (!out[k] || rt > lt) { out[k] = v; changed = true; }
+      if (!out[k] || rt > lt) { out[k] = v; keyChanged = true; }
     }
-    if (changed) writeLS(lsKey, out);
+    if (keyChanged) { writeLS(lsKey, out); changed = true; }
   }
 
   return changed;
 }
 
-/* ════════════════ GUARDADO EN LA NUBE (con anti-rebote) ════════════════ */
+/* ════════════════ GUARDADO EN LA NUBE (anti-rebote) ════════════════ */
 
 let saveTimer = null;
 
@@ -126,9 +132,7 @@ async function cloudSave() {
   }
 }
 
-/* ════════════════ ENVOLTORIOS sobre las funciones de app.js ════════════════
-   Se cargan tras app.js; las funciones son globales. Tras la acción
-   original, se programa la subida a la nube. */
+/* ════════════════ ENVOLTORIOS sobre las funciones de app.js ════════════════ */
 
 function wrapGlobal(name) {
   const orig = window[name];
@@ -145,14 +149,13 @@ function wrapGlobal(name) {
 ['toggleFav', 'toggleWatched', 'markWatchedSingle', 'markWatchedUpTo', 'saveHistory']
   .forEach(wrapGlobal);
 
-/* ════════════════ UI: ESTILOS + BOTÓN + MODAL ════════════════ */
+/* ════════════════ UI: ESTILOS + MODAL ════════════════ */
 
 const STYLES = `
-#dfsAuthBtn{flex:none;display:inline-flex;align-items:center;gap:7px;background:#e50914;color:#fff;
-  border:none;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;
-  font-family:inherit;transition:transform .15s ease,background .2s;margin-left:6px}
-#dfsAuthBtn:hover{transform:scale(1.05)}
-#dfsAuthBtn.logged{background:#1d1d24;border:1px solid #333;color:#fff}
+#dfsAuthBtn{background:none;border:none;padding:0;color:inherit;cursor:pointer}
+#dfsAuthBtn svg{width:100%;height:100%}
+#dfsAuthBtn.logged{color:#e50914}
+.more-menu a#dfsAuthBtnMobile{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer}
 #dfsOverlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;display:none;
   align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
 #dfsOverlay.open{display:flex}
@@ -235,17 +238,38 @@ function injectModal() {
   document.getElementById('dfsSwap').onclick = () => setMode(authMode === 'login' ? 'register' : 'login');
 }
 
-function injectButton() {
+/* ── Botón de ESCRITORIO: dentro de .nav-actions (junto a 🔍 y ⟳) ── */
+function injectDesktopButton() {
   if (document.getElementById('dfsAuthBtn')) return;
-  const nav = document.querySelector('.nav') || document.body;
+  const actions = document.querySelector('.nav-actions') || document.querySelector('.nav') || document.body;
   const btn = document.createElement('button');
   btn.id = 'dfsAuthBtn';
-  btn.innerHTML = '👤 Entrar';
+  btn.className = actions.classList.contains('nav-actions') ? 'icon-btn' : '';
+  btn.title = 'Mi cuenta';
+  btn.setAttribute('aria-label', 'Mi cuenta');
+  btn.innerHTML = USER_SVG;
   btn.onclick = openModal;
-  if (nav === document.body) {
-    btn.style.cssText += 'position:fixed;top:14px;right:14px;z-index:9998';
+  if (actions === document.body) {
+    btn.style.cssText = 'position:fixed;top:14px;right:14px;z-index:9998;width:34px;height:34px;color:#fff';
   }
-  nav.appendChild(btn);
+  actions.appendChild(btn);
+}
+
+/* ── Entrada de MÓVIL: dentro del menú "Más" (3 puntitos) ── */
+function injectMobileButton() {
+  if (document.getElementById('dfsAuthBtnMobile')) return;
+  const menu = document.getElementById('moreMenu');
+  if (!menu) return;
+  const a = document.createElement('a');
+  a.id = 'dfsAuthBtnMobile';
+  a.href = '#/';
+  a.textContent = '👤 Entrar';
+  a.onclick = (e) => {
+    e.preventDefault();
+    if (typeof window.toggleMoreMenu === 'function') window.toggleMoreMenu(); // cierra el menú
+    openModal();
+  };
+  menu.appendChild(a);
 }
 
 function setMode(mode) {
@@ -292,7 +316,7 @@ const ERRORS = {
   'auth/user-not-found': 'No existe ninguna cuenta con ese correo.',
   'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
   'auth/popup-closed-by-user': 'Se cerró la ventana de Google.',
-  'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase (revisa Authentication → Configuración → Dominios autorizados).'
+  'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase (Authentication → Configuración → Dominios autorizados).'
 };
 
 async function submitForm() {
@@ -337,15 +361,17 @@ async function doLogout() {
 /* ════════════════ ESTADO DE SESIÓN + SINCRONIZACIÓN ════════════════ */
 
 function updateAuthButton(user) {
-  const btn = document.getElementById('dfsAuthBtn');
-  if (!btn) return;
-  if (user) {
-    btn.classList.add('logged');
-    const initial = (user.email || 'U')[0].toUpperCase();
-    btn.innerHTML = `<span style="width:20px;height:20px;border-radius:50%;background:#e50914;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">${initial}</span><span style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${user.email || 'Mi cuenta'}</span>`;
-  } else {
-    btn.classList.remove('logged');
-    btn.innerHTML = '👤 Entrar';
+  const desk = document.getElementById('dfsAuthBtn');
+  if (desk) {
+    desk.classList.toggle('logged', !!user);
+    desk.title = user ? (user.email || 'Mi cuenta') : 'Mi cuenta';
+    desk.setAttribute('aria-label', desk.title);
+  }
+  const mob = document.getElementById('dfsAuthBtnMobile');
+  if (mob) {
+    mob.textContent = user
+      ? `👤 ${user.email || 'Mi cuenta'}`
+      : '👤 Entrar';
   }
 }
 
@@ -356,20 +382,17 @@ onAuthStateChanged(auth, async user => {
 
   if (!user) return;
 
-  // 1) Carga inicial: fusionar nube → local
   try {
     const snap = await getDoc(doc(db, 'users', user.uid));
     if (snap.exists()) {
       const changed = mergeAll(snap.data());
       if (changed) refreshUI();
     }
-    // Si el usuario es nuevo en la nube, sube lo que tiene local
     await cloudSave();
   } catch (e) {
     console.warn('[sync] Error al cargar la nube:', e.message);
   }
 
-  // 2) En vivo: lo que cambie en OTRO dispositivo se aplica aquí
   unsubSnapshot = onSnapshot(doc(db, 'users', user.uid), snap => {
     if (!snap.exists()) return;
     if (Date.now() - lastWriteAt < 2500) return; // eco de mi propia escritura
@@ -386,10 +409,12 @@ function refreshUI() {
 
 function boot() {
   injectStyles();
-  injectButton();
-  // Por si la navegación de app.js re-renderiza la barra, re-inyecta el botón
+  injectDesktopButton();
+  injectMobileButton();
+  // Si app.js re-renderiza algo, re-inyecta los controles
   new MutationObserver(() => {
-    if (!document.getElementById('dfsAuthBtn')) injectButton();
+    if (!document.getElementById('dfsAuthBtn')) injectDesktopButton();
+    if (!document.getElementById('dfsAuthBtnMobile')) injectMobileButton();
   }).observe(document.body, { childList: true, subtree: true });
 }
 
