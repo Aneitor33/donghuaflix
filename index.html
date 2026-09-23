@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <!-- Fase 1: una sola hoja de estilos (tokens + componentes + capa Pro consolidada) -->
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
 
@@ -37,6 +37,7 @@
     <div class="catalog-wrap" id="catalogWrap" style="display:none">
       <button class="catalog-fab" onclick="toggleCatalogMenu()" title="Cambiar catálogo" aria-label="Cambiar catálogo">
         <img src="icon-192.png" alt="">
+        <span class="cat-fab-label" id="catFabLabel">DonghuaLife</span>
         <svg class="fab-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       <div class="catalog-menu" id="catalogMenu">
@@ -109,10 +110,10 @@
   <!-- DonghuaFlix: capas en orden determinista.
        app.js define el núcleo; dfx-core/dfx-polish lo extienden;
        dfx-boot verifica el contrato de globals; firebase-sync es módulo. -->
-  <script src="app.js?v=21"></script>
-  <script src="dfx-core.js?v=21"></script>
-  <script src="dfx-polish.js?v=21"></script>
-  <script src="dfx-boot.js?v=21"></script>
-  <script type="module" src="firebase-sync.js?v=21"></script>
+  <script src="app.js?v=22"></script>
+  <script src="dfx-core.js?v=22"></script>
+  <script src="dfx-polish.js?v=22"></script>
+  <script src="dfx-boot.js?v=22"></script>
+  <script type="module" src="firebase-sync.js?v=22"></script>
 </body>
 </html>
