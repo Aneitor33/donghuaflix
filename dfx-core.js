@@ -904,8 +904,8 @@
     wrap('markWatchedSingle', afterChange);
     wrap('markWatchedUpTo', afterChange);
     wrap('saveHistory', afterChange);
-    wrap('home', () => { setTimeout(() => { injectRadar(); injectGlobalStats(); }, 300); });
-    wrap('episode', () => setTimeout(injectCopyLink, 200));
+    wrap('home', () => { setTimeout(() => { injectRadar(); injectGlobalStats(); cleanMoreMenu(); }, 300); });
+    wrap('episode', () => setTimeout(() => { injectCopyLink(); injectGlobalStats(); }, 200));
 
     /* barra inferior extra: radar, calendario, versus, random */
     const bn = document.querySelector('.bottom-nav');
@@ -927,11 +927,9 @@
       };
     }
 
-    /* re-inyectar si la navegación re-renderiza */
-    new MutationObserver(() => {
-      if (!document.getElementById('dfxAuthMobile')) cleanMoreMenu();
-      injectGlobalStats();
-    }).observe(document.body, { childList: true, subtree: true });
+    /* Sin MutationObserver: los controles se inyectan una vez al cargar
+       y se re-inyectan solo en los wraps de route()/home()/episode() */
+    setTimeout(() => { cleanMoreMenu(); injectGlobalStats(); }, 500);
 
     setTimeout(() => { injectRadar(); injectGlobalStats(); markSeenCurrent(); }, 800);
 
