@@ -11,8 +11,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=27">
-
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
 
@@ -53,10 +52,6 @@
       </a>
       <button id="reloadBtn" class="icon-btn" title="Actualizar catálogo" aria-label="Actualizar catálogo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>
-      </button>
-      <button id="dfsAuthBtn" class="icon-btn" title="Mi cuenta" aria-label="Mi cuenta"
-        onclick="window.__dfsOpenModal ? window.__dfsOpenModal() : (window.showToast && showToast('Cargando módulo de cuenta…'))">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.8 3.9-5.7 7.5-5.7s6.7 1.9 7.5 5.7"/></svg>
       </button>
     </div>
   </header>
@@ -106,11 +101,22 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <!-- DonghuaFlix: capas en orden determinista. -->
-  <script src="app.js?v=27"></script>
-  <script src="dfx-core.js?v=27"></script>
-  <script src="dfx-polish.js?v=27"></script>
-  <script src="dfx-boot.js?v=27"></script>
-  <script type="module" src="firebase-sync.js?v=27"></script>
+  <script src="app.js?v=28"></script>
+  <script type="module" src="firebase-sync.js"></script>
+  <script>
+    // DonghuaFlix Pro: espera a que app.js registre sus funciones y luego carga los módulos
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var s1 = document.createElement('script');
+        s1.src = 'dfx-core.js';
+        s1.onload = function () {
+          var s2 = document.createElement('script');
+          s2.src = 'dfx-polish.js';
+          document.body.appendChild(s2);
+        };
+        document.body.appendChild(s1);
+      }, 400);
+    });
+  </script>
 </body>
 </html>
