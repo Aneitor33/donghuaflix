@@ -25,7 +25,7 @@ let DETAILS_BASE = {};
 const DETAIL_CACHE = {};
 
 let DB_CACHE = {};
-let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghualife';
+let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghuaworld';
 if (!CATALOGS.some(c => c.id === currentCatalog)) currentCatalog = 'donghualife';
 const CATALOG_AVAILABLE = { donghua: true };
 
@@ -77,15 +77,36 @@ function mergeCatalogParts(manifest, parts) {
  * Ahora dejamos que navegador/CDN utilicen su caché normal.
  */
 async function fetchCatalogFile(file) {
-  const r = await fetch(file, {
-    cache: 'default'
-  });
+  /* Timeout de 20 s: con conexiones muy lentas o cortes, un fetch
+     puede quedarse colgado eternamente. Se aborta y quien llama
+     decide si reintenta. */
+  const ctrl =
+    new AbortController();
 
-  if (!r.ok) {
-    throw new Error('No se pudo cargar ' + file);
+  const t = setTimeout(
+    () => ctrl.abort(),
+    20000
+  );
+
+  try {
+    const r = await fetch(
+      file,
+      {
+        cache: 'default',
+        signal: ctrl.signal
+      }
+    );
+
+    if (!r.ok) {
+      throw new Error(
+        'No se pudo cargar ' + file
+      );
+    }
+
+    return await r.json();
+  } finally {
+    clearTimeout(t);
   }
-
-  return r.json();
 }
 
 async function ensureCatalog(id) {
@@ -133,7 +154,16 @@ async function ensureCatalog(id) {
         CATALOG_AVAILABLE[id] = true;
         return db;
       }
-    } catch { /* sin índice → seguimos con el catálogo completo */ }
+    } catch (e) {
+      /* Solo se cae al catálogo completo si el índice NO EXISTE
+         (error de red/timeout abort → NO: el completo pesa 17 MB
+         y en una conexión lenta sería una descarga eterna). */
+      if (e && e.name !== 'AbortError' && /No se pudo cargar/.test(e.message || '')) {
+        /* índice inexistente (404) → probar con el catálogo completo */
+      } else {
+        throw e;
+      }
+    }
   }
 
   // ② Compatibilidad: catálogo completo / sharded (código original)
@@ -1342,6 +1372,8 @@ function renderPagedGrid({ container, items, emptyText = 'No hay elementos dispo
 
 /* ---------- CARGA ---------- */
 
+let __loadRetries = 0;
+
 async function load() {
   stopProgressiveGrid();
 
@@ -1352,13 +1384,20 @@ async function load() {
         '<div class="skeleton"></div>'
       )
       .join('') +
-    '</div></section>';
+    '</div></section>' +
+    '<p class="muted" style="padding:0 4%">' +
+    'Cargando catálogo… con conexión lenta puede tardar un poco.' +
+    '</p>';
 
   try {
     DB =
       await ensureCatalog(
         currentCatalog
       );
+
+    /* carga correcta: reset de reintentos */
+    __loadRetries =
+      0;
 
     renderCatBar();
 
@@ -1395,10 +1434,60 @@ async function load() {
       err
     );
 
+    /* Estrategia ante fallo de carga:
+       1) si el catálogo activo NO es donghuaworld → cambiar a
+          donghuaworld (el más ligero) y reintentar;
+       2) si ya es donghuaworld → reintento simple a los 3 s;
+       3) después → pantalla de error. */
+    if (
+      __loadRetries === 0 &&
+      currentCatalog !== 'donghuaworld'
+    ) {
+      __loadRetries++;
+      currentCatalog =
+        'donghuaworld';
+      localStorage.setItem(
+        'donghuaflix_catalog',
+        currentCatalog
+      );
+      app.innerHTML =
+        '<section class="section page-top"><div class="grid">' +
+        Array(8)
+          .fill('<div class="skeleton"></div>')
+          .join('') +
+        '</div></section>' +
+        '<p class="muted" style="padding:0 4%">' +
+        'El catálogo no responde. Probando con DonghuaWorld…' +
+        '</p>';
+      setTimeout(
+        () => load(),
+        1200
+      );
+      return;
+    }
+
+    if (__loadRetries < 2) {
+      __loadRetries++;
+      app.innerHTML =
+        '<section class="section page-top"><div class="grid">' +
+        Array(8)
+          .fill('<div class="skeleton"></div>')
+          .join('') +
+        '</div></section>' +
+        '<p class="muted" style="padding:0 4%">' +
+        'Reintentando…' +
+        '</p>';
+      setTimeout(
+        () => load(),
+        3000
+      );
+      return;
+    }
+
     app.innerHTML =
       `<section class="empty page-top">
         <h2>Error al cargar el catálogo</h2>
-        <p class="muted">Revisa tu conexión o el archivo del catálogo</p>
+        <p class="muted">Revisa tu conexión (con WiFi carga mucho más rápido) y vuelve a intentarlo.</p>
       </section>`;
   }
 }
