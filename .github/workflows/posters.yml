@@ -1,7 +1,12 @@
 # ══════════════════════════════════════════════
 #  PORTADAS — descarga pósters de TMDB/AniList
-#  Usa poster-sync.js (uno por serie, con traducción es→en)
-#  Requiere opcional: secret TMDB_API_KEY
+#  SOLO DonghuaLife: los demás catálogos ya traen
+#  buena portada de su propia web.
+#  Rondas de 50 min con commit entre ellas: si GitHub
+#  corta, solo se pierde la ronda en curso.
+#  Tras cada ronda regenera el ÍNDICE LITE (lo que
+#  realmente lee la web) con las nuevas portadas.
+#  Requiere: secret TMDB_API_KEY (gratis en themoviedb.org)
 # ══════════════════════════════════════════════
 name: Sincronizar portadas
 
@@ -14,19 +19,20 @@ on:
         description: 'Forzar re-descarga de todas las portadas (1 = sí)'
         required: false
         default: '0'
+      catalog:
+        description: 'Catálogo a procesar (por defecto: donghualife)'
+        required: false
+        default: 'donghualife'
 
 env:
   TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
   FORCE_POSTERS: ${{ github.event.inputs.force || '0' }}
-
-concurrency:
-  group: sync-posters
-  cancel-in-progress: false
+  CATALOG: ${{ github.event.inputs.catalog || 'donghualife' }}
 
 jobs:
   posters:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 360
     permissions:
       contents: write
     steps:
@@ -36,22 +42,29 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Sincronizar portadas
-        run: node poster-sync.js
-
-      - name: Guardar portadas
+      - name: Rondas de 50 min con guardado entre ellas
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A public/data public/img/posters
-          git diff --staged --quiet && { echo "Sin cambios"; exit 0; }
-          git commit -m "sync(posters): actualizar portadas e indices"
-          for i in 1 2 3 4 5 6; do
-            git fetch origin main
-            if git merge origin/main -m "merge origin/main" -X ours --no-edit && git push; then
-              echo "✅ Push OK"; exit 0
+          for round in 1 2 3 4 5 6; do
+            echo "══════════════════ RONDA $round ($CATALOG) ══════════════════"
+            MAX_MINUTES=50 node poster-sync.js > /tmp/posters-ronda-$round.log 2>&1 || true
+            tail -n 40 /tmp/posters-ronda-$round.log
+            # Regenerar el ÍNDICE LITE y las fichas (lo que lee la web)
+            node split-catalog.js public/data/catalog-$CATALOG.json
+            git add -A public/data public/img/posters
+            if ! git diff --staged --quiet; then
+              git commit -m "sync(posters): $CATALOG (ronda $round)"
+              for i in 1 2 3 4 5; do
+                git fetch origin main
+                if git merge origin/main -m "merge origin/main" -X ours --no-edit && git push; then
+                  break
+                fi
+                echo "⚠️ Reintento de push en 30s..."; sleep 30
+              done
             fi
-            echo "⚠️ Intento $i fallido, reintentando en 30s..."
-            sleep 30
+            if grep -q '__ALL_DONE__' /tmp/posters-ronda-$round.log; then
+              echo "✅ Catálogo $CATALOG COMPLETO"
+              break
+            fi
           done
-          echo "❌ No se pudo subir tras varios intentos"; exit 1

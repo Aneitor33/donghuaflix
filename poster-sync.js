@@ -1,26 +1,32 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-/* Catálogos actuales de DonghuaFlix (uno por web + películas + doramas) */
-const FILES = [
-  path.resolve('public/data/catalog-donghualife.json'),
-  path.resolve('public/data/catalog-donghuasub.json'),
-  path.resolve('public/data/catalog-donghuaworld.json'),
-  path.resolve('public/data/catalog-peliculas.json'),
-  path.resolve('public/data/catalog-doramas.json')
-];
+/* Por defecto SOLO DonghuaLife necesita portadas externas: los demás
+   catálogos ya traen buena portada de su propia web. Si algún día se
+   necesita otro, se pasa CATALOG (p. ej. CATALOG=doramas). */
+const ALL_FILES = ['catalog-donghualife.json'];
+const CATALOG = (process.env.CATALOG || '').trim();
+const FILES = CATALOG
+  ? [path.resolve(`public/data/catalog-${CATALOG}.json`)]
+  : ALL_FILES.map(f => path.resolve('public/data', f));
+
 const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
-// Fallo con reintento: si no se encuentra, se vuelve a intentar a los
-// RETRY_DAYS días (los catálogos de TMDB/AniList mejoran con el tiempo).
-const RETRY_MS = 30 * 24 * 3600 * 1000; // 30 días
 
-/* Portadas que YA son buenas (las de estas fuentes no se reemplazan) */
+/* Presupuesto de tiempo por ejecución: al agotarse, se guarda TODO
+   y se sale (código 0) — el workflow reanuda en la siguiente ronda. */
+const BUDGET_MS = Math.max(5, Number(process.env.MAX_MINUTES || 50)) * 60000;
+const T0 = Date.now();
+const timeUp = () => Date.now() - T0 > BUDGET_MS;
+
+/* Fallo con reintento tras 30 días (TMDB/AniList mejoran con el tiempo). */
+const RETRY_MS = 30 * 24 * 3600 * 1000;
+
+/* Portadas que YA son buenas (no se reemplazan) */
 const GOOD_POSTER = /image\.tmdb\.org|anilist\.co/i;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-
 const normalize = s => String(s || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, '').replace(/\s+/g, ' ').trim();
 
 async function fetchJson(url, options = {}, attempt = 1) {
@@ -34,23 +40,22 @@ async function fetchJson(url, options = {}, attempt = 1) {
   }
 }
 
-/* ---------- TMDB (requiere API key gratuita) ---------- */
-async function tmdbSearch(endpoint, title, lang) {
+/* ---------- TMDB (requiere API key gratuita: secrets.TMDB_API_KEY) ---------- */
+/* strict=true exige coincidencia EXACTA del título (para 'movie', donde
+   hay muchas colisiones con términos genéricos y da falsos positivos). */
+async function tmdbSearch(endpoint, title, lang, strict = false) {
   if (!TMDB_KEY) return null;
   const url = `https://api.themoviedb.org/3/search/${endpoint}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&language=${lang}`;
   const data = await fetchJson(url);
   const norm = normalize(title);
   const results = data?.results || [];
-  const best = results.find(r => normalize(r.name || r.title) === norm) || results[0];
+  const exact = results.find(r => normalize(r.name || r.title) === norm);
+  const best = exact || (strict ? null : results[0]);
   if (!best?.poster_path) return null;
-  return {
-    poster: `https://image.tmdb.org/t/p/w500${best.poster_path}`,
-    match: best.name || best.title
-  };
+  return { poster: `https://image.tmdb.org/t/p/w500${best.poster_path}`, match: best.name || best.title, source: 'tmdb' };
 }
-
-const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang);
-const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang);
+const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang, false);
+const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang, true);
 
 /* ---------- Traducción gratuita (MyMemory, sin key) ---------- */
 async function translateTitle(text) {
@@ -82,15 +87,9 @@ async function searchAnilist(title) {
   const media = data?.data?.Page?.media || [];
   if (!media.length) return null;
   const norm = normalize(title);
-  const best = media.find(m => {
-    const t = normalize(m.title?.english || m.title?.romaji);
-    return t === norm;
-  }) || media[0];
+  const best = media.find(m => normalize(m.title?.english || m.title?.romaji) === norm) || media[0];
   if (!best?.coverImage?.large) return null;
-  return {
-    poster: best.coverImage.large,
-    match: best.title?.english || best.title?.romaji
-  };
+  return { poster: best.coverImage.large, match: best.title?.english || best.title?.romaji, source: 'anilist' };
 }
 
 async function downloadPoster(url, slug) {
@@ -98,7 +97,7 @@ async function downloadPoster(url, slug) {
     const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
     if (!res.ok) return null;
     const buf = Buffer.from(await res.arrayBuffer());
-    if (buf.length < 2000) return null; // imagen rota/placeholder
+    if (buf.length < 2000) return null;
     const type = res.headers.get('content-type') || 'image/jpeg';
     const ext = type.includes('png') ? '.png' : type.includes('webp') ? '.webp' : '.jpg';
     const file = `${slug}${ext}`;
@@ -114,20 +113,22 @@ async function processFile(OUT_FILE) {
     db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
   } catch {
     console.log(`⏭️  No existe ${path.basename(OUT_FILE)}, se omite`);
-    return;
+    return { done: true };
   }
-  let ok = 0, skip = 0, fail = 0, sinceSave = 0;
+  let ok = 0, skip = 0, fail = 0, sinceSave = 0, checked = 0;
 
   for (const s of db.series) {
+    if (timeUp()) {
+      console.log(`\n⏰ Presupuesto de tiempo agotado tras ${checked} series — se guarda y se sale (reanudable)`);
+      await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
+      return { done: false };
+    }
+    checked++;
+
     const slug = s.slug || s.id;
-    /* Saltar si ya tiene portada LOCAL o una ya verificada como buena
-       (TMDB/AniList). Las portadas que vienen de las webs SÍ se
-       reemplazan: son de baja calidad. */
     const isGood = s.image && GOOD_POSTER.test(s.image);
     if (!FORCE && (s.posterLocal || isGood)) { skip++; continue; }
 
-    // Fallida en un intento anterior: se reintenta tras RETRY_MS
-    // (salvo FORCE_POSTERS=1, que lo fuerza todo)
     if (!FORCE && s.posterFailed) {
       const failedAt = Date.parse(s.posterFailedAt || 0) || 0;
       if ((Date.now() - failedAt) < RETRY_MS) { skip++; continue; }
@@ -136,9 +137,8 @@ async function processFile(OUT_FILE) {
     const title = (s.title && s.title !== 'Temporadas') ? s.title : slug.split('-').join(' ');
     console.log(`\n🖼️  ${slug} ← buscando "${title}"`);
 
-    /* Candidatos: título en español + título original + TÍTULO TRADUCIDO
-       (es→en). La traducción es clave: AniList/TMDB indexan en inglés
-       y muchos títulos de las webs solo existen en español. */
+    /* Candidatos: español + original + traducción es→en (clave para
+       AniList/TMDB, que indexan en inglés). */
     const candidates = [...new Set([title, s.originalTitle].filter(Boolean))];
     const translated = await translateTitle(title);
     if (translated && !candidates.some(c => c.toLowerCase() === translated.toLowerCase())) {
@@ -168,7 +168,21 @@ async function processFile(OUT_FILE) {
       continue;
     }
 
-    const local = await downloadPoster(hit.poster, slug);
+    let local = await downloadPoster(hit.poster, slug);
+
+    /* Plan B: TMDB acertó pero la imagen no bajó → se prueba AniList */
+    if (!local && hit.source === 'tmdb') {
+      for (const c of candidates) {
+        const alt = await searchAnilist(c);
+        if (alt) {
+          console.log(`   · Plan B AniList "${c}" → ${alt.match}`);
+          local = await downloadPoster(alt.poster, slug);
+          if (local) { hit = alt; break; }
+        }
+        await sleep(650);
+      }
+    }
+
     if (!local) {
       console.log('   ❌ Descarga fallida (se reintentará en 30 días)');
       s.posterFailed = true;
@@ -180,7 +194,6 @@ async function processFile(OUT_FILE) {
     }
     delete s.posterFailed;
     delete s.posterFailedAt;
-
     s.posterLocal = local;
     console.log(`   ✅ ${hit.match} → ${local}`);
     ok++;
@@ -196,10 +209,23 @@ async function processFile(OUT_FILE) {
   await fs.writeFile(OUT_FILE, JSON.stringify(db), 'utf8');
   console.log(`\n========== PORTADAS (${path.basename(OUT_FILE)}) ==========`);
   console.log(`✅ Nuevas: ${ok} | ⏭️ Ya tenían: ${skip} | ❌ Fallaron: ${fail}`);
+  return { done: true };
 }
 
 async function main() {
-  for (const file of FILES) await processFile(file);
+  if (!TMDB_KEY) {
+    console.log('⚠️  TMDB_API_KEY no configurada: solo se buscará en AniList (menos aciertos).');
+    console.log('    Crea la secret en Settings → Secrets → Actions (gratis en themoviedb.org).');
+  }
+  let allDone = true;
+  for (const file of FILES) {
+    const r = await processFile(file);
+    if (!r.done) { allDone = false; break; }
+  }
+  // El workflow detecta el fin por la marca __ALL_DONE__ (bash -e mata
+  // cualquier código de salida no cero, así que siempre se sale en 0).
+  if (allDone) console.log('__ALL_DONE__');
+  process.exit(0);
 }
 
 main().catch(e => { console.error('💥', e); process.exit(1); });
