@@ -11,8 +11,8 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=15">
-  <link rel="stylesheet" href="dfx.css">
+  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="dfx.css?v=20">
 </head>
 <body>
 
@@ -102,22 +102,13 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <script src="app.js?v=19"></script>
-  <script type="module" src="firebase-sync.js"></script>
-  <script>
-    // DonghuaFlix Pro: espera a que app.js registre sus funciones y luego carga los módulos
-    window.addEventListener('load', function () {
-      setTimeout(function () {
-        var s1 = document.createElement('script');
-        s1.src = 'dfx-core.js';
-        s1.onload = function () {
-          var s2 = document.createElement('script');
-          s2.src = 'dfx-polish.js';
-          document.body.appendChild(s2);
-        };
-        document.body.appendChild(s1);
-      }, 400);
-    });
-  </script>
+  <!-- DonghuaFlix: capas en orden determinista.
+       app.js define el núcleo; dfx-core/dfx-polish lo extienden;
+       dfx-boot verifica el contrato de globals; firebase-sync es módulo. -->
+  <script src="app.js?v=20"></script>
+  <script src="dfx-core.js?v=20"></script>
+  <script src="dfx-polish.js?v=20"></script>
+  <script src="dfx-boot.js?v=20"></script>
+  <script type="module" src="firebase-sync.js?v=20"></script>
 </body>
 </html>
