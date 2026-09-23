@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-/* Por defecto SOLO DonghuaFlix necesita portadas externas: los demás
+/* Por defecto SOLO DonghuaLife necesita portadas externas: los demás
    catálogos ya traen buena portada de su propia web. Si algún día se
    necesita otro, se pasa CATALOG (p. ej. CATALOG=doramas). */
 const ALL_FILES = ['catalog-donghualife.json'];
@@ -14,9 +14,8 @@ const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
 
-/* Presupuesto de tiempo por ejecución: cuando se agota, el script
-   guarda TODO lo hecho y sale con código 0 (queda trabajo pendiente).
-   Si terminó TODO el catálogo, sale con código 3. */
+/* Presupuesto de tiempo por ejecución: al agotarse, se guarda TODO
+   y se sale (código 0) — el workflow reanuda en la siguiente ronda. */
 const BUDGET_MS = Math.max(5, Number(process.env.MAX_MINUTES || 50)) * 60000;
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > BUDGET_MS;
@@ -42,18 +41,21 @@ async function fetchJson(url, options = {}, attempt = 1) {
 }
 
 /* ---------- TMDB (requiere API key gratuita: secrets.TMDB_API_KEY) ---------- */
-async function tmdbSearch(endpoint, title, lang) {
+/* strict=true exige coincidencia EXACTA del título (para 'movie', donde
+   hay muchas colisiones con términos genéricos y da falsos positivos). */
+async function tmdbSearch(endpoint, title, lang, strict = false) {
   if (!TMDB_KEY) return null;
   const url = `https://api.themoviedb.org/3/search/${endpoint}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&language=${lang}`;
   const data = await fetchJson(url);
   const norm = normalize(title);
   const results = data?.results || [];
-  const best = results.find(r => normalize(r.name || r.title) === norm) || results[0];
+  const exact = results.find(r => normalize(r.name || r.title) === norm);
+  const best = exact || (strict ? null : results[0]);
   if (!best?.poster_path) return null;
-  return { poster: `https://image.tmdb.org/t/p/w500${best.poster_path}`, match: best.name || best.title };
+  return { poster: `https://image.tmdb.org/t/p/w500${best.poster_path}`, match: best.name || best.title, source: 'tmdb' };
 }
-const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang);
-const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang);
+const searchTmdb = (title, lang = 'es-ES') => tmdbSearch('tv', title, lang, false);
+const searchTmdbMovie = (title, lang = 'en-US') => tmdbSearch('movie', title, lang, true);
 
 /* ---------- Traducción gratuita (MyMemory, sin key) ---------- */
 async function translateTitle(text) {
@@ -87,7 +89,7 @@ async function searchAnilist(title) {
   const norm = normalize(title);
   const best = media.find(m => normalize(m.title?.english || m.title?.romaji) === norm) || media[0];
   if (!best?.coverImage?.large) return null;
-  return { poster: best.coverImage.large, match: best.title?.english || best.title?.romaji };
+  return { poster: best.coverImage.large, match: best.title?.english || best.title?.romaji, source: 'anilist' };
 }
 
 async function downloadPoster(url, slug) {
@@ -166,7 +168,21 @@ async function processFile(OUT_FILE) {
       continue;
     }
 
-    const local = await downloadPoster(hit.poster, slug);
+    let local = await downloadPoster(hit.poster, slug);
+
+    /* Plan B: TMDB acertó pero la imagen no bajó → se prueba AniList */
+    if (!local && hit.source === 'tmdb') {
+      for (const c of candidates) {
+        const alt = await searchAnilist(c);
+        if (alt) {
+          console.log(`   · Plan B AniList "${c}" → ${alt.match}`);
+          local = await downloadPoster(alt.poster, slug);
+          if (local) { hit = alt; break; }
+        }
+        await sleep(650);
+      }
+    }
+
     if (!local) {
       console.log('   ❌ Descarga fallida (se reintentará en 30 días)');
       s.posterFailed = true;
@@ -206,8 +222,10 @@ async function main() {
     const r = await processFile(file);
     if (!r.done) { allDone = false; break; }
   }
-  // Código 3 = todo terminado · 0 = se agotó el tiempo (reanudable)
-  process.exit(allDone ? 3 : 0);
+  // El workflow detecta el fin por la marca __ALL_DONE__ (bash -e mata
+  // cualquier código de salida no cero, así que siempre se sale en 0).
+  if (allDone) console.log('__ALL_DONE__');
+  process.exit(0);
 }
 
 main().catch(e => { console.error('💥', e); process.exit(1); });
