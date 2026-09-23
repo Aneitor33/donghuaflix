@@ -1178,8 +1178,7 @@ function renderProgressiveGrid({
   container.innerHTML = '';
 
   if (!items.length) {
-    container.innerHTML =
-      `<p class="muted" style="grid-column:1/-1">${emptyText}</p>`;
+    container.innerHTML = emptyStateHTML(emptyText);
     return;
   }
 
@@ -1289,7 +1288,7 @@ function renderPagedGrid({ container, items, emptyText = 'No hay elementos dispo
   stopProgressiveGrid();
 
   if (!items.length) {
-    container.innerHTML = `<p class="muted" style="grid-column:1/-1">${emptyText}</p>`;
+    container.innerHTML = emptyStateHTML(emptyText);
     return;
   }
 
@@ -2899,7 +2898,9 @@ function listMyList() {
       ),
     items: filtered,
     emptyText:
-      'Aún no tienes favoritos. Toca el corazón de cualquier serie para añadirla.'
+      '<strong>Aún no tienes favoritos.</strong><br>' +
+      'Toca el corazón de cualquier serie para añadirla.<br>' +
+      '<a class="btn-x glass" style="margin-top:14px" href="#/series">Explorar contenido</a>'
   });
 }
 
@@ -3209,7 +3210,8 @@ async function updateSearchResults(
     container,
     items: list,
     emptyText:
-      'No se encontraron donghuas con ese nombre.'
+      'No se encontraron donghuas con ese nombre.<br>' +
+      '<a class="btn-x glass" style="margin-top:14px" href="#/series">Ver catálogo completo</a>'
   });
 
   /* Cada resultado abre su catálogo de origen */
@@ -4802,8 +4804,6 @@ document.addEventListener(
 
 /* =========================================================
    CONTRATO GLOBAL — expone el estado interno a las capas Pro
-   (dfx-core.js / dfx-polish.js / firebase-sync.js lo leen
-   desde window; let/const no llegan al global por sí solos)
    ========================================================= */
 const __expose = (k, get, set) => {
   try {
@@ -4842,5 +4842,12 @@ __expose('seriesGenres', () => seriesGenres);
 __expose('isFav', () => isFav);
 __expose('lastWatchedEpisode', () => lastWatchedEpisode);
 __expose('getRecommendedSeries', () => getRecommendedSeries);
+
+/* Estado vacío con acción: caja .empty-state (admite HTML/CTA) */
+function emptyStateHTML(msg) {
+  return (
+    '<div class="empty-state"><p>' + msg + '</p></div>'
+  );
+}
 
 load();
