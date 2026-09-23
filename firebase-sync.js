@@ -6,10 +6,10 @@
 //  · NO modifica app.js: envuelve toggleFav / toggleWatched /
 //    saveHistory y añade los controles de cuenta.
 //  · Ubicación de los controles:
-//      - Escritorio: icono de usuario (estilo Netflix) en la barra
-//        superior, junto a la lupita y el botón de actualizar.
-//      - Móvil: entrada "👤 Mi cuenta" dentro del menú "Más"
-//        (los 3 puntitos de la barra inferior).
+//      - Escritorio y móvil: el botón #dfsAuthBtn vive FIJO en el
+//        HTML (index.html, junto a la lupita y el botón de actualizar)
+//        para que siempre sea visible; este módulo lo conecta.
+//      - Entrada extra "👤 Mi cuenta" dentro del menú "Más".
 //  · Favoritos, vistos e historial se guardan en Firestore
 //    (colección "users", un documento por usuario) y se fusionan
 //    con lo local al iniciar sesión: nada se pierde.
@@ -238,9 +238,16 @@ function injectModal() {
   document.getElementById('dfsSwap').onclick = () => setMode(authMode === 'login' ? 'register' : 'login');
 }
 
-/* ── Botón de ESCRITORIO: dentro de .nav-actions (junto a 🔍 y ⟳) ── */
+/* ── Botón de cuenta: en el HTML (index.html) siempre hay uno fijo
+   con id #dfsAuthBtn; aquí solo lo conectamos. Si no existe (HTML
+   antiguo), lo creamos dentro de .nav-actions como antes. ── */
 function injectDesktopButton() {
-  if (document.getElementById('dfsAuthBtn')) return;
+  const existing = document.getElementById('dfsAuthBtn');
+  if (existing) {
+    existing.onclick = openModal;
+    updateAuthButton(auth.currentUser);
+    return;
+  }
   const actions = document.querySelector('.nav-actions') || document.querySelector('.nav') || document.body;
   const btn = document.createElement('button');
   btn.id = 'dfsAuthBtn';
@@ -300,6 +307,9 @@ function openModal() {
 function closeModal() {
   document.getElementById('dfsOverlay')?.classList.remove('open');
 }
+
+/* Punto de entrada para el botón fijo del HTML */
+window.__dfsOpenModal = openModal;
 
 /* ════════════════ AUTENTICACIÓN ════════════════ */
 
@@ -414,7 +424,7 @@ function boot() {
   injectMobileButton();
   // Si app.js re-renderiza algo, re-inyecta los controles
   new MutationObserver(() => {
-    if (!document.getElementById('dfsAuthBtn')) injectDesktopButton();
+    injectDesktopButton();
     if (!document.getElementById('dfsAuthBtnMobile')) injectMobileButton();
   }).observe(document.body, { childList: true, subtree: true });
 }
