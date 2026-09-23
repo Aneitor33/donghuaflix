@@ -4,7 +4,9 @@
 //  1) Unifica la API pública de toasts (DFX.toast → showToast).
 //  2) Verifica el contrato de globals entre el núcleo y las
 //     capas Pro, avisando en consola si falta algo.
-//  3) Expone DFX.boot para diagnóstico.
+//  3) Elimina el botón flotante de modo cine (el atajo "C"
+//     del teclado sigue funcionando).
+//  4) Expone DFX.boot para diagnóstico.
 // ══════════════════════════════════════════════════════════
 (function () {
   'use strict';
@@ -44,6 +46,30 @@
     console.warn('[dfx-boot] Faltan globals del contrato: ' +
       missing.map(function (m) { return m[0] + ' → ' + m[1]; }).join(' | '));
   }
+
+  /* 3) Quitar el botón de modo cine de la barra superior.
+     Se busca por pistas en id / class / title / aria-label.
+     El modo cine sigue disponible con la tecla C. */
+  function quitarBotonCine() {
+    const candidatos = document.querySelectorAll('button, a');
+    candidatos.forEach(function (el) {
+      const pistas = (
+        (el.id || '') + ' ' +
+        (typeof el.className === 'string' ? el.className : '') + ' ' +
+        (el.title || '') + ' ' +
+        (el.getAttribute('aria-label') || '')
+      ).toLowerCase();
+      if (pistas.indexOf('cine') !== -1 || pistas.indexOf('cinema') !== -1) {
+        el.remove();
+      }
+    });
+  }
+
+  window.addEventListener('load', function () {
+    quitarBotonCine();
+    setTimeout(quitarBotonCine, 800);
+    setTimeout(quitarBotonCine, 2500);
+  });
 
   DFX.boot = { phase: 0, at: Date.now(), missing: missing.map(function (m) { return m[0]; }) };
 })();
