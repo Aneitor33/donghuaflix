@@ -213,24 +213,6 @@ function renderCatBar() {
     b.style.display =
       CATALOG_AVAILABLE[id] ? '' : 'none';
   });
-
-  /* etiqueta del selector integrado en la navbar (escritorio) */
-  const catLbl =
-    document.getElementById(
-      'catFabLabel'
-    );
-  if (catLbl) {
-    const cur =
-      CATALOGS.find(
-        c =>
-          c.id ===
-          currentCatalog
-      );
-    catLbl.textContent =
-      cur
-        ? cur.label
-        : currentCatalog;
-  }
 }
 
 function toggleCatalogMenu() {
