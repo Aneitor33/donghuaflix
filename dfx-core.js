@@ -228,41 +228,6 @@
     scheduleCloudSave();
   }
 
-  /* Cambio de perfil real: guarda el actual en su prefijo,
-     conmuta y restaura los datos del perfil destino. */
-  function switchProfile(newId) {
-    if (!DFX.profiles.some(p => p.id === newId) || newId === DFX.current) return;
-    const USER_KEYS = {
-      favs: 'donghuaflix_favs',
-      watched: 'donghuaflix_watched',
-      history: 'donghuaflix_history',
-      autonext: 'donghuaflix_autonext'
-    };
-    save(prefix() + 'favs', window.getFavs ? window.getFavs() : []);
-    save(prefix() + 'watched', window.getWatched ? window.getWatched() : {});
-    save(prefix() + 'history', window.getHistory ? window.getHistory() : {});
-    save(prefix() + 'autonext', window.autoNextEnabled !== false);
-    cloudSave();
-    DFX.current = newId;
-    save('dfx_current', DFX.current);
-    const restore = (k, fb) => {
-      const v = load(prefix() + k, null);
-      localStorage.setItem(USER_KEYS[k], JSON.stringify(v == null ? fb : v));
-    };
-    restore('favs', []);
-    restore('watched', {});
-    restore('history', []);
-    const an = load(prefix() + 'autonext', true);
-    localStorage.setItem('donghuaflix_autonext', an === false ? 'off' : 'on');
-    window.autoNextEnabled = an !== false;
-    applySettings();
-    checkBadges();
-    injectRadar();
-    cloudSave();
-    try { window.route && window.route(); } catch {}
-    toast('👤 Perfil: ' + prof().name);
-  }
-
   /* insignias: conteo de episodios vistos */
   const BADGES = [
     { id: 'first', name: 'Primera vez', icon: '🎬', test: s => s.total >= 1 },
@@ -749,8 +714,9 @@
 
     $('#dfxProfSeg').onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
-      switchProfile(b.dataset.p);
-      m.remove(); buildModal(); openSettings();
+      DFX.current = b.dataset.p; save('dfx_current', DFX.current);
+      afterChange(); applySettings(); checkBadges(); cloudSave(); m.remove(); buildModal(); openSettings();
+      toast('👤 Perfil: ' + prof().name);
     };
     $('#dfxNewProf').onclick = () => {
       if (DFX.profiles.length >= 4) return toast('Máximo 4 perfiles');
@@ -879,11 +845,18 @@
     }
   }
 
-  /* ---------- barra de estado global (contador) ----------
-     La píldora flotante tapaba la bottom-nav en móvil: se elimina.
-     Las estadísticas vivirán en el perfil. Se conserva checkBadges(). */
+  /* ---------- barra de estado global (contador) ---------- */
   function injectGlobalStats() {
-    checkBadges();
+    let el = $('#dfxGlobalStats');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'dfxGlobalStats';
+      el.style.cssText = 'position:fixed;bottom:14px;left:14px;z-index:9998;background:rgba(20,20,25,.92);border:1px solid #2a2a33;border-radius:99px;padding:7px 14px;color:#fff;font-size:11px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)';
+      document.body.appendChild(el);
+      el.onclick = () => { location.hash = '#/u/' + (DFX.account?.uid || ''); };
+    }
+    const s = checkBadges();
+    el.innerHTML = `👁️ <b>${s.total}</b> caps · 🏅 <b>${Object.keys(DFX.badge).filter(k => k.startsWith(DFX.current + ':')).length}</b>`;
   }
 
   /* ---------- sala compartida ---------- */
