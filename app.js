@@ -161,26 +161,36 @@ async function probeCatalogs() {
     }
 
     try {
-      const r = await fetch(c.file, {
-        cache: 'default'
-      });
+      /* ① Se prueba el índice LITE con HEAD: es lo que la app
+         realmente carga y no descarga ni un byte. El GET antiguo
+         bajaba el catálogo COMPLETO (hasta 17 MB) solo para
+         comprobar disponibilidad: ~40 MB en total. */
+      if (c.index) {
+        const ri = await fetch(
+          c.index,
+          {
+            method: 'HEAD',
+            cache: 'default'
+          }
+        );
 
-      if (!r.ok) {
-        CATALOG_AVAILABLE[c.id] = false;
-        continue;
+        if (ri.ok) {
+          CATALOG_AVAILABLE[c.id] = true;
+          continue;
+        }
       }
 
-      const parsed = await r.json().catch(() => null);
+      /* ② Sin índice: HEAD sobre el catálogo completo. */
+      const r = await fetch(
+        c.file,
+        {
+          method: 'HEAD',
+          cache: 'default'
+        }
+      );
 
-      if (parsed && parsed.sharded) {
-        CATALOG_AVAILABLE[c.id] =
-          Array.isArray(parsed.parts) &&
-          parsed.parts.length > 0;
-      } else {
-        CATALOG_AVAILABLE[c.id] =
-          Boolean(parsed && Array.isArray(parsed.series));
-      }
-
+      CATALOG_AVAILABLE[c.id] =
+        r.ok;
     } catch {
       CATALOG_AVAILABLE[c.id] = false;
     }
@@ -4244,6 +4254,60 @@ function gotoPage(p) {
 
 /* ---------- REPRODUCTOR ---------- */
 
+/* Entrada a episodio con carga bajo demanda: con índice LITE los
+   episodios solo viven en memoria tras abrir la ficha de la
+   serie. Si no se encuentra, se detecta la serie propietaria del
+   slug, se carga su ficha y se reintenta. El slug más largo gana
+   para no confundir "serie" con "serie-temporada-2". */
+async function episodeRoute(ref) {
+  let e =
+    findEpisode(ref);
+
+  if (!e) {
+    const owner =
+      DB.series
+        .filter(
+          x =>
+            ref.startsWith(
+              (x.slug || x.id) +
+                '-'
+            )
+        )
+        .sort(
+          (a, b) =>
+            (b.slug || b.id).length -
+            (a.slug || a.id).length
+        )[0];
+
+    if (owner) {
+      app.innerHTML =
+        '<section class="section page-top"><div class="grid">' +
+        Array(8)
+          .fill(
+            '<div class="skeleton"></div>'
+          )
+          .join('') +
+        '</div></section>';
+
+      await ensureDetail(
+        owner.slug ||
+          owner.id
+      );
+
+      e =
+        findEpisode(ref);
+    }
+  }
+
+  if (!e) {
+    return notfound();
+  }
+
+  episode(
+    e.slug || e.id
+  );
+}
+
 function episode(slug) {
   const e =
     findEpisode(slug);
@@ -4902,7 +4966,7 @@ function route() {
   } else if (
     type === 'episode'
   ) {
-    episode(
+    episodeRoute(
       arg
     );
 
