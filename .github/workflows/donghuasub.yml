@@ -1,6 +1,6 @@
 # ══════════════════════════════════════════════
 #  DONGHUASUB — donghuasub.com
-#  Usa syncdonghuasub.js (Playwright, serie a serie)
+#  Usa syncdonghuasub.js (Playwright, cola de 5 + salto de 3 + paralelo)
 #  Catálogo: public/data/catalog-donghuasub.json
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaSub
@@ -14,10 +14,10 @@ on:
         description: 'Tiempo máximo (minutos)'
         required: false
         default: '300'
-      chain_recheck_days:
-        description: 'Días entre re-chequeo profundo (cadena completa)'
+      tail_window:
+        description: 'Cola: episodios a comprobar tras el último guardado'
         required: false
-        default: '7'
+        default: '5'
 
 concurrency:
   group: sync-donghuasub
@@ -28,7 +28,9 @@ env:
   POLITENESS_MS: '500'
   MAX_RUNTIME_MINUTES: ${{ github.event.inputs.max_runtime_minutes || '300' }}
   COMPLETE_RECHECK_HOURS: '4'
-  CHAIN_RECHECK_DAYS: ${{ github.event.inputs.chain_recheck_days || '7' }}
+  TAIL_WINDOW: ${{ github.event.inputs.tail_window || '5' }}
+  PROBE_STRIDE: '3'
+  WORKERS: '5'
 
 jobs:
   sync:
