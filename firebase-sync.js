@@ -377,6 +377,7 @@ function updateAuthButton(user) {
 
 onAuthStateChanged(auth, async user => {
   updateAuthButton(user);
+  try { window.dfxAuthChanged && window.dfxAuthChanged(user); } catch {}
 
   if (unsubSnapshot) { unsubSnapshot(); unsubSnapshot = null; }
 
@@ -417,6 +418,25 @@ function boot() {
     if (!document.getElementById('dfsAuthBtnMobile')) injectMobileButton();
   }).observe(document.body, { childList: true, subtree: true });
 }
+
+
+/* ═══ Puente con dfx-core.js (DonghuaFlix Pro) ═══
+   Permite que el sistema de perfiles Pro suba/baje datos a Firestore. */
+window.DFX_CLOUD_SAVE = async function (payload) {
+  const u = auth.currentUser;
+  if (!u) throw new Error('sin sesión');
+  await setDoc(doc(db, 'users', u.uid, 'profiles', payload.profileId), {
+    ...payload.data,
+    updatedAt: Date.now()
+  });
+};
+window.DFX_CLOUD_LOAD = function (profileId, cb) {
+  const u = auth.currentUser;
+  if (!u) { cb(null); return; }
+  getDoc(doc(db, 'users', u.uid, 'profiles', profileId)).then(snap => {
+    cb(snap.exists() ? snap.data() : null);
+  }).catch(() => cb(null));
+};
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', boot);
