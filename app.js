@@ -1644,6 +1644,20 @@ function renderHero(dir = 0) {
     hero.synopsis ||
     'Catálogo de animación china en alta calidad.';
 
+  /* Con índice LITE la sinopsis vive en la ficha del título:
+     se descarga bajo demanda y se muestra al llegar. */
+  if (!hero.synopsis && !hero._synTried) {
+    hero._synTried = true;
+    ensureDetail(hero.slug || hero.id)
+      .then(() => {
+        const el = document.getElementById('heroSyn');
+        if (el && hero.synopsis) {
+          el.textContent = hero.synopsis;
+        }
+      })
+      .catch(() => {});
+  }
+
   document.getElementById(
     'heroBtn'
   ).onclick = () => {
