@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 
   <!-- ═══ AUTODIAGNÓSTICO (temporal): muestra en pantalla cualquier
        error JS y, a los 6 s, el estado de cada archivo. Cuando la web
@@ -38,7 +38,7 @@
     });
     setTimeout(function () {
       try {
-        var files = ['app.js?v=24','dfx-core.js?v=24','dfx-polish.js?v=24','dfx-boot.js?v=24','firebase-sync.js?v=24','styles.css?v=24','public/data/catalog-donghualife-index.json'];
+        var files = ['app.js?v=25','dfx-core.js?v=25','dfx-polish.js?v=25','dfx-boot.js?v=25','firebase-sync.js?v=25','styles.css?v=25','public/data/catalog-donghualife-index.json'];
         var chain = Promise.resolve();
         files.forEach(function (f) {
           chain = chain.then(function () {
@@ -54,6 +54,36 @@
           show('#app contenido: ' + (app ? app.innerHTML.length : 'no existe') + ' caracteres');
           var cw = document.getElementById('catalogWrap');
           show('selector catálogo: ' + (cw ? cw.style.display : 'no existe en el HTML'));
+          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            show('SW activo: ' + navigator.serviceWorker.controller.scriptURL.split('/').pop());
+          } else {
+            show('SW activo: ninguno todavia');
+          }
+          if ('caches' in window) {
+            caches.keys().then(function (ks) { show('caches: ' + (ks.join(', ') || 'ninguna')); });
+          }
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+            navigator.serviceWorker.getRegistrations().then(function (rs) {
+              rs.forEach(function (r) {
+                show('registro SW: ' + (r.active ? 'activo' : 'pendiente') + ' ' + r.scope);
+              });
+            });
+          }
+          var fix = document.createElement('button');
+          fix.textContent = 'Reparar cache (desregistra SW, borra caches y recarga)';
+          fix.style.cssText = 'margin-top:8px;background:#e50914;color:#fff;border:none;border-radius:8px;padding:8px 12px;font:700 12px inherit;cursor:pointer';
+          fix.onclick = function () {
+            fix.textContent = 'Reparando...';
+            Promise.all([
+              navigator.serviceWorker ? navigator.serviceWorker.getRegistrations().then(function (rs) {
+                return Promise.all(rs.map(function (r) { return r.unregister(); }));
+              }) : Promise.resolve(),
+              'caches' in window ? caches.keys().then(function (ks) {
+                return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+              }) : Promise.resolve()
+            ]).then(function () { location.reload(); });
+          };
+          box.appendChild(fix);
         });
       } catch (err) { show('diag: ' + err.message); }
     }, 6000);
@@ -153,10 +183,10 @@
   <div id="toast" role="status"></div>
 
   <!-- DonghuaFlix: capas en orden determinista. -->
-  <script src="app.js?v=24"></script>
-  <script src="dfx-core.js?v=24"></script>
-  <script src="dfx-polish.js?v=24"></script>
-  <script src="dfx-boot.js?v=24"></script>
-  <script type="module" src="firebase-sync.js?v=24"></script>
+  <script src="app.js?v=25"></script>
+  <script src="dfx-core.js?v=25"></script>
+  <script src="dfx-polish.js?v=25"></script>
+  <script src="dfx-boot.js?v=25"></script>
+  <script type="module" src="firebase-sync.js?v=25"></script>
 </body>
 </html>
