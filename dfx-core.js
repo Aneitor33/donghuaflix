@@ -885,18 +885,12 @@
     }
   }
 
-  /* ---------- barra de estado global (contador) ---------- */
+  /* ---------- barra de estado global (contador) ----------
+     Fase 1: la píldora flotante tapaba la bottom-nav en móvil.
+     Las estadísticas tendrán su sitio en "Tu DonghuaFlix" (perfil).
+     Se conserva checkBadges() para no perder desbloqueos. */
   function injectGlobalStats() {
-    let el = $('#dfxGlobalStats');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'dfxGlobalStats';
-      el.style.cssText = 'position:fixed;bottom:14px;left:14px;z-index:9998;background:rgba(20,20,25,.92);border:1px solid #2a2a33;border-radius:99px;padding:7px 14px;color:#fff;font-size:11px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)';
-      document.body.appendChild(el);
-      el.onclick = () => { location.hash = '#/u/' + (DFX.account?.uid || ''); };
-    }
-    const s = checkBadges();
-    el.innerHTML = `👁️ <b>${s.total}</b> caps · 🏅 <b>${Object.keys(DFX.badge).filter(k => k.startsWith(DFX.current + ':')).length}</b>`;
+    checkBadges();
   }
 
   /* ---------- sala compartida ---------- */
