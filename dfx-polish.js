@@ -261,10 +261,9 @@ body.dfx-cine #dfxGlow{opacity:.3}
     wrap('home', () => setTimeout(watchGlow, 400));
     wrap('route', () => setTimeout(() => { injectCineBtn(); }, 50));
 
-    new MutationObserver(() => {
-      if (!$('#dfxCineBtn')) injectCineBtn();
-      bindPlayerGestures();
-    }).observe(document.body, { childList: true, subtree: true });
+    /* Sin MutationObserver: el botón de cine se inyecta una vez.
+       Los wraps de episode()/route() se encargan de re-inyectarlo si hace falta. */
+    setTimeout(() => { injectCineBtn(); }, 300);
 
     toast('🚀 DonghuaFlix Pro cargado — pulsa ? para ver los atajos');
   }
