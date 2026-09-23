@@ -29,7 +29,7 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-f
 .cw-rail{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 /* hero con parallax sutil */
 .hero{position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:brightness(.62) saturate(1.15);transform:scale(1.06);z-index:0;will-change:transform}
+.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:blur(28px) brightness(.5) saturate(1.3);transform:scale(1.15);z-index:0;will-change:transform}
 .hero > *{position:relative;z-index:1}
 body.dfx-no-motion .card:hover{transform:none}
 body.dfx-no-motion .hero::before{transform:none}
@@ -128,6 +128,15 @@ body.dfx-cine #dfxGlow{opacity:.3}
     try { localStorage.setItem('dfx_cine', on ? '1' : '0'); } catch {}
     toast(on ? '🎬 Modo cine ON — pulsa C para salir' : '🎬 Modo cine OFF');
     if (on) window.scrollTo({ top: 0 });
+  }
+  function injectCineBtn() {
+    if ($('#dfxCineBtn')) return;
+    const b = document.createElement('button');
+    b.id = 'dfxCineBtn';
+    b.title = 'Modo cine (C)';
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M2 9h20M7 4v5M17 4v5"/></svg>';
+    b.onclick = toggleCine;
+    document.body.appendChild(b);
   }
   if (localStorage.getItem('dfx_cine') === '1') document.body.classList.add('dfx-cine');
 
@@ -247,9 +256,14 @@ body.dfx-cine #dfxGlow{opacity:.3}
     g.id = 'dfxGlow';
     document.body.prepend(g);
 
+    injectCineBtn();
     wrap('episode', () => setTimeout(() => { watchGlow(); bindPlayerGestures(); }, 300));
     wrap('home', () => setTimeout(watchGlow, 400));
+    wrap('route', () => setTimeout(() => { injectCineBtn(); }, 50));
 
+    /* Sin MutationObserver: el botón de cine se inyecta una vez.
+       Los wraps de episode()/route() se encargan de re-inyectarlo si hace falta. */
+    setTimeout(() => { injectCineBtn(); }, 300);
 
     toast('🚀 DonghuaFlix Pro cargado — pulsa ? para ver los atajos');
   }
