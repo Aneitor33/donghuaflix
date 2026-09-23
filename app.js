@@ -128,7 +128,7 @@ async function ensureCatalog(id) {
           lite: true
         };
         DETAILS_BASE[id] =
-          './public/data/' + (lite.detailsBase || '').replace(/\/?$/, '/');
+          './public/data/' + (lite.detailsBase || '');
         DB_CACHE[id] = db;
         CATALOG_AVAILABLE[id] = true;
         return db;
@@ -1511,7 +1511,7 @@ function cwCard(
 
   return `<div class="cw-card" onclick="location.hash='#/episode/${qs(
     hist.episodeId
-  )}'">
+  )}">
     ${
       img
         ? `<img loading="lazy" src="${esc(
@@ -2361,293 +2361,379 @@ function home() {
   renderHero();
 }
 
-/* ---------- VISTAS ---------- */
+/* ---------- LISTADOS ---------- */
 
 function listAllSeries() {
-  stopProgressiveGrid();
-
-  let t =
-    performance.now();
-
-  const filtered =
-    DB.series.slice();
-
-  app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>Catálogo completo</h1>
-      <span class="muted">${filtered.length} series</span>
-    </div>
-
-    <div class="filters">
-      <select id="fType">
-        <option value="all">
-          Todos los tipos
-        </option>
-        <option value="series">
-          Series
-        </option>
-        <option value="movie">
-          Películas
-        </option>
-      </select>
-
-      <select id="fYear">
-        <option value="all">
-          Todos los años
-        </option>
-      </select>
-
-      <select id="fGenre">
-        <option value="all">
-          Todos los géneros
-        </option>
-      </select>
-
-      <select id="fCountry">
-        <option value="all">
-          Todos los países
-        </option>
-      </select>
-
-      <select id="fOrder">
-        <option value="recent">
-          Más recientes
-        </option>
-        <option value="az">
-          A → Z
-        </option>
-        <option value="episodes">
-          Más episodios
-        </option>
-      </select>
-    </div>
-
-    <div class="grid" id="catGrid"></div>
-  </section>`;
-
-  const fType =
-    document.getElementById(
-      'fType'
+  const genres =
+    [
+      ...new Set(
+        DB.series.flatMap(
+          seriesGenres
+        )
+      )
+    ].sort(
+      (a, b) =>
+        a.localeCompare(
+          b,
+          'es'
+        )
     );
 
-  const fYear =
-    document.getElementById(
-      'fYear'
+  const years =
+    [
+      ...new Set(
+        DB.series
+          .map(getYear)
+          .filter(Boolean)
+      )
+    ]
+      .sort()
+      .reverse();
+
+  const countries =
+    [
+      ...new Set(
+        DB.series
+          .map(getCountry)
+          .filter(Boolean)
+      )
+    ].sort(
+      (a, b) =>
+        a.localeCompare(
+          b,
+          'es'
+        )
     );
 
-  const fGenre =
-    document.getElementById(
-      'fGenre'
-    );
+  const state = {
+    type: '',
+    genre: '',
+    year: '',
+    country: '',
+    sort: 'recent'
+  };
 
-  const fCountry =
-    document.getElementById(
-      'fCountry'
-    );
+  const applyFilters = () => {
+    let list =
+      DB.series.slice();
 
-  const fOrder =
-    document.getElementById(
-      'fOrder'
-    );
-
-  const catGrid =
-    document.getElementById(
-      'catGrid'
-    );
-
-  const country =
-    s =>
-      s.country ||
-      'Otro';
-
-  const years = [
-    ...new Set(
-      DB.series.map(
-        getYear
-      )
-    )
-  ]
-    .filter(Boolean)
-    .sort()
-    .reverse();
-
-  const genres = [
-    ...new Set(
-      DB.series.flatMap(
-        seriesGenres
-      )
-    )
-  ].sort();
-
-  const countries = [
-    ...new Set(
-      DB.series.map(
-        country
-      )
-    )
-  ].sort();
-
-  years.forEach(
-    y =>
-      fYear.insertAdjacentHTML(
-        'beforeend',
-        `<option value="${esc(
-          y
-        )}">${esc(
-          y
-        )}</option>`
-      )
-  );
-
-  genres.forEach(
-    g =>
-      fGenre.insertAdjacentHTML(
-        'beforeend',
-        `<option value="${esc(
-          g
-        )}">${esc(
-          g
-        )}</option>`
-      )
-  );
-
-  countries.forEach(
-    c =>
-      fCountry.insertAdjacentHTML(
-        'beforeend',
-        `<option value="${esc(
-          c
-        )}">${esc(
-          c
-        )}</option>`
-      )
-  );
-
-  const apply = () => {
-    let list = filtered;
-
-    if (fType.value !== 'all') {
+    if (state.type) {
       list =
         list.filter(
           s =>
             contentTypeOf(
               s
-            ) ===
-            fType.value
+            ) === state.type
         );
     }
 
-    if (fYear.value !== 'all') {
-      list =
-        list.filter(
-          s =>
-            getYear(s) ===
-            fYear.value
-        );
-    }
-
-    if (fGenre.value !== 'all') {
+    if (state.genre) {
       list =
         list.filter(
           s =>
             seriesGenres(
               s
-            ).includes(
-              fGenre.value
+            ).some(
+              g =>
+                fold(g) ===
+                fold(
+                  state.genre
+                )
             )
         );
     }
 
-    if (fCountry.value !== 'all') {
+    if (state.year) {
       list =
         list.filter(
           s =>
-            country(
-              s
+            String(
+              getYear(s)
             ) ===
-            fCountry.value
+            state.year
         );
     }
 
-    switch (fOrder.value) {
-      case 'az':
-        list =
-          list.sort(
-            (a, b) =>
-              cleanTitle(
-                a
-              ).localeCompare(
-                cleanTitle(
-                  b
-                ),
-                'es'
-              )
-          );
-        break;
-
-      case 'episodes':
-        list =
-          list.sort(
-            (a, b) =>
-              seriesEpisodeCount(
-                b
-              ) -
-              seriesEpisodeCount(
-                a
-              )
-          );
-        break;
-
-      default:
-        list =
-          list.sort(
-            (a, b) =>
-              (
-                b.updatedAt || ''
-              ).localeCompare(
-                a.updatedAt || ''
-              )
-          );
+    if (state.country) {
+      list =
+        list.filter(
+          s =>
+            fold(
+              getCountry(s)
+            ) ===
+            fold(
+              state.country
+            )
+        );
     }
 
-    renderPagedGrid({
-      container: catGrid,
-      items: list,
-      emptyText:
-        'Sin resultados.'
-    });
+    if (
+      state.sort ===
+      'az'
+    ) {
+      list.sort(
+        (a, b) =>
+          cleanTitle(
+            a
+          ).localeCompare(
+            cleanTitle(b),
+            'es'
+          )
+      );
+    } else {
+      list.sort(
+        (a, b) =>
+          (
+            b.updatedAt || ''
+          ).localeCompare(
+            a.updatedAt || ''
+          )
+      );
+    }
+
+    return list;
   };
 
-  [
-    fType,
-    fYear,
-    fGenre,
-    fCountry,
-    fOrder
-  ].forEach(
-    f =>
-      f.addEventListener(
-        'change',
-        apply
-      )
+  const renderGrid = () => {
+    const el =
+      document.getElementById(
+        'catalogGrid'
+      );
+
+    const count =
+      document.getElementById(
+        'catalogCount'
+      );
+
+    const list =
+      applyFilters();
+
+    if (count) {
+      count.textContent =
+        list.length;
+    }
+
+    if (el) {
+      renderPagedGrid({
+        container: el,
+        items: list,
+        emptyText:
+          'Nada coincide con esos filtros.'
+      });
+    }
+  };
+
+  app.innerHTML = `
+    <section class="section page-top">
+
+      <div class="section-head">
+        <h2>Catálogo completo</h2>
+        <span
+          class="muted"
+          id="catalogCount"
+        >${DB.series.length}</span>
+      </div>
+
+      <div class="filters">
+
+        <select id="fType">
+          <option value="">
+            Clasificación
+          </option>
+
+          <option
+            value="movie"
+            ${
+              state.type ===
+              'movie'
+                ? 'selected'
+                : ''
+            }
+          >
+            Películas
+          </option>
+
+          <option
+            value="series"
+            ${
+              state.type ===
+              'series'
+                ? 'selected'
+                : ''
+            }
+          >
+            Series
+          </option>
+        </select>
+
+        ${
+          genres.length
+            ? `<select id="fGenre">
+                <option value="">
+                  Género
+                </option>
+
+                ${genres
+                  .map(
+                    g =>
+                      `<option>${esc(
+                        g
+                      )}</option>`
+                  )
+                  .join('')}
+              </select>`
+            : ''
+        }
+
+        ${
+          years.length
+            ? `<select id="fYear">
+                <option value="">
+                  Año
+                </option>
+
+                ${years
+                  .map(
+                    y =>
+                      `<option>${y}</option>`
+                  )
+                  .join('')}
+              </select>`
+            : ''
+        }
+
+        ${
+          countries.length
+            ? `<select id="fCountry">
+                <option value="">
+                  País
+                </option>
+
+                ${countries
+                  .map(
+                    c =>
+                      `<option>${esc(
+                        c
+                      )}</option>`
+                  )
+                  .join('')}
+              </select>`
+            : ''
+        }
+
+        <select id="fSort">
+          <option value="recent">
+            Más recientes
+          </option>
+
+          <option value="az">
+            A – Z
+          </option>
+        </select>
+
+      </div>
+
+      <div
+        class="grid"
+        id="catalogGrid"
+      ></div>
+
+    </section>`;
+
+  const bind = (
+    id,
+    key
+  ) => {
+    const el =
+      document.getElementById(
+        id
+      );
+
+    if (el) {
+      el.onchange = () => {
+        state[key] =
+          el.value;
+
+        renderGrid();
+      };
+    }
+  };
+
+  bind(
+    'fType',
+    'type'
   );
 
-  apply();
-
-  console.log(
-    'Catalog render:',
-    Math.round(
-      performance.now() - t
-    ),
-    'ms'
+  bind(
+    'fGenre',
+    'genre'
   );
+
+  bind(
+    'fYear',
+    'year'
+  );
+
+  bind(
+    'fCountry',
+    'country'
+  );
+
+  bind(
+    'fSort',
+    'sort'
+  );
+
+  /* Primer lote */
+  renderGrid();
+}
+
+function listByStatus(
+  statusKeyword,
+  titleText
+) {
+  const filtered =
+    DB.series.filter(
+      s =>
+        (
+          s.status || ''
+        )
+          .toLowerCase()
+          .includes(
+            statusKeyword.toLowerCase()
+          )
+    );
+
+  app.innerHTML = `
+    <section class="section page-top">
+
+      <div class="section-head">
+        <h2>${titleText}</h2>
+        <span class="muted">
+          ${filtered.length}
+        </span>
+      </div>
+
+      <div
+        class="grid"
+        id="statusGrid"
+      ></div>
+
+    </section>`;
+
+  renderPagedGrid({
+    container:
+      document.getElementById(
+        'statusGrid'
+      ),
+    items: filtered,
+    emptyText:
+      'No hay elementos en esta categoría.'
+  });
 }
 
 function listMovies() {
-  stopProgressiveGrid();
-
-  const items =
+  const movies =
     DB.series.filter(
       s =>
         (
@@ -2665,173 +2751,123 @@ function listMovies() {
     );
 
   app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>Películas</h1>
-      <span class="muted">${items.length}</span>
-    </div>
-    <div class="grid" id="catGrid"></div>
-  </section>`;
+    <section class="section page-top">
+
+      <div class="section-head">
+        <h2>Películas</h2>
+        <span class="muted">
+          ${movies.length}
+        </span>
+      </div>
+
+      <div
+        class="grid"
+        id="moviesGrid"
+      ></div>
+
+    </section>`;
 
   renderPagedGrid({
     container:
       document.getElementById(
-        'catGrid'
+        'moviesGrid'
       ),
-    items
-  });
-}
-
-function listAiring() {
-  stopProgressiveGrid();
-
-  const items =
-    DB.series.filter(
-      s =>
-        (
-          s.status || ''
-        )
-          .toLowerCase()
-          .includes('emisión')
-    );
-
-  app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>En emisión</h1>
-      <span class="muted">${items.length}</span>
-    </div>
-    <div class="grid" id="catGrid"></div>
-  </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'catGrid'
-      ),
-    items
-  });
-}
-
-function listCompleted() {
-  stopProgressiveGrid();
-
-  const items =
-    DB.series.filter(
-      s =>
-        (
-          s.status || ''
-        )
-          .toLowerCase()
-          .includes('finaliz')
-    );
-
-  app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>Finalizadas</h1>
-      <span class="muted">${items.length}</span>
-    </div>
-    <div class="grid" id="catGrid"></div>
-  </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'catGrid'
-      ),
-    items
+    items: movies,
+    emptyText:
+      'No hay películas disponibles por el momento.'
   });
 }
 
 function listGenres() {
-  stopProgressiveGrid();
-
-  const counts =
-    DB.series.reduce(
-      (acc, s) => {
-        for (const g of seriesGenres(
-          s
-        )) {
-          acc[g] =
-            (acc[g] || 0) + 1;
-        }
-        return acc;
-      },
-      {}
-    );
-
-  const items =
-    Object.entries(
-      counts
-    ).sort(
-      (
-        [a],
-        [b]
-      ) =>
-        a.localeCompare(
-          b
-        )
-    );
+  const genres =
+    (DB.genres || [])
+      .map(
+        g =>
+          g.name || g
+      );
 
   app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>Géneros</h1>
-    </div>
+    <section class="section page-top">
 
-    <div class="genres-grid">
-      ${items
-        .map(
-          ([
-            g,
-            n
-          ]) => `
-        <a class="genre-card" href="#/genre/${qs(g)}">
-          <span>${esc(g)}</span>
-          <small class="muted">${n} títulos</small>
-        </a>`
-        )
-        .join('')}
-    </div>
-  </section>`;
+      <div class="section-head">
+        <h2>Géneros</h2>
+        <span class="muted">
+          ${genres.length}
+        </span>
+      </div>
+
+      ${
+        genres.length
+          ? `<div class="chips">
+              ${genres
+                .map(
+                  g =>
+                    `<a
+                      class="chip"
+                      href="#/genre/${qs(
+                        g
+                      )}"
+                    >
+                      ${esc(g)}
+                    </a>`
+                )
+                .join('')}
+            </div>`
+          : '<p class="muted">Géneros no disponibles en el catálogo.</p>'
+      }
+
+    </section>`;
 }
 
-function listByGenre(g) {
-  stopProgressiveGrid();
+function listByGenre(name) {
+  const n =
+    name.toLowerCase();
 
-  const items =
+  const filtered =
     DB.series.filter(
       s =>
         seriesGenres(
           s
-        ).includes(g)
+        ).some(
+          g =>
+            g.toLowerCase() ===
+            n
+        )
     );
 
   app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>${esc(g)}</h1>
-      <span class="muted">${items.length}</span>
-    </div>
-    <div class="grid" id="catGrid"></div>
-  </section>`;
+    <section class="section page-top">
+
+      <div class="section-head">
+        <h2>${esc(name)}</h2>
+        <span class="muted">
+          ${filtered.length}
+        </span>
+      </div>
+
+      <div
+        class="grid"
+        id="genreGrid"
+      ></div>
+
+    </section>`;
 
   renderPagedGrid({
     container:
       document.getElementById(
-        'catGrid'
+        'genreGrid'
       ),
-    items
+    items: filtered,
+    emptyText:
+      'No hay series en este género.'
   });
 }
 
-function myList() {
-  stopProgressiveGrid();
+function listMyList() {
+  const favs =
+    getFavs();
 
-  const favs = getFavs();
-
-  const items =
+  const filtered =
     DB.series.filter(
       s =>
         favs.includes(
@@ -2840,946 +2876,910 @@ function myList() {
     );
 
   app.innerHTML = `
-  <section class="section page-top">
-    <div class="section-head">
-      <h1>Mi lista</h1>
-      <span class="muted">${items.length}</span>
-    </div>
-    <div class="grid" id="catGrid"></div>
-  </section>`;
+    <section class="section page-top">
+
+      <div class="section-head">
+        <h2>Mi lista</h2>
+        <span class="muted">
+          ${filtered.length}
+        </span>
+      </div>
+
+      <div
+        class="grid"
+        id="myListGrid"
+      ></div>
+
+    </section>`;
 
   renderPagedGrid({
     container:
       document.getElementById(
-        'catGrid'
+        'myListGrid'
       ),
-    items,
+    items: filtered,
     emptyText:
-      'Tu lista está vacía. Agrega tus series favoritas.'
+      'Aún no tienes favoritos. Toca el corazón de cualquier serie para añadirla.'
   });
 }
 
-/* ---------- BÚSQUEDA MULTI-CATÁLOGO ---------- */
+/* ---------- BUSCADOR ---------- */
 
-let searchPool = [];
+let searchState = {
+  genre: '',
+  year: '',
+  country: '',
+  pool: null
+};
 
-async function getSearchPool() {
-  const list = [
-    'donghualife',
-    'donghuasub',
-    'donghuaworld'
-  ];
-
+function search(q = '') {
   if (
-    !list.includes(
-      currentCatalog
-    )
-  ) {
-    list.push(
-      currentCatalog
-    );
-  }
-
-  const out = [];
-
-  for (
-    const id of list
-  ) {
-    const db =
-      await ensureCatalog(
-        id
-      );
-
-    for (const s of db.series) {
-      s._cat = id;
-    }
-
-    out.push(...db.series);
-  }
-
-  return out;
-}
-
-function searchView() {
-  stopProgressiveGrid();
-
-  app.innerHTML = `
-  <section class="section page-top">
-    <div class="search-box">
-      <span class="search-ico">${ICONS.search}</span>
-      <input
-        id="q"
-        type="search"
-        placeholder="Buscar título…"
-        autocomplete="off"
-      >
-    </div>
-
-    <div class="filters" id="searchFilters" style="display:none">
-      <select id="sType">
-        <option value="all">Todos los tipos</option>
-        <option value="series">Series</option>
-        <option value="movie">Películas</option>
-      </select>
-
-      <select id="sStatus">
-        <option value="all">Cualquier estado</option>
-        <option value="emision">En emisión</option>
-        <option value="finalizada">Finalizada</option>
-      </select>
-
-      <select id="sGenre">
-        <option value="all">Todos los géneros</option>
-      </select>
-
-      <select id="sOrder">
-        <option value="best">Mejor resultado</option>
-        <option value="recent">Más recientes</option>
-        <option value="az">A → Z</option>
-        <option value="episodes">Más episodios</option>
-      </select>
-    </div>
-
-    <div class="grid" id="resGrid"></div>
-  </section>`;
-
-  const input =
-    document.getElementById(
+    !document.getElementById(
       'q'
-    );
-
-  const resGrid =
-    document.getElementById(
-      'resGrid'
-    );
-
-  const searchFilters =
-    document.getElementById(
-      'searchFilters'
-    );
-
-  const sType =
-    document.getElementById(
-      'sType'
-    );
-
-  const sStatus =
-    document.getElementById(
-      'sStatus'
-    );
-
-  const sGenre =
-    document.getElementById(
-      'sGenre'
-    );
-
-  const sOrder =
-    document.getElementById(
-      'sOrder'
-    );
-
-  let lastQ = '';
-
-  const isAir =
-    s =>
-      (
-        s.status || ''
-      )
-        .toLowerCase()
-        .includes('emisión');
-
-  const isDone =
-    s =>
-      (
-        s.status || ''
-      )
-        .toLowerCase()
-        .includes('finaliz');
-
-  const filterSearch =
-    list =>
-      list.filter(
-        s => {
-          if (
-            sType.value !==
-              'all' &&
-            contentTypeOf(
-              s
-            ) !==
-              sType.value
-          ) {
-            return false;
-          }
-
-          if (
-            sStatus.value ===
-              'emision' &&
-            !isAir(s)
-          ) {
-            return false;
-          }
-
-          if (
-            sStatus.value ===
-              'finalizada' &&
-            !isDone(s)
-          ) {
-            return false;
-          }
-
-          if (
-            sGenre.value !==
-              'all' &&
-            !seriesGenres(
-              s
-            ).includes(
-              sGenre.value
-            )
-          ) {
-            return false;
-          }
-
-          return true;
-        }
-      );
-
-  const orderSearch =
-    (list, q) => {
-      const calc =
-        s =>
-          cleanTitle(
-            s
-          )
-            .toLowerCase()
-            .startsWith(
-              q
-            )
-            ? 2
-            : cleanTitle(
-                s
-              )
-                .toLowerCase()
-                .includes(
-                  q
-                )
-            ? 1
-            : 0;
-
-      const scored =
-        list.map(
-          s => [
-            s,
-            calc(s)
-          ]
-        );
-
-      switch (
-        sOrder.value
-      ) {
-        case 'az':
-          return scored
-            .sort(
-              (
-                [a],
-                [b]
-              ) =>
-                cleanTitle(
-                  a
-                ).localeCompare(
-                  cleanTitle(
-                    b
-                  ),
-                  'es'
-                )
-            )
-            .map(
-              ([
-                s
-              ]) => s
-            );
-
-        case 'recent':
-          return scored
-            .sort(
-              (
-                [a],
-                [b]
-              ) =>
-                (
-                  b.updatedAt ||
-                  ''
-                ).localeCompare(
-                  a.updatedAt ||
-                    ''
-                )
-            )
-            .map(
-              ([
-                s
-              ]) => s
-            );
-
-        case 'episodes':
-          return scored
-            .sort(
-              (
-                [a],
-                [b]
-              ) =>
-                seriesEpisodeCount(
-                  b
-                ) -
-                seriesEpisodeCount(
-                  a
-                )
-            )
-            .map(
-              ([
-                s
-              ]) => s
-            );
-
-        default:
-          return scored
-            .sort(
-              (
-                [a, sa],
-                [b, sb]
-              ) =>
-                sb - sa
-            )
-            .map(
-              ([
-                s
-              ]) => s
-            );
-      }
-    };
-
-  const run =
-    () => {
-      const q =
-        input.value
-          .trim()
-          .toLowerCase();
-
-      if (!q) {
-        lastQ = '';
-        resGrid.innerHTML = '';
-        searchFilters.style.display =
-          'none';
-        return;
-      }
-
-      if (q === lastQ) {
-        render();
-        return;
-      }
-
-      lastQ = q;
-
-      searchFilters.style.display =
-        'flex';
-
-      const gf =
-        fold(q);
-
-      const list =
-        searchPool
-          .slice()
-          .sort(
-            () =>
-              Math.random() -
-              0.5
-          )
-          .filter(
-            s =>
-              fold(
-                cleanTitle(
-                  s
-                )
-              ).includes(
-                gf
-              )
-          );
-
-      const allGenres =
-        [
-          ...new Set(
-            list.flatMap(
-              seriesGenres
-            )
-          )
-        ].sort();
-
-      const current =
-        sGenre.value;
-
-      sGenre.innerHTML =
-        `<option value="all">Todos los géneros</option>` +
-        allGenres
-          .map(
-            g =>
-              `<option value="${esc(
-                g
-              )}">${esc(
-                g
-              )}</option>`
-          )
-          .join('');
-
-      if (
-        allGenres.includes(
-          current
-        )
-      ) {
-        sGenre.value =
-          current;
-      }
-
-      window.__lastSearch =
-        list;
-      render();
-    };
-
-  const render =
-    () => {
-      const q =
-        input.value
-          .trim()
-          .toLowerCase();
-
-      if (!q) {
-        resGrid.innerHTML = '';
-        return;
-      }
-
-      const base =
-        window.__lastSearch ||
-        [];
-
-      const list =
-        orderSearch(
-          filterSearch(
-            base
-          ),
-          q
-        );
-
-      renderProgressiveGrid({
-        container: resGrid,
-        items: list,
-        emptyText:
-          'Sin resultados.'
-      });
-    };
-
-  [
-    sType,
-    sStatus,
-    sGenre,
-    sOrder
-  ].forEach(
-    f =>
-      f.addEventListener(
-        'change',
-        render
-      )
-  );
-
-  input.addEventListener(
-    'input',
-    run
-  );
-
-  input.focus();
-
-  getSearchPool()
-    .then(
-      p => {
-        searchPool =
-          p;
-        run();
-      }
     )
-    .catch(
-      () => {}
-    );
-}
-
-/* ---------- DETALLES BAJO DEMANDA ---------- */
-
-async function ensureDetail(s, id) {
-  if (!s) return s;
-
-  /* Si ya trae temporadas/episodios, es detalle completo */
-  if (
-    Array.isArray(
-      s.seasons
-    ) &&
-    s.seasons.length
   ) {
-    return s;
-  }
+    searchState = {
+      genre: '',
+      year: '',
+      country: '',
+      pool: null
+    };
 
-  const key =
-    (id ||
-      currentCatalog) +
-    ':' +
-    (s.slug || s.id);
+    const genres =
+      [
+        ...new Set(
+          DB.series.flatMap(
+            seriesGenres
+          )
+        )
+      ].sort(
+        (a, b) =>
+          a.localeCompare(
+            b,
+            'es'
+          )
+      );
 
-  if (
-    DETAIL_CACHE[key]
-  ) {
-    return DETAIL_CACHE[
+    const years =
+      [
+        ...new Set(
+          DB.series
+            .map(getYear)
+            .filter(Boolean)
+        )
+      ]
+        .sort()
+        .reverse();
+
+    const countries =
+      [
+        ...new Set(
+          DB.series
+            .map(getCountry)
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          a.localeCompare(
+            b,
+            'es'
+          )
+      );
+
+    app.innerHTML = `
+      <section class="search page-top">
+
+        <h1>Buscar</h1>
+
+        <div class="searchbar">
+          ${ICONS.search}
+
+          <input
+            id="q"
+            type="text"
+            value="${esc(q)}"
+            autocomplete="off"
+            placeholder="Nombre..."
+          >
+        </div>
+
+        <div class="filters">
+
+          ${
+            genres.length
+              ? `<select id="sfGenre">
+                  <option value="">
+                    Género
+                  </option>
+
+                  ${genres
+                    .map(
+                      g =>
+                        `<option>${esc(
+                          g
+                        )}</option>`
+                    )
+                    .join('')}
+                </select>`
+              : ''
+          }
+
+          ${
+            years.length
+              ? `<select id="sfYear">
+                  <option value="">
+                    Año
+                  </option>
+
+                  ${years
+                    .map(
+                      y =>
+                        `<option>${y}</option>`
+                    )
+                    .join('')}
+                </select>`
+              : ''
+          }
+
+          ${
+            countries.length
+              ? `<select id="sfCountry">
+                  <option value="">
+                    País
+                  </option>
+
+                  ${countries
+                    .map(
+                      c =>
+                        `<option>${esc(
+                          c
+                        )}</option>`
+                    )
+                    .join('')}
+                </select>`
+              : ''
+          }
+
+        </div>
+
+        <div
+          id="results"
+          class="grid"
+        ></div>
+
+      </section>`;
+
+    const bindF = (
+      id,
       key
-    ];
-  }
-
-  const base =
-    DETAILS_BASE[
-      id ||
-      currentCatalog
-    ];
-
-  if (!base) return s;
-
-  try {
-    const r =
-      await fetch(
-        `${base}${s.slug || s.id}.json`,
-        { cache: 'default' }
-      );
-
-    if (!r.ok) return s;
-
-    const d =
-      await r.json();
-
-    /* Los ficheros de detalle envuelven la serie en d.series */
-    const meta =
-      (d && d.series) || {};
-
-    s.seasons =
-      d.seasons || [];
-    s.episodes =
-      d.episodes || [];
-    s.synopsis =
-      meta.synopsis ||
-      d.synopsis ||
-      s.synopsis ||
-      '';
-
-    if (
-      Array.isArray(
-        d.episodes
-      )
-    ) {
-      DB.episodes.push(
-        ...d.episodes
-      );
-    }
-
-    if (
-      Array.isArray(
-        d.seasons
-      )
-    ) {
-      DB.seasons.push(
-        ...d.seasons
-      );
-    }
-
-    DETAIL_CACHE[
-      key
-    ] = s;
-
-    return s;
-  } catch {
-    return s;
-  }
-}
-
-async function openSeries(
-  ref,
-  catalogId
-) {
-  if (
-    catalogId &&
-    catalogId !==
-      currentCatalog
-  ) {
-    try {
-      const db =
-        await ensureCatalog(
-          catalogId
+    ) => {
+      const el =
+        document.getElementById(
+          id
         );
 
-      DB = db;
+      if (el) {
+        el.onchange = () => {
+          searchState[key] =
+            el.value;
 
-      currentCatalog =
-        catalogId;
+          updateSearchResults(
+            document.getElementById(
+              'q'
+            ).value
+          );
+        };
+      }
+    };
 
-      localStorage.setItem(
-        'donghuaflix_catalog',
-        catalogId
+    bindF(
+      'sfGenre',
+      'genre'
+    );
+
+    bindF(
+      'sfYear',
+      'year'
+    );
+
+    bindF(
+      'sfCountry',
+      'country'
+    );
+
+    const input =
+      document.getElementById(
+        'q'
       );
 
-      renderCatBar();
+    input.addEventListener(
+      'input',
+      e =>
+        updateSearchResults(
+          e.target.value
+        )
+    );
 
-      location.hash =
-        '#/series/' +
-        qs(ref);
+    setTimeout(() => {
+      input.focus();
 
-      return;
-    } catch (e) {}
+      input.setSelectionRange(
+        input.value.length,
+        input.value.length
+      );
+    }, 50);
   }
 
-  const s =
-    findSeries(ref);
+  updateSearchResults(q);
+}
 
-  if (!s) {
-    app.innerHTML =
-      '<section class="section page-top"><h2>No encontrado</h2></section>';
+async function updateSearchResults(
+  q = ''
+) {
+  if (!searchState.pool) {
+    searchState.pool = await getSearchPool();
+  }
+  const container =
+    document.getElementById(
+      'results'
+    );
+
+  if (!container) return;
+
+  const query =
+    q.trim().toLowerCase();
+
+  if (!query) {
+    stopProgressiveGrid();
+
+    container.innerHTML =
+      '<p class="muted" style="grid-column:1/-1">Escribe para ver sugerencias...</p>';
+
     return;
   }
 
-  app.innerHTML = `
-  <section class="section page-top">
-    <div class="grid">
-      ${Array(8)
-        .fill(
-          '<div class="skeleton"></div>'
-        )
-        .join('')}
-    </div>
-  </section>`;
+  let list =
+    (searchState.pool || DB.series).filter(
+      s => {
+        const title =
+          cleanTitle(
+            s
+          ).toLowerCase();
 
-  const detailed =
-    await ensureDetail(
-      s,
-      catalogId ||
-        currentCatalog
+        return (
+          title.startsWith(
+            query
+          ) ||
+          title
+            .split(' ')
+            .some(
+              w =>
+                w.startsWith(
+                  query
+                )
+            ) ||
+          title.includes(
+            query
+          )
+        );
+      }
     );
 
-  renderSeriesDetail(
-    detailed
-  );
+  if (searchState.genre) {
+    list =
+      list.filter(
+        s =>
+          seriesGenres(
+            s
+          ).some(
+            g =>
+              fold(g) ===
+              fold(
+                searchState.genre
+              )
+          )
+      );
+  }
+
+  if (searchState.year) {
+    list =
+      list.filter(
+        s =>
+          String(
+            getYear(s)
+          ) ===
+          searchState.year
+      );
+  }
+
+  if (searchState.country) {
+    list =
+      list.filter(
+        s =>
+          fold(
+            getCountry(s)
+          ) ===
+          fold(
+            searchState.country
+          )
+      );
+  }
+
+  renderProgressiveGrid({
+    container,
+    items: list,
+    emptyText:
+      'No se encontraron donghuas con ese nombre.'
+  });
+
+  /* Cada resultado abre su catálogo de origen */
+  const cardsEl =
+    container.querySelectorAll(
+      '.card'
+    );
+  list.forEach((s, i) => {
+    const el = cardsEl[i];
+    if (el) {
+      el.onclick = () =>
+        openSeries(s);
+    }
+  });
 }
 
-/* ---------- PÁGINA DE SERIE ---------- */
+/* Búsqueda conjunta: los 3 catálogos de donghua a la vez
+   (más el catálogo activo si es otro). Cada resultado lleva
+   _cat = su catálogo de origen. */
+async function getSearchPool() {
+  const pool = [];
+
+  for (const id of DONGHUA_CATS) {
+    try {
+      const d =
+        await ensureCatalog(id);
+      CATALOG_AVAILABLE[id] = true;
+      for (const s of d.series || []) {
+        pool.push({
+          ...s,
+          _cat: id
+        });
+      }
+    } catch {}
+  }
+
+  if (
+    !DONGHUA_CATS.includes(
+      currentCatalog
+    )
+  ) {
+    try {
+      const d =
+        await ensureCatalog(
+          currentCatalog
+        );
+      for (const s of d.series || []) {
+        pool.push({
+          ...s,
+          _cat: currentCatalog
+        });
+      }
+    } catch {}
+  }
+
+  renderCatBar();
+  return pool;
+}
+
+/* Abre una serie cambiando antes a su catálogo si hace falta */
+async function openSeries(s) {
+  if (
+    s._cat &&
+    s._cat !== currentCatalog
+  ) {
+    try {
+      DB =
+        await ensureCatalog(s._cat);
+      currentCatalog = s._cat;
+      localStorage.setItem(
+        'donghuaflix_catalog',
+        s._cat
+      );
+      setAmbience('');
+      renderCatBar();
+    } catch {
+      showToast(
+        'Catálogo no disponible todavía'
+      );
+      return;
+    }
+  }
+
+  location.hash =
+    '#/series/' +
+    qs(s.slug || s.id);
+}
+
+/* Descarga la ficha completa de UN título (sinopsis + temporadas + servidores) */
+async function ensureDetail(slug) {
+  if (!DB.lite) return;                         // catálogo completo: nada que pedir
+  const key = String(slug || '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  const dir = DETAILS_BASE[currentCatalog];
+  if (!key || !dir) return;
+
+  const cacheKey = currentCatalog + '/' + key;
+  if (DETAIL_CACHE[cacheKey]) return;
+
+  try {
+    const d = await fetchCatalogFile(`${dir}/${key}.json`);
+    if (!d || !d.series) return;
+
+    const i = DB.series.findIndex(s => (s.slug || s.id) === (d.series.slug || d.series.id));
+    if (i !== -1) DB.series[i] = { ...DB.series[i], ...d.series };
+    else DB.series.push(d.series);
+
+    const have = new Set(DB.seasons.map(x => x.id));
+    (d.seasons || []).forEach(x => { if (!have.has(x.id)) DB.seasons.push(x); });
+
+    const haveEp = new Set(DB.episodes.map(x => x.id));
+    (d.episodes || []).forEach(x => { if (!haveEp.has(x.id)) DB.episodes.push(x); });
+
+    DETAIL_CACHE[cacheKey] = true;
+  } catch (e) {
+    console.warn('No se pudo cargar la ficha', slug, e);
+  }
+}
+
+/* ---------- DETALLE DE SERIE ---------- */
 
 let detailState = {
   seriesId: null,
   seasonIdx: 0,
-  epsPage: 0,
-  per: 50
+  page: null
 };
 
-function renderSeriesDetail(
-  s
+const EPS_PER_PAGE = 50;
+
+async function detail(slug, seasonRef) {
+  await ensureDetail(slug);
+  return detailSync(slug, seasonRef);
+}
+
+function detailSync(
+  slug,
+  seasonRef
 ) {
-  const img =
-    getSeriesImage(s);
+  const s =
+    findSeries(slug);
 
-  const progress =
-    seriesProgress(s);
-
-  const fav =
-    isFav(s.id);
-
-  detailState = {
-    seriesId: s.id,
-    seasonIdx: 0,
-    epsPage: 0,
-    per: 50
-  };
-
-  setAmbience(img);
+  if (!s) {
+    return notfound();
+  }
 
   const seasons =
     orderSeasons(
       s,
       DB.seasons.filter(
-        x => x.seriesId === s.id
+        x =>
+          x.seriesId ===
+          s.id
       )
     );
 
-  const totalEpisodes =
-    seriesEpisodeCount(s);
-
-  const watched =
-    getWatched();
-
-  let seen = 0;
-
-  for (const seas of seasons) {
-    const eps =
-      DB.episodes.filter(
-        e =>
-          e.seasonId === seas.id
-      );
-    const w =
-      watched[seas.id] || {};
-    seen += eps.filter(
-      e => w[e.number]
-    ).length;
+  if (
+    detailState.seriesId !==
+    s.id
+  ) {
+    detailState = {
+      seriesId: s.id,
+      seasonIdx: 0,
+      page: null
+    };
   }
 
+  if (seasonRef) {
+    const i =
+      seasons.findIndex(
+        x =>
+          (x.slug ||
+            x.id) ===
+            seasonRef ||
+          String(
+            x.number
+          ) ===
+            String(
+              seasonRef
+            )
+      );
+
+    if (i !== -1) {
+      detailState.seasonIdx =
+        i;
+
+      detailState.page =
+        null;
+    }
+  }
+
+  const imgUrl =
+    getSeriesImage(s);
+
+  const title =
+    cleanTitle(s);
+
+  const genres =
+    seriesGenres(s);
+
+  const fav =
+    isFav(s.id);
+
+  const epsTotal =
+    seriesEpisodeCount(
+      s
+    );
+
+  const lastEp =
+    lastWatchedEpisode(
+      s
+    );
+
+  const lastSeason =
+    lastEp
+      ? DB.seasons.find(
+          x =>
+            x.id ===
+            lastEp.seasonId
+        )
+      : null;
+
+  const lastSn =
+    lastSeason &&
+    Number.isFinite(
+      lastSeason.number
+    )
+      ? lastSeason.number
+      : 1;
+
+  const singleSeason =
+    seasons.length === 1
+      ? seasons[0]
+      : null;
+
+  const singleEps =
+    singleSeason
+      ? dedupeEps(
+          DB.episodes.filter(
+            e =>
+              e.seasonId ===
+              singleSeason.id
+          )
+        )
+      : [];
+
+  const allEpsCount =
+    DB.episodes.filter(
+      e =>
+        e.seriesId ===
+        s.id
+    ).length;
+
+  const isMovieEntry =
+    s.contentType ===
+      'movie' ||
+    (s.sourceUrl || '')
+      .includes(
+        '/peliculas/'
+      ) ||
+    allEpsCount === 1;
+
+  setAmbience(imgUrl);
+
   app.innerHTML = `
-  <section class="detail" style="--bg:url('${esc(img)}')">
-    <div class="detail-shade"></div>
+  <section class="detail-v2">
 
-    <div class="detail-top">
-      <div class="detail-info">
-        <h1>${esc(cleanTitle(s))}</h1>
+    <div
+      class="detail-hero"
+      style="--dhero:url('${esc(
+        imgUrl
+      )}')"
+    >
 
-        <div class="detail-meta">
-          ${
-            getYear(s)
-              ? `<span class="chip">${esc(
-                  getYear(s)
-                )}</span>`
-              : ''
-          }
-          ${
-            s.status
-              ? `<span class="chip">${esc(
-                  s.status
-                )}</span>`
-              : ''
-          }
-          <span class="chip">
-            ${totalEpisodes}
-            episodios
-          </span>
+      <button
+        class="detail-close"
+        onclick="location.hash='#/series'"
+        title="Cerrar"
+      >
+        ${ICONS.close}
+      </button>
+
+      <div class="detail-hero-shade"></div>
+
+      <div class="detail-hero-c">
+
+        <div class="eyebrow">
+          ${esc(
+            s.status || ''
+          )}
         </div>
 
-        <p class="muted">
+        <h1>
+          ${esc(title)}
+        </h1>
+
+        <div class="detail-meta">
+
           ${
-            s.synopsis ||
-            'Sin descripción.'
+            isMovieEntry
+              ? `<span class="movie-tag">PELÍCULA</span> ·`
+              : ''
           }
-        </p>
 
-        <div class="detail-btns">
-          <button
-            class="btn-x play"
-            id="playBtn"
-          >
-            ${ICONS.play}
-            <span>Ver ahora</span>
-          </button>
+          ${
+            s.year
+              ? `<span>${s.year}</span> ·`
+              : ''
+          }
+
+          ${
+            s.country
+              ? `<span>${esc(
+                  s.country
+                )}</span> ·`
+              : ''
+          }
+
+          ${
+            !isMovieEntry
+              ? `<span>${seasons.length} temporada${
+                  seasons.length ===
+                  1
+                    ? ''
+                    : 's'
+                }</span> ·
+                <span>${epsTotal} episodios</span>`
+              : ''
+          }
+
+          ${
+            genres.length
+              ? ' · <span>' +
+                esc(
+                  genres
+                    .slice(
+                      0,
+                      3
+                    )
+                    .join(' · ')
+                ) +
+                '</span>'
+              : ''
+          }
+
+        </div>
+
+        <div class="detail-actions">
+
+          ${
+            lastEp
+              ? `<button class="btn-x play big" onclick="location.hash='#/episode/${qs(
+                  lastEp.slug ||
+                    lastEp.id
+                )}'">
+                  ${ICONS.play}
+                  <span>${
+                    isMovieEntry
+                      ? 'Reproducir'
+                      : `Reproducir${
+                          lastEp.number >
+                          1
+                            ? ` · T${lastSn}:E${lastEp.number}`
+                            : ''
+                        }`
+                  }</span>
+                </button>`
+              : ''
+          }
 
           <button
-            class="btn-x ${
-              fav ? 'glass on' : 'glass'
-            }"
+            class="btn-x glass round"
             id="favBtn"
+            title="Mi lista"
           >
             ${
               fav
                 ? ICONS.check
                 : ICONS.plus
             }
-            <span>${
-              fav
-                ? 'En mi lista'
-                : 'Mi lista'
-            }</span>
           </button>
+
         </div>
 
-        ${
-          progress > 0
-            ? `<div class="progress detail-progress">
-              <span style="width:${progress}%"></span>
+      </div>
+    </div>
+
+    <div class="detail-body">
+
+      ${
+        genres.length
+          ? `<div class="chips">
+              ${genres
+                .map(
+                  g =>
+                    `<a class="chip" href="#/genre/${qs(
+                      g
+                    )}">
+                      ${esc(g)}
+                    </a>`
+                )
+                .join('')}
+            </div>`
+          : ''
+      }
+
+      <p class="detail-syn">
+        ${esc(
+          s.synopsis ||
+            'Sinopsis no disponible.'
+        )}
+      </p>
+
+      ${
+        isMovieEntry
+          ? `
+            <div class="movie-cta">
+              <button
+                class="btn-x play big"
+                onclick="location.hash='#/episode/${qs(
+                  singleEps[0]?.slug ||
+                  singleEps[0]?.id ||
+                  ''
+                )}'"
+              >
+                ${ICONS.play}
+                <span>▶ Reproducir ahora</span>
+              </button>
             </div>
-            <small class="muted">${seen}/${totalEpisodes} episodios</small>`
-            : ''
-        }
-      </div>
+          `
+          : '<div id="seasonArea"></div>'
+      }
+
     </div>
 
-    <div class="section detail-seasons">
-      <div class="section-head">
-        <h2>Temporadas</h2>
-        <span class="muted">${seasons.length}</span>
-      </div>
-
-      <div class="season-chips" id="seasonChips"></div>
-
-      <div class="section-head">
-        <h2>Episodios</h2>
-        <span class="muted" id="epsCount"></span>
-      </div>
-
-      <div class="eps" id="epsList"></div>
-
-      <nav class="pager" id="epsPager"></nav>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-head">
-      <h2>Recomendaciones</h2>
-    </div>
-    <div id="recGrid" class="grid"></div>
   </section>`;
 
-  const playBtn =
-    document.getElementById(
-      'playBtn'
-    );
+  document.getElementById(
+    'favBtn'
+  ).onclick = () => {
+    const f =
+      toggleFav(s.id);
 
-  if (playBtn) {
-    playBtn.onclick = () => {
-      const h =
-        getHistory()[s.id];
-
-      const ep =
-        h
-          ? findEpisode(
-              h.episodeId
-            )
-          : seasons.length
-            ? dedupeEps(
-                DB.episodes.filter(
-                  e =>
-                    e.seasonId ===
-                    seasons[0].id
-                )
-              )[0]
-            : null;
-
-      if (ep) {
-        location.hash =
-          '#/episode/' +
-          qs(
-            ep.slug ||
-              ep.id
-          );
-      } else {
-        showToast(
-          'No hay episodios disponibles'
-        );
-      }
-    };
-  }
-
-  const favBtn =
     document.getElementById(
       'favBtn'
+    ).innerHTML =
+      f
+        ? ICONS.check
+        : ICONS.plus;
+  };
+
+  if (!isMovieEntry) {
+    renderSeasonArea(
+      seasons
     );
-
-  if (favBtn) {
-    favBtn.onclick = () => {
-      const f =
-        toggleFav(
-          s.id
-        );
-
-      favBtn.className =
-        `btn-x ${
-          f ? 'glass on' : 'glass'
-        }`;
-
-      favBtn.innerHTML =
-        `${
-          f ? ICONS.check : ICONS.plus
-        }<span>${
-          f ? 'En mi lista' : 'Mi lista'
-        }</span>`;
-    };
   }
+}
 
-  const chips =
+function renderSeasonArea(
+  seasons
+) {
+  const area =
     document.getElementById(
-      'seasonChips'
+      'seasonArea'
     );
 
-  seasons.forEach(
-    (seas, i) => {
-      const b =
-        document.createElement(
-          'button'
-        );
+  if (!area) return;
 
-      b.className =
-        `pill ${
-          i === 0 ? 'on' : ''
-        }`;
+  if (!seasons.length) {
+    area.innerHTML =
+      '<div class="empty">No hay episodios disponibles.</div>';
 
-      b.textContent =
-        seasonTitle(
-          seas,
-          i
-        );
-
-      b.onclick = () => {
-        detailState.seasonIdx =
-          i;
-
-        detailState.epsPage =
-          0;
-
-        chips
-          .querySelectorAll(
-            '.pill'
-          )
-          .forEach(
-            p =>
-              p.classList.remove(
-                'on'
-              )
-          );
-
-        b.classList.add(
-          'on'
-        );
-
-        renderEpisodePage(
-          seas
-        );
-      };
-
-      chips.appendChild(
-        b
-      );
-    }
-  );
-
-  if (seasons.length) {
-    renderEpisodePage(
-      seasons[0]
-    );
+    return;
   }
 
-  renderProgressiveGrid({
-    container:
-      document.getElementById(
-        'recGrid'
-      ),
-    items:
-      getRecommendedSeries(
-        s
-      ),
-    emptyText:
-      'Sin recomendaciones.'
-  });
+  area.innerHTML = `
+    <div class="season-picker">
+
+      <select
+        id="seasonSelect"
+        onchange="selectSeason(this.value)"
+      >
+
+        ${seasons
+          .map(
+            (season, i) => {
+              const count =
+                dedupeEps(
+                  DB.episodes.filter(
+                    e =>
+                      e.seasonId ===
+                      season.id
+                  )
+                ).length;
+
+              return `<option
+                value="${i}"
+                ${
+                  i ===
+                  detailState.seasonIdx
+                    ? 'selected'
+                    : ''
+                }
+              >
+                ${esc(
+                  seasonTitle(
+                    season,
+                    i
+                  )
+                )} · ${count} episodios
+              </option>`;
+            }
+          )
+          .join('')}
+
+      </select>
+
+    </div>
+
+    <div
+      id="episodeArea"
+    ></div>`;
+
+  renderEpisodePage(
+    seasons[
+      detailState.seasonIdx
+    ]
+  );
+}
+
+function selectSeason(i) {
+  detailState.seasonIdx =
+    Number(i);
+
+  detailState.page =
+    null;
+
+  const s =
+    findSeries(
+      detailState.seriesId
+    );
+
+  if (!s) return;
+
+  const seasons =
+    orderSeasons(
+      s,
+      DB.seasons.filter(
+        x =>
+          x.seriesId ===
+          s.id
+      )
+    );
+
+  renderEpisodePage(
+    seasons[
+      detailState.seasonIdx
+    ]
+  );
 }
 
 function renderEpisodePage(
   season
 ) {
-  const list =
+  const area =
     document.getElementById(
-      'epsList'
+      'episodeArea'
     );
 
-  if (!list) return;
+  if (!area) return;
 
-  const all =
+  const eps =
     dedupeEps(
       DB.episodes.filter(
         e =>
@@ -3788,246 +3788,270 @@ function renderEpisodePage(
       )
     );
 
-  document.getElementById(
-    'epsCount'
-  ).textContent =
-    all.length;
-
-  const pages =
-    Math.ceil(
-      all.length /
-        detailState.per
-    );
-
-  const page =
-    Math.min(
-      detailState.epsPage,
-      pages - 1
-    );
-
-  const start =
-    page *
-    detailState.per;
-
-  const slice =
-    all.slice(
-      start,
-      start +
-        detailState.per
-    );
-
-  list.innerHTML =
-    slice
-      .map(
-        e => `
-      <div class="ep-row ${
-        isWatched(
-          season.id,
-          e.number
-        )
-          ? 'seen'
-          : ''
-      }">
-        <span class="num">
-          ${e.number}
-        </span>
-
-        <div class="ep-main">
-          <span class="ep-title">
-            ${esc(
-              cleanEpisodeTitle(
-                e
-              )
-            )}
-          </span>
-        </div>
-
-        <button
-          class="ep-check ${
-            isWatched(
-              season.id,
-              e.number
-            )
-              ? 'on'
-              : ''
-          }"
-          title="Marcar visto"
-          onclick="toggleWatched('${
-            season.id
-          }',${
-    e.number
-  })"
-        >
-          ${ICONS.check}
-        </button>
-
-        <a
-          class="ep-play"
-          href="#/episode/${qs(
-            e.slug ||
-              e.id
-          )}"
-        >
-          ${ICONS.play}
-        </a>
-      </div>`
-      )
-      .join('');
-
-  const pager =
-    document.getElementById(
-      'epsPager'
-    );
-
-  if (pages > 1) {
-    const win =
-      [];
-
-    const from =
-      Math.max(
-        0,
-        Math.min(
-          page - 2,
-          pages - 5
-        )
-      );
-
-    for (
-      let i = from;
-      i <
-      Math.min(
-        pages,
-        from + 5
-      );
-      i++
-    ) {
-      win.push(i);
-    }
-
-    pager.innerHTML = `
-      <button class="pg-btn" data-go="${page - 1}" ${page === 0 ? 'disabled' : ''}>‹</button>
-      ${win
-        .map(
-          i =>
-            `<button class="pg-btn ${i === page ? 'on' : ''}" data-go="${i}">${i + 1}</button>`
-        )
-        .join('')}
-      <button class="pg-btn" data-go="${page + 1}" ${page >= pages - 1 ? 'disabled' : ''}>›</button>
-      <span class="pg-info">Página ${page + 1} de ${pages}</span>`;
-
-    pager
-      .querySelectorAll(
-        '.pg-btn'
-      )
-      .forEach(
-        b => {
-          b.onclick = () => {
-            const go =
-              Number(
-                b.dataset.go
-              );
-
-            if (
-              isNaN(
-                go
-              ) ||
-              go < 0 ||
-              go >=
-                pages ||
-              go ===
-                page
-            ) {
-              return;
-            }
-
-            detailState.epsPage =
-              go;
-
-            renderEpisodePage(
-              season
-            );
-
-            list.scrollIntoView(
-              {
-                behavior:
-                  'smooth',
-                block:
-                  'start'
-              }
-            );
-          };
-        }
-      );
-  } else {
-    pager.innerHTML = '';
-  }
-}
-
-/* ---------- PÁGINA DE EPISODIO ---------- */
-
-async function episode(ref) {
-  let e =
-    findEpisode(ref);
-
-  /* Con índice LITE los episodios solo viven en memoria tras abrir
-     la ficha de la serie. Si entramos directos (continuar viendo,
-     radar, episodio aleatorio), cargamos la ficha bajo demanda. */
-  if (!e) {
-    const owner =
-      DB.series
-        .filter(
-          x =>
-            ref.startsWith(
-              (x.slug || x.id) + '-'
-            )
-        )
-        .sort(
-          (a, b) =>
-            (b.slug || b.id).length -
-            (a.slug || a.id).length
-        )[0];
-
-    if (owner) {
-      app.innerHTML =
-        '<section class="section page-top"><div class="grid">' +
-        Array(8)
-          .fill(
-            '<div class="skeleton"></div>'
-          )
-          .join('') +
-        '</div></section>';
-
-      await ensureDetail(
-        owner,
-        currentCatalog
-      );
-
-      e =
-        findEpisode(ref);
-    }
-  }
-
-  if (!e) {
-    app.innerHTML = `
-    <section class="empty page-top">
-      <h2>Episodio no disponible</h2>
-      <button class="btn-x glass" onclick="location.hash='#/'">Volver</button>
-    </section>`;
+  if (!eps.length) {
+    area.innerHTML =
+      '<div class="empty">No hay episodios disponibles todavía para esta temporada.</div>';
 
     return;
   }
 
+  const totalPages =
+    Math.ceil(
+      eps.length /
+        EPS_PER_PAGE
+    );
+
+  if (
+    detailState.page ==
+      null ||
+    detailState.page >=
+      totalPages
+  ) {
+    const watched =
+      getWatched()[
+        season.id
+      ] || {};
+
+    const lastWatched =
+      Math.max(
+        0,
+        ...Object.keys(
+          watched
+        ).map(Number)
+      );
+
+    detailState.page =
+      lastWatched
+        ? Math.floor(
+            (lastWatched - 1) /
+              EPS_PER_PAGE
+          )
+        : 0;
+  }
+
+  const page =
+    Math.min(
+      detailState.page,
+      totalPages - 1
+    );
+
+  detailState.page =
+    page;
+
+  const slice =
+    eps.slice(
+      page *
+        EPS_PER_PAGE,
+      (page + 1) *
+        EPS_PER_PAGE
+    );
+
+  const watched =
+    getWatched()[
+      season.id
+    ] || {};
+
+  area.innerHTML = `
+    <div class="episode-list">
+
+      ${slice
+        .map(e => {
+          const w =
+            Boolean(
+              watched[
+                e.number
+              ]
+            );
+
+          return `
+          <a
+            class="episode ${
+              w
+                ? 'watched'
+                : ''
+            }"
+            href="#/episode/${qs(
+              e.slug ||
+                e.id
+            )}"
+          >
+
+            <span class="ep-num">
+              ${e.number}
+            </span>
+
+            <span class="ep-info">
+
+              <strong>
+                ${esc(
+                  cleanEpisodeTitle(
+                    e
+                  )
+                )}
+              </strong>
+
+              <span class="meta">
+                ${esc(
+                  (
+                    e.servers ||
+                    []
+                  )
+                    .map(
+                      x =>
+                        x.name
+                    )
+                    .join(
+                      ' · '
+                    ) ||
+                  (
+                    e.releaseDate ||
+                    ''
+                  )
+                )}
+              </span>
+
+            </span>
+
+            <button
+              class="watched-btn ${
+                w
+                  ? 'on'
+                  : ''
+              }"
+              title="${
+                w
+                  ? 'Quitar marcador'
+                  : 'Marcar como visto'
+              }"
+              onclick="event.preventDefault();event.stopPropagation();toggleWatched('${esc(
+                season.id
+              )}',${e.number})"
+            >
+              ${
+                w
+                  ? ICONS.check
+                  : ''
+              }
+            </button>
+
+          </a>`;
+        })
+        .join('')}
+
+    </div>
+
+    ${
+      totalPages > 1
+        ? `
+      <div class="ep-pagination">
+
+        <button
+          class="btn-x glass"
+          ${
+            page === 0
+              ? 'disabled'
+              : ''
+          }
+          onclick="gotoPage(${
+            page - 1
+          })"
+        >
+          ${ICONS.prev}
+          <span>Anterior</span>
+        </button>
+
+        <span class="muted">
+          Página ${
+            page + 1
+          } de ${totalPages}
+        </span>
+
+        <button
+          class="btn-x glass"
+          ${
+            page >=
+            totalPages - 1
+              ? 'disabled'
+              : ''
+          }
+          onclick="gotoPage(${
+            page + 1
+          })"
+        >
+          <span>Siguiente</span>
+          ${ICONS.next}
+        </button>
+
+      </div>`
+        : ''
+    }`;
+}
+
+function gotoPage(p) {
+  detailState.page =
+    p;
+
   const s =
     findSeries(
-      e.seriesId
+      detailState.seriesId
     );
 
   if (!s) return;
 
-  const season =
-    DB.seasons.find(
-      x => x.id === e.seasonId
+  const seasons =
+    orderSeasons(
+      s,
+      DB.seasons.filter(
+        x =>
+          x.seriesId ===
+          s.id
+      )
     );
+
+  renderEpisodePage(
+    seasons[
+      detailState.seasonIdx
+    ]
+  );
+
+  setTimeout(
+    () =>
+      document
+        .getElementById(
+          'episodeArea'
+        )
+        ?.scrollIntoView({
+          behavior:
+            'smooth',
+          block: 'start'
+        }),
+    50
+  );
+}
+
+/* ---------- REPRODUCTOR ---------- */
+
+function episode(slug) {
+  const e =
+    findEpisode(slug);
+
+  if (!e) {
+    return notfound();
+  }
+
+  currentEpisode =
+    e;
+
+  saveHistory(
+    e.seriesId,
+    e
+  );
+
+  /* Marca solo ESTE episodio (antes se marcaban del 1 al N) */
+  markWatchedSingle(
+    e.seasonId,
+    e.number
+  );
 
   const seasonEps =
     dedupeEps(
@@ -4040,490 +4064,526 @@ async function episode(ref) {
 
   const idx =
     seasonEps.findIndex(
-      x => x.id === e.id
+      x =>
+        x.id ===
+        e.id
     );
 
-  const prev =
-    seasonEps[idx - 1];
+  const prevEp =
+    idx > 0
+      ? seasonEps[
+          idx - 1
+        ]
+      : null;
 
-  const next =
-    seasonEps[idx + 1];
+  const nextEp =
+    idx <
+    seasonEps.length - 1
+      ? seasonEps[
+          idx + 1
+        ]
+      : null;
 
-  const sn =
-    season &&
-    Number.isFinite(
-      season.number
-    )
-      ? season.number
-      : 1;
+  const serie =
+    findSeries(
+      e.seriesId
+    );
 
-  const img =
-    getSeriesImage(s);
+  const serieRef =
+    serie
+      ? serie.slug ||
+        serie.id
+      : e.seriesId;
 
-  currentEpisode = e;
+  const season =
+    DB.seasons.find(
+      x =>
+        x.id ===
+        e.seasonId
+    );
 
-  setAmbience(img);
-
-  markWatchedSingle(
-    e.seasonId,
-    e.number
+  setAmbience(
+    getSeriesImage(
+      serie || {}
+    ) ||
+      (season?.image ||
+        '')
   );
 
-  saveHistory(
-    s.id,
-    e
-  );
+  const langLabel = {
+    latino: 'Latino',
+    castellano:
+      'Castellano',
+    subtitulado:
+      'Subtitulado'
+  };
 
-  const langs = {};
+  const groups = [];
 
-  (
-    e.servers ||
-    []
-  ).forEach((srv, i) => {
-    const lang =
-      srv.lang ||
-      'subtitulado';
+  for (const l of [
+    'latino',
+    'castellano',
+    'subtitulado'
+  ]) {
+    const sv =
+      (e.servers || [])
+        .filter(
+          s =>
+            s.lang === l
+        );
 
-    if (
-      !langs[lang]
-    ) {
-      langs[lang] =
-        [];
+    if (sv.length) {
+      groups.push({
+        key: l,
+        label:
+          langLabel[l],
+        servers: sv
+      });
     }
-
-    langs[lang].push({
-      ...srv,
-      idx
-    });
-  });
-
-  let currentLang =
-    Object.keys(
-      langs
-    )[0] ||
-    '';
-
-  const groupsHTML =
-    Object.keys(
-      langs
-    )
-      .map(
-        lang => `
-      <div class="server-group">
-        <div class="group-title">
-          ${
-            lang ===
-            'latino'
-              ? '🇲🇽 Audio Latino'
-              : lang ===
-                'castellano'
-                ? '🇪🇸 Castellano'
-                : '🌐 Subtitulado'
-          }
-        </div>
-
-        <div class="servers">
-          ${
-            langs[lang]
-              .map(
-                (
-                  srv,
-                  i
-                ) => `
-              <button
-                class="srv-btn"
-                data-lang="${esc(lang)}"
-                data-idx="${srv.idx}"
-              >
-                Opción ${i + 1}
-              </button>`
-              )
-              .join('')
-          }
-        </div>
-      </div>`
-      )
-      .join('');
-
-  app.innerHTML = `
-  <section
-    class="section page-top watch"
-    style="--bg:url('${esc(img)}')"
-  >
-    <div class="player">
-      <div
-        class="player-shell"
-        id="playerShell"
-      >
-        <iframe
-          id="playerFrame"
-          class="player-frame"
-          src=""
-          frameborder="0"
-          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-
-      <div class="player-bar">
-        <a
-          class="btn-mini ${
-            prev ? '' : 'off'
-          }"
-          href="${
-            prev
-              ? '#/episode/' + qs(prev.slug || prev.id)
-              : '#'
-          }"
-          ${
-            prev
-              ? ''
-              : 'onclick="return false"'
-          }
-        >
-          ${ICONS.prev}
-          <span>Anterior</span>
-        </a>
-
-        <button
-          class="btn-mini"
-          id="autoNextBtn"
-          onclick="toggleAutoNext()"
-        >
-          ${ICONS.repeat}
-          <span>
-            Auto: ${
-              autoNextEnabled
-                ? 'ON'
-                : 'OFF'
-            }
-          </span>
-        </button>
-
-        <button
-          class="btn-mini"
-          onclick="togglePlayerFS()"
-        >
-          ${ICONS.full}
-          <span>
-            Pantalla completa
-          </span>
-        </button>
-
-        <a
-          class="btn-mini ${
-            next ? '' : 'off'
-          }"
-          href="${
-            next
-              ? '#/episode/' + qs(next.slug || next.id)
-              : '#'
-          }"
-          ${
-            next
-              ? ''
-              : 'onclick="return false"'
-          }
-        >
-          ${ICONS.next}
-          <span>Siguiente</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="watch-info">
-      <h1>
-        ${esc(cleanTitle(s))}
-      </h1>
-
-      <div class="detail-meta">
-        <span class="chip">
-          Temporada ${sn}
-        </span>
-
-        <span class="chip">
-          Episodio ${e.number}
-        </span>
-      </div>
-
-      <h2 class="ep-name">
-        ${esc(
-          cleanEpisodeTitle(
-            e
-          )
-        )}
-      </h2>
-    </div>
-
-    <div class="servers-wrap">
-      <div class="section-head">
-        <h2>Servidores</h2>
-      </div>
-
-      ${groupsHTML}
-    </div>
-
-    <section class="section" style="padding:0">
-      <div class="section-head">
-        <h2>
-          También te puede gustar
-        </h2>
-      </div>
-
-      <div
-        id="recGrid"
-        class="grid"
-      ></div>
-    </section>
-  </section>`;
-
-  const frame =
-    document.getElementById(
-      'playerFrame'
-    );
-
-  const shell =
-    document.getElementById(
-      'playerShell'
-    );
-
-  const playAt =
-    srv =>
-      frame.src =
-        (
-          srv.embed ||
-          srv.url ||
-          ''
-        )
-          .replace(
-            /(\?|&)autoplay=?\d*/i,
-            '$1'
-          ) +
-        (/\?/.test(
-          srv.embed ||
-          srv.url ||
-          ''
-        )
-          ? '&'
-          : '?') +
-        'autoplay=1';
-
-  document
-    .querySelectorAll(
-      '.srv-btn'
-    )
-    .forEach(
-      b => {
-        b.onclick = () => {
-          const srv =
-            (
-              e.servers ||
-              []
-            )[
-              Number(
-                b.dataset.idx
-              )
-            ];
-
-          document
-            .querySelectorAll(
-              '.srv-btn'
-            )
-            .forEach(
-              x =>
-                x.classList.remove(
-                  'on'
-                )
-            );
-
-          b.classList.add(
-            'on'
-          );
-
-          playAt(
-            srv
-          );
-        };
-      }
-    );
-
-  const first =
-    (
-      e.servers ||
-      []
-    )[0];
-
-  if (first) {
-    document
-      .querySelector(
-        '.srv-btn'
-      )
-      ?.classList.add(
-        'on'
-      );
-
-    playAt(
-      first
-    );
   }
 
-  renderProgressiveGrid({
-    container:
+  const untagged =
+    (e.servers || [])
+      .filter(
+        s => !s.lang
+      );
+
+  if (untagged.length) {
+    groups.push({
+      key: 'none',
+      label: 'Servidores',
+      servers:
+        untagged
+    });
+  }
+
+  let current =
+    e.servers?.[0];
+
+  let activeGroup =
+    Math.max(
+      0,
+      groups.findIndex(
+        g =>
+          g.servers.includes(
+            current
+          )
+      )
+    );
+
+  const selectServer =
+    srv => {
+      current = srv;
+      render();
+    };
+
+  const renderServers =
+    () => {
+      const wrap =
+        document.getElementById(
+          'serverGroups'
+        );
+
+      if (
+        !wrap ||
+        !groups.length
+      ) {
+        return;
+      }
+
+      const g =
+        groups[
+          activeGroup
+        ];
+
+      wrap.innerHTML = `
+        <div class="lang-tabs">
+
+          ${groups
+            .map(
+              (x, i) =>
+                `<button
+                  class="${
+                    i ===
+                    activeGroup
+                      ? 'on'
+                      : ''
+                  }"
+                  data-g="${i}"
+                >
+                  ${x.label}
+                </button>`
+            )
+            .join('')}
+
+        </div>
+
+        <div class="server-tabs">
+
+          ${g.servers
+            .map(
+              srv =>
+                `<button
+                  class="${
+                    srv ===
+                    current
+                      ? 'active'
+                      : ''
+                  }"
+                  data-url="${esc(
+                    srv.url
+                  )}"
+                >
+                  ${esc(
+                    srv.name
+                  )}
+                </button>`
+            )
+            .join('')}
+
+        </div>`;
+
+      wrap
+        .querySelectorAll(
+          '[data-g]'
+        )
+        .forEach(
+          b =>
+            (b.onclick = () => {
+              activeGroup =
+                Number(
+                  b.dataset
+                    .g
+                );
+
+              selectServer(
+                groups[
+                  activeGroup
+                ].servers[0]
+              );
+
+              renderServers();
+            })
+        );
+
+      wrap
+        .querySelectorAll(
+          '[data-url]'
+        )
+        .forEach(
+          b =>
+            (b.onclick = () => {
+              const srv =
+                g.servers.find(
+                  s =>
+                    s.url ===
+                    b.dataset
+                      .url
+                );
+
+              if (srv) {
+                selectServer(
+                  srv
+                );
+
+                renderServers();
+              }
+            })
+        );
+    };
+
+  const render = () => {
+    const playerEl =
       document.getElementById(
-        'recGrid'
-      ),
-    items:
-      getRecommendedSeries(
-        s
-      ),
-    emptyText:
-      'Sin recomendaciones.'
-  });
+        'player'
+      );
+
+    if (playerEl) {
+      playerEl.innerHTML =
+        current?.url
+          ? `<iframe
+              src="${esc(
+                current.url
+              )}"
+              allow="autoplay; fullscreen *; encrypted-media; picture-in-picture"
+              allowfullscreen
+              webkitallowfullscreen
+              mozallowfullscreen
+              loading="lazy"
+            ></iframe>
+
+            <button
+              class="fs-btn"
+              onclick="togglePlayerFS()"
+              title="Pantalla completa"
+            >
+              ${ICONS.full}
+            </button>`
+          : '<div class="empty">Servidor no disponible.</div>';
+    }
+  };
+
+  app.innerHTML = `
+  <section class="detail page-top">
+
+    <div class="eyebrow">
+      ${(() => {
+        const epsSerie =
+          DB.episodes.filter(
+            x =>
+              x.seriesId ===
+              e.seriesId
+          ).length;
+
+        const esPeli =
+          serie &&
+          (
+            serie.contentType ===
+              'movie' ||
+            (
+              serie.sourceUrl ||
+              ''
+            ).includes(
+              '/peliculas/'
+            ) ||
+            epsSerie === 1
+          );
+
+        return esPeli
+          ? `PELÍCULA${
+              isWatched(
+                e.seasonId,
+                e.number
+              )
+                ? ' · VISTO'
+                : ''
+            }`
+          : `${esc(
+              season
+                ? seasonTitle(
+                    season,
+                    0
+                  )
+                : ''
+            )} · EPISODIO ${
+              e.number
+            }${
+              isWatched(
+                e.seasonId,
+                e.number
+              )
+                ? ' · VISTO'
+                : ''
+            }`;
+      })()}
+    </div>
+
+    <h1 class="ep-title">
+      ${esc(
+        cleanEpisodeTitle(e)
+      )}
+    </h1>
+
+    <div
+      class="player"
+      id="player"
+    ></div>
+
+    <div
+      id="serverGroups"
+    ></div>
+
+    <div class="ep-nav">
+
+      ${
+        prevEp
+          ? `<a
+              class="btn-x glass"
+              href="#/episode/${qs(
+                prevEp.slug ||
+                  prevEp.id
+              )}"
+            >
+              ${ICONS.prev}
+              <span>Anterior</span>
+            </a>`
+          : `<button
+              class="btn-x glass"
+              disabled
+            >
+              ${ICONS.prev}
+              <span>Anterior</span>
+            </button>`
+      }
+
+      <a
+        class="btn-x glass"
+        href="#/series/${qs(
+          serieRef
+        )}"
+      >
+        ${ICONS.list}
+        <span>Serie</span>
+      </a>
+
+      ${
+        nextEp
+          ? `<a
+              class="btn-x glass"
+              href="#/episode/${qs(
+                nextEp.slug ||
+                  nextEp.id
+              )}"
+            >
+              <span>Siguiente</span>
+              ${ICONS.next}
+            </a>`
+          : `<button
+              class="btn-x glass"
+              disabled
+            >
+              <span>Siguiente</span>
+              ${ICONS.next}
+            </button>`
+      }
+
+    </div>
+
+    <div
+      class="ep-nav"
+      style="margin-top:10px"
+    >
+      <button
+        class="btn-x glass"
+        id="autoNextBtn"
+        onclick="toggleAutoNext()"
+      >
+        ${ICONS.repeat}
+        <span>
+          Auto:
+          ${
+            autoNextEnabled
+              ? 'ON'
+              : 'OFF'
+          }
+        </span>
+      </button>
+    </div>
+
+    ${(() => {
+      const recommended =
+        getRecommendedSeries(
+          serie || {
+            id:
+              e.seriesId
+          }
+        );
+
+      return recommended.length
+        ? `
+          <div style="margin-top:34px">
+
+            <div class="section-head">
+              <h2>
+                También te puede gustar
+              </h2>
+
+              <span class="muted">
+                ${recommended.length}
+              </span>
+            </div>
+
+            <div class="grid">
+              ${recommended
+                .map(card)
+                .join('')}
+            </div>
+
+          </div>`
+        : '';
+    })()}
+
+  </section>`;
+
+  render();
+  renderServers();
 }
 
-/* ---------- ROUTER ---------- */
-
-function route() {
-  const raw =
-    location.hash.slice(
-      2
-    );
-
-  const [
-    page,
-    ...rest
-  ] =
-    raw.split(
-      '/'
-    );
-
+function notfound() {
   stopProgressiveGrid();
+
+  app.innerHTML = `
+    <section class="empty page-top">
+
+      <h2>
+        No encontrado
+      </h2>
+
+      <p
+        class="muted"
+        style="margin-top:10px"
+      >
+        <a
+          href="#/"
+          style="color:var(--red)"
+        >
+          Volver al inicio
+        </a>
+      </p>
+
+    </section>`;
+}
+
+/* ---------- NAVEGACIÓN ---------- */
+
+function highlightNav() {
+  const hash =
+    location.hash ||
+    '#/';
 
   document
     .querySelectorAll(
       '[data-nav]'
     )
-    .forEach(
-      a => {
-        a.classList.remove(
-          'on'
+    .forEach(a => {
+      const href =
+        a.getAttribute(
+          'href'
         );
-      }
-    );
 
-  const mark =
-    href => {
-      document
-        .querySelectorAll(
-          `[data-nav][href="${href}"]`
-        )
-        .forEach(
-          a =>
-            a.classList.add(
-              'on'
-            )
+      const active =
+        href === hash ||
+        (
+          href !== '#/' &&
+          hash.startsWith(
+            href
+          )
         );
-    };
 
-  if (!page) {
-    mark('#/');
+      a.classList.toggle(
+        'active',
+        active
+      );
+    });
+}
 
-    home();
-
-  } else if (
-    page === 'series' &&
-    rest[0]
-  ) {
-    mark('#/series');
-
-    openSeries(
-      decodeURIComponent(
-        rest[0]
-      ),
-      decodeURIComponent(
-        rest[1] || ''
-      )
-    );
-
-  } else if (
-    page === 'series'
-  ) {
-    mark('#/series');
-
-    listAllSeries();
-
-  } else if (
-    page === 'movies'
-  ) {
-    mark('#/movies');
-
-    listMovies();
-
-  } else if (
-    page === 'airing'
-  ) {
-    mark('#/airing');
-
-    listAiring();
-
-  } else if (
-    page === 'completed'
-  ) {
-    mark('#/completed');
-
-    listCompleted();
-
-  } else if (
-    page === 'genres'
-  ) {
-    mark('#/genres');
-
-    listGenres();
-
-  } else if (
-    page === 'genre' &&
-    rest[0]
-  ) {
-    mark('#/genres');
-
-    listByGenre(
-      decodeURIComponent(
-        rest[0]
-      )
-    );
-
-  } else if (
-    page === 'mylist'
-  ) {
-    mark('#/mylist');
-
-    myList();
-
-  } else if (
-    page === 'search'
-  ) {
-    mark('#/search');
-
-    searchView();
-
-  } else if (
-    page === 'episode' &&
-    rest[0]
-  ) {
-    episode(
-      decodeURIComponent(
-        rest[0]
-      )
-    );
-
-  } else {
-    home();
-  }
-
-  window.scrollTo(
-    0,
-    0
+function pageTransition() {
+  app.classList.remove(
+    'page-anim'
   );
+  void app.offsetWidth;
+  app.classList.add(
+    'page-anim'
+  );
+}
+
+function route() {
+  clearInterval(
+    heroTimer
+  );
+  heroHold = false;
+
+  stopProgressiveGrid();
 
   document
     .getElementById(
@@ -4540,6 +4600,110 @@ function route() {
     ?.classList.remove(
       'open'
     );
+
+  const p =
+    location.hash
+      .replace(
+        /^#\/?/,
+        ''
+      )
+      .split('/')
+      .filter(Boolean)
+      .map(
+        decodeURIComponent
+      );
+
+  const type =
+    p[0];
+
+  const arg =
+    p[1];
+
+  const extra =
+    p[2];
+
+  if (!type) {
+    home();
+
+  } else if (
+    type === 'search'
+  ) {
+    search(
+      arg || ''
+    );
+
+  } else if (
+    type === 'series' &&
+    !arg
+  ) {
+    listAllSeries();
+
+  } else if (
+    type === 'movies'
+  ) {
+    listMovies();
+
+  } else if (
+    type === 'series' &&
+    arg
+  ) {
+    detail(
+      arg,
+      extra
+    );
+
+  } else if (
+    type === 'airing'
+  ) {
+    listByStatus(
+      'emisión',
+      'Donghuas En Emisión'
+    );
+
+  } else if (
+    type === 'completed'
+  ) {
+    listByStatus(
+      'finaliz',
+      'Donghuas Finalizados'
+    );
+
+  } else if (
+    type === 'genres'
+  ) {
+    listGenres();
+
+  } else if (
+    type === 'genre' &&
+    arg
+  ) {
+    listByGenre(
+      arg
+    );
+
+  } else if (
+    type === 'mylist'
+  ) {
+    listMyList();
+
+  } else if (
+    type === 'episode'
+  ) {
+    episode(
+      arg
+    );
+
+  } else {
+    home();
+  }
+
+  highlightNav();
+
+  pageTransition();
+
+  window.scrollTo({
+    top: 0
+  });
 }
 
 /* ---------- EVENTOS GLOBALES ---------- */
@@ -4549,60 +4713,25 @@ window.addEventListener(
   route
 );
 
-document
-  .getElementById(
-    'reloadBtn'
-  )
-  ?.addEventListener(
-    'click',
-    async e => {
-      e.preventDefault();
-
-      const btn =
-        e.currentTarget;
-
-      btn.classList.add(
-        'spin'
-      );
-
-      DB_CACHE = {};
-      DETAIL_CACHE = {};
-
-      await load();
-
-      btn.classList.remove(
-        'spin'
-      );
-    }
-  );
-
-document
-  .getElementById(
-    'toTop'
-  )
-  ?.addEventListener(
-    'click',
-    () =>
-      window.scrollTo(
-        {
-          top: 0,
-          behavior:
-            'smooth'
-        }
-      )
-  );
-
 window.addEventListener(
   'scroll',
   () => {
+    document
+      .querySelector(
+        '.nav'
+      )
+      ?.classList.toggle(
+        'scrolled',
+        window.scrollY > 40
+      );
+
     document
       .getElementById(
         'toTop'
       )
       ?.classList.toggle(
         'show',
-        window.scrollY >
-          600
+        window.scrollY > 500
       );
   },
   {
@@ -4611,52 +4740,50 @@ window.addEventListener(
 );
 
 document.addEventListener(
-  'click',
-  e => {
-    if (
-      !e.target.closest(
-        '.more-menu'
-      ) &&
-      !e.target.closest(
-        '[onclick="toggleMoreMenu()"]'
-      )
-    ) {
-      document
-        .getElementById(
-          'moreMenu'
-        )
-        ?.classList.remove(
-          'open'
-        );
-    }
-  }
-);
-
-window.addEventListener(
-  'error',
-  e => {
-    console.error(
-      'Error global:',
-      e.message
-    );
-  }
-);
-
-window.addEventListener(
-  'unhandledrejection',
-  e => {
-    console.error(
-      'Promesa rechazada:',
-      e.reason
-    );
-  }
-);
-
-/* ARRANQUE */
-
-document.addEventListener(
   'DOMContentLoaded',
   () => {
+    const reloadBtn =
+      document.getElementById(
+        'reloadBtn'
+      );
+
+    if (reloadBtn) {
+      reloadBtn.addEventListener(
+        'click',
+        async () => {
+          reloadBtn.style.transform =
+            'rotate(360deg)';
+
+          reloadBtn.style.transition =
+            'transform .5s ease';
+
+          await load();
+
+          setTimeout(
+            () => {
+              reloadBtn.style.transform =
+                'none';
+            },
+            500
+          );
+        }
+      );
+    }
+
+    document
+      .getElementById(
+        'toTop'
+      )
+      ?.addEventListener(
+        'click',
+        () =>
+          window.scrollTo({
+            top: 0,
+            behavior:
+              'smooth'
+          })
+      );
+
     if (
       'serviceWorker' in
       navigator
@@ -4671,6 +4798,7 @@ document.addEventListener(
     }
   }
 );
+
 
 /* =========================================================
    CONTRATO GLOBAL — expone el estado interno a las capas Pro
