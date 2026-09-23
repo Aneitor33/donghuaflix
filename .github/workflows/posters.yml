@@ -4,6 +4,8 @@
 #  buena portada de su propia web.
 #  Rondas de 50 min con commit entre ellas: si GitHub
 #  corta, solo se pierde la ronda en curso.
+#  Tras cada ronda regenera el ÍNDICE LITE (lo que
+#  realmente lee la web) con las nuevas portadas.
 #  Requiere: secret TMDB_API_KEY (gratis en themoviedb.org)
 # ══════════════════════════════════════════════
 name: Sincronizar portadas
@@ -48,6 +50,8 @@ jobs:
             echo "══════════════════ RONDA $round ($CATALOG) ══════════════════"
             MAX_MINUTES=50 node poster-sync.js > /tmp/posters-ronda-$round.log 2>&1 || true
             tail -n 40 /tmp/posters-ronda-$round.log
+            # Regenerar el ÍNDICE LITE y las fichas (lo que lee la web)
+            node split-catalog.js public/data/catalog-$CATALOG.json
             git add -A public/data public/img/posters
             if ! git diff --staged --quiet; then
               git commit -m "sync(posters): $CATALOG (ronda $round)"
