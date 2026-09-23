@@ -54,6 +54,10 @@
       <button id="reloadBtn" class="icon-btn" title="Actualizar catálogo" aria-label="Actualizar catálogo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>
       </button>
+      <button id="dfsAuthBtn" class="icon-btn" title="Mi cuenta" aria-label="Mi cuenta"
+        onclick="window.__dfsOpenModal ? window.__dfsOpenModal() : (window.showToast && showToast('Cargando módulo de cuenta…'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.8 3.9-5.7 7.5-5.7s6.7 1.9 7.5 5.7"/></svg>
+      </button>
     </div>
   </header>
 
