@@ -709,82 +709,66 @@ footer a.ig-link svg{width:13px;height:13px}
 
 
 /* ══════════════════════════════════════════════════════════
-   DONGHUAFLIX PRO — capa visual premium (se carga tras styles.css)
+   DONGHUAFLIX PRO — capa visual (OPTIMIZADA: sin animaciones
+   de entrada que congelan el móvil)
    ══════════════════════════════════════════════════════════ */
 :root{--dfx-red:#e50914;--dfx-glow:rgba(229,9,20,.35)}
 body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-/* zoom de tarjetas estilo Netflix */
-.card{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease;will-change:transform}
-.card:hover{transform:translateY(-6px) scale(1.035);box-shadow:0 18px 44px rgba(0,0,0,.65),0 0 0 1px var(--dfx-red);z-index:5;position:relative}
+/* hover de tarjetas (solo en hover, no animación de entrada) */
+.card{transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 38px rgba(0,0,0,.6),0 0 0 1px var(--dfx-red);z-index:5;position:relative}
 .card .poster{overflow:hidden;border-radius:10px;position:relative}
-.card .poster img{transition:transform .45s ease;display:block}
-.card:hover .poster img{transform:scale(1.09)}
-.card .poster::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 48%,transparent 62%);transform:translateX(-130%);transition:transform .65s ease}
-.card:hover .poster::after{transform:translateX(130%)}
+.card .poster img{transition:transform .35s ease;display:block}
+.card:hover .poster img{transform:scale(1.06)}
 .card .badge{box-shadow:0 2px 8px rgba(0,0,0,.5);letter-spacing:.4px}
-.card h3{font-weight:600;font-size:12.5px;line-height:1.3;margin-top:6px;transition:color .2s ease}
-.card:hover h3{color:#fff}
-/* raíles con edge-fade */
+.card h3{font-weight:600;font-size:12.5px;line-height:1.3;margin-top:6px}
+/* edge-fade en raíles (solo máscara, no animación) */
 .rail{mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);padding:4px 2px}
 .cw-rail{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 .top10-row{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
-/* hero con parallax sutil */
+/* hero: fondo estático (sin Ken Burns infinito que mata la GPU) */
 .hero{position:relative;overflow:hidden;touch-action:pan-y}
-.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:blur(28px) brightness(.5) saturate(1.3);transform:scale(1.15);z-index:0;will-change:transform;animation:dfxHeroIn 1.2s ease}
+.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:blur(28px) brightness(.5) saturate(1.3);z-index:0}
+@media(min-width:901px){
+  .hero::before{animation:dfxHeroIn 1.2s ease}
+}
 @keyframes dfxHeroIn{from{opacity:0}to{opacity:1}}
 .hero > *{position:relative;z-index:1}
 .hero h1{font-weight:900;letter-spacing:-1px;text-shadow:0 4px 30px rgba(0,0,0,.7)}
 /* sombras en capas */
-.detail-v2 .detail-hero,.player,.episode-list,#dfsSheet,.dfxCalDay{box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.player{border-radius:12px;overflow:hidden;transition:box-shadow .3s ease}
-.player:hover{box-shadow:0 30px 80px rgba(0,0,0,.75)}
-/* skeletons de brillo */
+.detail-v2 .detail-hero,.player,.episode-list{box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.player{border-radius:12px;overflow:hidden}
+/* skeletons de brillo (solo mientras carga, se eliminan al renderizar) */
 .skeleton{position:relative;overflow:hidden;background:#16161c;border-radius:10px}
 .skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.07) 50%,transparent 80%);animation:dfxShimmer 1.4s infinite;transform:translateX(-100%)}
 @keyframes dfxShimmer{to{transform:translateX(100%)}}
 /* tipografía con degradado */
 .section-head h2{background:linear-gradient(120deg,#fff 55%,#ffb3b8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;letter-spacing:-.2px}
 /* botones */
-.btn-x{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease,background .2s,border-color .2s}
-.btn-x:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.btn-x{transition:transform .15s ease,filter .15s ease,background .2s}
+.btn-x:hover{transform:translateY(-2px);filter:brightness(1.1)}
 .btn-x:active{transform:scale(.96)}
 .btn-x.play{box-shadow:0 8px 26px rgba(229,9,20,.35)}
-.btn-x.play:hover{box-shadow:0 12px 34px rgba(229,9,20,.5)}
-/* scrollbars */
+/* scrollbar */
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-track{background:#0a0a0c}
 ::-webkit-scrollbar-thumb{background:#2a2a33;border-radius:99px;border:2px solid #0a0a0c}
 ::-webkit-scrollbar-thumb:hover{background:var(--dfx-red)}
-/* episodios: deslizan al pasar el ratón */
-.episode{transition:transform .18s ease,border-color .2s,background .2s}
+/* episodios */
+.episode{transition:transform .15s ease,background .2s}
 .episode:hover{transform:translateX(6px)}
-/* glow ambiental (dfx-polish.js lo colorea) */
+/* glow ambiental */
 #dfxGlow{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;filter:blur(90px) saturate(1.4);transition:background 1s ease;background:transparent}
 body.dfx-cine #dfxGlow{opacity:.3}
 .player::before{content:'';position:absolute;inset:-40%;background:var(--dfx-glow,transparent);filter:blur(60px);opacity:.25;z-index:0;pointer-events:none}
 .player iframe{position:relative;z-index:1}
 /* modo cine */
-#dfxCineBtn{position:fixed;bottom:88px;right:16px;z-index:9997;width:46px;height:46px;border-radius:50%;background:rgba(20,20,25,.92);border:1px solid #333;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);transition:transform .2s ease,border-color .2s ease;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-#dfxCineBtn:hover{transform:scale(1.08);border-color:var(--dfx-red)}
+#dfxCineBtn{position:fixed;bottom:88px;right:16px;z-index:9997;width:46px;height:46px;border-radius:50%;background:rgba(20,20,25,.92);border:1px solid #333;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.5)}
 #dfxCineBtn svg{width:22px;height:22px}
 body.dfx-cine .nav,body.dfx-cine .bottom-nav,body.dfx-cine footer,body.dfx-cine #dfxGlobalStats,body.dfx-cine #dfxBNWrap{display:none!important}
 body.dfx-cine::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9990;background:radial-gradient(ellipse at 50% 0%,var(--dfx-glow,rgba(229,9,20,.35)),transparent 60%);mix-blend-mode:screen;opacity:.5}
-/* reducir animaciones */
-body.dfx-no-motion .card:hover{transform:none}
-body.dfx-no-motion .hero::before{transform:none;animation:none}
+/* reducir animaciones (ajuste del usuario) */
 body.dfx-no-motion *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-/* entrada escalonada de tarjetas */
-@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
-.grid .card{animation:cardIn .5s cubic-bezier(.2,.7,.25,1) both}
-.grid .card:nth-child(1){animation-delay:.02s}.grid .card:nth-child(2){animation-delay:.05s}
-.grid .card:nth-child(3){animation-delay:.08s}.grid .card:nth-child(4){animation-delay:.11s}
-.grid .card:nth-child(5){animation-delay:.14s}.grid .card:nth-child(6){animation-delay:.17s}
-.grid .card:nth-child(7){animation-delay:.20s}.grid .card:nth-child(8){animation-delay:.23s}
-.grid .card:nth-child(9){animation-delay:.26s}.grid .card:nth-child(10){animation-delay:.29s}
-.grid .card:nth-child(11){animation-delay:.32s}.grid .card:nth-child(12){animation-delay:.35s}
-.grid .card:nth-child(13){animation-delay:.38s}.grid .card:nth-child(14){animation-delay:.41s}
-.grid .card:nth-child(15){animation-delay:.44s}.grid .card:nth-child(16){animation-delay:.47s}
-.grid .card:nth-child(17){animation-delay:.50s}.grid .card:nth-child(18){animation-delay:.53s}
 /* responsive extra */
 @media(max-width:640px){
   .hero h1{letter-spacing:-1.4px}
