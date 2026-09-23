@@ -1,5146 +1,837 @@
-console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:#e50914;font-size:14px;font-weight:bold;");
+:root{
+  /* ── tokens base (originales — no renombrar, se usan en todo el CSS) ── */
+  --bg:#000;
+  --surface:#14161c;
+  --surface2:#1c1f27;
+  --text:#fff;
+  --muted:#9aa0a8;
+  --line:rgba(255,255,255,.12);
+  --red:#e50914;
+  --glass:rgba(255,255,255,.12);
+  --glass-brd:rgba(255,255,255,.22);
+  --radius:8px;
+  --shadow:0 22px 70px rgba(0,0,0,.55);
+  /* ── tokens Fase 1 ── */
+  --elevated:#1b1e26;      /* superficie elevada: hovers, episodios */
+  --accent:var(--red);     /* acento unificado (rojo) */
+  --text-2:#c9ccd2;        /* texto secundario */
+  --dur:.2s;               /* transición estándar */
+  --dur-slow:.35s;         /* transición lenta */
+}
+*{box-sizing:border-box}
+html{background:#000;scroll-behavior:smooth}
+body{
+  margin:0;
+  background:transparent;
+  color:var(--text);
+  font-family:'Segoe UI',Inter,system-ui,-apple-system,sans-serif;
+}
+button,input,select{font:inherit}
+a{color:inherit}
+img{user-select:none}
+.muted{color:var(--muted);font-size:12px}
+.center{text-align:center}
+.page-top{padding-top:calc(var(--topoff) + 46px)}
+svg{display:inline-block;vertical-align:middle}
 
-let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
-
-/* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld'];
-const CATALOGS = [
-  { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
-  { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
-  { id: 'donghuaworld',  file: './public/data/catalog-donghuaworld.json',  index: './public/data/catalog-donghuaworld-index.json',  label: 'DonghuaWorld' },
-  { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
-  { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
-];
-const SRC_LABEL = {
-  donghualife: 'DonghuaLife',
-  donghuasub: 'DonghuaSub',
-  donghuaworld: 'DonghuaWorld',
-  tiodonghua: 'TioDonghua',
-  peliculas: 'Películas',
-  doramas: 'Doramas'
-};
-
-/* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
-let DETAILS_BASE = {};
-const DETAIL_CACHE = {};
-
-let DB_CACHE = {};
-let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghualife';
-if (!CATALOGS.some(c => c.id === currentCatalog)) currentCatalog = 'donghualife';
-const CATALOG_AVAILABLE = { donghua: true };
-
-/* Une las partes de un catálogo dividido */
-function mergeCatalogParts(manifest, parts) {
-  const db = {
-    meta: manifest.meta || {},
-    series: [],
-    seasons: [],
-    episodes: [],
-    genres: []
-  };
-
-  const gset = new Set(manifest.genres || []);
-
-  for (const p of parts) {
-    if (!p) continue;
-
-    if (Array.isArray(p.series)) {
-      db.series.push(...p.series);
-    }
-
-    if (Array.isArray(p.seasons)) {
-      db.seasons.push(...p.seasons);
-    }
-
-    if (Array.isArray(p.episodes)) {
-      db.episodes.push(...p.episodes);
-    }
-
-    if (Array.isArray(p.genres)) {
-      p.genres.forEach(g => gset.add(g));
-    }
-  }
-
-  db.genres = [...gset];
-
-  return db;
+/* ---------- FONDO AMBIENTE (cristal líquido) ---------- */
+.bg-ambience{
+  position:fixed;inset:-70px;z-index:-1;
+  background:center/cover no-repeat;
+  filter:blur(75px) saturate(1.5) brightness(.42);
+  transition:background-image .8s ease;
 }
 
-/* ---------- CACHE ---------- */
-/*
- * Antes:
- *   ?ts=Date.now()
- *   cache: 'reload'
- *
- * Eso obligaba a descargar de nuevo el catálogo.
- *
- * Ahora dejamos que navegador/CDN utilicen su caché normal.
- */
-async function fetchCatalogFile(file) {
-  const r = await fetch(file, {
-    cache: 'default'
-  });
-
-  if (!r.ok) {
-    throw new Error('No se pudo cargar ' + file);
-  }
-
-  return r.json();
+/* ---------- NAVBAR SUPERIOR ---------- */
+.nav{
+  height:64px;position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;padding:0 4%;gap:30px;
+  background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.35) 70%,transparent);
+  transition:background .3s;
 }
-
-async function ensureCatalog(id) {
-  if (DB_CACHE[id]) return DB_CACHE[id];
-
-  const cat = CATALOGS.find(c => c.id === id);
-  if (!cat) throw new Error('Catálogo desconocido: ' + id);
-
-  // ① Intentar el índice LITE (≈1 MB en vez de 15-30 MB)
-  if (cat.index) {
-    try {
-      const lite = await fetchCatalogFile(cat.index);
-      if (lite && Array.isArray(lite.series)) {
-        // El índice viene comprimido (claves cortas + géneros numerados):
-        // lo devolvemos al formato de siempre para no tocar el resto de la app.
-        const gl = lite.genres || [];
-        const ib = lite.imageBase || '';
-        const rows = lite.compact
-          ? lite.series.map(r => ({
-              id: r.i,
-              slug: r.s,
-              title: r.t,
-              image: r.p ? (r.p.startsWith('http') || r.p.startsWith('./') || r.p.startsWith('/') ? r.p : ib + r.p) : null,
-              status: r.st || null,
-              type: r.ty || null,
-              year: r.y || null,
-              country: r.c || null,
-              genres: (r.g || []).map(n => gl[n]).filter(Boolean),
-              totalEpisodes: r.e ?? null,
-              updatedAt: r.u || null
-            }))
-          : lite.series;
-
-        const db = {
-          meta: lite.meta || {},
-          series: rows,
-          seasons: [],
-          episodes: [],
-          genres: lite.genres || [],
-          lite: true
-        };
-        DETAILS_BASE[id] =
-          './public/data/' + (lite.detailsBase || '');
-        DB_CACHE[id] = db;
-        CATALOG_AVAILABLE[id] = true;
-        return db;
-      }
-    } catch { /* sin índice → seguimos con el catálogo completo */ }
-  }
-
-  // ② Compatibilidad: catálogo completo / sharded (código original)
-  const data = await fetchCatalogFile(cat.file);
-  let merged = data;
-
-  if (data && data.sharded && Array.isArray(data.parts) && data.parts.length) {
-    const parts = await Promise.all(
-      data.parts.map(f => fetchCatalogFile(f).catch(() => null))
-    );
-    if (parts.some(p => p === null)) throw new Error('Falta alguna parte del catálogo');
-    merged = mergeCatalogParts(data, parts);
-  }
-
-  DB_CACHE[id] = merged;
-  CATALOG_AVAILABLE[id] = true;
-  return merged;
+.nav.scrolled{background:rgba(5,5,7,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:-.5px;font-size:19px}
+.brand-mark{width:32px;height:32px;border-radius:8px;overflow:hidden;background:var(--red);display:grid;place-items:center;flex-shrink:0}
+.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.brand-mark svg{width:13px;height:13px;color:#fff}
+.brand b{color:var(--red);font-weight:800}
+.nav nav{display:flex;gap:7px;align-items:center}
+.nav nav a{
+  color:#d5d8de;text-decoration:none;font-size:12.5px;font-weight:600;
+  padding:7px 14px;border-radius:999px;white-space:nowrap;
+  background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
 }
-
-async function probeCatalogs() {
-  let netFail = false;
-
-  for (const c of CATALOGS) {
-    if (DB_CACHE[c.id]) {
-      CATALOG_AVAILABLE[c.id] = true;
-      continue;
-    }
-
-    try {
-      /* GET del índice LITE: pequeño (43-80 KB, ~300 KB en
-         total) y compatible con todo. El GET antiguo bajaba
-         el catálogo COMPLETO (hasta 17 MB) y HEAD fallaba
-         con algunos bloqueadores: por eso el selector no
-         aparecía. */
-      if (c.index) {
-        const ri = await fetch(
-          c.index,
-          {
-            cache: 'default'
-          }
-        );
-
-        if (ri.ok) {
-          CATALOG_AVAILABLE[c.id] = true;
-          continue;
-        }
-      }
-
-      const r = await fetch(
-        c.file,
-        {
-          method: 'HEAD',
-          cache: 'default'
-        }
-      );
-
-      CATALOG_AVAILABLE[c.id] =
-        r.ok;
-    } catch {
-      /* Fallo DE RED: no marcar como no disponible;
-         se reintenta a los 15 s. Así el selector no
-         desaparece por una conexión floja. */
-      netFail = true;
-    }
-  }
-
-  renderCatBar();
-
-  if (netFail) {
-    setTimeout(
-      () =>
-        probeCatalogs(),
-      15000
-    );
-  }
+.nav nav a:hover{background:rgba(255,255,255,.2);color:#fff}
+.nav nav a.active{background:#fff;color:#000;border-color:#fff;font-weight:700}
+.nav-actions{margin-left:auto;display:flex;gap:9px}
+.icon-btn{
+  width:38px;height:38px;cursor:pointer;text-decoration:none;
+  border-radius:50%;border:1px solid var(--glass-brd);
+  background:var(--glass);backdrop-filter:blur(14px);
+  color:#fff;display:grid;place-items:center;
+  transition:transform .2s,background .2s;
 }
+.icon-btn svg{width:15px;height:15px}
+.icon-btn:hover{background:var(--red);border-color:var(--red);transform:scale(1.08)}
 
-function renderCatBar() {
-  const menu = document.getElementById('catalogMenu');
-  const wrap = document.getElementById('catalogWrap');
-
-  if (!menu || !wrap) return;
-
-  const available = CATALOGS.filter(
-    c => CATALOG_AVAILABLE[c.id]
-  );
-
-  wrap.style.display =
-    available.length > 1 ? '' : 'none';
-
-  menu.querySelectorAll('button').forEach(b => {
-    const id = b.dataset.cat;
-
-    b.classList.toggle(
-      'on',
-      id === currentCatalog
-    );
-
-    b.style.display =
-      CATALOG_AVAILABLE[id] ? '' : 'none';
-  });
+/* ---------- BOTONES CRISTAL ---------- */
+.btn-x{
+  border:0;border-radius:7px;padding:11px 20px;font-weight:700;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .15s ease,background .2s ease;
 }
+.btn-x svg{width:14px;height:14px}
+.btn-x:active{transform:scale(.96)}
+.btn-x:disabled{opacity:.35;cursor:default;transform:none}
+.btn-x.play{background:#fff;color:#0a0b0f}
+.btn-x.play:hover{background:var(--red);color:#fff}
+.btn-x.glass{background:var(--glass);backdrop-filter:blur(16px);color:#fff;border:1px solid var(--glass-brd)}
+.btn-x.glass:hover{background:rgba(255,255,255,.22)}
+.btn-x.big{padding:14px 26px;font-size:15px}
+.btn-x.big svg{width:16px;height:16px}
+.btn-x.round{width:46px;height:46px;padding:0;border-radius:50%}
+.btn-x.round svg{width:18px;height:18px}
 
-function toggleCatalogMenu() {
-  document
-    .getElementById('catalogMenu')
-    ?.classList.toggle('open');
+:root{--topoff:64px}
+
+/* ---------- PILLS DE FILTROS ---------- */
+.pills{display:flex;gap:8px;padding:84px 4% 6px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:2}
+.pills::-webkit-scrollbar{display:none}
+.pill{
+  flex-shrink:0;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;
+  color:#fff;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);cursor:pointer;transition:.2s;white-space:nowrap;
 }
-
-/* Cerrar menú al tocar fuera */
-document.addEventListener('click', e => {
-  const m = document.getElementById('catalogMenu');
-
-  if (
-    m?.classList.contains('open') &&
-    !e.target.closest('.catalog-wrap')
-  ) {
-    m.classList.remove('open');
-  }
-});
-
-async function switchCatalog(id) {
-  if (id === currentCatalog) return;
-
-  app.innerHTML =
-    '<section class="section page-top"><div class="grid">' +
-    Array(8)
-      .fill('<div class="skeleton"></div>')
-      .join('') +
-    '</div></section>';
-
-  try {
-    DB = await ensureCatalog(id);
-
-    currentCatalog = id;
-
-    localStorage.setItem(
-      'donghuaflix_catalog',
-      id
-    );
-
-    setAmbience('');
-
-    location.hash = '#/';
-
-    renderCatBar();
-    route();
-
-  } catch (e) {
-    showToast('Catálogo no disponible todavía');
-    load();
-  }
-}
-
-const app = document.getElementById('app');
-
-const esc = s =>
-  String(s ?? '').replace(
-    /[&<>"']/g,
-    m =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      }[m])
-  );
-
-const qs = s => encodeURIComponent(s || '');
-
-/* ---------- ICONOS SVG ---------- */
-const ICONS = {
-  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
-
-  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-
-  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
-
-  heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9A5.3 5.3 0 0 1 12 6.6a5.3 5.3 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg>',
-
-  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
-
-  reload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>',
-
-  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
-
-  tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2.5"/><path d="M8 3l4 4 4-4"/></svg>',
-
-  dots: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>',
-
-  full: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>',
-
-  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg>',
-
-  prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
-
-  next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
-
-  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
-
-  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
-
-  film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M3 16h18M8 3v18M16 3v18"/></svg>',
-
-  repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>'
-};
-
-/* ---------- HELPERS ---------- */
-
-const cleanTitle = s => {
-  let title = s?.title;
-
-  if (title) {
-    title = title
-      .replace(/\s*\|\s*Donghualife.*$/i, '')
-      .trim();
-  }
-
-  if (
-    !title ||
-    title.toLowerCase() === 'temporadas'
-  ) {
-    const rawSlug = s?.slug || s?.id || '';
-
-    if (rawSlug) {
-      return rawSlug
-        .split('-')
-        .map(
-          w =>
-            w.charAt(0).toUpperCase() +
-            w.slice(1)
-        )
-        .join(' ');
-    }
-
-    return 'Donghua';
-  }
-
-  return title;
-};
-
-const cleanEpisodeTitle = e => {
-  let t = (e.title || '')
-    .replace(/\s*\|\s*Donghualife.*$/i, '')
-    .trim();
-
-  const m = t.match(
-    /(?:^|[-–—])\s*\d*\s*(?:Episodio|Episode)\s*x?(\d+)\s*$/i
-  );
-
-  if (m) {
-    return `Episodio ${parseInt(m[1], 10)}`;
-  }
-
-  return t || `Episodio ${e.number}`;
-};
-
-const slugFromUrl = u =>
-  (u || '')
-    .split('?')[0]
-    .split('/')
-    .filter(Boolean)
-    .pop() || '';
-
-const prettySlug = slug =>
-  slug
-    .split('-')
-    .filter(Boolean)
-    .map(
-      w =>
-        w.charAt(0).toUpperCase() +
-        w.slice(1)
-    )
-    .join(' ');
-
-const seasonTitle = (season, index) => {
-  if (Number.isFinite(season.number)) {
-    return `Temporada ${season.number}`;
-  }
-
-  const t = (season.title || '').trim();
-
-  if (
-    t &&
-    t.toLowerCase() !== 'temporadas'
-  ) {
-    const m =
-      t.match(
-        /(?:temporada|season)\s*(\d{1,3})/i
-      ) ||
-      t.match(/^(\d{1,3})[ª°.]/);
-
-    if (m) {
-      return `Temporada ${parseInt(m[1], 10)}`;
-    }
-
-    return t;
-  }
-
-  const slug = (
-    season.slug ||
-    season.id ||
-    slugFromUrl(
-      season.url ||
-      season.sourceUrl
-    ) ||
-    ''
-  ).toLowerCase();
-
-  let m = slug.match(/-(\d{1,3})-\d{1,3}$/);
-
-  if (m) {
-    return `Temporada ${parseInt(m[1], 10)}`;
-  }
-
-  m = slug.match(/-(\d{1,3})$/);
-
-  if (m) {
-    return `Temporada ${parseInt(m[1], 10)}`;
-  }
-
-  if (slug) return prettySlug(slug);
-
-  return `Temporada ${index + 1}`;
-};
-
-function orderSeasons(s, seasons) {
-  const urls = s.seasonUrls || [];
-
-  if (!urls.length) return seasons;
-
-  const rank = seas => {
-    const key = (
-      seas.slug ||
-      seas.id ||
-      slugFromUrl(
-        seas.url ||
-        seas.sourceUrl
-      ) ||
-      ''
-    ).toLowerCase();
-
-    const i = urls.findIndex(
-      u =>
-        slugFromUrl(u).toLowerCase() === key ||
-        u ===
-          (seas.url ||
-            seas.sourceUrl)
-    );
-
-    return i === -1 ? 999 : i;
-  };
-
-  return seasons
-    .slice()
-    .sort(
-      (a, b) => rank(a) - rank(b)
-    );
-}
-
-const getSeriesImage = s => {
-  if (s?.posterLocal) {
-    return s.posterLocal;
-  }
-
-  if (
-    s?.image &&
-    !s.image.includes('IcoPrueba.png')
-  ) {
-    return s.image;
-  }
-
-  const seasons = DB.seasons.filter(
-    seas => seas.seriesId === s.id
-  );
-
-  for (const seas of seasons) {
-    if (
-      seas.image &&
-      !seas.image.includes('IcoPrueba.png')
-    ) {
-      return seas.image;
-    }
-  }
-
-  return '';
-};
-
-const findSeries = ref =>
-  DB.series.find(
-    x =>
-      (x.slug || x.id) === ref ||
-      x.id === ref
-  );
-
-const findEpisode = ref =>
-  DB.episodes.find(
-    x =>
-      (x.slug || x.id) === ref ||
-      x.id === ref
-  );
-
-const dedupeEps = eps => {
-  const map = new Map();
-
-  eps.forEach(e => {
-    if (!map.has(e.number)) {
-      map.set(e.number, e);
-    }
-  });
-
-  return [...map.values()].sort(
-    (a, b) => a.number - b.number
-  );
-};
-
-const seriesGenres = s => {
-  if (Array.isArray(s.genres)) {
-    return s.genres;
-  }
-
-  if (s.genre) {
-    return [s.genre];
-  }
-
-  return [];
-};
-
-/* Portadas inteligentes */
-function imgLoaded(img) {
-  img.classList.toggle(
-    'wide',
-    img.naturalWidth > img.naturalHeight
-  );
-}
-
-/* ---------- FONDO AMBIENTE ---------- */
-
-function setAmbience(url) {
-  const el =
-    document.getElementById('bgAmbience');
-
-  if (!el) return;
-
-  el.style.backgroundImage = url
-    ? `url('${url}')`
-    : 'none';
-}
-
-/* ---------- VISTOS ---------- */
-
-function getWatched() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(
-        'donghuaflix_watched'
-      ) || '{}'
-    );
-  } catch (e) {
-    return {};
-  }
-}
-
-function isWatched(seasonId, num) {
-  return Boolean(
-    getWatched()[seasonId]?.[num]
-  );
-}
-
-/* Marca SOLO el episodio que se está viendo */
-function markWatchedSingle(
-  seasonId,
-  num
-) {
-  const all = getWatched();
-
-  all[seasonId] =
-    all[seasonId] || {};
-
-  all[seasonId][num] =
-    Date.now();
-
-  localStorage.setItem(
-    'donghuaflix_watched',
-    JSON.stringify(all)
-  );
-}
-
-function markWatchedUpTo(
-  seasonId,
-  num
-) {
-  const all = getWatched();
-
-  all[seasonId] =
-    all[seasonId] || {};
-
-  for (
-    let n = 1;
-    n <= num;
-    n++
-  ) {
-    if (!all[seasonId][n]) {
-      all[seasonId][n] = Date.now();
-    }
-  }
-
-  localStorage.setItem(
-    'donghuaflix_watched',
-    JSON.stringify(all)
-  );
-}
-
-function toggleWatched(
-  seasonId,
-  num
-) {
-  const all = getWatched();
-
-  all[seasonId] =
-    all[seasonId] || {};
-
-  if (all[seasonId][num]) {
-    delete all[seasonId][num];
-  } else {
-    all[seasonId][num] =
-      Date.now();
-  }
-
-  localStorage.setItem(
-    'donghuaflix_watched',
-    JSON.stringify(all)
-  );
-
-  showToast(
-    isWatched(seasonId, num)
-      ? 'Marcado como visto'
-      : 'Marcador quitado'
-  );
-
-  const s =
-    findSeries(detailState.seriesId);
-
-  if (s) {
-    const seasons =
-      orderSeasons(
-        s,
-        DB.seasons.filter(
-          x => x.seriesId === s.id
-        )
-      );
-
-    if (
-      seasons[detailState.seasonIdx]
-    ) {
-      renderEpisodePage(
-        seasons[
-          detailState.seasonIdx
-        ]
-      );
-    }
-  }
-}
-
-function seriesProgress(s) {
-  const watched =
-    getWatched();
-
-  const seasons =
-    DB.seasons.filter(
-      x => x.seriesId === s.id
-    );
-
-  let total = 0;
-  let seen = 0;
-
-  for (const seas of seasons) {
-    const eps =
-      DB.episodes.filter(
-        e =>
-          e.seasonId === seas.id
-      );
-
-    total += eps.length;
-
-    const w =
-      watched[seas.id] || {};
-
-    seen += eps.filter(
-      e => w[e.number]
-    ).length;
-  }
-
-  return total
-    ? Math.round(
-        seen / total * 100
-      )
-    : 0;
-}
-
-function seriesEpisodeCount(s) {
-  return DB.episodes.filter(
-    e => e.seriesId === s.id
-  ).length;
-}
-
-/* ---------- TOAST ---------- */
-
-let toastTimer = null;
-
-function showToast(msg) {
-  const t =
-    document.getElementById('toast');
-
-  if (!t) return;
-
-  t.textContent = msg;
-  t.classList.add('show');
-
-  clearTimeout(toastTimer);
-
-  toastTimer = setTimeout(
-    () =>
-      t.classList.remove('show'),
-    2200
-  );
-}
-
-/* ---------- FAVORITOS ---------- */
-
-function getFavs() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(
-        'donghuaflix_favs'
-      ) || '[]'
-    );
-  } catch (e) {
-    return [];
-  }
-}
-
-function toggleFav(seriesId) {
-  let favs = getFavs();
-
-  const was =
-    favs.includes(seriesId);
-
-  favs = was
-    ? favs.filter(
-        id => id !== seriesId
-      )
-    : [...favs, seriesId];
-
-  localStorage.setItem(
-    'donghuaflix_favs',
-    JSON.stringify(favs)
-  );
-
-  showToast(
-    was
-      ? 'Quitado de Mi lista'
-      : 'Añadido a Mi lista'
-  );
-
-  return !was;
-}
-
-const isFav = id =>
-  getFavs().includes(id);
-
-/* Comparación sin acentos */
-const fold = s =>
-  String(s || '')
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase();
-
-const getYear = s =>
-  s.year ||
-  (
-    String(
-      s.releaseDate || ''
-    ).match(/\d{4}/) || []
-  )[0] ||
-  (
-    cleanTitle(s).match(
-      /\b((?:19|20)\d{2})\b/
-    ) || []
-  )[0] ||
-  null;
-
-const getCountry = s =>
-  s.country || null;
-
-const contentTypeOf = s => {
-  if (s.contentType) {
-    return s.contentType;
-  }
-
-  if (
-    (s.sourceUrl || '').includes(
-      '/peliculas/'
-    )
-  ) {
-    return 'movie';
-  }
-
-  return 'series';
-};
-
-/* ---------- HISTORIAL ---------- */
-
-function getHistory() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(
-        'donghuaflix_history'
-      ) || '{}'
-    );
-  } catch (e) {
-    return {};
-  }
-}
-
-function saveHistory(
-  seriesId,
-  episodeData
-) {
-  try {
-    const history =
-      getHistory();
-
-    history[seriesId] = {
-      episodeId:
-        episodeData.id,
-      episodeNumber:
-        episodeData.number,
-      episodeTitle:
-        episodeData.title,
-      seasonId:
-        episodeData.seasonId,
-      timestamp:
-        Date.now()
-    };
-
-    localStorage.setItem(
-      'donghuaflix_history',
-      JSON.stringify(history)
-    );
-  } catch (e) {}
-}
-
-function lastWatchedEpisode(s) {
-  const h =
-    getHistory()[s.id];
-
-  if (h) {
-    const ep =
-      findEpisode(h.episodeId);
-
-    if (ep) return ep;
-  }
-
-  const seasons =
-    orderSeasons(
-      s,
-      DB.seasons.filter(
-        x => x.seriesId === s.id
-      )
-    );
-
-  for (const seas of seasons) {
-    const eps =
-      dedupeEps(
-        DB.episodes.filter(
-          e =>
-            e.seasonId === seas.id
-        )
-      );
-
-    if (eps.length) {
-      return eps[0];
-    }
-  }
-
-  return null;
-}
-
-/* ---------- AUTO SIGUIENTE ---------- */
-
-let currentEpisode = null;
-
-let autoNextEnabled =
-  localStorage.getItem(
-    'donghuaflix_autonext'
-  ) !== 'off';
-
-function toggleAutoNext() {
-  autoNextEnabled =
-    !autoNextEnabled;
-
-  localStorage.setItem(
-    'donghuaflix_autonext',
-    autoNextEnabled
-      ? 'on'
-      : 'off'
-  );
-
-  showToast(
-    autoNextEnabled
-      ? 'Auto-siguiente activado'
-      : 'Auto-siguiente desactivado'
-  );
-
-  const b =
-    document.getElementById(
-      'autoNextBtn'
-    );
-
-  if (b) {
-    b.innerHTML =
-      `${ICONS.repeat}<span>Auto: ${
-        autoNextEnabled
-          ? 'ON'
-          : 'OFF'
-      }</span>`;
-  }
-}
-
-function autoNext() {
-  if (
-    !currentEpisode ||
-    !autoNextEnabled
-  ) {
-    return;
-  }
-
-  const seasonEps =
-    dedupeEps(
-      DB.episodes.filter(
-        x =>
-          x.seasonId ===
-          currentEpisode.seasonId
-      )
-    );
-
-  const idx =
-    seasonEps.findIndex(
-      x =>
-        x.id ===
-        currentEpisode.id
-    );
-
-  const next =
-    seasonEps[idx + 1];
-
-  if (next) {
-    showToast(
-      'Cargando siguiente episodio…'
-    );
-
-    setTimeout(() => {
-      location.hash =
-        '#/episode/' +
-        qs(
-          next.slug ||
-          next.id
-        );
-    }, 1200);
-
-  } else {
-    showToast(
-      '¡Has terminado esta temporada!'
-    );
-  }
-}
-
-window.addEventListener(
-  'message',
-  event => {
-    const origin =
-      String(event.origin || '');
-
-    if (
-      !/dailymotion|dmcdn/i.test(
-        origin
-      )
-    ) {
-      return;
-    }
-
-    const data =
-      typeof event.data === 'string'
-        ? event.data
-        : JSON.stringify(
-            event.data || {}
-          );
-
-    if (
-      /video[_-]?end|ended/i.test(
-        data
-      )
-    ) {
-      autoNext();
-    }
-  }
-);
-
-/* ---------- RECOMENDACIONES ---------- */
-
-function getRecommendedSeries(
-  currentSeries,
-  limit = 8
-) {
-  const historyIds =
-    new Set(
-      Object.keys(
-        getHistory()
-      )
-    );
-
-  const currentGenres =
-    seriesGenres(
-      currentSeries
-    ).map(
-      g => g.toLowerCase()
-    );
-
-  const others =
-    DB.series.filter(
-      s =>
-        s.id !==
-        currentSeries.id
-    );
-
-  const scored =
-    others.map(s => ({
-      s,
-      score:
-        seriesGenres(s)
-          .map(
-            g => g.toLowerCase()
-          )
-          .filter(
-            g =>
-              currentGenres.includes(
-                g
-              )
-          ).length
-    }));
-
-  const fresh =
-    scored
-      .filter(
-        x =>
-          x.score > 0 &&
-          !historyIds.has(
-            x.s.id
-          )
-      )
-      .sort(
-        (a, b) =>
-          b.score - a.score ||
-          (
-            b.s.updatedAt || ''
-          ).localeCompare(
-            a.s.updatedAt || ''
-          )
-      );
-
-  const filler =
-    scored
-      .filter(
-        x =>
-          x.score === 0 &&
-          !historyIds.has(
-            x.s.id
-          )
-      )
-      .sort(
-        (a, b) =>
-          (
-            b.s.updatedAt || ''
-          ).localeCompare(
-            a.s.updatedAt || ''
-          )
-      );
-
-  return [
-    ...fresh,
-    ...filler
-  ]
-    .slice(0, limit)
-    .map(x => x.s);
-}
-
-/* ---------- PANTALLA COMPLETA ---------- */
-
-function togglePlayerFS() {
-  const player =
-    document.querySelector(
-      '.player'
-    );
-
-  if (!player) return;
-
-  if (
-    document.fullscreenElement
-  ) {
-    document.exitFullscreen();
-  } else if (
-    player.requestFullscreen
-  ) {
-    player.requestFullscreen();
-  } else if (
-    player.webkitRequestFullscreen
-  ) {
-    player.webkitRequestFullscreen();
-  }
-}
-
-function toggleMoreMenu() {
-  document
-    .getElementById('moreMenu')
-    ?.classList.toggle('open');
-}
-
-/* =========================================================
-   CARGA PROGRESIVA DE TARJETAS
-   ========================================================= */
-
-const PROGRESSIVE_BATCH = 60;
-
-let activeGridObserver = null;
-
-function stopProgressiveGrid() {
-  if (activeGridObserver) {
-    activeGridObserver.disconnect();
-    activeGridObserver = null;
-  }
-}
-
-/*
- * Renderiza únicamente un grupo inicial de tarjetas.
- *
- * Cuando el usuario se acerca al final,
- * añade automáticamente otro grupo.
- *
- * Así una lista de 11.000 elementos NO genera
- * 11.000 elementos DOM de golpe.
- */
-function renderProgressiveGrid({
-  container,
-  items,
-  emptyText = 'No hay elementos disponibles.',
-  batchSize = PROGRESSIVE_BATCH
-}) {
-  if (!container) return;
-
-  stopProgressiveGrid();
-
-  container.innerHTML = '';
-
-  if (!items.length) {
-    container.innerHTML = emptyStateHTML(emptyText);
-    return;
-  }
-
-  let index = 0;
-
-  const sentinel =
-    document.createElement('div');
-
-  sentinel.className =
-    'grid-sentinel';
-
-  sentinel.style.cssText =
-    'grid-column:1/-1;width:100%;height:1px;pointer-events:none;';
-
-  const appendBatch = () => {
-    if (index >= items.length) {
-      sentinel.remove();
-
-      if (activeGridObserver) {
-        activeGridObserver.disconnect();
-        activeGridObserver = null;
-      }
-
-      return;
-    }
-
-    const end =
-      Math.min(
-        index + batchSize,
-        items.length
-      );
-
-    const batch =
-      items.slice(
-        index,
-        end
-      );
-
-    const html =
-      batch
-        .map(card)
-        .join('');
-
-    sentinel.insertAdjacentHTML(
-      'beforebegin',
-      html
-    );
-
-    index = end;
-
-    if (
-      index >= items.length
-    ) {
-      sentinel.remove();
-
-      if (activeGridObserver) {
-        activeGridObserver.disconnect();
-        activeGridObserver = null;
-      }
-    }
-  };
-
-  /*
-   * Primero cargamos solamente 60.
-   */
-  container.appendChild(
-    sentinel
-  );
-
-  appendBatch();
-
-  /*
-   * Carga el siguiente bloque
-   * antes de que el usuario llegue
-   * completamente al final.
-   */
-  activeGridObserver =
-    new IntersectionObserver(
-      entries => {
-        if (
-          entries.some(
-            entry =>
-              entry.isIntersecting
-          )
-        ) {
-          appendBatch();
-        }
-      },
-      {
-        root: null,
-        rootMargin:
-          '1000px 0px',
-        threshold: 0
-      }
-    );
-
-  activeGridObserver.observe(
-    sentinel
-  );
-}
-
-/* ---------- PAGINACIÓN (20 por página) ---------- */
-const PER_PAGE = 20;
-
-function renderPagedGrid({ container, items, emptyText = 'No hay elementos disponibles.', perPage = PER_PAGE }) {
-  if (!container) return;
-  stopProgressiveGrid();
-
-  if (!items.length) {
-    container.innerHTML = emptyStateHTML(emptyText);
-    return;
-  }
-
-  const pages = Math.ceil(items.length / perPage);
-  let page = 0;
-
-  let pager = container.nextElementSibling;
-  if (!pager || !pager.classList.contains('pager')) {
-    pager = document.createElement('nav');
-    pager.className = 'pager';
-    container.after(pager);
-  }
-
-  const draw = () => {
-    container.innerHTML = items
-      .slice(page * perPage, (page + 1) * perPage)
-      .map(card)
-      .join('');
-
-    const win = [];
-    const from = Math.max(0, Math.min(page - 2, pages - 5));
-    for (let i = from; i < Math.min(pages, from + 5); i++) win.push(i);
-
-    pager.innerHTML = `
-      <button class="pg-btn" data-go="${page - 1}" ${page === 0 ? 'disabled' : ''}>‹</button>
-      ${win.map(i => `<button class="pg-btn ${i === page ? 'on' : ''}" data-go="${i}">${i + 1}</button>`).join('')}
-      <button class="pg-btn" data-go="${page + 1}" ${page >= pages - 1 ? 'disabled' : ''}>›</button>
-      <span class="pg-info">Página ${page + 1} de ${pages}</span>`;
-
-    pager.querySelectorAll('.pg-btn').forEach(b => {
-      b.onclick = () => {
-        const go = Number(b.dataset.go);
-        if (isNaN(go) || go < 0 || go >= pages || go === page) return;
-        page = go;
-        draw();
-        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      };
-    });
-  };
-
-  draw();
-}
-
-/* ---------- CARGA ---------- */
-
-async function load() {
-  stopProgressiveGrid();
-
-  app.innerHTML =
-    '<section class="section page-top"><div class="grid">' +
-    Array(8)
-      .fill(
-        '<div class="skeleton"></div>'
-      )
-      .join('') +
-    '</div></section>';
-
-  try {
-    DB =
-      await ensureCatalog(
-        currentCatalog
-      );
-
-    renderCatBar();
-
-    const footerStatus =
-      document.getElementById(
-        'footerStatus'
-      );
-
-    if (footerStatus) {
-      const igIcon =
-        '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>';
-
-      footerStatus.innerHTML = `
-        ${
-          DB.meta?.syncedAt
-            ? `Actualizado: ${new Date(
-                DB.meta.syncedAt
-              ).toLocaleString(
-                'es-ES'
-              )} · `
-            : ''
-        }
-        Desarrollado por
-        <a class="ig-link" href="https://instagram.com/bledark__" target="_blank" rel="noopener">${igIcon} @bledark__</a>`;
-    }
-
-    route();
-
-    probeCatalogs();
-
-  } catch (err) {
-    console.error(
-      'Error cargando catálogo:',
-      err
-    );
-
-    app.innerHTML =
-      `<section class="empty page-top">
-        <h2>Error al cargar el catálogo</h2>
-        <p class="muted">Revisa tu conexión o el archivo del catálogo</p>
-      </section>`;
-  }
-}
-
-/* ---------- TARJETAS ---------- */
-
-function card(s) {
-  const imgUrl =
-    getSeriesImage(s);
-
-  const title =
-    cleanTitle(s);
-
-  const fav =
-    isFav(s.id);
-
-  const progress =
-    seriesProgress(s);
-
-  return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
-    <div class="poster">
-      ${
-        imgUrl
-          ? `<img loading="lazy" src="${esc(imgUrl)}" alt="${esc(title)}" onload="imgLoaded(this)" onerror="this.parentNode.innerHTML='<div class=&quot;no-img&quot;>DONGHUAFLIX</div>'">`
-          : '<div class="no-img">DONGHUAFLIX</div>'
-      }
-
-      <span class="badge">${esc(
-        s.status ||
-          'DONGHUA'
-      )}</span>
-
-      ${
-        s._cat || s.src
-          ? `<span class="badge src">${esc(
-              SRC_LABEL[s._cat || s.src] ||
-                s.src ||
-                ''
-            )}</span>`
-          : ''
-      }
-
-      <button
-        class="fav-heart ${
-          fav ? 'on' : ''
-        }"
-        title="Mi lista"
-        onclick="event.stopPropagation();toggleFav('${esc(
-          s.id
-        )}');refreshFavUI(this,'${esc(
-    s.id
-  )}')"
-      >
-        ${ICONS.heart}
-      </button>
-
-      ${
-        progress > 0
-          ? `<div class="progress"><span style="width:${progress}%"></span></div>`
-          : ''
-      }
-    </div>
-
-    <h3>${esc(title)}</h3>
-  </article>`;
-}
-
-function refreshFavUI(
-  btn,
-  seriesId
-) {
-  btn.classList.toggle(
-    'on',
-    isFav(seriesId)
-  );
-}
-
-function rail(items) {
-  return `<div class="rail">${
-    items
-      .map(
-        s =>
-          `<div class="rail-item">${card(
-            s
-          )}</div>`
-      )
-      .join('')
-  }</div>`;
-}
-
-/* ---------- CONTINUAR VIENDO ---------- */
-
-function cwCard(
-  s,
-  hist
-) {
-  const img =
-    getSeriesImage(s);
-
-  const season =
-    DB.seasons.find(
-      x =>
-        x.id ===
-        hist.seasonId
-    );
-
-  const sn =
-    season &&
-    Number.isFinite(
-      season.number
-    )
-      ? season.number
-      : 1;
-
-  const progress =
-    seriesProgress(s);
-
-  return `<div class="cw-card" onclick="location.hash='#/episode/${qs(
-    hist.episodeId
-  )}">
-    ${
-      img
-        ? `<img loading="lazy" src="${esc(
-            img
-          )}" alt="" onerror="this.remove()">`
-        : ''
-    }
-
-    <div class="cw-shade"></div>
-
-    <div class="cw-play">
-      ${ICONS.play}
-    </div>
-
-    <div class="cw-info">
-      ${esc(
-        cleanTitle(s)
-      )} · T${sn}:E${
-    hist.episodeNumber
-  }
-    </div>
-
-    ${
-      progress > 0
-        ? `<div class="cw-progress"><span style="width:${progress}%"></span></div>`
-        : ''
-    }
-  </div>`;
-}
-
-/* ---------- TOP 10 ---------- */
-
-function top10Rail(items) {
-  if (!items.length) return '';
-
-  return `<div class="top10-row">${
-    items
-      .map(
-        (s, i) => `
-    <div class="top10-item" onclick="location.hash='#/series/${qs(
-      s.slug || s.id
-    )}'">
-      <span class="top10-num">${
-        i + 1
-      }</span>
-
-      <div
-        class="top10-poster"
-        style="background-image:url('${esc(
-          getSeriesImage(s)
-        )}')"
-      ></div>
-    </div>`
-      )
-      .join('')
-  }</div>`;
-}
+.pill:hover{background:rgba(255,255,255,.2)}
+.pill.on{background:#fff;color:#000;border-color:#fff}
 
 /* ---------- HERO ---------- */
-
-let heroItems = [];
-let heroIdx = 0;
-let heroTimer = null;
-let heroTouchX = null;
-let heroMouseX = null;
-let heroHold = false;
-
-const HERO_INTERVAL = 5000;
-
-function heroGo(dir) {
-  if (!heroItems.length) return;
-  heroIdx =
-    (heroIdx + dir + heroItems.length) %
-    heroItems.length;
-  renderHero(dir);
+.hero{
+  position:relative;height:min(80vh,680px);min-height:460px;
+  display:flex;align-items:flex-end;
+  background-image:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,.1) 75%),
+                   linear-gradient(0deg,#000 0%,transparent 42%),var(--hero);
+  background-size:cover;background-position:center 15%;
 }
+.hero-shade{position:absolute;inset:0;background:linear-gradient(0deg,#000 0%,transparent 30%)}
+.hero-content{position:relative;padding:0 4% 56px;max-width:640px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:2.4px;color:#e8eaee}
+.hero h1{font-size:clamp(36px,6vw,74px);line-height:.95;letter-spacing:-2.5px;margin:12px 0 8px;text-shadow:0 4px 24px rgba(0,0,0,.8)}
+.hero-meta{font-size:13px;color:#d5d8de;font-weight:600;margin-bottom:8px}
+.hero p{font-size:14px;line-height:1.6;color:#c9ccd2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:560px}
+.hero-btns{display:flex;gap:10px;margin-top:18px}
+.hero-dots{position:absolute;right:4%;bottom:22px;display:flex;gap:7px;z-index:2}
+.hero-dots button{width:20px;height:4px;border-radius:99px;border:0;background:rgba(255,255,255,.28);cursor:pointer;padding:0;transition:background .3s}
+.hero-dots button.active{background:var(--red)}
 
-function heroGoTo(i) {
-  if (!heroItems.length || i === heroIdx) return;
-  const dir = i > heroIdx ? 1 : -1;
-  heroIdx = i;
-  renderHero(dir);
+/* ---------- SECCIONES / RAÍLES ---------- */
+.section{padding:26px 4%;animation:fadeUp .35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section h2{font-size:19px;margin:0;letter-spacing:-.4px}
+.rail{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:6px 2px 14px;scroll-snap-type:x proximity}
+.rail::-webkit-scrollbar{display:none}
+.rail-item{width:172px;flex-shrink:0;scroll-snap-align:start}
+
+/* ---------- TARJETAS ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:16px}
+.card{min-width:0;cursor:pointer;transition:transform .25s ease}
+.card:hover{transform:translateY(-4px)}
+.poster{aspect-ratio:2/3;border-radius:var(--radius);overflow:hidden;background:#101218;position:relative;box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.poster img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .35s}
+.poster img.wide{object-position:center}
+.card:hover .poster img{transform:scale(1.05)}
+.badge{position:absolute;left:8px;top:8px;z-index:2;background:#fff;color:#101116;padding:4px 7px;border-radius:4px;font-size:8.5px;font-weight:800;text-transform:uppercase}
+.no-img{display:flex;align-items:center;justify-content:center;height:100%;background:#101218;color:#4a4f5c;font-weight:800;font-size:11px;letter-spacing:1.5px}
+.card h3{font-size:13px;margin:9px 2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.meta{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.18);z-index:3}
+.progress span{display:block;height:100%;background:var(--red)}
+
+/* Favorito (corazón SVG) */
+.fav-heart{
+  position:absolute;right:8px;top:8px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(0,0,0,.65);display:grid;place-items:center;color:#fff;
+  opacity:0;transition:opacity .2s,transform .2s;
 }
+.fav-heart svg{width:14px;height:14px}
+.card:hover .fav-heart{opacity:1}
+.fav-heart:hover{transform:scale(1.18)}
+.fav-heart.on{opacity:1;background:var(--red)}
+.fav-heart.on svg{fill:#fff}
 
-function heroRestartTimer() {
-  clearInterval(heroTimer);
-  if (heroItems.length > 1 && !heroHold) {
-    heroTimer = setInterval(
-      () => heroGo(1),
-      HERO_INTERVAL
-    );
-  }
+/* ---------- CONTINUAR VIENDO ---------- */
+.cw-rail{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 12px}
+.cw-rail::-webkit-scrollbar{display:none}
+.cw-card{
+  flex-shrink:0;width:270px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;
+  position:relative;cursor:pointer;background:#101218;scroll-snap-align:start;
 }
-
-function renderHero(dir = 0) {
-  const hero =
-    heroItems[heroIdx];
-
-  const sec =
-    document.getElementById(
-      'hero'
-    );
-
-  if (!hero || !sec) return;
-
-  const img =
-    getSeriesImage(hero);
-
-  sec.style.setProperty(
-    '--hero',
-    `url('${img}')`
-  );
-
-  setAmbience(img);
-
-  document.getElementById(
-    'heroTitle'
-  ).textContent =
-    cleanTitle(hero);
-
-  const heroMetaBits = [];
-  if (hero.status) {
-    heroMetaBits.push(
-      hero.status
-    );
-  }
-  const heroYear =
-    getYear(hero);
-  if (heroYear) {
-    heroMetaBits.push(
-      String(heroYear)
-    );
-  }
-  heroMetaBits.push(
-    ...seriesGenres(hero).slice(
-      0,
-      2
-    )
-  );
-  document.getElementById(
-    'heroMeta'
-  ).textContent =
-    heroMetaBits.join(' · ');
-
-  document.getElementById(
-    'heroSyn'
-  ).textContent =
-    hero.synopsis ||
-    'Catálogo de animación china en alta calidad.';
-
-  /* Con índice LITE la sinopsis vive en la ficha del título:
-     se descarga bajo demanda y se muestra al llegar. */
-  if (!hero.synopsis && !hero._synTried) {
-    hero._synTried = true;
-    ensureDetail(hero.slug || hero.id)
-      .then(() => {
-        const el = document.getElementById('heroSyn');
-        if (el && hero.synopsis) {
-          el.textContent = hero.synopsis;
-        }
-      })
-      .catch(() => {});
-  }
-
-  const heroEp =
-    lastWatchedEpisode(hero);
-
-  const heroBtnLabel =
-    document.getElementById(
-      'heroBtnLabel'
-    );
-
-  if (heroBtnLabel) {
-    if (heroEp) {
-      const hSeason =
-        DB.seasons.find(
-          x =>
-            x.id ===
-            heroEp.seasonId
-        );
-      const hSn =
-        hSeason &&
-        Number.isFinite(
-          hSeason.number
-        )
-          ? hSeason.number
-          : 1;
-      heroBtnLabel.textContent =
-        `Continuar · T${hSn}:E${heroEp.number}`;
-    } else {
-      heroBtnLabel.textContent =
-        'Ver serie';
-    }
-  }
-
-  document.getElementById(
-    'heroBtn'
-  ).onclick = () => {
-    if (heroEp) {
-      location.hash =
-        '#/episode/' +
-        qs(
-          heroEp.slug ||
-            heroEp.id
-        );
-    } else {
-      location.hash =
-        '#/series/' +
-        qs(
-          hero.slug ||
-            hero.id
-        );
-    }
-  };
-
-  const favBtn =
-    document.getElementById(
-      'heroListBtn'
-    );
-
-  if (favBtn) {
-    const fav =
-      isFav(hero.id);
-
-    favBtn.innerHTML =
-      fav
-        ? `${ICONS.check}<span>Mi lista</span>`
-        : `${ICONS.plus}<span>Mi lista</span>`;
-
-    favBtn.onclick = () => {
-      const f =
-        toggleFav(
-          hero.id
-        );
-
-      favBtn.innerHTML =
-        f
-          ? `${ICONS.check}<span>Mi lista</span>`
-          : `${ICONS.plus}<span>Mi lista</span>`;
-    };
-  }
-
-  document
-    .querySelectorAll(
-      '.hero-dots button'
-    )
-    .forEach(
-      (d, i) =>
-        d.classList.toggle(
-          'active',
-          i === heroIdx
-        )
-    );
-
-  /* animación direccional del contenido */
-  sec.classList.remove(
-    'slide-l',
-    'slide-r'
-  );
-  if (dir) {
-    void sec.offsetWidth;
-    sec.classList.add(
-      dir > 0 ? 'slide-l' : 'slide-r'
-    );
-  }
+.cw-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.cw-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent 55%)}
+.cw-play{
+  position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .2s;
+  background:rgba(0,0,0,.35);
 }
+.cw-play svg{width:18px;height:18px;color:#fff}
+.cw-play::before{content:"";width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.7);border:1.5px solid rgba(255,255,255,.45);position:absolute}
+.cw-play svg{position:relative}
+.cw-card:hover .cw-play{opacity:1}
+.cw-info{position:absolute;left:10px;bottom:10px;right:10px;font-size:11px;color:#fff;font-weight:600;text-shadow:0 1px 4px #000;z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.28);z-index:2}
+.cw-progress span{display:block;height:100%;background:var(--red)}
 
-function mountHero(items) {
-  clearInterval(
-    heroTimer
-  );
-
-  heroItems =
-    items.slice(0, 5);
-
-  heroIdx = 0;
-  heroHold = false;
-
-  renderHero();
-  heroRestartTimer();
-
-  const heroEl =
-    document.getElementById(
-      'hero'
-    );
-
-  if (
-    heroEl &&
-    !heroEl.dataset
-      .swipeBound
-  ) {
-    heroEl.dataset.swipeBound =
-      '1';
-
-    /* táctil: deslizar izquierda/derecha */
-    heroEl.addEventListener(
-      'touchstart',
-      e => {
-        heroTouchX =
-          e.touches[0].clientX;
-        heroHold = true;
-        clearInterval(
-          heroTimer
-        );
-      },
-      { passive: true }
-    );
-
-    heroEl.addEventListener(
-      'touchend',
-      e => {
-        if (
-          heroTouchX !=
-          null
-        ) {
-          const dx =
-            e.changedTouches[0]
-              .clientX -
-            heroTouchX;
-          if (
-            Math.abs(dx) >
-            45
-          ) {
-            heroGo(
-              dx < 0
-                ? 1
-                : -1
-            );
-          }
-        }
-        heroTouchX = null;
-        heroHold = false;
-        heroRestartTimer();
-      },
-      { passive: true }
-    );
-
-    /* ratón: arrastrar en escritorio */
-    heroEl.addEventListener(
-      'mousedown',
-      e => {
-        heroMouseX =
-          e.clientX;
-      }
-    );
-
-    window.addEventListener(
-      'mouseup',
-      e => {
-        if (
-          heroMouseX ==
-          null
-        ) {
-          return;
-        }
-        const dx =
-          e.clientX -
-          heroMouseX;
-        if (
-          Math.abs(dx) >
-          70
-        ) {
-          heroGo(
-            dx < 0
-              ? 1
-              : -1
-          );
-        }
-        heroMouseX = null;
-      }
-    );
-
-    /* teclado: flechas izquierda/derecha */
-    document.addEventListener(
-      'keydown',
-      e => {
-        if (
-          !document.getElementById(
-            'hero'
-          )
-        ) {
-          return;
-        }
-        if (
-          e.key ===
-          'ArrowRight'
-        ) {
-          heroGo(1);
-        } else if (
-          e.key ===
-          'ArrowLeft'
-        ) {
-          heroGo(-1);
-        }
-      }
-    );
-  }
+/* ---------- TOP 10 ---------- */
+.top10-row{display:flex;align-items:flex-end;gap:16px;overflow-x:auto;scrollbar-width:none;padding:6px 2px 14px}
+.top10-row::-webkit-scrollbar{display:none}
+.top10-item{display:flex;align-items:flex-end;flex-shrink:0;cursor:pointer}
+.top10-num{
+  font-size:108px;font-weight:800;line-height:.75;color:#000;
+  -webkit-text-stroke:2.5px #4d525a;letter-spacing:-9px;margin-right:-15px;position:relative;z-index:0;
 }
-
-/* ---------- VISTA HOME ---------- */
-
-function home() {
-  stopProgressiveGrid();
-
-  const recent =
-    DB.series
-      .slice()
-      .sort(
-        (a, b) =>
-          (
-            b.updatedAt || ''
-          ).localeCompare(
-            a.updatedAt || ''
-          )
-      );
-
-  const bySize =
-    DB.series
-      .slice()
-      .sort(
-        (a, b) =>
-          seriesEpisodeCount(
-            b
-          ) -
-          seriesEpisodeCount(
-            a
-          )
-      );
-
-  const historyData =
-    getHistory();
-
-  const historyList =
-    DB.series
-      .filter(
-        s =>
-          historyData[s.id]
-      )
-      .sort(
-        (a, b) =>
-          historyData[b.id]
-            .timestamp -
-          historyData[a.id]
-            .timestamp
-      );
-
-  const favList =
-    DB.series.filter(
-      s => isFav(s.id)
-    );
-
-  const airingList =
-    DB.series.filter(
-      s =>
-        (
-          s.status || ''
-        )
-          .toLowerCase()
-          .includes('emisión')
-    );
-
-  const completedList =
-    DB.series.filter(
-      s =>
-        (
-          s.status || ''
-        )
-          .toLowerCase()
-          .includes('finaliz')
-    );
-
-  const moviesList =
-    DB.series.filter(
-      s =>
-        (
-          s.type || ''
-        )
-          .toLowerCase() ===
-          'movie' ||
-        (
-          s.title || ''
-        )
-          .toLowerCase()
-          .includes(
-            'película'
-          )
-    );
-
-  const top10 =
-    bySize.slice(0, 10);
-
-  /* Hero contextual: si hay historial, el primer título es el
-     último que viste; el resto se rellena al azar con títulos
-     que tienen portada. */
-  const heroPool = [];
-  if (
-    historyList.length &&
-    getSeriesImage(
-      historyList[0]
-    )
-  ) {
-    heroPool.push(
-      historyList[0]
-    );
-  }
-  const shuffledHero =
-    DB.series
-      .filter(
-        s =>
-          getSeriesImage(s)
-      )
-      .sort(
-        () =>
-          Math.random() - 0.5
-      );
-  for (const s of shuffledHero) {
-    if (
-      heroPool.length >= 5
-    ) {
-      break;
-    }
-    if (
-      !heroPool.includes(s)
-    ) {
-      heroPool.push(s);
-    }
-  }
-
-  const sections = [];
-
-  if (historyList.length) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Continuar viendo</h2>
-        <span class="muted">${historyList.length}</span>
-      </div>
-
-      <div class="cw-rail">
-        ${historyList
-          .slice(0, 10)
-          .map(
-            s =>
-              cwCard(
-                s,
-                historyData[s.id]
-              )
-          )
-          .join('')}
-      </div>
-    </section>`);
-  }
-
-  if (favList.length) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Mi lista</h2>
-        <span class="muted">${favList.length}</span>
-      </div>
-
-      ${rail(favList)}
-    </section>`);
-  }
-
-  /* ── Recomendado para ti: géneros de lo que ves/sigues ── */
-  {
-    const followRec =
-      new Set([
-        ...getFavs(),
-        ...Object.keys(
-          historyData
-        )
-      ]);
-    const genreW =
-      new Map();
-    for (const s of DB.series) {
-      if (
-        !followRec.has(
-          s.id
-        )
-      ) {
-        continue;
-      }
-      for (const g of seriesGenres(
-        s
-      )) {
-        const k =
-          fold(g);
-        genreW.set(
-          k,
-          (genreW.get(
-            k
-          ) || 0) + 1
-        );
-      }
-    }
-    if (
-      genreW.size
-    ) {
-      const recScored =
-        DB.series
-          .filter(
-            s =>
-              !followRec.has(
-                s.id
-              )
-          )
-          .map(
-            s => ({
-              s,
-              score:
-                seriesGenres(
-                  s
-                ).reduce(
-                  (
-                    acc,
-                    g
-                  ) =>
-                    acc +
-                    (genreW.get(
-                      fold(
-                        g
-                      )
-                    ) || 0),
-                  0
-                )
-            })
-          )
-          .filter(
-            x =>
-              x.score > 0
-          )
-          .sort(
-            (
-              a,
-              b
-            ) =>
-              b.score -
-                a.score ||
-              (
-                b.s.updatedAt ||
-                ''
-              ).localeCompare(
-                a.s.updatedAt ||
-                  ''
-              )
-          )
-          .slice(0, 14)
-          .map(
-            x => x.s
-          );
-      if (
-        recScored.length
-      ) {
-        sections.push(`
-        <section class="section">
-          <div class="section-head">
-            <h2>Recomendado para ti</h2>
-            <span class="muted">${recScored.length}</span>
-          </div>
-          ${rail(recScored)}
-        </section>`);
-      }
-    }
-  }
-
-  /* En Cine */
-  if (
-    currentCatalog ===
-      'series' ||
-    currentCatalog ===
-      'peliculas'
-  ) {
-    const cineMovies =
-      DB.series.filter(
-        s =>
-          contentTypeOf(s) ===
-          'movie'
-      );
-
-    const cineSeries =
-      DB.series.filter(
-        s =>
-          contentTypeOf(s) ===
-          'series'
-      );
-
-    if (cineMovies.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>Películas</h2>
-          <span class="muted">${cineMovies.length}</span>
-        </div>
-
-        ${rail(cineMovies)}
-      </section>`);
-    }
-
-    if (cineSeries.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>Series</h2>
-          <span class="muted">${cineSeries.length}</span>
-        </div>
-
-        ${rail(cineSeries)}
-      </section>`);
-    }
-  }
-
-  if (
-    airingList.length ||
-    top10.length
-  ) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Top 10 hoy</h2>
-        <span class="muted">serie</span>
-      </div>
-
-      ${top10Rail(top10)}
-    </section>`);
-
-    if (airingList.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>En Emisión</h2>
-          <span class="muted">${airingList.length}</span>
-        </div>
-
-        ${rail(airingList)}
-      </section>`);
-    }
-  }
-
-  if (completedList.length) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Finalizadas</h2>
-        <span class="muted">${completedList.length}</span>
-      </div>
-
-      ${rail(completedList)}
-    </section>`);
-  }
-
-  /* ── Nuevos episodios: series con capítulos recién actualizados ── */
-  {
-    const epLatest =
-      new Map();
-    for (const e of DB.episodes) {
-      const t =
-        Date.parse(
-          e.updatedAt || 0
-        ) || 0;
-      if (
-        t &&
-        (!epLatest.has(
-          e.seriesId
-        ) ||
-          t >
-            epLatest.get(
-              e.seriesId
-            ))
-      ) {
-        epLatest.set(
-          e.seriesId,
-          t
-        );
-      }
-    }
-    /* Prioridad: series seguidas primero; como señal de fecha
-       vale el episodio más reciente Y, con índice LITE, el
-       updatedAt de la serie. */
-    const followHome =
-      new Set([
-        ...getFavs(),
-        ...Object.keys(
-          historyData
-        )
-      ]);
-    const tsOf =
-      s =>
-        epLatest.get(
-          s.id
-        ) ||
-        Date.parse(
-          s.updatedAt || 0
-        ) ||
-        0;
-    const freshEps =
-      DB.series
-        .filter(
-          s =>
-            tsOf(s) > 0
-        )
-        .sort(
-          (a, b) => {
-            const fa =
-              followHome.has(
-                a.id
-              )
-                ? 1
-                : 0;
-            const fb =
-              followHome.has(
-                b.id
-              )
-                ? 1
-                : 0;
-            if (
-              fa !== fb
-            ) {
-              return (
-                fb - fa
-              );
-            }
-            return (
-              tsOf(b) -
-              tsOf(a)
-            );
-          }
-        )
-        .slice(0, 14);
-    if (freshEps.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>Nuevos episodios</h2>
-          <span class="muted">${freshEps.length}</span>
-        </div>
-        ${rail(freshEps)}
-      </section>`);
-    }
-  }
-
-  /* ── Para maratonear: los títulos más largos ── */
-  {
-    const marathon =
-      DB.series
-        .slice()
-        .sort(
-          (a, b) =>
-            seriesEpisodeCount(
-              b
-            ) -
-            seriesEpisodeCount(
-              a
-            )
-        )
-        .filter(
-          s =>
-            seriesEpisodeCount(
-              s
-            ) >= 50
-        )
-        .slice(0, 12);
-    if (marathon.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>Para maratonear</h2>
-          <span class="muted">${marathon.length}</span>
-        </div>
-        ${rail(marathon)}
-      </section>`);
-    }
-  }
-
-  /* ── Raíles por género: los 3 géneros con más títulos ── */
-  {
-    const genreCount =
-      new Map();
-    for (const s of DB.series) {
-      for (const g of seriesGenres(
-        s
-      )) {
-        const k =
-          fold(g);
-        genreCount.set(
-          k,
-          (genreCount.get(
-            k
-          ) || 0) + 1
-        );
-      }
-    }
-    const topGenres =
-      [
-        ...genreCount.entries()
-      ]
-        .sort(
-          (a, b) =>
-            b[1] - a[1]
-        )
-        .slice(0, 3);
-    for (const [
-      gKey
-    ] of topGenres) {
-      const inGenre =
-        DB.series
-          .filter(
-            s =>
-              seriesGenres(
-                s
-              ).some(
-                g =>
-                  fold(
-                    g
-                  ) ===
-                  gKey
-              )
-          )
-          .slice(0, 14);
-      if (
-        inGenre.length < 4
-      ) {
-        continue;
-      }
-      const gName =
-        seriesGenres(
-          inGenre[0]
-        ).find(
-          g =>
-            fold(g) ===
-            gKey
-        ) || gKey;
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>${esc(gName)}</h2>
-          <span class="muted">${inGenre.length}</span>
-        </div>
-        ${rail(inGenre)}
-      </section>`);
-    }
-  }
-
-  /*
-   * Importante:
-   * Esta sección puede contener miles de películas.
-   *
-   * En lugar de meter las 11.000 tarjetas en el DOM,
-   * mostramos únicamente una muestra inicial.
-   *
-   * El catálogo completo sigue estando disponible
-   * mediante "Ver catálogo completo".
-   */
-  if (moviesList.length) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Películas y Especiales</h2>
-        <span class="muted">${moviesList.length}</span>
-      </div>
-
-      ${rail(
-        moviesList.slice(0, 20)
-      )}
-    </section>`);
-  }
-
-  sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Agregados recientemente</h2>
-        <span class="muted">${Math.min(
-          recent.length,
-          15
-        )}</span>
-      </div>
-
-      ${rail(
-        recent.slice(0, 15)
-      )}
-    </section>`);
-
-  app.innerHTML = `
-  <section class="hero" id="hero">
-    <div class="hero-shade"></div>
-
-    <div class="hero-content">
-      <div class="eyebrow">
-        DONGHUAFLIX EXCLUSIVE
-      </div>
-
-      <h1 id="heroTitle"></h1>
-
-      <div
-        class="hero-meta"
-        id="heroMeta"
-      ></div>
-
-      <p id="heroSyn"></p>
-
-      <div class="hero-btns">
-        <button
-          class="btn-x play"
-          id="heroBtn"
-        >
-          ${ICONS.play}
-          <span id="heroBtnLabel">Ver serie</span>
-        </button>
-
-        <button
-          class="btn-x glass"
-          id="heroListBtn"
-        >
-          ${ICONS.plus}
-          <span>Mi lista</span>
-        </button>
-      </div>
-    </div>
-
-    ${
-      heroPool.length > 1
-        ? `<div class="hero-dots">
-          ${heroPool
-            .slice(0, 5)
-            .map(
-              (_, i) =>
-                `<button onclick="heroGoTo(${i})" aria-label="Hero ${
-                  i + 1
-                }" ${i === heroIdx ? 'class="active"' : ''}></button>`
-            )
-            .join('')}
-          <button class="hero-arrow left" onclick="heroGo(-1)" aria-label="Anterior">‹</button>
-          <button class="hero-arrow right" onclick="heroGo(1)" aria-label="Siguiente">›</button>
-        </div>`
-        : ''
-    }
-  </section>
-
-  ${sections.join('')}
-
-  <section class="section center">
-    <button
-      class="btn-x glass"
-      onclick="location.hash='#/series'"
-    >
-      Ver catálogo completo
-      (${DB.series.length} series)
-    </button>
-  </section>`;
-
-  mountHero(
-    heroPool
-  );
-
-  renderHero();
+.top10-poster{
+  width:104px;height:150px;border-radius:8px;position:relative;z-index:1;
+  background:#101218 center/cover no-repeat;
+  transition:transform .25s ease;box-shadow:0 12px 30px rgba(0,0,0,.5);
 }
+.top10-item:hover .top10-poster{transform:translateY(-6px)}
 
-/* ---------- LISTADOS ---------- */
-
-function listAllSeries() {
-  const genres =
-    [
-      ...new Set(
-        DB.series.flatMap(
-          seriesGenres
-        )
-      )
-    ].sort(
-      (a, b) =>
-        a.localeCompare(
-          b,
-          'es'
-        )
-    );
-
-  const years =
-    [
-      ...new Set(
-        DB.series
-          .map(getYear)
-          .filter(Boolean)
-      )
-    ]
-      .sort()
-      .reverse();
-
-  const countries =
-    [
-      ...new Set(
-        DB.series
-          .map(getCountry)
-          .filter(Boolean)
-      )
-    ].sort(
-      (a, b) =>
-        a.localeCompare(
-          b,
-          'es'
-        )
-    );
-
-  const state = {
-    type: '',
-    genre: '',
-    year: '',
-    country: '',
-    sort: 'recent'
-  };
-
-  const applyFilters = () => {
-    let list =
-      DB.series.slice();
-
-    if (state.type) {
-      list =
-        list.filter(
-          s =>
-            contentTypeOf(
-              s
-            ) === state.type
-        );
-    }
-
-    if (state.genre) {
-      list =
-        list.filter(
-          s =>
-            seriesGenres(
-              s
-            ).some(
-              g =>
-                fold(g) ===
-                fold(
-                  state.genre
-                )
-            )
-        );
-    }
-
-    if (state.year) {
-      list =
-        list.filter(
-          s =>
-            String(
-              getYear(s)
-            ) ===
-            state.year
-        );
-    }
-
-    if (state.country) {
-      list =
-        list.filter(
-          s =>
-            fold(
-              getCountry(s)
-            ) ===
-            fold(
-              state.country
-            )
-        );
-    }
-
-    if (
-      state.sort ===
-      'az'
-    ) {
-      list.sort(
-        (a, b) =>
-          cleanTitle(
-            a
-          ).localeCompare(
-            cleanTitle(b),
-            'es'
-          )
-      );
-    } else {
-      list.sort(
-        (a, b) =>
-          (
-            b.updatedAt || ''
-          ).localeCompare(
-            a.updatedAt || ''
-          )
-      );
-    }
-
-    return list;
-  };
-
-  const renderGrid = () => {
-    const el =
-      document.getElementById(
-        'catalogGrid'
-      );
-
-    const count =
-      document.getElementById(
-        'catalogCount'
-      );
-
-    const list =
-      applyFilters();
-
-    if (count) {
-      count.textContent =
-        list.length;
-    }
-
-    if (el) {
-      renderPagedGrid({
-        container: el,
-        items: list,
-        emptyText:
-          'Nada coincide con esos filtros.'
-      });
-    }
-  };
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>Catálogo completo</h2>
-        <span
-          class="muted"
-          id="catalogCount"
-        >${DB.series.length}</span>
-      </div>
-
-      <div class="filters">
-
-        <select id="fType">
-          <option value="">
-            Clasificación
-          </option>
-
-          <option
-            value="movie"
-            ${
-              state.type ===
-              'movie'
-                ? 'selected'
-                : ''
-            }
-          >
-            Películas
-          </option>
-
-          <option
-            value="series"
-            ${
-              state.type ===
-              'series'
-                ? 'selected'
-                : ''
-            }
-          >
-            Series
-          </option>
-        </select>
-
-        ${
-          genres.length
-            ? `<select id="fGenre">
-                <option value="">
-                  Género
-                </option>
-
-                ${genres
-                  .map(
-                    g =>
-                      `<option>${esc(
-                        g
-                      )}</option>`
-                  )
-                  .join('')}
-              </select>`
-            : ''
-        }
-
-        ${
-          years.length
-            ? `<select id="fYear">
-                <option value="">
-                  Año
-                </option>
-
-                ${years
-                  .map(
-                    y =>
-                      `<option>${y}</option>`
-                  )
-                  .join('')}
-              </select>`
-            : ''
-        }
-
-        ${
-          countries.length
-            ? `<select id="fCountry">
-                <option value="">
-                  País
-                </option>
-
-                ${countries
-                  .map(
-                    c =>
-                      `<option>${esc(
-                        c
-                      )}</option>`
-                  )
-                  .join('')}
-              </select>`
-            : ''
-        }
-
-        <select id="fSort">
-          <option value="recent">
-            Más recientes
-          </option>
-
-          <option value="az">
-            A – Z
-          </option>
-        </select>
-
-      </div>
-
-      <div
-        class="grid"
-        id="catalogGrid"
-      ></div>
-
-    </section>`;
-
-  const bind = (
-    id,
-    key
-  ) => {
-    const el =
-      document.getElementById(
-        id
-      );
-
-    if (el) {
-      el.onchange = () => {
-        state[key] =
-          el.value;
-
-        renderGrid();
-      };
-    }
-  };
-
-  bind(
-    'fType',
-    'type'
-  );
-
-  bind(
-    'fGenre',
-    'genre'
-  );
-
-  bind(
-    'fYear',
-    'year'
-  );
-
-  bind(
-    'fCountry',
-    'country'
-  );
-
-  bind(
-    'fSort',
-    'sort'
-  );
-
-  /* Primer lote */
-  renderGrid();
+/* ---------- DETALLE DE SERIE (estilo Netflix) ---------- */
+.detail-v2{min-height:100vh}
+.detail-hero{
+  position:relative;height:min(62vh,560px);min-height:400px;
+  background-image:linear-gradient(0deg,#000 4%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.25) 70%,rgba(0,0,0,.55)),var(--dhero);
+  background-size:cover;background-position:center 12%;
+  display:flex;align-items:flex-end;
 }
-
-function listByStatus(
-  statusKeyword,
-  titleText
-) {
-  const filtered =
-    DB.series.filter(
-      s =>
-        (
-          s.status || ''
-        )
-          .toLowerCase()
-          .includes(
-            statusKeyword.toLowerCase()
-          )
-    );
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>${titleText}</h2>
-        <span class="muted">
-          ${filtered.length}
-        </span>
-      </div>
-
-      <div
-        class="grid"
-        id="statusGrid"
-      ></div>
-
-    </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'statusGrid'
-      ),
-    items: filtered,
-    emptyText:
-      'No hay elementos en esta categoría.'
-  });
+.detail-hero-shade{position:absolute;inset:0;background:linear-gradient(0deg,#000 0%,transparent 40%)}
+.detail-close{
+  position:absolute;top:78px;right:4%;z-index:3;width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--glass-brd);background:var(--glass);backdrop-filter:blur(14px);
+  color:#fff;cursor:pointer;display:grid;place-items:center;transition:.2s;
 }
+.detail-close svg{width:16px;height:16px}
+.detail-close:hover{background:var(--red);border-color:var(--red)}
+.detail-hero-c{position:relative;padding:0 4% 30px;max-width:720px}
+.detail-hero-c h1{font-size:clamp(32px,5vw,58px);letter-spacing:-2px;margin:8px 0 10px;line-height:.95;text-shadow:0 4px 24px rgba(0,0,0,.8)}
+.detail-meta{font-size:13px;color:#d5d8de;font-weight:600}
+.detail-actions{display:flex;gap:10px;margin-top:18px;align-items:center}
+.detail-body{padding:26px 4% 70px;max-width:1100px}
+.detail-syn{line-height:1.7;color:#c9ccd2;max-width:780px;margin:14px 0 0}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1px solid var(--glass-brd);background:var(--glass);backdrop-filter:blur(10px);color:#e8eaee;border-radius:999px;padding:6px 12px;font-size:11px;cursor:pointer;text-decoration:none;display:inline-block;transition:.2s}
+.chip:hover{border-color:var(--red);color:#fff}
 
-function listMovies() {
-  const movies =
-    DB.series.filter(
-      s =>
-        (
-          s.type || ''
-        )
-          .toLowerCase() ===
-          'movie' ||
-        (
-          s.title || ''
-        )
-          .toLowerCase()
-          .includes(
-            'película'
-          )
-    );
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>Películas</h2>
-        <span class="muted">
-          ${movies.length}
-        </span>
-      </div>
-
-      <div
-        class="grid"
-        id="moviesGrid"
-      ></div>
-
-    </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'moviesGrid'
-      ),
-    items: movies,
-    emptyText:
-      'No hay películas disponibles por el momento.'
-  });
+/* ---------- SELECTOR DE TEMPORADA ---------- */
+.season-picker{max-width:360px;margin:30px 0 16px}
+.season-picker select{
+  width:100%;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:var(--surface) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3e%3c/svg%3e") no-repeat right 15px center;
+  color:#fff;border:1px solid var(--line);border-radius:8px;
+  padding:13px 40px 13px 14px;font-size:14px;font-weight:600;
 }
+.season-picker select:focus{outline:0;border-color:var(--red)}
 
-function listGenres() {
-  const genres =
-    (DB.genres || [])
-      .map(
-        g =>
-          g.name || g
-      );
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>Géneros</h2>
-        <span class="muted">
-          ${genres.length}
-        </span>
-      </div>
-
-      ${
-        genres.length
-          ? `<div class="chips">
-              ${genres
-                .map(
-                  g =>
-                    `<a
-                      class="chip"
-                      href="#/genre/${qs(
-                        g
-                      )}"
-                    >
-                      ${esc(g)}
-                    </a>`
-                )
-                .join('')}
-            </div>`
-          : '<p class="muted">Géneros no disponibles en el catálogo.</p>'
-      }
-
-    </section>`;
+/* ---------- EPISODIOS ---------- */
+.episode-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.episode{
+  display:flex;align-items:center;gap:14px;text-decoration:none;color:#fff;
+  background:#14161d;border:1px solid transparent;border-radius:9px;
+  padding:12px 14px;transition:border-color .2s,background .2s,opacity .2s;
 }
-
-function listByGenre(name) {
-  const n =
-    name.toLowerCase();
-
-  const filtered =
-    DB.series.filter(
-      s =>
-        seriesGenres(
-          s
-        ).some(
-          g =>
-            g.toLowerCase() ===
-            n
-        )
-    );
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>${esc(name)}</h2>
-        <span class="muted">
-          ${filtered.length}
-        </span>
-      </div>
-
-      <div
-        class="grid"
-        id="genreGrid"
-      ></div>
-
-    </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'genreGrid'
-      ),
-    items: filtered,
-    emptyText:
-      'No hay series en este género.'
-  });
+.episode:hover{border-color:#3b3f4a;background:#1b1e26}
+.episode .ep-num{font-size:21px;font-weight:800;color:#7c8089;min-width:40px;text-align:center}
+.episode:hover .ep-num{color:#fff}
+.episode .ep-info{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.episode .ep-info strong{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.episode.watched{opacity:.5}
+.episode.watched .ep-num{color:var(--red)}
+.watched-btn{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;border:1.5px solid #3b3f4a;
+  background:#0e1015;color:#2ecc71;cursor:pointer;display:grid;place-items:center;
+  transition:border-color .2s,background .2s,transform .15s;
 }
-
-function listMyList() {
-  const favs =
-    getFavs();
-
-  const filtered =
-    DB.series.filter(
-      s =>
-        favs.includes(
-          s.id
-        )
-    );
-
-  app.innerHTML = `
-    <section class="section page-top">
-
-      <div class="section-head">
-        <h2>Mi lista</h2>
-        <span class="muted">
-          ${filtered.length}
-        </span>
-      </div>
-
-      <div
-        class="grid"
-        id="myListGrid"
-      ></div>
-
-    </section>`;
-
-  renderPagedGrid({
-    container:
-      document.getElementById(
-        'myListGrid'
-      ),
-    items: filtered,
-    emptyText:
-      '<strong>Aún no tienes favoritos.</strong><br>' +
-      'Toca el corazón de cualquier serie para añadirla.<br>' +
-      '<a class="btn-x glass" style="margin-top:14px" href="#/series">Explorar contenido</a>'
-  });
-}
-
-/* ---------- BUSCADOR ---------- */
-
-let searchState = {
-  genre: '',
-  year: '',
-  country: '',
-  pool: null
-};
-
-function search(q = '') {
-  if (
-    !document.getElementById(
-      'q'
-    )
-  ) {
-    searchState = {
-      genre: '',
-      year: '',
-      country: '',
-      pool: null
-    };
-
-    const genres =
-      [
-        ...new Set(
-          DB.series.flatMap(
-            seriesGenres
-          )
-        )
-      ].sort(
-        (a, b) =>
-          a.localeCompare(
-            b,
-            'es'
-          )
-      );
-
-    const years =
-      [
-        ...new Set(
-          DB.series
-            .map(getYear)
-            .filter(Boolean)
-        )
-      ]
-        .sort()
-        .reverse();
-
-    const countries =
-      [
-        ...new Set(
-          DB.series
-            .map(getCountry)
-            .filter(Boolean)
-        )
-      ].sort(
-        (a, b) =>
-          a.localeCompare(
-            b,
-            'es'
-          )
-      );
-
-    app.innerHTML = `
-      <section class="search page-top">
-
-        <h1>Buscar</h1>
-
-        <div class="searchbar">
-          ${ICONS.search}
-
-          <input
-            id="q"
-            type="text"
-            value="${esc(q)}"
-            autocomplete="off"
-            placeholder="Nombre..."
-          >
-        </div>
-
-        <div class="filters">
-
-          ${
-            genres.length
-              ? `<select id="sfGenre">
-                  <option value="">
-                    Género
-                  </option>
-
-                  ${genres
-                    .map(
-                      g =>
-                        `<option>${esc(
-                          g
-                        )}</option>`
-                    )
-                    .join('')}
-                </select>`
-              : ''
-          }
-
-          ${
-            years.length
-              ? `<select id="sfYear">
-                  <option value="">
-                    Año
-                  </option>
-
-                  ${years
-                    .map(
-                      y =>
-                        `<option>${y}</option>`
-                    )
-                    .join('')}
-                </select>`
-              : ''
-          }
-
-          ${
-            countries.length
-              ? `<select id="sfCountry">
-                  <option value="">
-                    País
-                  </option>
-
-                  ${countries
-                    .map(
-                      c =>
-                        `<option>${esc(
-                          c
-                        )}</option>`
-                    )
-                    .join('')}
-                </select>`
-              : ''
-          }
-
-        </div>
-
-        <div
-          id="results"
-          class="grid"
-        ></div>
-
-      </section>`;
-
-    const bindF = (
-      id,
-      key
-    ) => {
-      const el =
-        document.getElementById(
-          id
-        );
-
-      if (el) {
-        el.onchange = () => {
-          searchState[key] =
-            el.value;
-
-          updateSearchResults(
-            document.getElementById(
-              'q'
-            ).value
-          );
-        };
-      }
-    };
-
-    bindF(
-      'sfGenre',
-      'genre'
-    );
-
-    bindF(
-      'sfYear',
-      'year'
-    );
-
-    bindF(
-      'sfCountry',
-      'country'
-    );
-
-    const input =
-      document.getElementById(
-        'q'
-      );
-
-    input.addEventListener(
-      'input',
-      e =>
-        updateSearchResults(
-          e.target.value
-        )
-    );
-
-    setTimeout(() => {
-      input.focus();
-
-      input.setSelectionRange(
-        input.value.length,
-        input.value.length
-      );
-    }, 50);
-  }
-
-  updateSearchResults(q);
-}
-
-async function updateSearchResults(
-  q = ''
-) {
-  if (!searchState.pool) {
-    searchState.pool = await getSearchPool();
-  }
-  const container =
-    document.getElementById(
-      'results'
-    );
-
-  if (!container) return;
-
-  const query =
-    q.trim().toLowerCase();
-
-  if (!query) {
-    stopProgressiveGrid();
-
-    container.innerHTML =
-      '<p class="muted" style="grid-column:1/-1">Escribe para ver sugerencias...</p>';
-
-    return;
-  }
-
-  let list =
-    (searchState.pool || DB.series).filter(
-      s => {
-        const title =
-          cleanTitle(
-            s
-          ).toLowerCase();
-
-        return (
-          title.startsWith(
-            query
-          ) ||
-          title
-            .split(' ')
-            .some(
-              w =>
-                w.startsWith(
-                  query
-                )
-            ) ||
-          title.includes(
-            query
-          )
-        );
-      }
-    );
-
-  if (searchState.genre) {
-    list =
-      list.filter(
-        s =>
-          seriesGenres(
-            s
-          ).some(
-            g =>
-              fold(g) ===
-              fold(
-                searchState.genre
-              )
-          )
-      );
-  }
-
-  if (searchState.year) {
-    list =
-      list.filter(
-        s =>
-          String(
-            getYear(s)
-          ) ===
-          searchState.year
-      );
-  }
-
-  if (searchState.country) {
-    list =
-      list.filter(
-        s =>
-          fold(
-            getCountry(s)
-          ) ===
-          fold(
-            searchState.country
-          )
-      );
-  }
-
-  renderProgressiveGrid({
-    container,
-    items: list,
-    emptyText:
-      'No se encontraron donghuas con ese nombre.<br>' +
-      '<a class="btn-x glass" style="margin-top:14px" href="#/series">Ver catálogo completo</a>'
-  });
-
-  /* Cada resultado abre su catálogo de origen */
-  const cardsEl =
-    container.querySelectorAll(
-      '.card'
-    );
-  list.forEach((s, i) => {
-    const el = cardsEl[i];
-    if (el) {
-      el.onclick = () =>
-        openSeries(s);
-    }
-  });
-}
-
-/* Búsqueda conjunta: los 3 catálogos de donghua a la vez
-   (más el catálogo activo si es otro). Cada resultado lleva
-   _cat = su catálogo de origen. */
-async function getSearchPool() {
-  const pool = [];
-
-  for (const id of DONGHUA_CATS) {
-    try {
-      const d =
-        await ensureCatalog(id);
-      CATALOG_AVAILABLE[id] = true;
-      for (const s of d.series || []) {
-        pool.push({
-          ...s,
-          _cat: id
-        });
-      }
-    } catch {}
-  }
-
-  if (
-    !DONGHUA_CATS.includes(
-      currentCatalog
-    )
-  ) {
-    try {
-      const d =
-        await ensureCatalog(
-          currentCatalog
-        );
-      for (const s of d.series || []) {
-        pool.push({
-          ...s,
-          _cat: currentCatalog
-        });
-      }
-    } catch {}
-  }
-
-  renderCatBar();
-  return pool;
-}
-
-/* Abre una serie cambiando antes a su catálogo si hace falta */
-async function openSeries(s) {
-  if (
-    s._cat &&
-    s._cat !== currentCatalog
-  ) {
-    try {
-      DB =
-        await ensureCatalog(s._cat);
-      currentCatalog = s._cat;
-      localStorage.setItem(
-        'donghuaflix_catalog',
-        s._cat
-      );
-      setAmbience('');
-      renderCatBar();
-    } catch {
-      showToast(
-        'Catálogo no disponible todavía'
-      );
-      return;
-    }
-  }
-
-  location.hash =
-    '#/series/' +
-    qs(s.slug || s.id);
-}
-
-/* Descarga la ficha completa de UN título (sinopsis + temporadas + servidores) */
-async function ensureDetail(slug) {
-  if (!DB.lite) return;                         // catálogo completo: nada que pedir
-  const key = String(slug || '').replace(/[^a-zA-Z0-9._-]/g, '_');
-  const dir = DETAILS_BASE[currentCatalog];
-  if (!key || !dir) return;
-
-  const cacheKey = currentCatalog + '/' + key;
-  if (DETAIL_CACHE[cacheKey]) return;
-
-  try {
-    const d = await fetchCatalogFile(`${dir}/${key}.json`);
-    if (!d || !d.series) return;
-
-    const i = DB.series.findIndex(s => (s.slug || s.id) === (d.series.slug || d.series.id));
-    if (i !== -1) DB.series[i] = { ...DB.series[i], ...d.series };
-    else DB.series.push(d.series);
-
-    const have = new Set(DB.seasons.map(x => x.id));
-    (d.seasons || []).forEach(x => { if (!have.has(x.id)) DB.seasons.push(x); });
-
-    const haveEp = new Set(DB.episodes.map(x => x.id));
-    (d.episodes || []).forEach(x => { if (!haveEp.has(x.id)) DB.episodes.push(x); });
-
-    DETAIL_CACHE[cacheKey] = true;
-  } catch (e) {
-    console.warn('No se pudo cargar la ficha', slug, e);
-  }
-}
-
-/* ---------- DETALLE DE SERIE ---------- */
-
-let detailState = {
-  seriesId: null,
-  seasonIdx: 0,
-  page: null
-};
-
-const EPS_PER_PAGE = 50;
-
-async function detail(slug, seasonRef) {
-  await ensureDetail(slug);
-  return detailSync(slug, seasonRef);
-}
-
-function detailSync(
-  slug,
-  seasonRef
-) {
-  const s =
-    findSeries(slug);
-
-  if (!s) {
-    return notfound();
-  }
-
-  const seasons =
-    orderSeasons(
-      s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
-    );
-
-  if (
-    detailState.seriesId !==
-    s.id
-  ) {
-    detailState = {
-      seriesId: s.id,
-      seasonIdx: 0,
-      page: null
-    };
-  }
-
-  if (seasonRef) {
-    const i =
-      seasons.findIndex(
-        x =>
-          (x.slug ||
-            x.id) ===
-            seasonRef ||
-          String(
-            x.number
-          ) ===
-            String(
-              seasonRef
-            )
-      );
-
-    if (i !== -1) {
-      detailState.seasonIdx =
-        i;
-
-      detailState.page =
-        null;
-    }
-  }
-
-  const imgUrl =
-    getSeriesImage(s);
-
-  const title =
-    cleanTitle(s);
-
-  const genres =
-    seriesGenres(s);
-
-  const fav =
-    isFav(s.id);
-
-  const epsTotal =
-    seriesEpisodeCount(
-      s
-    );
-
-  const lastEp =
-    lastWatchedEpisode(
-      s
-    );
-
-  const lastSeason =
-    lastEp
-      ? DB.seasons.find(
-          x =>
-            x.id ===
-            lastEp.seasonId
-        )
-      : null;
-
-  const lastSn =
-    lastSeason &&
-    Number.isFinite(
-      lastSeason.number
-    )
-      ? lastSeason.number
-      : 1;
-
-  const singleSeason =
-    seasons.length === 1
-      ? seasons[0]
-      : null;
-
-  const singleEps =
-    singleSeason
-      ? dedupeEps(
-          DB.episodes.filter(
-            e =>
-              e.seasonId ===
-              singleSeason.id
-          )
-        )
-      : [];
-
-  const allEpsCount =
-    DB.episodes.filter(
-      e =>
-        e.seriesId ===
-        s.id
-    ).length;
-
-  const isMovieEntry =
-    s.contentType ===
-      'movie' ||
-    (s.sourceUrl || '')
-      .includes(
-        '/peliculas/'
-      ) ||
-    allEpsCount === 1;
-
-  setAmbience(imgUrl);
-
-  app.innerHTML = `
-  <section class="detail-v2">
-
-    <div
-      class="detail-hero"
-      style="--dhero:url('${esc(
-        imgUrl
-      )}')"
-    >
-
-      <button
-        class="detail-close"
-        onclick="location.hash='#/series'"
-        title="Cerrar"
-      >
-        ${ICONS.close}
-      </button>
-
-      <div class="detail-hero-shade"></div>
-
-      <div class="detail-hero-c">
-
-        <div class="eyebrow">
-          ${esc(
-            s.status || ''
-          )}
-        </div>
-
-        <h1>
-          ${esc(title)}
-        </h1>
-
-        <div class="detail-meta">
-
-          ${
-            isMovieEntry
-              ? `<span class="movie-tag">PELÍCULA</span> ·`
-              : ''
-          }
-
-          ${
-            s.year
-              ? `<span>${s.year}</span> ·`
-              : ''
-          }
-
-          ${
-            s.country
-              ? `<span>${esc(
-                  s.country
-                )}</span> ·`
-              : ''
-          }
-
-          ${
-            !isMovieEntry
-              ? `<span>${seasons.length} temporada${
-                  seasons.length ===
-                  1
-                    ? ''
-                    : 's'
-                }</span> ·
-                <span>${epsTotal} episodios</span>`
-              : ''
-          }
-
-          ${
-            genres.length
-              ? ' · <span>' +
-                esc(
-                  genres
-                    .slice(
-                      0,
-                      3
-                    )
-                    .join(' · ')
-                ) +
-                '</span>'
-              : ''
-          }
-
-        </div>
-
-        <div class="detail-actions">
-
-          ${
-            lastEp
-              ? `<button class="btn-x play big" onclick="location.hash='#/episode/${qs(
-                  lastEp.slug ||
-                    lastEp.id
-                )}'">
-                  ${ICONS.play}
-                  <span>${
-                    isMovieEntry
-                      ? 'Reproducir'
-                      : `Reproducir${
-                          lastEp.number >
-                          1
-                            ? ` · T${lastSn}:E${lastEp.number}`
-                            : ''
-                        }`
-                  }</span>
-                </button>`
-              : ''
-          }
-
-          <button
-            class="btn-x glass round"
-            id="favBtn"
-            title="Mi lista"
-          >
-            ${
-              fav
-                ? ICONS.check
-                : ICONS.plus
-            }
-          </button>
-
-        </div>
-
-      </div>
-    </div>
-
-    <div class="detail-body">
-
-      ${
-        genres.length
-          ? `<div class="chips">
-              ${genres
-                .map(
-                  g =>
-                    `<a class="chip" href="#/genre/${qs(
-                      g
-                    )}">
-                      ${esc(g)}
-                    </a>`
-                )
-                .join('')}
-            </div>`
-          : ''
-      }
-
-      <p class="detail-syn">
-        ${esc(
-          s.synopsis ||
-            'Sinopsis no disponible.'
-        )}
-      </p>
-
-      ${
-        isMovieEntry
-          ? `
-            <div class="movie-cta">
-              <button
-                class="btn-x play big"
-                onclick="location.hash='#/episode/${qs(
-                  singleEps[0]?.slug ||
-                  singleEps[0]?.id ||
-                  ''
-                )}'"
-              >
-                ${ICONS.play}
-                <span>▶ Reproducir ahora</span>
-              </button>
-            </div>
-          `
-          : '<div id="seasonArea"></div>'
-      }
-
-    </div>
-
-  </section>`;
-
-  document.getElementById(
-    'favBtn'
-  ).onclick = () => {
-    const f =
-      toggleFav(s.id);
-
-    document.getElementById(
-      'favBtn'
-    ).innerHTML =
-      f
-        ? ICONS.check
-        : ICONS.plus;
-  };
-
-  if (!isMovieEntry) {
-    renderSeasonArea(
-      seasons
-    );
-  }
-}
-
-function renderSeasonArea(
-  seasons
-) {
-  const area =
-    document.getElementById(
-      'seasonArea'
-    );
-
-  if (!area) return;
-
-  if (!seasons.length) {
-    area.innerHTML =
-      '<div class="empty">No hay episodios disponibles.</div>';
-
-    return;
-  }
-
-  area.innerHTML = `
-    <div class="season-picker">
-
-      <select
-        id="seasonSelect"
-        onchange="selectSeason(this.value)"
-      >
-
-        ${seasons
-          .map(
-            (season, i) => {
-              const count =
-                dedupeEps(
-                  DB.episodes.filter(
-                    e =>
-                      e.seasonId ===
-                      season.id
-                  )
-                ).length;
-
-              return `<option
-                value="${i}"
-                ${
-                  i ===
-                  detailState.seasonIdx
-                    ? 'selected'
-                    : ''
-                }
-              >
-                ${esc(
-                  seasonTitle(
-                    season,
-                    i
-                  )
-                )} · ${count} episodios
-              </option>`;
-            }
-          )
-          .join('')}
-
-      </select>
-
-    </div>
-
-    <div
-      id="episodeArea"
-    ></div>`;
-
-  renderEpisodePage(
-    seasons[
-      detailState.seasonIdx
-    ]
-  );
-}
-
-function selectSeason(i) {
-  detailState.seasonIdx =
-    Number(i);
-
-  detailState.page =
-    null;
-
-  const s =
-    findSeries(
-      detailState.seriesId
-    );
-
-  if (!s) return;
-
-  const seasons =
-    orderSeasons(
-      s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
-    );
-
-  renderEpisodePage(
-    seasons[
-      detailState.seasonIdx
-    ]
-  );
-}
-
-function renderEpisodePage(
-  season
-) {
-  const area =
-    document.getElementById(
-      'episodeArea'
-    );
-
-  if (!area) return;
-
-  const eps =
-    dedupeEps(
-      DB.episodes.filter(
-        e =>
-          e.seasonId ===
-          season.id
-      )
-    );
-
-  if (!eps.length) {
-    area.innerHTML =
-      '<div class="empty">No hay episodios disponibles todavía para esta temporada.</div>';
-
-    return;
-  }
-
-  const totalPages =
-    Math.ceil(
-      eps.length /
-        EPS_PER_PAGE
-    );
-
-  if (
-    detailState.page ==
-      null ||
-    detailState.page >=
-      totalPages
-  ) {
-    const watched =
-      getWatched()[
-        season.id
-      ] || {};
-
-    const lastWatched =
-      Math.max(
-        0,
-        ...Object.keys(
-          watched
-        ).map(Number)
-      );
-
-    detailState.page =
-      lastWatched
-        ? Math.floor(
-            (lastWatched - 1) /
-              EPS_PER_PAGE
-          )
-        : 0;
-  }
-
-  const page =
-    Math.min(
-      detailState.page,
-      totalPages - 1
-    );
-
-  detailState.page =
-    page;
-
-  const slice =
-    eps.slice(
-      page *
-        EPS_PER_PAGE,
-      (page + 1) *
-        EPS_PER_PAGE
-    );
-
-  const watched =
-    getWatched()[
-      season.id
-    ] || {};
-
-  area.innerHTML = `
-    <div class="episode-list">
-
-      ${slice
-        .map(e => {
-          const w =
-            Boolean(
-              watched[
-                e.number
-              ]
-            );
-
-          return `
-          <a
-            class="episode ${
-              w
-                ? 'watched'
-                : ''
-            }"
-            href="#/episode/${qs(
-              e.slug ||
-                e.id
-            )}"
-          >
-
-            <span class="ep-num">
-              ${e.number}
-            </span>
-
-            <span class="ep-info">
-
-              <strong>
-                ${esc(
-                  cleanEpisodeTitle(
-                    e
-                  )
-                )}
-              </strong>
-
-              <span class="meta">
-                ${esc(
-                  (
-                    e.servers ||
-                    []
-                  )
-                    .map(
-                      x =>
-                        x.name
-                    )
-                    .join(
-                      ' · '
-                    ) ||
-                  (
-                    e.releaseDate ||
-                    ''
-                  )
-                )}
-              </span>
-
-            </span>
-
-            <button
-              class="watched-btn ${
-                w
-                  ? 'on'
-                  : ''
-              }"
-              title="${
-                w
-                  ? 'Quitar marcador'
-                  : 'Marcar como visto'
-              }"
-              onclick="event.preventDefault();event.stopPropagation();toggleWatched('${esc(
-                season.id
-              )}',${e.number})"
-            >
-              ${
-                w
-                  ? ICONS.check
-                  : ''
-              }
-            </button>
-
-          </a>`;
-        })
-        .join('')}
-
-    </div>
-
-    ${
-      totalPages > 1
-        ? `
-      <div class="ep-pagination">
-
-        <button
-          class="btn-x glass"
-          ${
-            page === 0
-              ? 'disabled'
-              : ''
-          }
-          onclick="gotoPage(${
-            page - 1
-          })"
-        >
-          ${ICONS.prev}
-          <span>Anterior</span>
-        </button>
-
-        <span class="muted">
-          Página ${
-            page + 1
-          } de ${totalPages}
-        </span>
-
-        <button
-          class="btn-x glass"
-          ${
-            page >=
-            totalPages - 1
-              ? 'disabled'
-              : ''
-          }
-          onclick="gotoPage(${
-            page + 1
-          })"
-        >
-          <span>Siguiente</span>
-          ${ICONS.next}
-        </button>
-
-      </div>`
-        : ''
-    }`;
-}
-
-function gotoPage(p) {
-  detailState.page =
-    p;
-
-  const s =
-    findSeries(
-      detailState.seriesId
-    );
-
-  if (!s) return;
-
-  const seasons =
-    orderSeasons(
-      s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
-    );
-
-  renderEpisodePage(
-    seasons[
-      detailState.seasonIdx
-    ]
-  );
-
-  setTimeout(
-    () =>
-      document
-        .getElementById(
-          'episodeArea'
-        )
-        ?.scrollIntoView({
-          behavior:
-            'smooth',
-          block: 'start'
-        }),
-    50
-  );
-}
+.watched-btn svg{width:13px;height:13px}
+.watched-btn:hover{border-color:#2ecc71;transform:scale(1.12)}
+.watched-btn.on{background:#2ecc71;border-color:#2ecc71;color:#08110c}
+.ep-pagination{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
 
 /* ---------- REPRODUCTOR ---------- */
+.detail{padding:0 4% 70px;max-width:1150px}
+.ep-title{font-size:clamp(20px,3.5vw,30px);margin:4px 0 14px;letter-spacing:-.5px}
+.player{width:100%;max-width:1120px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin:10px 0 20px;position:relative}
+.player iframe{width:100%;height:100%;border:0}
+.player:fullscreen{border-radius:0;aspect-ratio:auto;width:100%;height:100%}
+.player:fullscreen iframe{height:100%}
+.fs-btn{
+  position:absolute;right:12px;bottom:12px;z-index:5;width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--glass-brd);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+  color:#fff;cursor:pointer;display:grid;place-items:center;opacity:.85;transition:.2s;
+}
+.fs-btn svg{width:16px;height:16px}
+.fs-btn:hover{opacity:1;transform:scale(1.1)}
+.server-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.server-tabs button{border:1px solid var(--glass-brd);background:var(--glass);backdrop-filter:blur(10px);color:#fff;padding:9px 15px;border-radius:999px;cursor:pointer;font-size:12px;transition:.2s}
+.server-tabs button:hover{background:rgba(255,255,255,.2)}
+.server-tabs button.active{background:var(--red);border-color:var(--red);font-weight:700}
+.ep-nav{display:flex;justify-content:space-between;margin-top:18px;gap:10px;flex-wrap:wrap}
 
-/* Entrada a episodio con carga bajo demanda: con índice LITE los
-   episodios solo viven en memoria tras abrir la ficha de la
-   serie. Si no se encuentra, se detecta la serie propietaria del
-   slug (el más largo gana) y se reintenta tras cargarla. */
-async function episodeRoute(ref) {
-  let e =
-    findEpisode(ref);
+/* ---------- BUSCADOR ---------- */
+.search{max-width:900px;margin:0 auto;padding-left:4%;padding-right:4%;padding-bottom:60px}
+.search h1{margin-bottom:16px;font-size:26px}
+.searchbar{position:relative;margin-bottom:26px}
+.searchbar svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.searchbar input{
+  width:100%;background:var(--surface);border:1px solid var(--line);border-radius:9px;
+  padding:14px 16px 14px 42px;color:#fff;outline:0;transition:border-color .2s;
+}
+.searchbar input:focus{border-color:var(--red)}
 
-  if (!e) {
-    const owner =
-      DB.series
-        .filter(
-          x =>
-            ref.startsWith(
-              (x.slug || x.id) +
-                '-'
-            )
-        )
-        .sort(
-          (a, b) =>
-            (b.slug || b.id).length -
-            (a.slug || a.id).length
-        )[0];
+/* ---------- VARIOS ---------- */
+.empty{text-align:center;padding:70px 15px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:30px 4%;display:flex;justify-content:space-between;gap:30px;color:var(--muted);font-size:13px}
+footer a{color:var(--red);text-decoration:none;font-weight:600}
+#toast{position:fixed;right:22px;bottom:86px;background:#171a21;border:1px solid #343844;color:#fff;padding:12px 16px;border-radius:8px;display:none;z-index:100;box-shadow:var(--shadow);font-size:13px;font-weight:600}
+.skeleton{aspect-ratio:2/3;border-radius:var(--radius);background:linear-gradient(100deg,#12141a,#1e2129,#12141a);background-size:200% 100%;animation:load 1.2s infinite}
+@keyframes load{to{background-position:-200% 0}}
+.to-top{
+  position:fixed;right:22px;bottom:86px;z-index:90;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--glass-brd);background:var(--glass);backdrop-filter:blur(12px);
+  color:#fff;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(10px);
+  transition:opacity .25s,transform .25s,background .2s;display:grid;place-items:center;
+}
+.to-top svg{width:16px;height:16px}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top:hover{background:var(--red);border-color:var(--red)}
+#toast.show{display:block;animation:toastIn .3s ease}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-    if (owner) {
-      app.innerHTML =
-        '<section class="section page-top"><div class="grid">' +
-        Array(8)
-          .fill(
-            '<div class="skeleton"></div>'
-          )
-          .join('') +
-        '</div></section>';
-
-      await ensureDetail(
-        owner.slug ||
-          owner.id
-      );
-
-      e =
-        findEpisode(ref);
-    }
+/* ---------- BARRA INFERIOR (móvil) ---------- */
+.bottom-nav{display:none}
+.more-menu{display:none}
+@media(max-width:900px){
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;
+    background:rgba(8,9,12,.82);backdrop-filter:blur(18px) saturate(1.3);
+    border-top:1px solid var(--line);
+    padding:6px 2px calc(6px + env(safe-area-inset-bottom));
   }
-
-  if (!e) {
-    return notfound();
+  .bottom-nav a,.bottom-nav button{
+    flex:1;background:none;border:0;color:#8b8f98;text-decoration:none;
+    font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;
+    padding:4px 0;cursor:pointer;
   }
-
-  episode(
-    e.slug || e.id
-  );
+  .bottom-nav svg{width:19px;height:19px}
+  .bottom-nav a.active,.bottom-nav button.active{color:#fff}
+  .more-menu{
+    display:none;flex-direction:column;position:fixed;bottom:76px;right:10px;
+    background:rgba(16,18,24,.92);backdrop-filter:blur(18px);
+    border:1px solid var(--line);border-radius:14px;padding:8px;z-index:61;
+    box-shadow:var(--shadow);min-width:190px;
+  }
+  .more-menu.open{display:flex;animation:toastIn .2s ease}
+  .more-menu a{padding:12px 16px;color:#fff;text-decoration:none;font-size:13px;font-weight:600;border-radius:9px}
+  .more-menu a:hover{background:rgba(255,255,255,.08)}
 }
 
-function episode(slug) {
-  const e =
-    findEpisode(slug);
-
-  if (!e) {
-    return notfound();
-  }
-
-  currentEpisode =
-    e;
-
-  saveHistory(
-    e.seriesId,
-    e
-  );
-
-  /* Marca solo ESTE episodio (antes se marcaban del 1 al N) */
-  markWatchedSingle(
-    e.seasonId,
-    e.number
-  );
-
-  const seasonEps =
-    dedupeEps(
-      DB.episodes.filter(
-        x =>
-          x.seasonId ===
-          e.seasonId
-      )
-    );
-
-  const idx =
-    seasonEps.findIndex(
-      x =>
-        x.id ===
-        e.id
-    );
-
-  const prevEp =
-    idx > 0
-      ? seasonEps[
-          idx - 1
-        ]
-      : null;
-
-  const nextEp =
-    idx <
-    seasonEps.length - 1
-      ? seasonEps[
-          idx + 1
-        ]
-      : null;
-
-  const serie =
-    findSeries(
-      e.seriesId
-    );
-
-  const serieRef =
-    serie
-      ? serie.slug ||
-        serie.id
-      : e.seriesId;
-
-  const season =
-    DB.seasons.find(
-      x =>
-        x.id ===
-        e.seasonId
-    );
-
-  setAmbience(
-    getSeriesImage(
-      serie || {}
-    ) ||
-      (season?.image ||
-        '')
-  );
-
-  const langLabel = {
-    latino: 'Latino',
-    castellano:
-      'Castellano',
-    subtitulado:
-      'Subtitulado'
-  };
-
-  const groups = [];
-
-  for (const l of [
-    'latino',
-    'castellano',
-    'subtitulado'
-  ]) {
-    const sv =
-      (e.servers || [])
-        .filter(
-          s =>
-            s.lang === l
-        );
-
-    if (sv.length) {
-      groups.push({
-        key: l,
-        label:
-          langLabel[l],
-        servers: sv
-      });
-    }
-  }
-
-  const untagged =
-    (e.servers || [])
-      .filter(
-        s => !s.lang
-      );
-
-  if (untagged.length) {
-    groups.push({
-      key: 'none',
-      label: 'Servidores',
-      servers:
-        untagged
-    });
-  }
-
-  let current =
-    e.servers?.[0];
-
-  let activeGroup =
-    Math.max(
-      0,
-      groups.findIndex(
-        g =>
-          g.servers.includes(
-            current
-          )
-      )
-    );
-
-  const selectServer =
-    srv => {
-      current = srv;
-      render();
-    };
-
-  const renderServers =
-    () => {
-      const wrap =
-        document.getElementById(
-          'serverGroups'
-        );
-
-      if (
-        !wrap ||
-        !groups.length
-      ) {
-        return;
-      }
-
-      const g =
-        groups[
-          activeGroup
-        ];
-
-      wrap.innerHTML = `
-        <div class="lang-tabs">
-
-          ${groups
-            .map(
-              (x, i) =>
-                `<button
-                  class="${
-                    i ===
-                    activeGroup
-                      ? 'on'
-                      : ''
-                  }"
-                  data-g="${i}"
-                >
-                  ${x.label}
-                </button>`
-            )
-            .join('')}
-
-        </div>
-
-        <div class="server-tabs">
-
-          ${g.servers
-            .map(
-              srv =>
-                `<button
-                  class="${
-                    srv ===
-                    current
-                      ? 'active'
-                      : ''
-                  }"
-                  data-url="${esc(
-                    srv.url
-                  )}"
-                >
-                  ${esc(
-                    srv.name
-                  )}
-                </button>`
-            )
-            .join('')}
-
-        </div>`;
-
-      wrap
-        .querySelectorAll(
-          '[data-g]'
-        )
-        .forEach(
-          b =>
-            (b.onclick = () => {
-              activeGroup =
-                Number(
-                  b.dataset
-                    .g
-                );
-
-              selectServer(
-                groups[
-                  activeGroup
-                ].servers[0]
-              );
-
-              renderServers();
-            })
-        );
-
-      wrap
-        .querySelectorAll(
-          '[data-url]'
-        )
-        .forEach(
-          b =>
-            (b.onclick = () => {
-              const srv =
-                g.servers.find(
-                  s =>
-                    s.url ===
-                    b.dataset
-                      .url
-                );
-
-              if (srv) {
-                selectServer(
-                  srv
-                );
-
-                renderServers();
-              }
-            })
-        );
-    };
-
-  const render = () => {
-    const playerEl =
-      document.getElementById(
-        'player'
-      );
-
-    if (playerEl) {
-      playerEl.innerHTML =
-        current?.url
-          ? `<iframe
-              src="${esc(
-                current.url
-              )}"
-              allow="autoplay; fullscreen *; encrypted-media; picture-in-picture"
-              allowfullscreen
-              webkitallowfullscreen
-              mozallowfullscreen
-              loading="lazy"
-            ></iframe>
-
-            <button
-              class="fs-btn"
-              onclick="togglePlayerFS()"
-              title="Pantalla completa"
-            >
-              ${ICONS.full}
-            </button>`
-          : '<div class="empty">Servidor no disponible.</div>';
-    }
-  };
-
-  app.innerHTML = `
-  <section class="detail page-top">
-
-    <div class="eyebrow">
-      ${(() => {
-        const epsSerie =
-          DB.episodes.filter(
-            x =>
-              x.seriesId ===
-              e.seriesId
-          ).length;
-
-        const esPeli =
-          serie &&
-          (
-            serie.contentType ===
-              'movie' ||
-            (
-              serie.sourceUrl ||
-              ''
-            ).includes(
-              '/peliculas/'
-            ) ||
-            epsSerie === 1
-          );
-
-        return esPeli
-          ? `PELÍCULA${
-              isWatched(
-                e.seasonId,
-                e.number
-              )
-                ? ' · VISTO'
-                : ''
-            }`
-          : `${esc(
-              season
-                ? seasonTitle(
-                    season,
-                    0
-                  )
-                : ''
-            )} · EPISODIO ${
-              e.number
-            }${
-              isWatched(
-                e.seasonId,
-                e.number
-              )
-                ? ' · VISTO'
-                : ''
-            }`;
-      })()}
-    </div>
-
-    <h1 class="ep-title">
-      ${esc(
-        cleanEpisodeTitle(e)
-      )}
-    </h1>
-
-    <div
-      class="player"
-      id="player"
-    ></div>
-
-    <div
-      id="serverGroups"
-    ></div>
-
-    <div class="ep-nav">
-
-      ${
-        prevEp
-          ? `<a
-              class="btn-x glass"
-              href="#/episode/${qs(
-                prevEp.slug ||
-                  prevEp.id
-              )}"
-            >
-              ${ICONS.prev}
-              <span>Anterior</span>
-            </a>`
-          : `<button
-              class="btn-x glass"
-              disabled
-            >
-              ${ICONS.prev}
-              <span>Anterior</span>
-            </button>`
-      }
-
-      <a
-        class="btn-x glass"
-        href="#/series/${qs(
-          serieRef
-        )}"
-      >
-        ${ICONS.list}
-        <span>Serie</span>
-      </a>
-
-      ${
-        nextEp
-          ? `<a
-              class="btn-x glass"
-              href="#/episode/${qs(
-                nextEp.slug ||
-                  nextEp.id
-              )}"
-            >
-              <span>Siguiente</span>
-              ${ICONS.next}
-            </a>`
-          : `<button
-              class="btn-x glass"
-              disabled
-            >
-              <span>Siguiente</span>
-              ${ICONS.next}
-            </button>`
-      }
-
-    </div>
-
-    <div
-      class="ep-nav"
-      style="margin-top:10px"
-    >
-      <button
-        class="btn-x glass"
-        id="autoNextBtn"
-        onclick="toggleAutoNext()"
-      >
-        ${ICONS.repeat}
-        <span>
-          Auto:
-          ${
-            autoNextEnabled
-              ? 'ON'
-              : 'OFF'
-          }
-        </span>
-      </button>
-    </div>
-
-    ${(() => {
-      const recommended =
-        getRecommendedSeries(
-          serie || {
-            id:
-              e.seriesId
-          }
-        );
-
-      return recommended.length
-        ? `
-          <div style="margin-top:34px">
-
-            <div class="section-head">
-              <h2>
-                También te puede gustar
-              </h2>
-
-              <span class="muted">
-                ${recommended.length}
-              </span>
-            </div>
-
-            <div class="grid">
-              ${recommended
-                .map(card)
-                .join('')}
-            </div>
-
-          </div>`
-        : '';
-    })()}
-
-  </section>`;
-
-  render();
-  renderServers();
+/* ---------- MODO CINEMA (apaisado) ---------- */
+@media(orientation:landscape) and (max-height:560px){
+  .nav{height:52px}
+  .page-top{padding-top:70px}
+  .detail{padding-top:70px}
+  .player{aspect-ratio:auto;height:calc(100vh - 140px)}
+  .detail-close{top:62px}
 }
 
-function notfound() {
-  stopProgressiveGrid();
-
-  app.innerHTML = `
-    <section class="empty page-top">
-
-      <h2>
-        No encontrado
-      </h2>
-
-      <p
-        class="muted"
-        style="margin-top:10px"
-      >
-        <a
-          href="#/"
-          style="color:var(--red)"
-        >
-          Volver al inicio
-        </a>
-      </p>
-
-    </section>`;
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+  .nav nav{display:none}
+  .nav{padding:0 4%}
+  body{padding-bottom:66px}
+  .hero{height:66vh;min-height:420px}
+  .hero p{-webkit-line-clamp:2}
+  .cw-card{width:230px}
+  .top10-num{font-size:84px}
+  .top10-poster{width:82px;height:118px}
+}
+@media(max-width:640px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .card h3{font-size:11px;margin:7px 1px 3px}
+  .badge{font-size:7.5px;padding:3px 5px;left:5px;top:5px}
+  .hero h1{letter-spacing:-1.4px}
+  .hero-meta{font-size:11px}
+  .hero-btns .btn-x{flex:1;padding:10px 8px;font-size:12.5px}
+  .cw-card{width:200px}
+  .cw-info{font-size:10px}
+  .episode-list{grid-template-columns:1fr}
+  .episode .ep-num{font-size:17px;min-width:32px}
+  .episode .ep-info strong{font-size:12px}
+  .season-picker{max-width:100%}
+  .ep-pagination{gap:8px}
+  .ep-pagination .btn-x{padding:10px 12px;font-size:12px}
+  .detail-actions .btn-x.big{flex:1;padding:12px 14px;font-size:13.5px}
+  .hero-content{padding-bottom:44px}
+}
+@media(hover:none){
+  .cw-play{opacity:1}
+  .fav-heart{opacity:1}
 }
 
-/* ---------- NAVEGACIÓN ---------- */
 
-function highlightNav() {
-  const hash =
-    location.hash ||
-    '#/';
+/* ---------- PANEL DE FILTROS DEL CATÁLOGO ---------- */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 
-  document
-    .querySelectorAll(
-      '[data-nav]'
-    )
-    .forEach(a => {
-      const href =
-        a.getAttribute(
-          'href'
-        );
 
-      const active =
-        href === hash ||
-        (
-          href !== '#/' &&
-          hash.startsWith(
-            href
-          )
-        );
+/* ---------- FICHA DE PELÍCULA ---------- */
+.movie-tag{
+  background:var(--red);color:#fff;font-size:10px;font-weight:800;
+  letter-spacing:1.5px;padding:4px 9px;border-radius:4px;
+}
+.movie-cta{margin-top:28px}
+.movie-cta .btn-x.big{padding:16px 34px;font-size:16px}
 
-      a.classList.toggle(
-        'active',
-        active
-      );
-    });
+
+/* ---------- PESTAÑAS PELÍCULAS / SERIES ---------- */
+.type-tabs{display:flex;gap:8px;margin-bottom:16px}
+.type-tabs button{
+  padding:9px 20px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
+  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.type-tabs button:hover{background:rgba(255,255,255,.2);color:#fff}
+.type-tabs button.on{background:#fff;color:#000;border-color:#fff}
+
+
+/* ---------- ETIQUETAS DE IDIOMA EN SERVIDORES ---------- */
+.server-tabs button{display:inline-flex;align-items:center;gap:7px}
+.lang-tag{
+  font-size:9px;font-weight:800;letter-spacing:.8px;
+  padding:2px 6px;border-radius:4px;line-height:1;
+}
+.lang-tag.latino{background:#2ecc71;color:#06130b}
+.lang-tag.castellano{background:#e5b53a;color:#1a1206}
+.lang-tag.subtitulado{background:#4aa8ff;color:#061324}
+
+
+/* ---------- PESTAÑAS DE IDIOMA (servidores) ---------- */
+.lang-tabs{display:flex;gap:8px;margin-bottom:12px}
+.lang-tabs button{
+  padding:9px 22px;border-radius:999px;font-size:12.5px;font-weight:700;cursor:pointer;
+  color:#d5d8de;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);transition:.2s;
+}
+.lang-tabs button:hover{background:rgba(255,255,255,.2);color:#fff}
+.lang-tabs button.on{background:#fff;color:#000;border-color:#fff}
+
+/* ---------- FOOTER: enlace Instagram ---------- */
+footer a.ig-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:#fff;text-decoration:none;font-weight:700;
+  padding:4px 12px;border-radius:999px;
+  background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+}
+footer a.ig-link:hover{filter:brightness(1.15)}
+footer a.ig-link svg{width:13px;height:13px}
+
+
+/* ---------- SELECTOR DE CATÁLOGOS (FAB circular) ---------- */
+.catalog-wrap{position:relative;margin-left:auto;display:flex;align-items:center}
+.catalog-fab{
+  width:42px;height:42px;border-radius:50%;cursor:pointer;position:relative;
+  border:1.5px solid var(--glass-brd);
+  background:var(--glass);backdrop-filter:blur(16px);
+  display:grid;place-items:center;transition:.2s;flex-shrink:0;
+}
+.catalog-fab img{width:26px;height:26px;border-radius:7px;object-fit:cover;display:block}
+.catalog-fab:hover{background:rgba(255,255,255,.2);transform:scale(1.06)}
+.fab-caret{
+  position:absolute;right:-3px;bottom:-3px;width:16px;height:16px;padding:2px;
+  color:#fff;background:rgba(0,0,0,.75);border-radius:50%;
+  border:1px solid var(--glass-brd);
+}
+.catalog-menu{
+  display:none;flex-direction:column;min-width:170px;padding:8px;
+  position:absolute;top:52px;right:0;z-index:60;
+  background:rgba(14,16,22,.8);backdrop-filter:blur(20px) saturate(1.3);
+  border:1px solid var(--glass-brd);border-radius:14px;box-shadow:var(--shadow);
+}
+.catalog-menu.open{display:flex;animation:toastIn .2s ease}
+.catalog-menu button{
+  padding:11px 16px;background:none;border:0;color:#e8eaee;text-align:left;
+  font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;transition:.15s;
+}
+.catalog-menu button:hover{background:rgba(255,255,255,.09);color:#fff}
+.catalog-menu button.on{color:var(--red2);font-weight:800}
+
+@media(max-width:900px){
+  /* Móvil/vertical: FAB flotante en esquina inferior derecha, sobre la bottom-nav */
+  .catalog-wrap{
+    position:fixed;right:14px;bottom:calc(80px + env(safe-area-inset-bottom));
+    z-index:70;margin:0;
+  }
+  .catalog-fab{width:52px;height:52px;box-shadow:var(--shadow)}
+  .catalog-fab img{width:32px;height:32px}
+  .catalog-menu{top:auto;bottom:62px;right:0}
 }
 
-function pageTransition() {
-  app.classList.remove(
-    'page-anim'
-  );
-  void app.offsetWidth;
-  app.classList.add(
-    'page-anim'
-  );
+/* ---------- FILTROS: píldoras de cristal líquido transparente ---------- */
+.filters select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:rgba(255,255,255,.07) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3e%3c/svg%3e") no-repeat right 14px center;
+  backdrop-filter:blur(16px) saturate(1.3);
+  color:#fff;border:1px solid var(--glass-brd);border-radius:999px;
+  padding:10px 38px 10px 17px;font-size:13px;font-weight:600;
+  transition:border-color .2s,background .2s;
+}
+.filters select:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+.filters select:focus{outline:0;border-color:rgba(255,255,255,.45)}
+
+
+/* ---------- PAGINADOR (cristal líquido) ---------- */
+.pager{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  margin:28px 0 12px;
+}
+.pg-btn{
+  min-width:40px;height:40px;padding:0 13px;border-radius:999px;cursor:pointer;
+  color:#fff;font-size:13px;font-weight:700;
+  background:var(--glass);backdrop-filter:blur(16px) saturate(1.3);
+  border:1px solid var(--glass-brd);transition:background .2s,transform .2s,color .2s;
+}
+.pg-btn:hover:not(:disabled){background:rgba(255,255,255,.2);transform:translateY(-2px)}
+.pg-btn:active:not(:disabled){transform:scale(.95)}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-btn.on{background:#fff;color:#000;border-color:#fff}
+.pg-info{font-size:12px;color:var(--muted);margin-left:8px;white-space:nowrap}
+
+/* ---------- RETOQUES DE MÁRGENES (nada tapado por las barras) ---------- */
+@media(max-width:900px){
+  /* el paginador no se esconde detrás de la barra inferior */
+  .pager{padding-bottom:8px}
+  /* aire extra tras el último bloque para la bottom-nav */
+  .section:last-of-type{margin-bottom:26px}
+  footer{padding-bottom:calc(34px + env(safe-area-inset-bottom))}
+  .empty{padding-bottom:110px}
 }
 
-function route() {
-  clearInterval(
-    heroTimer
-  );
-  heroHold = false;
+/* ---------- ETIQUETA DE FUENTE (resultados de búsqueda) ---------- */
+.badge.src{top:34px;background:var(--red);color:#fff;letter-spacing:.4px;text-transform:none;font-weight:700}
 
-  stopProgressiveGrid();
+/* ═══════════════════════ PACK DE ANIMACIONES ═══════════════════════ */
 
-  document
-    .getElementById(
-      'moreMenu'
-    )
-    ?.classList.remove(
-      'open'
-    );
+/* ── HERO: Ken Burns (zoom lento cinematográfico) ── */
+.hero{overflow:hidden;touch-action:pan-y}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background-image:inherit;background-size:cover;background-position:center 15%;
+  animation:kenburns 22s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes kenburns{
+  from{transform:scale(1) translateX(0)}
+  to{transform:scale(1.09) translateX(-1.5%)}
+}
+.hero .hero-content,.hero .hero-dots,.hero .hero-arrow{position:relative;z-index:2}
+.hero .hero-content>*{animation:heroIn .55s cubic-bezier(.2,.7,.25,1) both}
+.hero .hero-content>*:nth-child(1){animation-delay:.02s}
+.hero .hero-content>*:nth-child(2){animation-delay:.07s}
+.hero .hero-content>*:nth-child(3){animation-delay:.12s}
+.hero .hero-content>*:nth-child(4){animation-delay:.17s}
+.hero .hero-content>*:nth-child(5){animation-delay:.22s}
+.hero.slide-l .hero-content>*{animation-name:heroInL}
+.hero.slide-r .hero-content>*{animation-name:heroInR}
+@keyframes heroIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes heroInL{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+@keyframes heroInR{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
 
-  document
-    .getElementById(
-      'catalogMenu'
-    )
-    ?.classList.remove(
-      'open'
-    );
+/* flechas del hero (escritorio) */
+.hero-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:44px;height:44px;border-radius:50%;cursor:pointer;line-height:1;font-size:24px;
+  border:1px solid var(--glass-brd);background:rgba(0,0,0,.45);backdrop-filter:blur(10px);color:#fff;
+  display:grid;place-items:center;opacity:0;transition:opacity .25s ease,background .2s,transform .2s,border-color .2s;
+}
+.hero:hover .hero-arrow{opacity:.92}
+.hero-arrow:hover{background:var(--red);border-color:var(--red);transform:translateY(-50%) scale(1.1)}
+.hero-arrow.left{left:14px}
+.hero-arrow.right{right:14px}
+@media(hover:none){.hero-arrow{display:none}}
 
-  const p =
-    location.hash
-      .replace(
-        /^#\/?/,
-        ''
-      )
-      .split('/')
-      .filter(Boolean)
-      .map(
-        decodeURIComponent
-      );
+/* dots: pill activa que crece */
+.hero-dots button{transition:width .3s ease,background .3s ease}
+.hero-dots button.active{width:30px}
 
-  const type =
-    p[0];
+/* ── ENTRADA ESCALONADA DE TARJETAS ── */
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.grid .card{animation:cardIn .5s cubic-bezier(.2,.7,.25,1) both}
+.grid .card:nth-child(1){animation-delay:.02s}.grid .card:nth-child(2){animation-delay:.05s}
+.grid .card:nth-child(3){animation-delay:.08s}.grid .card:nth-child(4){animation-delay:.11s}
+.grid .card:nth-child(5){animation-delay:.14s}.grid .card:nth-child(6){animation-delay:.17s}
+.grid .card:nth-child(7){animation-delay:.20s}.grid .card:nth-child(8){animation-delay:.23s}
+.grid .card:nth-child(9){animation-delay:.26s}.grid .card:nth-child(10){animation-delay:.29s}
+.grid .card:nth-child(11){animation-delay:.32s}.grid .card:nth-child(12){animation-delay:.35s}
+.grid .card:nth-child(13){animation-delay:.38s}.grid .card:nth-child(14){animation-delay:.41s}
+.grid .card:nth-child(15){animation-delay:.44s}.grid .card:nth-child(16){animation-delay:.47s}
+.grid .card:nth-child(17){animation-delay:.50s}.grid .card:nth-child(18){animation-delay:.53s}
+.rail .rail-item:nth-child(1) .card{animation:cardIn .5s .02s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(2) .card{animation:cardIn .5s .06s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(3) .card{animation:cardIn .5s .10s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(4) .card{animation:cardIn .5s .14s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(5) .card{animation:cardIn .5s .18s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(6) .card{animation:cardIn .5s .22s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(7) .card{animation:cardIn .5s .26s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(8) .card{animation:cardIn .5s .30s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(9) .card{animation:cardIn .5s .34s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(10) .card{animation:cardIn .5s .38s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(11) .card{animation:cardIn .5s .42s cubic-bezier(.2,.7,.25,1) both}
+.rail .rail-item:nth-child(12) .card{animation:cardIn .5s .46s cubic-bezier(.2,.7,.25,1) both}
 
-  const arg =
-    p[1];
+/* ── HOVER DE TARJETAS: elevación + brillo que cruza ── */
+.card .poster{transition:box-shadow .3s ease}
+.card .poster::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 48%,transparent 62%);
+  transform:translateX(-130%);transition:transform .65s ease;
+}
+.card:hover{transform:translateY(-6px)}
+.card:hover .poster{box-shadow:0 18px 42px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.07)}
+.card:hover .poster::after{transform:translateX(130%)}
+.card h3{transition:color .2s ease}
+.card:hover h3{color:#fff}
 
-  const extra =
-    p[2];
+/* corazón y checks: pop al activarse */
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.fav-heart.on{animation:pop .35s ease}
+.watched-btn.on{animation:pop .35s ease}
 
-  if (!type) {
-    home();
+/* ── BOTONES ── */
+.btn-x{transition:transform .15s ease,filter .2s ease,background .2s,border-color .2s,box-shadow .25s ease}
+.btn-x:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-x:active{transform:scale(.96)}
+.btn-x.play{box-shadow:0 6px 24px rgba(229,9,20,.35)}
+.btn-x.play:hover{box-shadow:0 12px 32px rgba(229,9,20,.55)}
 
-  } else if (
-    type === 'search'
-  ) {
-    search(
-      arg || ''
-    );
+/* ── PÍLDORAS, CHIPS, TABS DE SERVIDORES ── */
+.pill,.chip{transition:transform .15s ease,background .2s}
+.pill:hover,.chip:hover{transform:translateY(-1px) scale(1.05)}
+.pill.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
+.server-tabs button,.lang-tabs button,.type-tabs button{transition:transform .15s ease,background .2s}
+.server-tabs button:hover{transform:translateY(-2px);background:rgba(255,255,255,.22)}
+.server-tabs button.active{box-shadow:0 4px 16px rgba(229,9,20,.45)}
+.lang-tabs button.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
 
-  } else if (
-    type === 'series' &&
-    !arg
-  ) {
-    listAllSeries();
+/* ── EPISODIOS: deslizan al pasar el ratón ── */
+.episode{transition:transform .18s ease,border-color .2s,background .2s}
+.episode:hover{transform:translateX(6px)}
 
-  } else if (
-    type === 'movies'
-  ) {
-    listMovies();
+/* ─é PAGINADOR ── */
+.pg-btn{transition:transform .15s ease,background .2s,color .2s,box-shadow .2s}
+.pg-btn:hover:not(:disabled){transform:translateY(-3px)}
+.pg-btn.on{box-shadow:0 4px 14px rgba(255,255,255,.25)}
 
-  } else if (
-    type === 'series' &&
-    arg
-  ) {
-    detail(
-      arg,
-      extra
-    );
+/* ── NAV SUPERIOR ── */
+.nav nav a{transition:transform .15s ease,background .2s,color .2s}
+.nav nav a:hover{transform:translateY(-1px)}
+.icon-btn{transition:transform .2s ease,background .2s,border-color .2s}
+.icon-btn:hover{transform:scale(1.1) rotate(5deg)}
 
-  } else if (
-    type === 'airing'
-  ) {
-    listByStatus(
-      'emisión',
-      'Donghuas En Emisión'
-    );
+/* ── BARRA DE BÚSQUEDA: glow al enfocar ── */
+.searchbar input{transition:border-color .2s ease,box-shadow .2s ease}
+.searchbar input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,9,20,.18)}
 
-  } else if (
-    type === 'completed'
-  ) {
-    listByStatus(
-      'finaliz',
-      'Donghuas Finalizados'
-    );
+/* ── TRANSICIÓN ENTRE PÁGINAS ── */
+#app.page-anim>*{animation:pageIn .38s cubic-bezier(.2,.7,.25,1) both}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  } else if (
-    type === 'genres'
-  ) {
-    listGenres();
+/* ── SKELETON: shimmer suave ── */
+.skeleton{background:linear-gradient(100deg,#12141a 30%,#242936 50%,#12141a 70%);background-size:220% 100%;animation:shimmer 1.3s linear infinite}
+@keyframes shimmer{to{background-position:-220% 0}}
 
-  } else if (
-    type === 'genre' &&
-    arg
-  ) {
-    listByGenre(
-      arg
-    );
+/* ── MENÚS DESPLEGABLES ── */
+@keyframes menuIn{from{opacity:0;transform:scale(.92) translateY(-6px)}to{opacity:1;transform:none}}
+.catalog-menu{transform-origin:top right}
+.catalog-menu.open{animation:menuIn .18s ease both}
+.more-menu.open{animation:menuIn .18s ease both}
 
-  } else if (
-    type === 'mylist'
-  ) {
-    listMyList();
+/* ── REPRODUCTOR: sombra viva ── */
+.player{transition:box-shadow .3s ease}
+.player:hover{box-shadow:0 30px 80px rgba(0,0,0,.75)}
 
-  } else if (
-    type === 'episode'
-  ) {
-    episodeRoute(
-      arg
-    );
+/* ── ACCESIBILIDAD: respetar "reducir movimiento" del sistema ── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
 
-  } else {
-    home();
+/* ═══════════════════════ OPTIMIZACIÓN DE FLUIDEZ ═══════════════════════ */
+
+/* Reducir el blur del fondo en móvil (es lo que más lag produce) */
+@media(max-width:900px){
+  .bg-ambience{
+    filter:blur(40px) saturate(1.3) brightness(.35);
+    /* Reducir tamaño para que ocupe menos memoria GPU */
+    inset:-40px;
   }
 
-  highlightNav();
+  /* Desactivar animaciones pesadas en móvil si el usuario prefiere fluidez */
+  .hero::before{
+    animation:none !important;
+  }
 
-  pageTransition();
-
-  window.scrollTo({
-    top: 0
-  });
+  /* Reducir sombras complejas que causan repintado */
+  .card:hover .poster{
+    box-shadow:0 8px 24px rgba(0,0,0,.5);
+  }
 }
 
-/* ---------- EVENTOS GLOBALES ---------- */
-
-window.addEventListener(
-  'hashchange',
-  route
-);
-
-window.addEventListener(
-  'scroll',
-  () => {
-    document
-      .querySelector(
-        '.nav'
-      )
-      ?.classList.toggle(
-        'scrolled',
-        window.scrollY > 40
-      );
-
-    document
-      .getElementById(
-        'toTop'
-      )
-      ?.classList.toggle(
-        'show',
-        window.scrollY > 500
-      );
-  },
-  {
-    passive: true
-  }
-);
-
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
-    const reloadBtn =
-      document.getElementById(
-        'reloadBtn'
-      );
-
-    if (reloadBtn) {
-      reloadBtn.addEventListener(
-        'click',
-        async () => {
-          reloadBtn.style.transform =
-            'rotate(360deg)';
-
-          reloadBtn.style.transition =
-            'transform .5s ease';
-
-          await load();
-
-          setTimeout(
-            () => {
-              reloadBtn.style.transform =
-                'none';
-            },
-            500
-          );
-        }
-      );
-    }
-
-    document
-      .getElementById(
-        'toTop'
-      )
-      ?.addEventListener(
-        'click',
-        () =>
-          window.scrollTo({
-            top: 0,
-            behavior:
-              'smooth'
-          })
-      );
-
-    /* SW desactivado temporalmente: se desregistra cualquier
-       worker viejo. El modo offline vuelve en la Fase 8. */
-    if (
-      'serviceWorker' in
-      navigator
-    ) {
-      navigator.serviceWorker
-        .getRegistrations()
-        .then(
-          rs =>
-            Promise.all(
-              rs.map(
-                r =>
-                  r.unregister()
-              )
-            )
-        )
-        .catch(
-          () => {}
-        );
-    }
-  }
-);
-
-
-/* =========================================================
-   CONTRATO GLOBAL — expone el estado interno a las capas Pro
-   ========================================================= */
-const __expose = (k, get, set) => {
-  try {
-    Object.defineProperty(window, k, { configurable: true, get, set });
-  } catch (e) {}
-};
-
-__expose('DB', () => DB);
-__expose('DB_CACHE', () => DB_CACHE);
-__expose('currentEpisode', () => currentEpisode);
-__expose('detailState', () => detailState);
-
-/* autoNextEnabled necesita setter: los ajustes Pro escriben
-   window.autoNextEnabled y antes no surtía efecto en caliente */
-__expose('autoNextEnabled', () => autoNextEnabled, v => {
-  autoNextEnabled = !!v;
-  localStorage.setItem('donghuaflix_autonext', autoNextEnabled ? 'on' : 'off');
-  const b = document.getElementById('autoNextBtn');
-  if (b) b.innerHTML = `${ICONS.repeat}<span>Auto: ${autoNextEnabled ? 'ON' : 'OFF'}</span>`;
-});
-
-__expose('SRC_LABEL', () => SRC_LABEL);
-__expose('ICONS', () => ICONS);
-__expose('esc', () => esc);
-__expose('qs', () => qs);
-__expose('fold', () => fold);
-__expose('getYear', () => getYear);
-__expose('getCountry', () => getCountry);
-__expose('contentTypeOf', () => contentTypeOf);
-__expose('cleanTitle', () => cleanTitle);
-__expose('cleanEpisodeTitle', () => cleanEpisodeTitle);
-__expose('getSeriesImage', () => getSeriesImage);
-__expose('findSeries', () => findSeries);
-__expose('findEpisode', () => findEpisode);
-__expose('seriesGenres', () => seriesGenres);
-__expose('isFav', () => isFav);
-__expose('lastWatchedEpisode', () => lastWatchedEpisode);
-__expose('getRecommendedSeries', () => getRecommendedSeries);
-
-/* Estado vacío con acción: caja .empty-state (admite HTML/CTA) */
-function emptyStateHTML(msg) {
-  return (
-    '<div class="empty-state"><p>' + msg + '</p></div>'
-  );
+/* Optimización general: usar transform y opacity que son más baratos que filter */
+.card, .btn-x, .episode, .pg-btn {
+  will-change: transform;
 }
 
-load();
+/* Reducir el blur en el hero en móvil */
+@media(max-width:900px){
+  .hero{
+    /* Usar imagen estática sin animación en móvil para ahorrar batería */
+    background-attachment: scroll;
+  }
+}
+
+/* Forzar aceleración por hardware en elementos animados */
+.hero-content, .rail, .grid .card {
+  transform: translateZ(0);
+}
+
+/* Reducir la frecuencia de animaciones en dispositivos de gama baja */
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none !important;
+  }
+}
+/* ══════════════════════════════════════════════════════════
+   DONGHUAFLIX PRO — capa visual (OPTIMIZADA: sin animaciones
+   de entrada que congelan el móvil)
+   ══════════════════════════════════════════════════════════ */
+:root{--dfx-red:#e50914;--dfx-glow:rgba(229,9,20,.35)}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+/* hover de tarjetas (solo en hover, no animación de entrada) */
+.card{transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 38px rgba(0,0,0,.6),0 0 0 1px var(--dfx-red);z-index:5;position:relative}
+.card .poster{overflow:hidden;border-radius:10px;position:relative}
+.card .poster img{transition:transform .35s ease;display:block}
+.card:hover .poster img{transform:scale(1.06)}
+.card .badge{box-shadow:0 2px 8px rgba(0,0,0,.5);letter-spacing:.4px}
+.card h3{font-weight:600;font-size:12.5px;line-height:1.3;margin-top:6px}
+/* edge-fade en raíles (solo máscara, no animación) */
+.rail{mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);padding:4px 2px}
+.cw-rail{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+.top10-row{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+/* hero: fondo estático (sin Ken Burns infinito que mata la GPU) */
+.hero{position:relative;overflow:hidden;touch-action:pan-y}
+.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:blur(28px) brightness(.5) saturate(1.3);z-index:0}
+@media(min-width:901px){
+  .hero::before{animation:dfxHeroIn 1.2s ease}
+}
+@keyframes dfxHeroIn{from{opacity:0}to{opacity:1}}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-weight:900;letter-spacing:-1px;text-shadow:0 4px 30px rgba(0,0,0,.7)}
+/* sombras en capas */
+.detail-v2 .detail-hero,.player,.episode-list{box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.player{border-radius:12px;overflow:hidden}
+/* skeletons de brillo (solo mientras carga, se eliminan al renderizar) */
+.skeleton{position:relative;overflow:hidden;background:#16161c;border-radius:10px}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.07) 50%,transparent 80%);animation:dfxShimmer 1.4s infinite;transform:translateX(-100%)}
+@keyframes dfxShimmer{to{transform:translateX(100%)}}
+/* tipografía con degradado */
+.section-head h2{background:linear-gradient(120deg,#fff 55%,#ffb3b8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;letter-spacing:-.2px}
+/* botones */
+.btn-x{transition:transform .15s ease,filter .15s ease,background .2s}
+.btn-x:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-x:active{transform:scale(.96)}
+.btn-x.play{box-shadow:0 8px 26px rgba(229,9,20,.35)}
+/* scrollbar */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#0a0a0c}
+::-webkit-scrollbar-thumb{background:#2a2a33;border-radius:99px;border:2px solid #0a0a0c}
+::-webkit-scrollbar-thumb:hover{background:var(--dfx-red)}
+/* episodios */
+.episode{transition:transform .15s ease,background .2s}
+.episode:hover{transform:translateX(6px)}
+/* glow ambiental */
+#dfxGlow{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;filter:blur(90px) saturate(1.4);transition:background 1s ease;background:transparent}
+body.dfx-cine #dfxGlow{opacity:.3}
+.player::before{content:'';position:absolute;inset:-40%;background:var(--dfx-glow,transparent);filter:blur(60px);opacity:.25;z-index:0;pointer-events:none}
+.player iframe{position:relative;z-index:1}
+/* modo cine */
+#dfxCineBtn{position:fixed;bottom:88px;right:16px;z-index:9997;width:46px;height:46px;border-radius:50%;background:rgba(20,20,25,.92);border:1px solid #333;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#dfxCineBtn svg{width:22px;height:22px}
+body.dfx-cine .nav,body.dfx-cine .bottom-nav,body.dfx-cine footer,body.dfx-cine #dfxGlobalStats,body.dfx-cine #dfxBNWrap{display:none!important}
+body.dfx-cine::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9990;background:radial-gradient(ellipse at 50% 0%,var(--dfx-glow,rgba(229,9,20,.35)),transparent 60%);mix-blend-mode:screen;opacity:.5}
+/* reducir animaciones (ajuste del usuario) */
+body.dfx-no-motion *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+/* responsive extra */
+@media(max-width:640px){
+  .hero h1{letter-spacing:-1.4px}
+  .hero-btns .btn-x{flex:1;padding:10px 8px;font-size:12.5px}
+  .detail-actions .btn-x.big{flex:1;padding:12px 14px;font-size:13.5px}
+}
+/* ── extras consolidados desde la antigua hoja dfx (eliminada) ── */
+.detail-v2 .detail-hero,.player,.episode-list,#dfsSheet,.dfxCalDay{box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.empty .dfxBig{font-size:42px;display:block;margin-bottom:10px;opacity:.65}
+/* ══════════════════════════════════════════════════════════
+   FASE 1 — Sistema visual: tokens extendidos, foco visible,
+   estados vacíos con acción, selección y botón de cine oculto.
+   (Las reglas anteriores NO se han modificado: esta sección
+   solo AÑADE. El cascade sigue siendo el de siempre.)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── tokens Fase 1 (alias y utilidades; los originales siguen arriba) ── */
+:root{
+  --elevated:#1b1e26;      /* superficie elevada: hovers, episodios */
+  --accent:var(--red);     /* acento unificado (rojo) */
+  --text-2:#c9ccd2;        /* texto secundario */
+  --dur:.2s;               /* transición estándar */
+  --dur-slow:.35s;         /* transición lenta */
+}
+
+/* ── foco visible (teclado) ── */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+  border-radius:6px;
+}
+
+/* ── color de selección ── */
+::selection{background:var(--accent);color:#fff}
+
+/* ── estado vacío con acción (usa .empty-state generado por app.js) ── */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;
+  padding:44px 20px;
+  border:1px dashed var(--glass-brd);
+  border-radius:14px;
+  background:rgba(255,255,255,.02);
+}
+.empty-state p{color:var(--muted);margin:0 0 14px;font-size:14px;line-height:1.6}
+.empty-state .btn-x{margin-top:2px}
+
+/* ── ocultar el botón de modo cine (dfx-boot.js también lo elimina del DOM;
+      el modo cine sigue disponible con la tecla C) ── */
+#dfxCineBtn{display:none!important}
+
+/* ── FASE 1b — Móvil: el FAB de catálogos es vital (esquina inferior
+      derecha). El botón "volver arriba" y los toasts no deben taparlo. ── */
+@media(max-width:900px){
+  #toTop{display:none!important}
+  #toast{
+    left:14px;right:86px;      /* deja hueco al FAB en la esquina */
+    bottom:calc(84px + env(safe-area-inset-bottom));
+    text-align:center;
+  }
+}
