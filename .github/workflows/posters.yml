@@ -4,7 +4,7 @@
 #  buena portada de su propia web.
 #  Rondas de 50 min con commit entre ellas: si GitHub
 #  corta, solo se pierde la ronda en curso.
-#  Recomendado: secret TMDB_API_KEY (gratis en themoviedb.org)
+#  Requiere: secret TMDB_API_KEY (gratis en themoviedb.org)
 # ══════════════════════════════════════════════
 name: Sincronizar portadas
 
@@ -46,8 +46,8 @@ jobs:
           git config --local user.name "github-actions[bot]"
           for round in 1 2 3 4 5 6; do
             echo "══════════════════ RONDA $round ($CATALOG) ══════════════════"
-            MAX_MINUTES=50 node poster-sync.js
-            code=$?
+            MAX_MINUTES=50 node poster-sync.js > /tmp/posters-ronda-$round.log 2>&1 || true
+            tail -n 40 /tmp/posters-ronda-$round.log
             git add -A public/data public/img/posters
             if ! git diff --staged --quiet; then
               git commit -m "sync(posters): $CATALOG (ronda $round)"
@@ -59,11 +59,8 @@ jobs:
                 echo "⚠️ Reintento de push en 30s..."; sleep 30
               done
             fi
-            if [ "$code" -eq 3 ]; then
+            if grep -q '__ALL_DONE__' /tmp/posters-ronda-$round.log; then
               echo "✅ Catálogo $CATALOG COMPLETO"
               break
-            fi
-            if [ "$code" -ne 0 ]; then
-              echo "💥 Error inesperado (código $code)"; exit 1
             fi
           done
