@@ -835,16 +835,3 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     text-align:center;
   }
 }
-
-/* ── FASE 2 — Selector de catálogo integrado en la navbar ──
-   Escritorio: píldora con el nombre del catálogo (mismo menú de siempre).
-   Móvil: se mantiene el FAB circular flotante (elemento vital). ── */
-.cat-fab-label{display:none}
-@media(min-width:901px){
-  .catalog-fab{
-    width:auto;height:38px;border-radius:999px;
-    padding:0 14px 0 6px;display:flex;align-items:center;gap:8px;
-  }
-  .catalog-fab img{width:26px;height:26px;border-radius:6px}
-  .cat-fab-label{display:inline;font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap}
-}

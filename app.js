@@ -154,6 +154,8 @@ async function ensureCatalog(id) {
 }
 
 async function probeCatalogs() {
+  let netFail = false;
+
   for (const c of CATALOGS) {
     if (DB_CACHE[c.id]) {
       CATALOG_AVAILABLE[c.id] = true;
@@ -161,32 +163,50 @@ async function probeCatalogs() {
     }
 
     try {
-      const r = await fetch(c.file, {
-        cache: 'default'
-      });
+      /* HEAD: no descarga nada (el GET antiguo bajaba hasta
+         17 MB por catálogo para solo comprobar existencia). */
+      if (c.index) {
+        const ri = await fetch(
+          c.index,
+          {
+            method: 'HEAD',
+            cache: 'default'
+          }
+        );
 
-      if (!r.ok) {
-        CATALOG_AVAILABLE[c.id] = false;
-        continue;
+        if (ri.ok) {
+          CATALOG_AVAILABLE[c.id] = true;
+          continue;
+        }
       }
 
-      const parsed = await r.json().catch(() => null);
+      const r = await fetch(
+        c.file,
+        {
+          method: 'HEAD',
+          cache: 'default'
+        }
+      );
 
-      if (parsed && parsed.sharded) {
-        CATALOG_AVAILABLE[c.id] =
-          Array.isArray(parsed.parts) &&
-          parsed.parts.length > 0;
-      } else {
-        CATALOG_AVAILABLE[c.id] =
-          Boolean(parsed && Array.isArray(parsed.series));
-      }
-
+      CATALOG_AVAILABLE[c.id] =
+        r.ok;
     } catch {
-      CATALOG_AVAILABLE[c.id] = false;
+      /* Fallo DE RED: no marcar como no disponible;
+         se reintenta a los 15 s. Así el selector no
+         desaparece por una conexión floja. */
+      netFail = true;
     }
   }
 
   renderCatBar();
+
+  if (netFail) {
+    setTimeout(
+      () =>
+        probeCatalogs(),
+      15000
+    );
+  }
 }
 
 function renderCatBar() {
@@ -1631,12 +1651,29 @@ function renderHero(dir = 0) {
   ).textContent =
     cleanTitle(hero);
 
+  const heroMetaBits = [];
+  if (hero.status) {
+    heroMetaBits.push(
+      hero.status
+    );
+  }
+  const heroYear =
+    getYear(hero);
+  if (heroYear) {
+    heroMetaBits.push(
+      String(heroYear)
+    );
+  }
+  heroMetaBits.push(
+    ...seriesGenres(hero).slice(
+      0,
+      2
+    )
+  );
   document.getElementById(
     'heroMeta'
   ).textContent =
-    seriesGenres(hero)
-      .slice(0, 3)
-      .join(' · ');
+    heroMetaBits.join(' · ');
 
   document.getElementById(
     'heroSyn'
@@ -1644,20 +1681,60 @@ function renderHero(dir = 0) {
     hero.synopsis ||
     'Catálogo de animación china en alta calidad.';
 
+  /* Con índice LITE la sinopsis vive en la ficha del título:
+     se descarga bajo demanda y se muestra al llegar. */
+  if (!hero.synopsis && !hero._synTried) {
+    hero._synTried = true;
+    ensureDetail(hero.slug || hero.id)
+      .then(() => {
+        const el = document.getElementById('heroSyn');
+        if (el && hero.synopsis) {
+          el.textContent = hero.synopsis;
+        }
+      })
+      .catch(() => {});
+  }
+
+  const heroEp =
+    lastWatchedEpisode(hero);
+
+  const heroBtnLabel =
+    document.getElementById(
+      'heroBtnLabel'
+    );
+
+  if (heroBtnLabel) {
+    if (heroEp) {
+      const hSeason =
+        DB.seasons.find(
+          x =>
+            x.id ===
+            heroEp.seasonId
+        );
+      const hSn =
+        hSeason &&
+        Number.isFinite(
+          hSeason.number
+        )
+          ? hSeason.number
+          : 1;
+      heroBtnLabel.textContent =
+        `Continuar · T${hSn}:E${heroEp.number}`;
+    } else {
+      heroBtnLabel.textContent =
+        'Ver serie';
+    }
+  }
+
   document.getElementById(
     'heroBtn'
   ).onclick = () => {
-    const ep =
-      lastWatchedEpisode(
-        hero
-      );
-
-    if (ep) {
+    if (heroEp) {
       location.hash =
         '#/episode/' +
         qs(
-          ep.slug ||
-            ep.id
+          heroEp.slug ||
+            heroEp.id
         );
     } else {
       location.hash =
@@ -1945,27 +2022,42 @@ function home() {
   const top10 =
     bySize.slice(0, 10);
 
-  /* Hero ALEATORIO del catálogo activo (sin mezclar catálogos):
-     prioriza títulos con portada y sinopsis para que quede bonito */
-  const heroCandidates =
-    DB.series.filter(
-      s =>
-        getSeriesImage(s) &&
-        (s.synopsis || '')
-          .length > 40
+  /* Hero contextual: si hay historial, el primer título es el
+     último que viste; el resto se rellena al azar con títulos
+     que tienen portada. */
+  const heroPool = [];
+  if (
+    historyList.length &&
+    getSeriesImage(
+      historyList[0]
+    )
+  ) {
+    heroPool.push(
+      historyList[0]
     );
-  const heroSource =
-    heroCandidates.length >= 5
-      ? heroCandidates
-      : DB.series;
-  const heroPool =
-    heroSource
-      .slice()
+  }
+  const shuffledHero =
+    DB.series
+      .filter(
+        s =>
+          getSeriesImage(s)
+      )
       .sort(
         () =>
           Math.random() - 0.5
-      )
-      .slice(0, 5);
+      );
+  for (const s of shuffledHero) {
+    if (
+      heroPool.length >= 5
+    ) {
+      break;
+    }
+    if (
+      !heroPool.includes(s)
+    ) {
+      heroPool.push(s);
+    }
+  }
 
   const sections = [];
 
@@ -2004,6 +2096,108 @@ function home() {
     </section>`);
   }
 
+  /* ── Recomendado para ti: géneros de lo que ves/sigues ── */
+  {
+    const followRec =
+      new Set([
+        ...getFavs(),
+        ...Object.keys(
+          historyData
+        )
+      ]);
+    const genreW =
+      new Map();
+    for (const s of DB.series) {
+      if (
+        !followRec.has(
+          s.id
+        )
+      ) {
+        continue;
+      }
+      for (const g of seriesGenres(
+        s
+      )) {
+        const k =
+          fold(g);
+        genreW.set(
+          k,
+          (genreW.get(
+            k
+          ) || 0) + 1
+        );
+      }
+    }
+    if (
+      genreW.size
+    ) {
+      const recScored =
+        DB.series
+          .filter(
+            s =>
+              !followRec.has(
+                s.id
+              )
+          )
+          .map(
+            s => ({
+              s,
+              score:
+                seriesGenres(
+                  s
+                ).reduce(
+                  (
+                    acc,
+                    g
+                  ) =>
+                    acc +
+                    (genreW.get(
+                      fold(
+                        g
+                      )
+                    ) || 0),
+                  0
+                )
+            })
+          )
+          .filter(
+            x =>
+              x.score > 0
+          )
+          .sort(
+            (
+              a,
+              b
+            ) =>
+              b.score -
+                a.score ||
+              (
+                b.s.updatedAt ||
+                ''
+              ).localeCompare(
+                a.s.updatedAt ||
+                  ''
+              )
+          )
+          .slice(0, 14)
+          .map(
+            x => x.s
+          );
+      if (
+        recScored.length
+      ) {
+        sections.push(`
+        <section class="section">
+          <div class="section-head">
+            <h2>Recomendado para ti</h2>
+            <span class="muted">${recScored.length}</span>
+          </div>
+          ${rail(recScored)}
+        </section>`);
+      }
+    }
+  }
+
   /* En Cine */
   if (
     currentCatalog ===
@@ -2029,7 +2223,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🎬 Películas</h2>
+          <h2>Películas</h2>
           <span class="muted">${cineMovies.length}</span>
         </div>
 
@@ -2041,7 +2235,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>📺 Series</h2>
+          <h2>Series</h2>
           <span class="muted">${cineSeries.length}</span>
         </div>
 
@@ -2114,29 +2308,64 @@ function home() {
         );
       }
     }
+    /* Prioridad: series seguidas primero; como señal de fecha
+       vale el episodio más reciente Y, con índice LITE, el
+       updatedAt de la serie. */
+    const followHome =
+      new Set([
+        ...getFavs(),
+        ...Object.keys(
+          historyData
+        )
+      ]);
+    const tsOf =
+      s =>
+        epLatest.get(
+          s.id
+        ) ||
+        Date.parse(
+          s.updatedAt || 0
+        ) ||
+        0;
     const freshEps =
       DB.series
         .filter(
           s =>
-            epLatest.has(
-              s.id
-            )
+            tsOf(s) > 0
         )
         .sort(
-          (a, b) =>
-            epLatest.get(
-              b.id
-            ) -
-            epLatest.get(
-              a.id
-            )
+          (a, b) => {
+            const fa =
+              followHome.has(
+                a.id
+              )
+                ? 1
+                : 0;
+            const fb =
+              followHome.has(
+                b.id
+              )
+                ? 1
+                : 0;
+            if (
+              fa !== fb
+            ) {
+              return (
+                fb - fa
+              );
+            }
+            return (
+              tsOf(b) -
+              tsOf(a)
+            );
+          }
         )
         .slice(0, 14);
     if (freshEps.length) {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🔥 Nuevos episodios</h2>
+          <h2>Nuevos episodios</h2>
           <span class="muted">${freshEps.length}</span>
         </div>
         ${rail(freshEps)}
@@ -2169,7 +2398,7 @@ function home() {
       sections.push(`
       <section class="section">
         <div class="section-head">
-          <h2>🏃 Para maratonear</h2>
+          <h2>Para maratonear</h2>
           <span class="muted">${marathon.length}</span>
         </div>
         ${rail(marathon)}
@@ -2309,7 +2538,7 @@ function home() {
           id="heroBtn"
         >
           ${ICONS.play}
-          <span>Ver serie</span>
+          <span id="heroBtnLabel">Ver serie</span>
         </button>
 
         <button
@@ -4033,6 +4262,59 @@ function gotoPage(p) {
 
 /* ---------- REPRODUCTOR ---------- */
 
+/* Entrada a episodio con carga bajo demanda: con índice LITE los
+   episodios solo viven en memoria tras abrir la ficha de la
+   serie. Si no se encuentra, se detecta la serie propietaria del
+   slug (el más largo gana) y se reintenta tras cargarla. */
+async function episodeRoute(ref) {
+  let e =
+    findEpisode(ref);
+
+  if (!e) {
+    const owner =
+      DB.series
+        .filter(
+          x =>
+            ref.startsWith(
+              (x.slug || x.id) +
+                '-'
+            )
+        )
+        .sort(
+          (a, b) =>
+            (b.slug || b.id).length -
+            (a.slug || a.id).length
+        )[0];
+
+    if (owner) {
+      app.innerHTML =
+        '<section class="section page-top"><div class="grid">' +
+        Array(8)
+          .fill(
+            '<div class="skeleton"></div>'
+          )
+          .join('') +
+        '</div></section>';
+
+      await ensureDetail(
+        owner.slug ||
+          owner.id
+      );
+
+      e =
+        findEpisode(ref);
+    }
+  }
+
+  if (!e) {
+    return notfound();
+  }
+
+  episode(
+    e.slug || e.id
+  );
+}
+
 function episode(slug) {
   const e =
     findEpisode(slug);
@@ -4691,7 +4973,7 @@ function route() {
   } else if (
     type === 'episode'
   ) {
-    episode(
+    episodeRoute(
       arg
     );
 
@@ -4786,13 +5068,22 @@ document.addEventListener(
           })
       );
 
+    /* SW desactivado temporalmente: se desregistra cualquier
+       worker viejo. El modo offline vuelve en la Fase 8. */
     if (
       'serviceWorker' in
       navigator
     ) {
       navigator.serviceWorker
-        .register(
-          'sw.js'
+        .getRegistrations()
+        .then(
+          rs =>
+            Promise.all(
+              rs.map(
+                r =>
+                  r.unregister()
+              )
+            )
         )
         .catch(
           () => {}
