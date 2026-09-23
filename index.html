@@ -11,8 +11,54 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Fase 1: una sola hoja de estilos (tokens + componentes + capa Pro consolidada) -->
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=24">
+
+  <!-- ═══ AUTODIAGNÓSTICO (temporal): muestra en pantalla cualquier
+       error JS y, a los 6 s, el estado de cada archivo. Cuando la web
+       vaya bien, se quita este bloque entero. ═══ -->
+  <script>
+  (function () {
+    var box = null;
+    function show(msg) {
+      if (!box) {
+        box = document.createElement('pre');
+        box.id = 'dfxDiag';
+        box.style.cssText = 'position:fixed;top:66px;left:8px;right:8px;z-index:2147483647;background:rgba(24,0,0,.94);color:#ff9a9a;border:1.5px solid #ff4040;border-radius:10px;padding:10px 12px;font:12px/1.55 monospace;white-space:pre-wrap;max-height:55vh;overflow:auto';
+        document.documentElement.appendChild(box);
+      }
+      box.textContent += msg + '\n';
+    }
+    window.addEventListener('error', function (e) {
+      var f = (e.filename || '').split('/').pop();
+      show('ERROR: ' + (e.message || e.type) + '  @  ' + f + ':' + e.lineno);
+    });
+    window.addEventListener('unhandledrejection', function (e) {
+      var r = e.reason;
+      show('PROMESA: ' + (r && (r.message || r)));
+    });
+    setTimeout(function () {
+      try {
+        var files = ['app.js?v=24','dfx-core.js?v=24','dfx-polish.js?v=24','dfx-boot.js?v=24','firebase-sync.js?v=24','styles.css?v=24','public/data/catalog-donghualife-index.json'];
+        var chain = Promise.resolve();
+        files.forEach(function (f) {
+          chain = chain.then(function () {
+            return fetch(f, { cache: 'no-store' }).then(function (r) {
+              if (!r.ok) show('FALTA: ' + f + ' -> HTTP ' + r.status);
+            }).catch(function () { show('FALTA: ' + f + ' -> red/CORS'); });
+          });
+        });
+        chain.then(function () {
+          show('--- estado de la app ---');
+          show('home: ' + typeof window.home + ' | route: ' + typeof window.route + ' | DFX: ' + typeof window.DFX + ' | DB expuesta: ' + ('DB' in window));
+          var app = document.getElementById('app');
+          show('#app contenido: ' + (app ? app.innerHTML.length : 'no existe') + ' caracteres');
+          var cw = document.getElementById('catalogWrap');
+          show('selector catálogo: ' + (cw ? cw.style.display : 'no existe en el HTML'));
+        });
+      } catch (err) { show('diag: ' + err.message); }
+    }, 6000);
+  })();
+  </script>
 </head>
 <body>
 
@@ -37,7 +83,6 @@
     <div class="catalog-wrap" id="catalogWrap" style="display:none">
       <button class="catalog-fab" onclick="toggleCatalogMenu()" title="Cambiar catálogo" aria-label="Cambiar catálogo">
         <img src="icon-192.png" alt="">
-        <span class="cat-fab-label" id="catFabLabel">DonghuaLife</span>
         <svg class="fab-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       <div class="catalog-menu" id="catalogMenu">
@@ -107,13 +152,11 @@
   <!-- NOTIFICACIONES -->
   <div id="toast" role="status"></div>
 
-  <!-- DonghuaFlix: capas en orden determinista.
-       app.js define el núcleo; dfx-core/dfx-polish lo extienden;
-       dfx-boot verifica el contrato de globals; firebase-sync es módulo. -->
-  <script src="app.js?v=22"></script>
-  <script src="dfx-core.js?v=22"></script>
-  <script src="dfx-polish.js?v=22"></script>
-  <script src="dfx-boot.js?v=22"></script>
-  <script type="module" src="firebase-sync.js?v=22"></script>
+  <!-- DonghuaFlix: capas en orden determinista. -->
+  <script src="app.js?v=24"></script>
+  <script src="dfx-core.js?v=24"></script>
+  <script src="dfx-polish.js?v=24"></script>
+  <script src="dfx-boot.js?v=24"></script>
+  <script type="module" src="firebase-sync.js?v=24"></script>
 </body>
 </html>
