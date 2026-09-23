@@ -29,7 +29,7 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-f
 .cw-rail{mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 /* hero con parallax sutil */
 .hero{position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:blur(28px) brightness(.5) saturate(1.3);transform:scale(1.15);z-index:0;will-change:transform}
+.hero::before{content:'';position:absolute;inset:-12%;background:var(--hero) center/cover no-repeat;filter:brightness(.62) saturate(1.15);transform:scale(1.06);z-index:0;will-change:transform}
 .hero > *{position:relative;z-index:1}
 body.dfx-no-motion .card:hover{transform:none}
 body.dfx-no-motion .hero::before{transform:none}
