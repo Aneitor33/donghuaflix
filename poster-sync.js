@@ -1,10 +1,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-/* Por defecto SOLO DonghuaLife necesita portadas externas: los demás
-   catálogos ya traen buena portada de su propia web. Si algún día se
-   necesita otro, se pasa CATALOG (p. ej. CATALOG=doramas). */
-const ALL_FILES = ['catalog-donghualife.json'];
+/* TODOS los catálogos: se buscan portadas locales para cada uno.
+   Si solo se quiere uno, se pasa CATALOG (p. ej. CATALOG=doramas). */
+const ALL_FILES = [
+  'catalog-donghualife.json',
+  'catalog-donghuasub.json',
+  'catalog-donghuaworld.json',
+  'catalog-peliculas.json',
+  'catalog-doramas.json'
+];
 const CATALOG = (process.env.CATALOG || '').trim();
 const FILES = CATALOG
   ? [path.resolve(`public/data/catalog-${CATALOG}.json`)]
@@ -14,11 +19,17 @@ const POSTER_DIR = path.resolve('public/img/posters');
 const TMDB_KEY = process.env.TMDB_API_KEY || '';
 const FORCE = process.env.FORCE_POSTERS === '1';
 
-/* Presupuesto de tiempo por ejecución: al agotarse, se guarda TODO
-   y se sale (código 0) — el workflow reanuda en la siguiente ronda. */
-const BUDGET_MS = Math.max(5, Number(process.env.MAX_MINUTES || 50)) * 60000;
+/* Presupuesto de tiempo: SIN LÍMITE por defecto. Si se define
+   MAX_MINUTES se respeta (útil en GitHub Actions, cuyos trabajos
+   tienen tope de 6 h): al agotarse se guarda TODO y se sale
+   (código 0) — el workflow reanuda en la siguiente ronda. */
+const BUDGET_MS = process.env.MAX_MINUTES
+  ? Math.max(5, Number(process.env.MAX_MINUTES)) * 60000
+  : Infinity;
 const T0 = Date.now();
-const timeUp = () => Date.now() - T0 > BUDGET_MS;
+const timeUp = () =>
+  BUDGET_MS !== Infinity &&
+  Date.now() - T0 > BUDGET_MS;
 
 /* Fallo con reintento tras 30 días (TMDB/AniList mejoran con el tiempo). */
 const RETRY_MS = 30 * 24 * 3600 * 1000;
