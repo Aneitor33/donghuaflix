@@ -2,8 +2,7 @@
 #  PORTADAS — descarga pósters de TMDB/AniList
 #  TODOS los catálogos, sin límite de tiempo por
 #  catálogo: cada uno corre en su PROPIO trabajo
-#  (tope real: 6 h de GitHub Actions, que es el
-#  máximo que permite la plataforma).
+#  (tope real: 6 h por trabajo, máximo de GitHub).
 #  Tras cada pasada regenera el ÍNDICE LITE (lo
 #  que realmente lee la web) y hace commit.
 #  Requiere: secret TMDB_API_KEY (gratis en
@@ -21,18 +20,17 @@ on:
         required: false
         default: '0'
       catalog:
-        description: 'Catálogo: all | donghualife | donghuasub | donghuaworld | peliculas | doramas'
+        description: 'all | donghualife | donghuasub | donghuaworld | peliculas | doramas'
         required: false
         default: 'all'
 
 env:
   TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
   FORCE_POSTERS: ${{ github.event.inputs.force || '0' }}
+  ONLY: ${{ github.event.inputs.catalog || 'all' }}
 
 jobs:
   posters:
-    # En schedule (o con 'all') corre los 5; manualmente, solo el elegido
-    if: github.event_name == 'schedule' || github.event.inputs.catalog == 'all' || github.event.inputs.catalog == matrix.catalog
     runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
@@ -50,16 +48,25 @@ jobs:
 
       - name: Portadas de ${{ matrix.catalog }} — sin límite de tiempo
         run: |
+          # Guard: si se pidió un catálogo concreto, los demás trabajos se omiten
+          if [ "$ONLY" != "all" ] && [ "$ONLY" != "${{ matrix.catalog }}" ]; then
+            echo "⏭️ Se pidió '$ONLY'; este trabajo es '${{ matrix.catalog }}' — se omite."
+            exit 0
+          fi
+
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           CATALOG=${{ matrix.catalog }}
+
           for round in 1 2; do
             echo "══════════════════ PASADA $round ($CATALOG) ══════════════════"
             # Sin MAX_MINUTES: corre hasta acabar el catálogo entero
             CATALOG=$CATALOG node poster-sync.js > /tmp/posters-ronda-$round.log 2>&1 || true
             tail -n 40 /tmp/posters-ronda-$round.log
+
             # Regenerar el ÍNDICE LITE y las fichas (lo que lee la web)
             node split-catalog.js public/data/catalog-$CATALOG.json
+
             git add -A public/data public/img/posters
             if ! git diff --staged --quiet; then
               git commit -m "sync(posters): $CATALOG (pasada $round)"
@@ -71,6 +78,7 @@ jobs:
                 echo "⚠️ Reintento de push en 30s..."; sleep 30
               done
             fi
+
             if grep -q '__ALL_DONE__' /tmp/posters-ronda-$round.log; then
               echo "✅ Catálogo $CATALOG COMPLETO"
               break
