@@ -20,7 +20,7 @@ on:
         required: false
         default: '0'
       catalog:
-        description: 'all | donghualife | donghuasub | donghuaworld | peliculas | doramas'
+        description: 'all | donghualife | donghuasub | donghuaworld | peliculas | doramas | donghuacli'
         required: false
         default: 'all'
 
@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        catalog: [donghualife, donghuasub, donghuaworld, peliculas, doramas]
+        catalog: [donghualife, donghuasub, donghuaworld, peliculas, doramas, donghuacli]
     permissions:
       contents: write
     steps:
