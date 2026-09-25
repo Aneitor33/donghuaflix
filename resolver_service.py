@@ -36,13 +36,21 @@ TTL_SERVERS = int(os.environ.get("DHUA_TTL_SERVERS", 21600))
 TTL_PROBE = int(os.environ.get("DHUA_TTL_PROBE", 600))
 MAX_WORKERS = int(os.environ.get("DHUA_MAX_WORKERS", 6))
 
+# Fuentes excluidas tras verificación manual (25/09/2026): ak y ld
+EXCLUDED_SOURCES = {"ak", "ld"}
+
+
+def active_sources():
+    return [s for s in ALL_SOURCES if s.enabled and s.key not in EXCLUDED_SOURCES]
+
+
 app = FastAPI(title="donghuaflix-resolver")
 _SERVERS: dict[str, tuple[float, list[dict]]] = {}
 _PROBE: dict[str, tuple[float, bool]] = {}
 
 # Idioma aproximado por etiqueta de <option> (mejor esfuerzo)
 LANG_HINTS = [
-    (re.compile(r"spanish|español|\bes\b|\besp\b", re.I), "spa"),
+    (re.compile(r"spanish|español|\bes\b|\besp\b|multi|all[- ]?sub", re.I), "spa"),
     (re.compile(r"indonesia|\bid\b|\bindo\b", re.I), "ind"),
     (re.compile(r"english|\ben\b|\beng\b", re.I), "eng"),
     (re.compile(r"turkish|\btr\b", re.I), "tur"),
@@ -139,7 +147,7 @@ def find_series(title: str) -> dict[str, tuple[str, str]]:
     import difflib
     found: dict[str, tuple[str, str]] = {}
     with ThreadPoolExecutor(max_workers=5) as pool:
-        futs = {pool.submit(s.search, title): s for s in ALL_SOURCES if s.enabled}
+        futs = {pool.submit(s.search, title): s for s in active_sources()}
         for fut, src in futs.items():
             try:
                 results = fut.result()
@@ -226,4 +234,4 @@ def resolve(title: str = Query(...), ep: int = Query(..., ge=1)):
 
 @app.get("/health")
 def health():
-    return {"ok": True, "sources": [s.key for s in ALL_SOURCES if s.enabled]}
+    return {"ok": True, "sources": [s.key for s in active_sources()]}
