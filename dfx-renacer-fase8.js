@@ -119,6 +119,15 @@
         long_tasks: state.longTasks,
         transiciones: state.transitions,
         errores_red: state.errors,
+        en_linea: navigator.onLine,
+        conexion: (navigator.connection && navigator.connection.effectiveType) || '?',
+        ahorro_movil: !!(navigator.connection && navigator.connection.saveData),
+        service_worker: ('serviceWorker' in navigator && navigator.serviceWorker.controller) ? 'activo' : ('serviceWorker' in navigator ? 'registrado (sin controlar aún)' : 'no soportado'),
+        firebase_user: (window.__DFX_FIREBASE_USER__ && (window.__DFX_FIREBASE_USER__.email || 'sí')) || 'sin sesión',
+        catalogo_activo: (typeof currentCatalog !== 'undefined' ? currentCatalog : '?'),
+        series_cargadas: (window.DB && window.DB.series) ? window.DB.series.length : 0,
+        catalogos_ok: (() => { try { const a = CATALOG_AVAILABLE; const ks = Object.keys(a); return ks.filter(k => a[k]).length + '/' + ks.length; } catch (e) { return '?'; } })(),
+        localstorage_kb: Math.round(JSON.stringify(localStorage).length / 1024),
         memoria_MB: mem,
         ahorro_datos: document.documentElement.classList.contains('f8-lite'),
         reduccion_movimiento: matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -169,22 +178,34 @@
         <h1 style="font-size:20px;margin:0 0 4px">Diagnóstico DonghuaFlix</h1>
         <p style="color:#9a9aa5;margin:0 0 16px">Renacer · sin consola</p>
         <ul style="list-style:none;margin:0 0 16px;padding:0">
+          ${li('Conexión', d.en_linea ? '🟢 en línea (' + d.conexion + ')' : '🔴 sin conexión')}
+          ${li('Service Worker', d.service_worker)}
+          ${li('Firebase / sesión', d.firebase_user)}
+          ${li('Catálogo activo', d.catalogo_activo + ' · ' + d.series_cargadas + ' series')}
+          ${li('Catálogos disponibles', d.catalogos_ok)}
           ${li('Fase 6 (rendimiento)', flag(!!window.DFX6))}
           ${li('Fase 7 (descubrir)', flag(!!window.DFX7))}
           ${li('Fase 8 (pulido)', flag(!!window.DFX8))}
           ${li('Núcleo Pro (dfx-core)', flag(!!window.DFX))}
           ${li('Imágenes rotas', `${d.imgs.rotas} / ${d.imgs.total}`)}
           ${li('Carruseles duplicados (B1)', d.carruseles_duplicados.length ? `<b style="color:#ffb84d">${d.carruseles_duplicados.length} grupos</b>` : 'ninguno')}
-          ${li('Long tasks', d.long_tasks)}
-          ${li('Memoria JS', (d.memoria_MB ?? '?') + ' MB')}
-          ${li('Ahorro de datos', d.ahorro_datos ? 'sí' : 'no')}
+          ${li('Long tasks / Errores de red', d.long_tasks + ' / ' + d.errores_red)}
+          ${li('Memoria JS', (d.memoria_MB ?? '?') + ' MB · localStorage ' + d.localstorage_kb + ' KB')}
+          ${li('Ahorro de datos', d.ahorro_datos || d.ahorro_movil ? 'sí' : 'no')}
           ${li('Reducción de movimiento', d.reduccion_movimiento ? 'sí' : 'no')}
-          ${li('Errores de red', d.errores_red)}
         </ul>
+        <button id="dfxDiagCopy" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:#17171c;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px">📋 Copiar informe completo</button>
         ${d.carruseles_duplicados.length ? `<details style="margin-bottom:16px"><summary style="cursor:pointer;color:#ffb84d">Ver secciones duplicadas</summary><pre style="white-space:pre-wrap;font-size:12px;color:#cfcfda;background:#17171c;padding:10px;border-radius:10px">${JSON.stringify(d.carruseles_duplicados, null, 2)}</pre></details>` : ''}
         ${d.imgs.rotas ? `<details><summary style="cursor:pointer;color:#ffb84d">Ver URLs rotas</summary><pre style="white-space:pre-wrap;font-size:11px;color:#cfcfda;background:#17171c;padding:10px;border-radius:10px">${d.imgs.rotas.join('\n')}</pre></details>` : ''}
         <p style="color:#9a9aa5;font-size:12px;margin-top:16px">Esta página la genera dfx-renacer-fase8.js. Refresca con Ctrl+F5 o borra caché si no coincide con lo esperado.</p>
       </div>`;
+    const btn = document.getElementById('dfxDiagCopy');
+    if (btn) btn.onclick = () => {
+      const rep = JSON.stringify(d, null, 2);
+      (navigator.clipboard ? navigator.clipboard.writeText(rep) : Promise.reject())
+        .then(() => { btn.textContent = '✔ Copiado'; setTimeout(() => { btn.textContent = '📋 Copiar informe completo'; }, 1500); })
+        .catch(() => { btn.textContent = 'No se pudo copiar'; });
+    };
     window.scrollTo(0, 0);
   }
   function addDiagLink() {
