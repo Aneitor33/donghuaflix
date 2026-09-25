@@ -609,8 +609,11 @@ def process_seed_title(title, total, with_servers):
 # --servers-only
 # ─────────────────────────────────────────────────────────────────────
 
-def backfill_servers(workers: int) -> int:
+def backfill_servers(workers: int, shard: int = 0, nshards: int = 1) -> int:
     files = sorted(DETAILS_DIR.glob("*.json"))
+    if nshards > 1:
+        files = [fp for i, fp in enumerate(files) if i % nshards == shard]
+    print(f"[servers] shard {shard + 1}/{nshards}: {len(files)} fichas asignadas")
     if not files:
         print("[servers] no hay fichas que rellenar")
         return 1
@@ -683,13 +686,17 @@ def main() -> int:
     ap.add_argument("--max-pages", type=int, default=300)
     ap.add_argument("--max-series", type=int, default=0)
     ap.add_argument("--with-servers", action="store_true")
+    ap.add_argument("--shard", type=int, default=0,
+                    help="Shard a procesar (0-based); requiere --nshards")
+    ap.add_argument("--nshards", type=int, default=1,
+                    help="Nº total de shards (para paralelizar con matrix de Actions)")
     args = ap.parse_args()
 
     t0 = time.time()
     DETAILS_DIR.mkdir(parents=True, exist_ok=True)
 
     if args.servers_only:
-        return backfill_servers(args.workers)
+        return backfill_servers(args.workers, args.shard, args.nshards)
 
     st = load_state(args.fresh)
     done_set = set(st["done"])
