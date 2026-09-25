@@ -20,3 +20,36 @@
 /* Cabecera: nada se encoge ni desaparece al cargar */
 .nav-actions, .catalog-wrap { flex-shrink: 0; }
 .nav { gap: 12px; }
+
+/* ============================================================
+   FASE FINAL v2 — Hero nítido + ambiente de color (estilo clásico)
+   ============================================================ */
+
+/* HERO: la portada se ve REAL, sin nube. Sombra inferior para el texto. */
+.hero::before{
+  filter:blur(0) brightness(.82) saturate(1.18) !important;
+  transform:none !important;
+  animation:none !important;
+}
+.hero .hero-shade{
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.10) 0%,
+    rgba(0,0,0,0) 30%,
+    rgba(0,0,0,.55) 62%,
+    rgba(0,0,0,.92) 100%) !important;
+}
+.hero h1, .hero .hero-meta, .hero p#heroSyn{
+  text-shadow:0 3px 18px rgba(0,0,0,.85);
+}
+
+/* AMBIENTE: la página entera se tiñe del color dominante del póster
+   (dfx-polish.js ya calcula --dfx-glow: aquí lo hacemos visible) */
+#dfxGlow{
+  opacity:.55 !important;
+  filter:blur(110px) saturate(1.7) !important;
+}
+body{
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--dfx-glow, #e50914) 24%, #0a0a0c) 0%,
+    #0a0a0c 62%) fixed !important;
+}
