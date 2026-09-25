@@ -1,0 +1,74 @@
+# .github/workflows/dhua-sync.yml
+# Scrapea catálogo vía donghua-cli y publica los JSON en el repo.
+# Requiere: dhua-titles.txt en la raíz (opcional; si no existe, usa los
+# índices ya existentes en public/data como semilla de títulos).
+name: donghua-cli sync
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # diario 04:00 UTC
+  workflow_dispatch:       # botón manual en la pestaña Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dhua-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install donghua-cli
+
+      - name: Cache del catálogo anterior
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/donghua-cli
+            public/data/catalog-donghuacli.json
+          key: dhua-catalog-${{ github.run_id }}
+          restore-keys: dhua-catalog-
+
+      - name: Scrapear catálogo con donghua-cli
+        env:
+          # reduce ruido en los logs del Action
+          PYTHONUNBUFFERED: "1"
+        run: python sync-donghuacli.py
+
+      - name: Commit y push de los JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/catalog-donghuacli.json \
+                  public/data/catalog-donghuacli-index.json \
+                  public/data/catalog-donghuacli-details/
+          if git diff --cached --quiet; then
+            echo "Sin cambios, nada que commitear."
+          else
+            git commit -m "chore(dhua): sync catálogo donghua-cli [skip ci]"
+            git push
+          fi
+
+  # ── Opcional: despliega/reinicia el servicio de resolución ─────────
+  # Solo si tu hosting lo soporta (ej. un VPS con un deploy hook o SSH).
+  # Si tu donghuaflix es 100% estático en GitHub Pages, puedes borrar
+  # este job y correr resolver_service.py en un servicio aparte
+  # (Railway, Render, VPS...). GitHub Pages NO puede ejecutar Python.
+  resolver:
+    needs: sync
+    if: false   # ← ponlo en true cuando tengas dónde desplegarlo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping deploy hook del resolutor
+        run: curl -fsSL -X POST "${{ secrets.DHUA_RESOLVER_DEPLOY_HOOK }}"
