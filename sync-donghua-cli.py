@@ -3,28 +3,22 @@
 sync-donghua-cli.py — Catálogo "donghuacli" para donghuaflix usando donghua-cli.
 
 MODOS:
-  --crawl-sites            Descubre series en las webs de donghua-cli (sitemap+A-Z+portada),
-                           limpia títulos, descarta inglés/indonesio (sin "multi"), y genera
-                           catálogo + fichas con lista de episodios (sin servidores).
-  --servers-only           NO descubre nada: recorre las fichas ya generadas y rellena
-                           e.servers con los iframes detectados. Retomable (salta episodios
-                           que ya tienen servidores).
-  (sin flags)              Modo semilla con dhua-titles.txt / tus índices de donghua.
+  --crawl-sites   Descubre series (y FRAGMENTOS: posts tipo "Episodes 57 To 60") en las
+                  webs de donghua-cli, los AGRUPA por título (exacto + difuso, sin mezclar
+                  temporadas) y UNE sus episodios por número para series completas.
+  --servers-only  Rellena e.servers en fichas ya existentes (retomable).
+  (sin flags)     Modo semilla (dhua-titles.txt / tus índices).
 
-CHECKPOINT / RETOMAR:
-  - Guarda estado tras cada serie (catalog-donghuacli-state.json).
-  - Al re-ejecutar, salta las series ya hechas. Usa --fresh para forzar de cero.
-  - El workflow commitea aunque falle (if: always()), así el progreso sobrevive.
+CHECKPOINT: estado guardado tras cada serie; al re-ejecutar salta lo hecho. --fresh = de cero.
 
-Uso típico:
-  python sync-donghua-cli.py --crawl-sites --workers 8            # catálogo completo
-  python sync-donghua-cli.py --servers-only --workers 8           # rellenar servidores
-  python sync-donghua-cli.py --crawl-sites --max-series 30        # prueba
-  python sync-donghua-cli.py --crawl-sites --fresh                # rehacer desde cero
+Por qué el merge de fragmentos: estas webs publican series largas en varios posts
+(p.ej. "Against the Sky Supreme" 1-346 + posts de 347+). donghua-cli solo lee la lista
+de UN post, así que sin fusionar la serie queda incompleta.
 """
 import argparse
 import base64
 import binascii
+import difflib
 import json
 import re
 import sys
@@ -33,6 +27,7 @@ import time
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+from urllib.parse import unquote
 
 from donghua_cli.sources import ALL_SOURCES, get_source
 from donghua_cli.extractor import VIDEO_HOSTS
@@ -48,6 +43,16 @@ TITLES_FILE = ROOT / "dhua-titles.txt"
 
 DONGHUA_INDEX_HINTS = ("donghualife", "donghuasub", "donghuaworld")
 
+# Fuentes EXCLUIDAS tras verificación manual (25/09/2026):
+#   ak (AnimeKhor)      -> no ofrece multisub completo
+#   ld (LuciferDonghua) -> solo inglés
+EXCLUDED_SOURCES = {"ak", "ld"}
+
+
+def active_sources():
+    """Fuentes habilitadas menos las excluidas."""
+    return [s for s in ALL_SOURCES if s.enabled and s.key not in EXCLUDED_SOURCES]
+
 HOST_NAMES = [
     ("dailymotion.com", "Dailymotion"),
     ("streamtape.com", "Streamtape"),
@@ -60,27 +65,29 @@ HOST_NAMES = [
     ("vk.com", "VK"),
 ]
 LANG_HINTS = [
-    (re.compile(r"spanish|español|\bes\b|\besp\b", re.I), "spa"),
+    (re.compile(r"spanish|español|\bes\b|\besp\b|multi|all[- ]?sub", re.I), "spa"),
     (re.compile(r"indonesia|\bid\b|\bindo\b", re.I), "ind"),
     (re.compile(r"english|\ben\b|\beng\b", re.I), "eng"),
     (re.compile(r"turkish|\btr\b", re.I), "tur"),
     (re.compile(r"portugu", re.I), "por"),
 ]
 
-# URL de episodio (no de serie): /episode-102, /ep-3, etc.
 EP_URL_RX = re.compile(r"(?:^|[-_/])(?:episode|ep)[-_ ]?\d+", re.I)
-# Título que anuncia subs que NO nos sirven (salvo que diga multi/español)
 BAD_SUB_RX = re.compile(
-    r"english subtitles?$|english sub$|subtitles? english( indonesian)?$|"
+    r"english sub(?:titles?|bed)?$|subtitles? english( indonesian)?$|subbed$|dub(?:bed)?$|"
     r"sub indo(?!.*multi)|indonesian sub(?!.*multi)|indo sub(?!.*multi)", re.I)
 MULTI_RX = re.compile(r"multi|espa?ñol|spanish", re.I)
 SITE_TAG_RX = re.compile(
     r"\s*[|\-–—]\s*(DonghuaStream|AnimeXin|AnimeKhor|LMAnime|LuciferDonghua)\b.*$", re.I)
-EP_TITLE_RX = re.compile(
-    r"\s+(?:episode|ep)\s*\d+\s*(?:english subtitles?|subtitles? english(?: indonesian)?|"
+# "… Episodes 57 To 60 Subtitles English Indonesia" / "… Episode 102 English Subtitles"
+FRAG_BATCH_RX = re.compile(r"\s+episodes?\s+\d+\s*(?:to|[-–])\s*\d+.*$", re.I)
+FRAG_SINGLE_RX = re.compile(
+    r"\s+(?:episode|ep)\s+\d+\s+(?:english sub(?:titles?|bed)?|subtitles? english(?: indonesian)?|"
     r"sub indo|multi[- ]?sub[^\n]*)?$", re.I)
 LANG_SUFFIX_RX = re.compile(
-    r"\s+(?:english subtitles?|subtitles? english(?: indonesian)?|multi[- ]?sub[^|]*)$", re.I)
+    r"\s+(?:english sub(?:titles?|bed)?|subtitles? english(?: indonesian)?|multi[- ]?sub[^|]*)$", re.I)
+# cola basura de slugs: zhutianjiep16, zichuanep26, immortalityyep12
+JUNK_TAIL_RX = re.compile(r"(?:chapter|ch|ep|e|p|pt|part)\d+$")
 
 _progress_lock = threading.Lock()
 _progress = {"n": 0, "hits": 0}
@@ -94,6 +101,21 @@ def slugify(title: str) -> str:
 
 def norm_key(title: str) -> str:
     return re.sub(r"[^a-z0-9]", "", title.lower())
+
+
+def series_key2(title: str) -> str:
+    """Clave de agrupación: norm_key sin colas basura de fragmento (ep16, p12...)."""
+    k = norm_key(title)
+    prev = None
+    while prev != k:
+        prev = k
+        k = JUNK_TAIL_RX.sub("", k)
+    return k
+
+
+def season_tail(k: str) -> str:
+    m = re.search(r"(?:season|s)(\d{1,2})$", k)
+    return m.group(1) if m else ""
 
 
 def host_name(url: str) -> str:
@@ -121,7 +143,7 @@ def load_state(fresh: bool) -> dict:
         try:
             st = json.loads(STATE_FILE.read_text(encoding="utf-8"))
             if isinstance(st, dict) and "done" in st:
-                print(f"[state] retomando: {len(st['done'])} series ya hechas")
+                print(f"[state] retomando: {len(st['done'])} grupos ya hechos")
                 return st
         except Exception:
             pass
@@ -133,7 +155,7 @@ def save_state(st: dict) -> None:
 
 
 # ─────────────────────────────────────────────────────────────────────
-# DESCUBRIMIENTO (sitemap + A-Z + portada paginada)
+# DESCUBRIMIENTO
 # ─────────────────────────────────────────────────────────────────────
 
 def _listing_items(tree, src):
@@ -169,9 +191,8 @@ def _listing_items(tree, src):
 
 
 def _paginated_listing(src, path, max_pages):
-    """Recorre /page/N/ de una ruta de listado y devuelve [(t,u,c), ...] sin duplicados."""
     base = src.base_url.rstrip("/")
-    out, seen, = [], set()
+    out, seen = [], set()
     for page in range(1, max_pages + 1):
         url = f"{base}{path}" if page == 1 else f"{base}{path}page/{page}/"
         try:
@@ -188,13 +209,13 @@ def _paginated_listing(src, path, max_pages):
                 out.append((t, u, c))
                 new += 1
         if new == 0:
-            break  # página repetida: fin de la paginación
+            break
     return out
 
 
 def crawl_source_sitemap(src):
     base = src.base_url.rstrip("/")
-    series_urls = {}
+    found_urls: dict[str, None] = {}
 
     def locs(html):
         return re.findall(r"<loc>\s*(https?://[^<]+?)\s*</loc>", html or "")
@@ -209,26 +230,36 @@ def crawl_source_sitemap(src):
             continue
         subs = [u for u in found if u.endswith(".xml")]
         for u in found:
-            if src._is_series_link(u) and not EP_URL_RX.search(u):
-                series_urls[u] = None
+            if src._is_series_link(u):
+                found_urls.setdefault(u, None)
         for sub in subs:
             try:
                 t2 = fetch_html(sub, timeout=src.episode_timeout)
             except Exception:
                 continue
             for u in locs(t2.html or ""):
-                if src._is_series_link(u) and not EP_URL_RX.search(u):
-                    series_urls.setdefault(u, None)
-        if series_urls:
+                if src._is_series_link(u):
+                    found_urls.setdefault(u, None)
+        if found_urls:
             break
-    return [(u.rstrip("/").split("/")[-1].replace("-", " ").title(), u, None)
-            for u in sorted(series_urls)]
+    out = []
+    for u in sorted(found_urls):
+        title = unquote(u.rstrip("/").split("/")[-1]).replace("-", " ").title()
+        out.append((title, u, None))
+    return out
 
 
-def keep_item(title: str, url: str) -> bool:
-    """¿Nos interesa esta entrada? Descarta páginas de episodio y subs eng/indo puros."""
-    if EP_URL_RX.search(url):
-        return False
+def clean_discovered_title(t: str) -> str:
+    t = unquote(t)
+    t = SITE_TAG_RX.sub("", t)
+    t = FRAG_BATCH_RX.sub("", t)
+    t = FRAG_SINGLE_RX.sub("", t)
+    t = LANG_SUFFIX_RX.sub("", t)
+    return t.strip(" -|–—").strip()
+
+
+def keep_item(title: str) -> bool:
+    """Filtro de idioma sobre el título YA LIMPIO: fuera inglés/indonesio puro."""
     if MULTI_RX.search(title):
         return True
     if BAD_SUB_RX.search(title):
@@ -236,18 +267,11 @@ def keep_item(title: str, url: str) -> bool:
     return True
 
 
-def clean_discovered_title(t: str) -> str:
-    t = SITE_TAG_RX.sub("", t)
-    t = EP_TITLE_RX.sub("", t)
-    t = LANG_SUFFIX_RX.sub("", t)
-    return t.strip(" -|–—").strip()
-
-
 def discover_series(max_pages: int, max_series: int) -> list[dict]:
+    """Devuelve la lista de GRUPOS (series fusionadas con sus fragmentos)."""
     pool: dict[str, dict] = {}
-    for src in [s for s in ALL_SOURCES if s.enabled]:
+    for src in active_sources():
         by_url: dict[str, tuple] = {}
-        n_sitemap = 0
         for it in crawl_source_sitemap(src):
             by_url.setdefault(it[1], it)
         n_sitemap = len(by_url)
@@ -256,24 +280,77 @@ def discover_series(max_pages: int, max_series: int) -> list[dict]:
                 by_url.setdefault(it[1], it)
         kept = 0
         for t, u, c in by_url.values():
-            if not keep_item(t, u):
+            ct = clean_discovered_title(t)
+            if not ct or not keep_item(ct):
                 continue
-            ct = clean_discovered_title(t) or t
             k = norm_key(ct)
             if not k:
                 continue
-            e = pool.setdefault(k, {"title": ct, "urls": {}, "cover": c})
-            e["urls"][src.key] = u
+            e = pool.setdefault(k, {"titles": set(), "urls": {}, "cover": c})
+            e["titles"].add(ct)
+            e["urls"].setdefault(src.key, u)   # 1ª URL por fuente: preferimos página de serie
             if c and not e["cover"]:
                 e["cover"] = c
             kept += 1
-        print(f"[crawl] {src.key} ({src.name}): {kept} series válidas "
-              f"(sitemap {n_sitemap} URLs, total {len(by_url)})")
-    series_list = list(pool.values())
-    series_list.sort(key=lambda e: e["title"].lower())
+        print(f"[crawl] {src.key} ({src.name}): {kept} entradas válidas "
+              f"(sitemap {n_sitemap} URLs, total {len(by_url)})", flush=True)
+    groups = merge_fragments(pool.values())
+    groups.sort(key=lambda g: g["title"].lower())
     if max_series and max_series > 0:
-        series_list = series_list[:max_series]
-    return series_list
+        groups = groups[:max_series]
+    return groups
+
+
+def merge_fragments(entries) -> list[dict]:
+    """Agrupa entradas en series: 1) clave exacta, 2) contención/difusa dentro del
+    mismo bucket de prefijo y MISMA temporada (nunca mezcla Season 1 con Season 2)."""
+    by_key: dict[str, dict] = {}
+    order: list[dict] = []
+    for e in entries:
+        best = min(e["titles"], key=len)
+        k2 = series_key2(best)
+        g = by_key.get(k2)
+        if not g:
+            g = {"key": k2, "tail": season_tail(k2), "titles": set(e["titles"]),
+                 "urls": dict(e["urls"]), "cover": e.get("cover")}
+            by_key[k2] = g
+            order.append(g)
+        else:
+            g["titles"] |= e["titles"]
+            for k, u in e["urls"].items():
+                g["urls"].setdefault(k, u)
+            if e.get("cover") and not g["cover"]:
+                g["cover"] = e["cover"]
+    # pase difuso: une grupos parecidos (nunca entre temporadas distintas)
+    merged_idx: set[int] = set()
+    for i in range(len(order)):
+        if i in merged_idx:
+            continue
+        a = order[i]
+        for j in range(i + 1, len(order)):
+            if j in merged_idx:
+                continue
+            b = order[j]
+            if a["tail"] != b["tail"] or a["key"][:4] != b["key"][:4]:
+                continue
+            if len(a["key"]) < 5 or len(b["key"]) < 5:
+                continue
+            contains = (a["key"] in b["key"] or b["key"] in a["key"])
+            similar = difflib.SequenceMatcher(None, a["key"], b["key"]).ratio() >= 0.85
+            if contains or similar:
+                a["titles"] |= b["titles"]
+                for k, u in b["urls"].items():
+                    a["urls"].setdefault(k, u)
+                if b.get("cover") and not a["cover"]:
+                    a["cover"] = b["cover"]
+                merged_idx.add(j)
+    groups = []
+    for i, g in enumerate(order):
+        if i in merged_idx:
+            continue
+        g["title"] = min(g["titles"], key=len)   # título canónico = el más corto
+        groups.append(g)
+    return groups
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -301,10 +378,9 @@ def load_seed_titles() -> list[str]:
 
 
 def search_all_sources(title: str) -> dict:
-    import difflib
     match = {"title": title, "sources": {}}
     with ThreadPoolExecutor(max_workers=5) as pool:
-        futs = {pool.submit(s.search_with_covers, title): s for s in ALL_SOURCES if s.enabled}
+        futs = {pool.submit(s.search_with_covers, title): s for s in active_sources()}
         for fut, src in futs.items():
             try:
                 results = fut.result()
@@ -323,25 +399,63 @@ def search_all_sources(title: str) -> dict:
 # EPISODIOS / SERVIDORES / FICHAS
 # ─────────────────────────────────────────────────────────────────────
 
-def fetch_episodes(key: str, series_url: str) -> list[tuple[int, str]]:
+def fetch_episodes(key: str, url: str) -> list[tuple[int, str, str]]:
+    """[(numero, url_pagina_episodio, source_key), ...]"""
     src = get_source(key)
     if src is None:
         return []
     try:
-        eps = src.get_episodes(series_url)
+        eps = src.get_episodes(url)
     except Exception:
         return []
     out = []
-    for title, url in eps:
-        n = extract_episode_number(title, url)
+    for title, u in eps:
+        n = extract_episode_number(title, u)
         if n != 999999:
-            out.append((n, url))
+            out.append((n, u, key))
+    # si la URL ES un episodio, añadirlo directamente (los posts sueltos a veces
+    # no tienen eplister completo, pero su propia página sí es un episodio)
+    n_self = extract_episode_number("", url)
+    if n_self != 999999 and n_self not in [n for n, _, _ in out]:
+        out.append((n_self, url, key))
     return out
 
 
+def has_gaps(merged: dict[int, dict[str, str]]) -> bool:
+    if not merged:
+        return True
+    nums = set(merged)
+    mx = max(nums)
+    if mx > 2000:
+        return False
+    return any(i not in nums for i in range(1, mx + 1))
+
+
+def collect_group_episodes(group: dict) -> dict[int, dict[str, str]]:
+    """Une episodios de todas las URLs del grupo. Páginas de serie primero;
+    fragmentos (posts de episodios) solo hasta cubrir los huecos de la numeración."""
+    def sort_key(kv):
+        key, url = kv
+        frag = 1 if EP_URL_RX.search(url) else 0
+        n = extract_episode_number("", url)
+        return (frag, n if n != 999999 else 0)
+
+    merged: dict[int, dict[str, str]] = {}
+    frags_fetched = 0
+    for key, url in sorted(group["urls"].items(), key=sort_key):
+        is_frag = EP_URL_RX.search(url) is not None
+        if is_frag:
+            if not has_gaps(merged):
+                break                       # la serie ya está completa 1..max
+            frags_fetched += 1
+            if frags_fetched > 400:         # red de seguridad
+                break
+        for n, u, k in fetch_episodes(key, url):
+            merged.setdefault(n, {}).setdefault(k, u)
+    return merged
+
+
 def fix_episode_numbers(merged: dict[int, dict[str, str]]) -> dict[int, dict[str, str]]:
-    """Si la numeración no empieza en 1, renumera 1..N en orden (los posts sueltos
-    de algunas webs numeran raro). Si ya hay un 1 coherente, se respeta."""
     nums = sorted(merged)
     if not nums:
         return merged
@@ -400,7 +514,7 @@ def build_detail(slug, title, cover, merged, with_servers):
         ep_id = f"{slug}-ep-{n}"
         servers: list[dict] = []
         if with_servers:
-            for key, page in merged[n].items():
+            for _key, page in (merged[n] or {}).items():
                 for srv in collect_embeds(page):
                     if not any(s["url"] == srv["url"] for s in servers):
                         servers.append(srv)
@@ -428,7 +542,20 @@ def _bump(hit: bool, total: int):
 
 def _emit(slug, title, cover, merged, with_servers):
     detail = build_detail(slug, title, cover, merged, with_servers)
-    (DETAILS_DIR / f"{slug}.json").write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
+    # preservar servidores ya rellenados (evita perder el trabajo del modo --servers-only
+    # cuando el crawl regenera la ficha, p.ej. tras excluir fuentes)
+    fp = DETAILS_DIR / f"{slug}.json"
+    if fp.exists():
+        try:
+            old_srv = {ep.get("number"): ep.get("servers")
+                       for ep in json.loads(fp.read_text(encoding="utf-8")).get("episodes", [])}
+            for ep in detail["episodes"]:
+                s = old_srv.get(ep["number"])
+                if s and not ep["servers"]:
+                    ep["servers"] = s
+        except Exception:
+            pass
+    fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
     return {
         "i": slug, "s": slug, "t": title,
         "p": cover or f"./public/img/posters/{slug}.jpg",
@@ -438,27 +565,22 @@ def _emit(slug, title, cover, merged, with_servers):
     }
 
 
-def process_crawl_entry(entry, total, with_servers, st):
-    title = entry["title"]
-    key = norm_key(title)
-    if key in st["done"]:
-        n_done, _ = _bump(True, total)
+def process_group(group, total, with_servers, st):
+    title = group["title"]
+    gkey = f"{group['key']}:{group['tail']}"
+    if gkey in st["done"]:
+        _bump(True, total)
         return "SKIP"
-    merged: dict[int, dict[str, str]] = {}
-    with ThreadPoolExecutor(max_workers=len(entry["urls"])) as pool:
-        futs = {pool.submit(fetch_episodes, k, u): k for k, u in entry["urls"].items()}
-        for fut, k in futs.items():
-            for n, url in fut.result():
-                merged.setdefault(n, {})[k] = url
+    merged = collect_group_episodes(group)
     n_done, hits = _bump(bool(merged), total)
     if not merged:
-        print(f"[{n_done}/{total}] {title} -> sin episodios")
-        st["done"].append(key)
+        print(f"[{n_done}/{total}] {title} -> sin episodios", flush=True)
+        st["done"].append(gkey)
         return None
     merged = fix_episode_numbers(merged)
     print(f"[{n_done}/{total}] {title} -> {len(merged)} episodios "
-          f"({len(entry['urls'])} fuentes) [{hits} hits]")
-    return _emit(slugify(title), title, entry.get("cover"), merged, with_servers)
+          f"({len(group['urls'])} URLs) [{hits} hits]", flush=True)
+    return _emit(slugify(title), title, group.get("cover"), merged, with_servers)
 
 
 def process_seed_title(title, total, with_servers):
@@ -471,8 +593,8 @@ def process_seed_title(title, total, with_servers):
     with ThreadPoolExecutor(max_workers=len(match["sources"])) as pool:
         futs = {pool.submit(fetch_episodes, k, v["series_url"]): k for k, v in match["sources"].items()}
         for fut, k in futs.items():
-            for n, url in fut.result():
-                merged.setdefault(n, {})[k] = url
+            for n, u, kk in fut.result():
+                merged.setdefault(n, {}).setdefault(kk, u)
     n_done, hits = _bump(bool(merged), total)
     if not merged:
         print(f"[{n_done}/{total}] {title} -> sin episodios")
@@ -484,7 +606,7 @@ def process_seed_title(title, total, with_servers):
 
 
 # ─────────────────────────────────────────────────────────────────────
-# --servers-only: rellenar servidores en fichas existentes
+# --servers-only
 # ─────────────────────────────────────────────────────────────────────
 
 def backfill_servers(workers: int) -> int:
@@ -522,7 +644,7 @@ def backfill_servers(workers: int) -> int:
         for i, ch in enumerate(pool.map(work, files), 1):
             done_eps += ch
             if i % 25 == 0 or i == total:
-                print(f"[servers] {i}/{total} fichas ({done_eps} episodios con servidores)")
+                print(f"[servers] {i}/{total} fichas ({done_eps} episodios con servidores)", flush=True)
     print(f"[ok] {done_eps} episodios rellenados")
     return 0
 
@@ -555,15 +677,12 @@ def write_outputs(entries, t0):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--crawl-sites", action="store_true")
-    ap.add_argument("--servers-only", action="store_true",
-                    help="Solo rellenar servidores en fichas ya existentes (retomable)")
-    ap.add_argument("--fresh", action="store_true",
-                    help="Ignora el estado guardado y empieza de cero")
+    ap.add_argument("--servers-only", action="store_true")
+    ap.add_argument("--fresh", action="store_true")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--max-pages", type=int, default=300)
     ap.add_argument("--max-series", type=int, default=0)
-    ap.add_argument("--with-servers", action="store_true",
-                    help="Scrapea iframes durante el crawl (lento; mejor usa --servers-only después)")
+    ap.add_argument("--with-servers", action="store_true")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -577,36 +696,34 @@ def main() -> int:
     entries: list[dict] = list(st["entries"])
     flush_counter = {"i": 0}
 
-    def stash(entry, key):
+    def stash(entry, gkey):
         if entry:
             entries.append(entry)
             st["entries"].append(entry)
-        if key:
-            st["done"].append(key)
+        if gkey:
+            st["done"].append(gkey)
         flush_counter["i"] += 1
         if flush_counter["i"] % 10 == 0:
             save_state(st)
 
     if args.crawl_sites:
-        print(f"[modo] crawl-sites: descubriendo en {sum(1 for s in ALL_SOURCES if s.enabled)} fuentes")
-        series = discover_series(args.max_pages, args.max_series)
-        todo = [s for s in series if norm_key(s["title"]) not in done_set]
-        print(f"[start] {len(series)} series únicas ({len(todo)} pendientes), workers={args.workers}")
+        print(f"[modo] crawl-sites: descubriendo en {sum(1 for s in active_sources())} fuentes")
+        groups = discover_series(args.max_pages, args.max_series)
+        todo = [g for g in groups if f"{g['key']}:{g['tail']}" not in done_set]
+        print(f"[start] {len(groups)} grupos únicos ({len(todo)} pendientes), workers={args.workers}")
         total = len(todo)
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
-            futs = {pool.submit(process_crawl_entry, s, total, args.with_servers, st): s for s in todo}
-            for fut, s in futs.items():
+            futs = {pool.submit(process_group, g, total, args.with_servers, st): g for g in todo}
+            for fut, g in futs.items():
+                gkey = f"{g['key']}:{g['tail']}"
                 try:
                     r = fut.result()
                 except Exception as e:
-                    print(f"  [warn] error procesando {s['title']}: {e}")
+                    print(f"  [warn] error en {g['title']}: {e}")
                     continue
                 if r == "SKIP":
                     continue
-                if r:
-                    stash(r, norm_key(s["title"]))
-                else:
-                    stash(None, norm_key(s["title"]))
+                stash(r if r else None, gkey)
     else:
         titles = load_seed_titles()
         if not titles:
