@@ -3,19 +3,20 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuacli', 'dramasyt'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
-  { id: 'donghuaworld',  file: './public/data/catalog-donghuaworld.json',  index: './public/data/catalog-donghuaworld-index.json',  label: 'DonghuaWorld' },
   { id: 'donghuacli',    file: './public/data/catalog-donghuacli.json',    index: './public/data/catalog-donghuacli-index.json',    label: 'DonghuaCLI' },
+  { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
 const SRC_LABEL = {
   donghualife: 'DonghuaLife',
   donghuasub: 'DonghuaSub',
-  donghuaworld: 'DonghuaWorld',
+  donghuacli: 'DonghuaCLI',
+  dramasyt: 'DramasYT',
   tiodonghua: 'TioDonghua',
   peliculas: 'Películas',
   doramas: 'Doramas'
@@ -3245,7 +3246,7 @@ async function updateSearchResults(
   });
 }
 
-/* Búsqueda conjunta: los 3 catálogos de donghua a la vez
+/* Búsqueda conjunta: los catálogos principales a la vez
    (más el catálogo activo si es otro). Cada resultado lleva
    _cat = su catálogo de origen. */
 async function getSearchPool() {

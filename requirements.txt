@@ -1,5 +1,6 @@
-# Dependencias del scraper/resolutor donghua-cli para donghuaflix
-# (usado por .github/workflows/dhua-sync.yml y resolver_service.py)
+# Dependencias de los scrapers de donghuaflix
+# (usado por .github/workflows/dhua-sync.yml y dramas-yt-sync.yml)
 donghua-cli>=0.1.0
+yt-dlp>=2024.1.1
 fastapi>=0.110
 uvicorn>=0.29

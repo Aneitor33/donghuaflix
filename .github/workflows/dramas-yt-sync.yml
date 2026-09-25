@@ -1,0 +1,70 @@
+# .github/workflows/dramas-yt-sync.yml
+# Catálogo "DramasYT": series chinas live-action (wuxia/cultivo/romance) con subs
+# o doblaje en español, desde canales OFICIALES de YouTube (WeTV, iQIYI, Huace,
+# YOUKU, MangoTV en español). Episodios servidos por embed oficial de YouTube.
+name: dramas-yt sync
+
+on:
+  schedule:
+    - cron: "30 6 * * *"       # diario 06:30 UTC (tras el crawl de donghua-cli)
+  workflow_dispatch:            # botón manual
+    inputs:
+      max_series:
+        description: "Máx. series a procesar (0 = todas). Usa p.ej. 10 para probar."
+        required: false
+        default: "0"
+      fresh:
+        description: "Rehacer desde cero"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dramas-yt-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Sync catálogo DramasYT (YouTube oficial)
+        env:
+          PYTHONUNBUFFERED: "1"
+          DYT_MAX: ${{ github.event.inputs.max_series || '0' }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}   # opcional; sin ella va solo por keywords
+        run: >-
+          python sync-dramas-yt.py
+          --workers 6
+          --max-series "$DYT_MAX"
+          ${{ github.event.inputs.fresh == 'true' && '--fresh' || '' }}
+
+      - name: Commit y push
+        if: ${{ always() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/catalog-dramasyt.json \
+                  public/data/catalog-dramasyt-index.json \
+                  public/data/catalog-dramasyt-state.json \
+                  public/data/catalog-dramasyt-details/
+          if git diff --cached --quiet; then
+            echo "Sin cambios, nada que commitear."
+          else
+            git commit -m "chore(dramasyt): sync dramas YouTube oficial [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
