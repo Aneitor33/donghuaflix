@@ -128,6 +128,14 @@
         series_cargadas: (() => { try { return (typeof DB !== 'undefined' && DB.series) ? DB.series.length : 0; } catch (e) { return 0; } })(),
         catalogos_ok: (() => { try { const a = CATALOG_AVAILABLE; const ks = Object.keys(a); return ks.filter(k => a[k]).length + '/' + ks.length; } catch (e) { return '?'; } })(),
         localstorage_kb: Math.round(JSON.stringify(localStorage).length / 1024),
+        selector_catalogo: (() => {
+          try {
+            const w = document.getElementById('catalogWrap');
+            if (!w) return 'FALTA en el index.html';
+            const st = getComputedStyle(w);
+            return 'display=' + w.style.display + ' / css=' + st.display + ' / ' + (st.position === 'fixed' ? 'FAB-fijo' : 'inline');
+          } catch (e) { return '?'; }
+        })(),
         memoria_MB: mem,
         ahorro_datos: document.documentElement.classList.contains('f8-lite'),
         reduccion_movimiento: matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -219,12 +227,17 @@
 
   /* Reintento del selector de catálogos: si la sonda inicial falló
      (red lenta en móvil), se reintenta cada 6 s sin molestar. */
-  setInterval(function () {
+  function fixCatalogWrap() {
     try {
       var wrap = document.getElementById('catalogWrap');
-      if (wrap && wrap.style.display === 'none' && typeof renderCatBar === 'function') renderCatBar();
+      if (!wrap) return;
+      var a = CATALOG_AVAILABLE;
+      var n = Object.keys(a).filter(function (k) { return a[k]; }).length;
+      if (n > 1) wrap.style.display = '';
     } catch (e) {}
-  }, 6000);
+  }
+  setTimeout(fixCatalogWrap, 2500);
+  setInterval(fixCatalogWrap, 6000);
 
   console.info('DonghuaFlix Renacer Fase 8 activa · DFX8.diag() o #/diag');
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', addDiagLink); else addDiagLink();
