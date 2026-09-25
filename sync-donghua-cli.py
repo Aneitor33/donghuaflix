@@ -73,6 +73,11 @@ LANG_HINTS = [
 ]
 
 EP_URL_RX = re.compile(r"(?:^|[-_/])(?:episode|ep)[-_ ]?\d+", re.I)
+CJK_RX = re.compile(
+    "[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"
+    "\u3040-\u30ff\uac00-\ud7af]")
+S_EP_RX = re.compile(r"\s+S\d{1,2}\s*(?:Ep|Episode)\s*\d{1,3}.*$", re.I)
+DISPLAY_JUNK_RX = re.compile(r"(?:^|[\s\-])(?:chapter|ch|episode|ep|e|p|pt|part)\d+$", re.I)
 BAD_SUB_RX = re.compile(
     r"english sub(?:titles?|bed)?$|subtitles? english( indonesian)?$|subbed$|dub(?:bed)?$|"
     r"sub indo(?!.*multi)|indonesian sub(?!.*multi)|indo sub(?!.*multi)", re.I)
@@ -252,9 +257,11 @@ def crawl_source_sitemap(src):
 def clean_discovered_title(t: str) -> str:
     t = unquote(t)
     t = SITE_TAG_RX.sub("", t)
+    t = S_EP_RX.sub("", t)
     t = FRAG_BATCH_RX.sub("", t)
     t = FRAG_SINGLE_RX.sub("", t)
     t = LANG_SUFFIX_RX.sub("", t)
+    t = DISPLAY_JUNK_RX.sub("", t)
     return t.strip(" -|–—").strip()
 
 
@@ -282,6 +289,8 @@ def discover_series(max_pages: int, max_series: int) -> list[dict]:
         for t, u, c in by_url.values():
             ct = clean_discovered_title(t)
             if not ct or not keep_item(ct):
+                continue
+            if CJK_RX.search(ct):
                 continue
             k = norm_key(ct)
             if not k:
@@ -506,7 +515,23 @@ def collect_embeds(ep_url: str) -> list[dict]:
     return out
 
 
-def build_detail(slug, title, cover, merged, with_servers):
+def fetch_synopsis(url: str) -> str:
+    """Sinopsis best-effort de la página de la serie (el HTML ya está en caché de dhua)."""
+    try:
+        tree = fetch_html(url, timeout=10)
+    except Exception:
+        return ""
+    for sel in ("div.entry-content p", ".entry-content", "#summary",
+                "div[itemprop='description']", ".synopsis"):
+        for node in tree.css(sel):
+            t = (node.text(strip=True) or "").strip()
+            low = t.lower()
+            if len(t) >= 60 and "download" not in low and "episode" not in low[:30]:
+                return t[:600]
+    return ""
+
+
+def build_detail(slug, title, cover, merged, with_servers, synopsis=""):
     season_id = f"{slug}-s1"
     now = datetime.now(timezone.utc).isoformat()
     episodes = []
@@ -525,7 +550,7 @@ def build_detail(slug, title, cover, merged, with_servers):
         })
     return {
         "series": {"id": slug, "slug": slug, "title": title, "image": cover or "",
-                   "status": "En Emisión", "type": "donghua", "synopsis": "",
+                   "status": "En Emisión", "type": "donghua", "synopsis": synopsis,
                    "updatedAt": now, "sourceUrl": ""},
         "seasons": [{"id": season_id, "seriesId": slug, "number": 1, "title": "Temporada 1"}],
         "episodes": episodes,
@@ -540,8 +565,8 @@ def _bump(hit: bool, total: int):
         return _progress["n"], _progress["hits"]
 
 
-def _emit(slug, title, cover, merged, with_servers):
-    detail = build_detail(slug, title, cover, merged, with_servers)
+def _emit(slug, title, cover, merged, with_servers, synopsis=""):
+    detail = build_detail(slug, title, cover, merged, with_servers, synopsis)
     # preservar servidores ya rellenados (evita perder el trabajo del modo --servers-only
     # cuando el crawl regenera la ficha, p.ej. tras excluir fuentes)
     fp = DETAILS_DIR / f"{slug}.json"
@@ -558,14 +583,46 @@ def _emit(slug, title, cover, merged, with_servers):
     fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
     return {
         "i": slug, "s": slug, "t": title,
-        "p": cover or f"./public/img/posters/{slug}.jpg",
+        "p": cover,
         "g": [], "st": "En Emisión", "ty": "donghua", "y": None,
         "e": len(merged), "pl": len(next(iter(merged.values()))) if merged else 0,
         "u": datetime.now(timezone.utc).isoformat(),
     }
 
 
-def process_group(group, total, with_servers, st):
+POSTERS_DIR = ROOT / "public" / "img" / "posters-donghuacli"
+
+
+def find_cover(title: str):
+    """Busca portada en las fuentes activas cuando el descubrimiento no la trajo."""
+    with ThreadPoolExecutor(max_workers=len(active_sources()) or 1) as pool:
+        futs = {pool.submit(s.search_with_covers, title): s for s in active_sources()}
+        for fut in futs:
+            try:
+                for _t, _u, cov in fut.result():
+                    if cov and str(cov).startswith("http"):
+                        return cov
+            except Exception:
+                continue
+    return None
+
+
+def download_poster(slug: str, url: str):
+    """Descarga la portada al repo (./public/img/posters-donghuacli/) y devuelve la ruta local."""
+    try:
+        from curl_cffi import requests as creq
+        r = creq.get(str(url), impersonate="chrome", timeout=20)
+        if r.status_code != 200 or len(r.content) < 2000:
+            return None
+        POSTERS_DIR.mkdir(parents=True, exist_ok=True)
+        fp = POSTERS_DIR / f"{slug}.jpg"
+        fp.write_bytes(r.content)
+        return f"./public/img/posters-donghuacli/{slug}.jpg"
+    except Exception:
+        return None
+
+
+def process_group(group, total, with_servers, st, local_posters=False):
     title = group["title"]
     gkey = f"{group['key']}:{group['tail']}"
     if gkey in st["done"]:
@@ -578,9 +635,14 @@ def process_group(group, total, with_servers, st):
         st["done"].append(gkey)
         return None
     merged = fix_episode_numbers(merged)
+    cover = group.get("cover") or find_cover(title)
+    if cover and local_posters:
+        cover = download_poster(slugify(title), cover) or cover
+    syn_url = next((u for u in group["urls"].values() if not EP_URL_RX.search(u)), None)
+    synopsis = fetch_synopsis(syn_url) if syn_url else ""
     print(f"[{n_done}/{total}] {title} -> {len(merged)} episodios "
           f"({len(group['urls'])} URLs) [{hits} hits]", flush=True)
-    return _emit(slugify(title), title, group.get("cover"), merged, with_servers)
+    return _emit(slugify(title), title, cover, merged, with_servers, synopsis)
 
 
 def process_seed_title(title, total, with_servers):
@@ -654,7 +716,25 @@ def backfill_servers(workers: int, shard: int = 0, nshards: int = 1) -> int:
 
 # ─────────────────────────────────────────────────────────────────────
 
+def eps_with_servers(slug) -> int:
+    try:
+        d = json.loads((DETAILS_DIR / f"{slug}.json").read_text(encoding="utf-8"))
+        return sum(1 for ep in d.get("episodes", []) if ep.get("servers"))
+    except Exception:
+        return 0
+
+
 def write_outputs(entries, t0):
+    entries = [e for e in entries if e]
+    # Poda: si YA hay servidores rellenados en alguna ficha, las series con 0
+    # servidores se ocultan del índice (vuelven a aparecer si un sync posterior
+    # consigue servidores para ellas).
+    if any(eps_with_servers(e.get("s") or e.get("i")) > 0 for e in entries):
+        before = len(entries)
+        entries = [e for e in entries if eps_with_servers(e.get("s") or e.get("i")) > 0]
+        pruned = before - len(entries)
+        if pruned:
+            print(f"[prune] {pruned} series sin servidores ocultas del índice")
     entries.sort(key=lambda x: x["t"].lower())
     total_eps = sum(e["e"] for e in entries)
     now = datetime.now(timezone.utc).isoformat()
@@ -686,6 +766,11 @@ def main() -> int:
     ap.add_argument("--max-pages", type=int, default=300)
     ap.add_argument("--max-series", type=int, default=0)
     ap.add_argument("--with-servers", action="store_true")
+    ap.add_argument("--local-posters", action="store_true",
+                    help="Descarga las portadas a ./public/img/posters-donghuacli/ "
+                         "(recomendado: evita hotlinks rotos; aumenta el tamaño del repo)")
+    ap.add_argument("--prune-index", action="store_true",
+                    help="Regenera índice/db desde el estado y poda series sin servidores")
     ap.add_argument("--shard", type=int, default=0,
                     help="Shard a procesar (0-based); requiere --nshards")
     ap.add_argument("--nshards", type=int, default=1,
@@ -697,6 +782,14 @@ def main() -> int:
 
     if args.servers_only:
         return backfill_servers(args.workers, args.shard, args.nshards)
+
+    if args.prune_index:
+        st = load_state(False)
+        if not st["entries"]:
+            print("[prune] no hay entradas en el estado")
+            return 1
+        write_outputs(st["entries"], t0)
+        return 0
 
     st = load_state(args.fresh)
     done_set = set(st["done"])
@@ -720,7 +813,7 @@ def main() -> int:
         print(f"[start] {len(groups)} grupos únicos ({len(todo)} pendientes), workers={args.workers}")
         total = len(todo)
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
-            futs = {pool.submit(process_group, g, total, args.with_servers, st): g for g in todo}
+            futs = {pool.submit(process_group, g, total, args.with_servers, st, args.local_posters): g for g in todo}
             for fut, g in futs.items():
                 gkey = f"{g['key']}:{g['tail']}"
                 try:
