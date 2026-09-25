@@ -8,7 +8,8 @@ const ALL_FILES = [
   'catalog-donghuasub.json',
   'catalog-donghuaworld.json',
   'catalog-peliculas.json',
-  'catalog-doramas.json'
+  'catalog-doramas.json',
+  'catalog-donghuacli.json'
 ];
 const CATALOG = (process.env.CATALOG || '').trim();
 const FILES = CATALOG
