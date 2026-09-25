@@ -5,13 +5,24 @@ name: donghua-cli sync
 
 on:
   schedule:
-    - cron: "0 4 * * *"        # diario 04:00 UTC (crawl completo)
-  workflow_dispatch:            # botón manual en la pestaña Actions
+    - cron: "0 4 * * *"        # diario 04:00 UTC (crawl completo incremental)
+  workflow_dispatch:            # botón manual
     inputs:
+      mode:
+        description: "crawl = catálogo (descubre series) | servers = solo rellenar servidores"
+        type: choice
+        options:
+          - crawl
+          - servers
+        default: crawl
       max_series:
-        description: "Máx. series a scrapear (0 = todas). Usa p.ej. 30 para probar."
+        description: "Máx. series nuevas a scrapear (0 = todas)"
         required: false
         default: "0"
+      fresh:
+        description: "Rehacer desde cero (ignora lo ya hecho)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -45,18 +56,25 @@ jobs:
           key: dhua-catalog-${{ github.run_id }}
           restore-keys: dhua-catalog-
 
-      - name: Scrapear catálogo con donghua-cli (crawl completo de las fuentes)
+      - name: Scrapear catálogo con donghua-cli
         env:
           PYTHONUNBUFFERED: "1"
           DHUA_MAX_SERIES: ${{ github.event.inputs.max_series || '0' }}
-        run: python sync-donghua-cli.py --crawl-sites --workers 8 --max-series "$DHUA_MAX_SERIES"
+        run: >-
+          python sync-donghua-cli.py
+          --workers 8
+          --max-series "$DHUA_MAX_SERIES"
+          ${{ github.event.inputs.mode == 'servers' && '--servers-only' || '--crawl-sites' }}
+          ${{ github.event.inputs.fresh == 'true' && '--fresh' || '' }}
 
       - name: Commit y push de los JSON
+        if: ${{ always() }}   # commitea aunque el scrape falle o se agote el tiempo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/catalog-donghuacli.json \
                   public/data/catalog-donghuacli-index.json \
+                  public/data/catalog-donghuacli-state.json \
                   public/data/catalog-donghuacli-details/
           if git diff --cached --quiet; then
             echo "Sin cambios, nada que commitear."
