@@ -169,3 +169,39 @@ body{
 #catalogWrap .catalog-menu{
   z-index:97 !important;
 }
+
+/* === FASE FINAL v6 — Selector de catálogos EN LA NAVBAR (móvil) ===
+   Se anula el FAB flotante: el selector queda fijo en la fila superior,
+   a la derecha de las pestañas y antes de la lupa, igual que en escritorio. */
+@media (max-width:900px){
+  #catalogWrap{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    display:flex !important;
+    align-items:center;
+    margin:0 !important;
+    z-index:auto !important;
+    flex:none !important;
+  }
+  #catalogWrap .catalog-fab{
+    position:relative !important;
+    width:38px !important;
+    height:38px !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.5);
+  }
+  #catalogWrap .catalog-fab img{
+    width:26px !important;
+    height:26px !important;
+  }
+  #catalogWrap .catalog-menu{
+    position:absolute !important;
+    top:calc(100% + 10px) !important;
+    right:0 !important;
+    bottom:auto !important;
+    left:auto !important;
+    min-width:180px;
+  }
+}
