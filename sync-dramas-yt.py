@@ -54,9 +54,32 @@ SPANISH_RX = re.compile(
     r"sub\s*esp|espa[ñn]ol|doblado|latino|castellano|esp\s*sub|esp\]|"
     r"(?<![a-z])esp(?![a-z])", re.I)
 TITLE_RANGE_RX = re.compile(
-    r"[\s\|·\-]*(?:episodios?|eps?|cap[íi]tulos?)\s*\d+\s*"
+    r"[\s\|·\-]*(?:episodios?|eps?|caps?|cap[íi]tulos?)\.?\s*\d+\s*"
     r"(?:[-–]\s*\d+)?\s*(?:completos?|full)?[\s\|·\-]*$", re.I)
+# rangos sueltos en CUALQUIER parte del título: "EP01-10", "Cap 1-40"...
+RANGE_ANYWHERE_RX = re.compile(
+    r"\s+(?:ep|eps|episodios?|caps?|cap[íi]tulos?)\.?\s*\d{1,4}\s*[-–]\s*\d{1,4}\b", re.I)
+# rango huérfano al final tras quitar el CJK ("第1-40集" -> " 1-40")
+ORPHAN_RANGE_RX = re.compile(r"\s+\d{1,4}\s*[-–]\s*\d{1,4}\s*$")
 DROP_VIDEO_RX = re.compile(r"trailer|avance|teaser|promo|making|behind|recap", re.I)
+# Playlists que NO son series (compilaciones de estrenos, clips, highlights)
+PROMO_PL_RX = re.compile(
+    r"estreno|próxim|proxim|novedad|trailer|promo|clip|momentos|highlights|recap|"
+    r"escenas|recopilaci[oó]n|preview|extra\b|avance|behind|making|official|"
+    r"bienvenid|presentaci|lo mejor|top\s*\d", re.I)
+# Frases de marketing dentro de los títulos
+MARKETING_RX = re.compile(
+    r"\b(todos los (episodios|cap[ií]tulos)|episodios?\s+completos?|"
+    r"serie completa|temporada completa|completas?|en espa[ñn]ol|sub espa[ñn]ol|"
+    r"subtitulad[oa]|audio latino|latino|castellano|full hd|hd|4k|"
+    r"nueva temporada)\b", re.I)
+# Emojis y símbolos decorativos
+EMOJI_RX = re.compile(
+    "[\U0001F000-\U0001FAFF\U00002700-\U000027BF\U000024C2-\U0001F251"
+    "\u200d\ufe0f\u2190-\u21FF\u2B00-\u2BFF\uFE00-\uFE0F]+")
+MIN_DUR = 600         # segundos (10 min): por debajo = promo/clip/avance
+MIN_EPISODES = 5    # mínimo de episodios para considerar una playlist una serie
+CLIPS_PL_RATIO = 0.6  # si >60% de los videos con duración son cortos = playlist de clips
 EP_RX = re.compile(
     r"(?:^|[\s\|·\-])(?:ep|eps|episode|episodio|cap[íi]tulo|cap)\s*\.?\s*0*(\d{1,4})",
     re.I)
@@ -112,6 +135,7 @@ def tmdb_enrich(title: str, cache: dict):
             det = tmdb_get(f"/tv/{best['id']}", language="es-ES")
             if det:
                 out = {
+                    "title": best.get("name") or best.get("original_name") or "",
                     "genres": [g["name"] for g in det.get("genres", [])],
                     "overview": (det.get("overview") or "").strip(),
                     "poster": (TMDB_IMG + det["poster_path"]) if det.get("poster_path") else None,
@@ -165,11 +189,19 @@ def clean_title(t: str) -> str:
                           else f" {m.group(1)} "), t or "")
     t = re.sub(r"\[([^\]]{0,50})\]",
                lambda m: " " if SPANISH_RX.search(m.group(1)) else m.group(0), t)
+    # 1) frases de marketing ANTES que los marcadores sueltos (evita que
+    #    "sub\s*esp" se coma medio "Español" dejando "añol")
+    t = MARKETING_RX.sub(" ", t)
     t = SPANISH_RX.sub(" ", t)
     t = TITLE_RANGE_RX.sub("", t)
+    t = EMOJI_RX.sub(" ", t)
     t = re.sub(r"\(\s*\)", " ", t)          # paréntesis vacíos tras quitar marcas
     # restos CJK sueltos ("多语言", "完整版"...): fuera
     t = re.sub(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+", " ", t)
+    # 2) tras quitar CJK pueden quedar rangos huérfanos ("第1-40集" -> " 1-40")
+    t = RANGE_ANYWHERE_RX.sub(" ", t)
+    t = ORPHAN_RANGE_RX.sub("", t)
+    t = TITLE_RANGE_RX.sub("", t)
     t = re.sub(r"\s+", " ", t)
     return t.strip(" -|·•")
 
@@ -297,6 +329,17 @@ def build_detail(slug, title, poster, synopsis, source_url, eps, ch_name):
     }
 
 
+def build_episode_pairs(entries):
+    """[(número, video_id)] ordenado: por número parseado del título cuando TODOS
+    lo tienen y son únicos (corrige playlists subidas en orden inverso); si no,
+    numeración secuencial 1..N respetando el orden de la playlist."""
+    parsed = [(parse_ep_number(e.get("title") or ""), e["id"]) for e in entries]
+    nums = [n for n, _ in parsed]
+    if all(n is not None for n in nums) and len(set(nums)) == len(nums):
+        return sorted(parsed, key=lambda x: x[0])
+    return [(i + 1, vid) for i, (_n, vid) in enumerate(parsed)]
+
+
 def process_playlist(pl, ch, total, st):
     pl_id = pl["id"]
     if pl_id in st["done"]:
@@ -313,13 +356,27 @@ def process_playlist(pl, ch, total, st):
         return None
 
     raw_title = data.get("title") or pl["title"] or ""
+    if PROMO_PL_RX.search(raw_title or ""):
+        st["done"].append(pl_id)
+        return None
     if ch["filter"] and not SPANISH_RX.search(raw_title):
         st["done"].append(pl_id)
         return None
 
     entries = [e for e in (data.get("entries") or []) if e and e.get("id")]
     entries = [e for e in entries if not DROP_VIDEO_RX.search(e.get("title") or "")]
-    if len(entries) < 2:
+
+    # filtro por duración: cortos (<90s) = promos/clips; si casi todos son
+    # cortos, la playlist entera es de clips -> descartar
+    with_dur = [e for e in entries if (e.get("duration") or 0)]
+    if len(with_dur) >= 2:
+        short = [e for e in with_dur if e["duration"] < MIN_DUR]
+        if len(short) > len(with_dur) * CLIPS_PL_RATIO:
+            st["done"].append(pl_id)
+            return None
+    entries = [e for e in entries if not e.get("duration") or e["duration"] >= MIN_DUR]
+
+    if len(entries) < MIN_EPISODES:
         st["done"].append(pl_id)
         return None
 
@@ -328,11 +385,7 @@ def process_playlist(pl, ch, total, st):
         st["done"].append(pl_id)
         return None
 
-    # numeración de episodios: del título si se puede, si no secuencial
-    nums = [parse_ep_number(e.get("title") or "") for e in entries]
-    if any(n is None for n in nums) or len(set(nums)) != len(nums):
-        nums = list(range(1, len(entries) + 1))
-    eps = list(zip(nums, [e["id"] for e in entries]))
+    eps = build_episode_pairs(entries)
 
     first_id = entries[0]["id"]
     synopsis = clean_synopsis(run_ytdlp_video_desc(first_id))
@@ -356,6 +409,11 @@ def process_playlist(pl, ch, total, st):
             if tmdb_data.get("poster"):
                 poster = tmdb_data["poster"]
             year = tmdb_data.get("year")
+            # El título CANÓNICO es el de TMDB (español, limpio); el de YouTube
+            # solo es un fallback. Esto arregla de raíz los títulos sucios.
+            if tmdb_data.get("title"):
+                title = tmdb_data["title"]
+                slug = slugify(title)
 
     detail = build_detail(slug, title, poster, synopsis, pl["url"], eps, ch["name"])
     (DETAILS_DIR / f"{slug}.json").write_text(
