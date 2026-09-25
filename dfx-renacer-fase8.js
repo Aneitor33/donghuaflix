@@ -65,7 +65,8 @@
     state.transitions++;
     setTimeout(() => app.classList.remove('f8-swap'), 260);
   };
-  addEventListener('hashchange', swap);
+  addEventListener('hashchange', () => { swap(); if (location.hash.indexOf('#/diag') === 0) renderDiag(); });
+  if (location.hash.indexOf('#/diag') === 0) setTimeout(renderDiag, 300);
 
   /* ---------- 5. Errores de red visibles ---------- */
   let lastToast = 0;
@@ -155,5 +156,46 @@
     rotas() { return [...state.broken]; }
   };
 
-  console.info('DonghuaFlix Renacer Fase 8 activa · DFX8.diag() para diagnóstico');
+  /* ---------- 9. Página de diagnóstico móvil (#/diag) ---------- */
+  function renderDiag() {
+    const app = $('#app');
+    if (!app) return;
+    document.title = 'Diagnóstico — DonghuaFlix';
+    const d = window.DFX8.diag();
+    const li = (k, v) => `<li style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:#9a9aa5">${k}</span><b>${v}</b></li>`;
+    const flag = (on) => on ? '<b style="color:#7CFC9A">✔ activa</b>' : '<b style="color:#ff6b6b">✖ no</b>';
+    app.innerHTML = `
+      <div style="max-width:640px;margin:0 auto;padding:20px 16px 90px;font:14px/1.5 system-ui;color:#fff;background:#0b0b0f;min-height:100vh">
+        <h1 style="font-size:20px;margin:0 0 4px">Diagnóstico DonghuaFlix</h1>
+        <p style="color:#9a9aa5;margin:0 0 16px">Renacer · sin consola</p>
+        <ul style="list-style:none;margin:0 0 16px;padding:0">
+          ${li('Fase 6 (rendimiento)', flag(!!window.DFX6))}
+          ${li('Fase 7 (descubrir)', flag(!!window.DFX7))}
+          ${li('Fase 8 (pulido)', flag(!!window.DFX8))}
+          ${li('Núcleo Pro (dfx-core)', flag(!!window.DFX))}
+          ${li('Imágenes rotas', `${d.imgs.rotas} / ${d.imgs.total}`)}
+          ${li('Carruseles duplicados (B1)', d.carruseles_duplicados.length ? `<b style="color:#ffb84d">${d.carruseles_duplicados.length} grupos</b>` : 'ninguno')}
+          ${li('Long tasks', d.long_tasks)}
+          ${li('Memoria JS', (d.memoria_MB ?? '?') + ' MB')}
+          ${li('Ahorro de datos', d.ahorro_datos ? 'sí' : 'no')}
+          ${li('Reducción de movimiento', d.reduccion_movimiento ? 'sí' : 'no')}
+          ${li('Errores de red', d.errores_red)}
+        </ul>
+        ${d.carruseles_duplicados.length ? `<details style="margin-bottom:16px"><summary style="cursor:pointer;color:#ffb84d">Ver secciones duplicadas</summary><pre style="white-space:pre-wrap;font-size:12px;color:#cfcfda;background:#17171c;padding:10px;border-radius:10px">${JSON.stringify(d.carruseles_duplicados, null, 2)}</pre></details>` : ''}
+        ${d.imgs.rotas ? `<details><summary style="cursor:pointer;color:#ffb84d">Ver URLs rotas</summary><pre style="white-space:pre-wrap;font-size:11px;color:#cfcfda;background:#17171c;padding:10px;border-radius:10px">${d.imgs.rotas.join('\n')}</pre></details>` : ''}
+        <p style="color:#9a9aa5;font-size:12px;margin-top:16px">Esta página la genera dfx-renacer-fase8.js. Refresca con Ctrl+F5 o borra caché si no coincide con lo esperado.</p>
+      </div>`;
+    window.scrollTo(0, 0);
+  }
+  function addDiagLink() {
+    const more = document.getElementById('moreMenu');
+    if (more && !more.querySelector('a[href="#/diag"]')) {
+      const m = document.createElement('a');
+      m.href = '#/diag'; m.textContent = 'Diagnóstico';
+      more.appendChild(m);
+    }
+  }
+
+  console.info('DonghuaFlix Renacer Fase 8 activa · DFX8.diag() o #/diag');
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', addDiagLink); else addDiagLink();
 })();
