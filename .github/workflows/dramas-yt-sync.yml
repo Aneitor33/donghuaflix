@@ -45,6 +45,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           DYT_MAX: ${{ github.event.inputs.max_series || '0' }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}   # opcional; sin ella va solo por keywords
         run: >-
           python sync-dramas-yt.py
           --workers 6
