@@ -1,15 +1,20 @@
 # .github/workflows/dhua-sync.yml
 # Scrapea catálogo vía donghua-cli y publica los JSON en el repo.
 # Requiere: requirements.txt en la raíz (con punto: requirements.txt)
+#
+# MODOS:
+#   crawl   → 1 runner: descubre series y genera catálogo (incremental, retomable)
+#   servers → 4 runners en paralelo (matrix): cada uno rellena 1/4 de las fichas
+#             con servidores iframe; un job final fusiona y commitea.
 name: donghua-cli sync
 
 on:
   schedule:
-    - cron: "0 4 * * *"        # diario 04:00 UTC (crawl completo incremental)
+    - cron: "0 4 * * *"        # diario 04:00 UTC (crawl incremental)
   workflow_dispatch:            # botón manual
     inputs:
       mode:
-        description: "crawl = catálogo (descubre series) | servers = solo rellenar servidores"
+        description: "crawl = catálogo | servers = rellenar servidores (4 runners paralelos)"
         type: choice
         options:
           - crawl
@@ -32,7 +37,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  sync:
+  # ───────────────────────────────────────────────────────────────────
+  # CRAWL: descubre series y construye el catálogo (1 runner)
+  # ───────────────────────────────────────────────────────────────────
+  crawl:
+    if: ${{ github.event.inputs.mode != 'servers' }}
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
@@ -62,13 +71,12 @@ jobs:
           DHUA_MAX_SERIES: ${{ github.event.inputs.max_series || '0' }}
         run: >-
           python sync-donghua-cli.py
-          --workers 8
+          --crawl-sites --workers 8
           --max-series "$DHUA_MAX_SERIES"
-          ${{ github.event.inputs.mode == 'servers' && '--servers-only' || '--crawl-sites' }}
           ${{ github.event.inputs.fresh == 'true' && '--fresh' || '' }}
 
       - name: Commit y push de los JSON
-        if: ${{ always() }}   # commitea aunque el scrape falle o se agote el tiempo
+        if: ${{ always() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -79,15 +87,73 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios, nada que commitear."
           else
-            git commit -m "chore(dhua): sync catálogo donghua-cli"
+            git commit -m "chore(dhua): sync catálogo donghua-cli [skip ci]"
+            git pull --rebase origin main   # ← por si subiste cambios mientras corría
             git push
           fi
 
-  # ── Opcional: despliega/reinicia el servicio de resolución ─────────
-  resolver:
-    needs: sync
-    if: false   # ← ponlo en true cuando tengas dónde desplegarlo
+  # ───────────────────────────────────────────────────────────────────
+  # SERVERS: rellena servidores iframe en 4 runners paralelos (matrix)
+  # ───────────────────────────────────────────────────────────────────
+  servers:
+    if: ${{ github.event.inputs.mode == 'servers' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Rellenar servidores (shard ${{ matrix.shard }}/4)
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: >-
+          python sync-donghua-cli.py
+          --servers-only --workers 8
+          --shard ${{ matrix.shard }} --nshards 4
+
+      - name: Subir fichas del shard como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dhua-fichas-${{ matrix.shard }}
+          path: public/data/catalog-donghuacli-details/
+          retention-days: 1
+          if-no-files-found: error
+
+  servers-merge:
+    needs: servers
+    if: ${{ github.event.inputs.mode == 'servers' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Ping deploy hook del resolutor
-        run: curl -fsSL -X POST "${{ secrets.DHUA_RESOLVER_DEPLOY_HOOK }}"
+      - uses: actions/checkout@v4
+
+      - name: Descargar y fusionar los 4 shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: dhua-fichas-*
+          merge-multiple: true
+          path: public/data/catalog-donghuacli-details
+
+      - name: Commit y push de las fichas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/catalog-donghuacli-details/
+          if git diff --cached --quiet; then
+            echo "Sin cambios, nada que commitear."
+          else
+            git commit -m "chore(dhua): servidores rellenados [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
