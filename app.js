@@ -3,7 +3,7 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld', 'donghuacli'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
@@ -16,7 +16,6 @@ const SRC_LABEL = {
   donghualife: 'DonghuaLife',
   donghuasub: 'DonghuaSub',
   donghuaworld: 'DonghuaWorld',
-  donghuacli: 'DonghuaCLI',
   tiodonghua: 'TioDonghua',
   peliculas: 'Películas',
   doramas: 'Doramas'
@@ -115,7 +114,7 @@ async function ensureCatalog(id) {
               type: r.ty || null,
               year: r.y || null,
               country: r.c || null,
-              genres: (r.g || []).map(n => gl[n]).filter(Boolean),
+              genres: [...new Set((r.g || []).map(n => (typeof n === 'number' ? gl[n] : n)).filter(Boolean))],
               totalEpisodes: r.e ?? null,
               updatedAt: r.u || null
             }))
@@ -163,7 +162,10 @@ async function probeCatalogs() {
     }
 
     try {
-      const r = await fetch(c.file, {
+      /* Parche Fase FINAL: probar el índice LIGERO (~80 KB) en vez del
+         JSON completo (15-30 MB). Así el selector de catálogos aparece
+         en segundos incluso en móvil. */
+      const r = await fetch(c.index || c.file, {
         cache: 'default'
       });
 
@@ -173,16 +175,8 @@ async function probeCatalogs() {
       }
 
       const parsed = await r.json().catch(() => null);
-
-      if (parsed && parsed.sharded) {
-        CATALOG_AVAILABLE[c.id] =
-          Array.isArray(parsed.parts) &&
-          parsed.parts.length > 0;
-      } else {
-        CATALOG_AVAILABLE[c.id] =
-          Boolean(parsed && Array.isArray(parsed.series));
-      }
-
+      CATALOG_AVAILABLE[c.id] =
+        Boolean(parsed && (Array.isArray(parsed.series) || (parsed.sharded && Array.isArray(parsed.parts) && parsed.parts.length > 0)));
     } catch {
       CATALOG_AVAILABLE[c.id] = false;
     }
@@ -196,6 +190,18 @@ function renderCatBar() {
   const wrap = document.getElementById('catalogWrap');
 
   if (!menu || !wrap) return;
+
+  /* Parche Fase FINAL: construir los botones desde CATALOGS para que
+     el menú siempre coincida con la lista real (incluido donghuacli). */
+  CATALOGS.forEach(c => {
+    if (!menu.querySelector('button[data-cat="' + c.id + '"]')) {
+      const b = document.createElement('button');
+      b.dataset.cat = c.id;
+      b.textContent = c.label;
+      b.onclick = () => switchCatalog(c.id);
+      menu.appendChild(b);
+    }
+  });
 
   const available = CATALOGS.filter(
     c => CATALOG_AVAILABLE[c.id]
@@ -2207,6 +2213,7 @@ function home() {
             b[1] - a[1]
         )
         .slice(0, 3);
+    let lastGenreSig = '';
     for (const [
       gKey
     ] of topGenres) {
@@ -2230,6 +2237,16 @@ function home() {
       ) {
         continue;
       }
+      /* Parche Fase FINAL (B1): si este carrusel repite exactamente el
+         anterior (datos con todos los géneros por título), no se pinta. */
+      const sig = inGenre
+        .slice(0, 6)
+        .map(s => String(s.id))
+        .join('|');
+      if (sig === lastGenreSig) {
+        continue;
+      }
+      lastGenreSig = sig;
       const gName =
         seriesGenres(
           inGenre[0]
@@ -3920,6 +3937,11 @@ function renderEpisodePage(
                   ? 'on'
                   : ''
               }"
+              style="${
+                w
+                  ? ''
+                  : 'opacity:.38'
+              }"
               title="${
                 w
                   ? 'Quitar marcador'
@@ -3930,9 +3952,7 @@ function renderEpisodePage(
               )}',${e.number})"
             >
               ${
-                w
-                  ? ICONS.check
-                  : ''
+                ICONS.check
               }
             </button>
 
@@ -4031,29 +4051,6 @@ function gotoPage(p) {
   );
 }
 
-const serverNameFromUrl = u => {
-  try {
-    const h = new URL(u).hostname.replace(/^www\./, '');
-    const known = [
-      ['dailymotion', 'Dailymotion'],
-      ['streamtape', 'Streamtape'],
-      ['mixdrop', 'Mixdrop'],
-      ['mp4upload', 'MP4Upload'],
-      ['ok.ru', 'OK.ru'],
-      ['dood', 'Doodstream'],
-      ['youtube', 'YouTube'],
-      ['rumble', 'Rumble'],
-      ['vk.com', 'VK']
-    ];
-    for (const [k, n] of known) {
-      if (h.includes(k)) return n;
-    }
-    return h.split('.')[0];
-  } catch (err) {
-    return 'Servidor';
-  }
-};
-
 /* ---------- REPRODUCTOR ---------- */
 
 function episode(slug) {
@@ -4062,59 +4059,6 @@ function episode(slug) {
 
   if (!e) {
     return notfound();
-  }
-
-  /* ── DonghuaCLI: resolver bajo demanda si el episodio no trae servidores ──
-     El catálogo 'donghuacli' guarda las páginas de episodio (estables) y los
-     servidores iframe se resuelven al reproducir contra resolver_service.py.
-     Si no hay backend, este fetch falla en silencio y se muestra el mensaje
-     habitual de "Servidor no disponible". */
-  if (
-    (!e.servers || !e.servers.length) &&
-    !e._dhuaTried
-  ) {
-    e._dhuaTried = true;
-
-    const serie =
-      findSeries(e.seriesId);
-
-    const title =
-      serie
-        ? cleanTitle(serie)
-        : '';
-
-    if (title) {
-      fetch(
-        '/api/resolve?title=' +
-          encodeURIComponent(title) +
-          '&ep=' +
-          e.number
-      )
-        .then(r => r.json())
-        .then(d => {
-          if (
-            d &&
-            d.ok &&
-            Array.isArray(d.servers) &&
-            d.servers.length
-          ) {
-            const langMap = {
-              spa: 'subtitulado',
-              lat: 'latino',
-              cas: 'castellano'
-            };
-
-            e.servers = d.servers.map(s => ({
-              name: serverNameFromUrl(s.url),
-              url: s.url,
-              lang: langMap[s.lang] || null
-            }));
-
-            episode(slug);
-          }
-        })
-        .catch(() => {});
-    }
   }
 
   currentEpisode =
