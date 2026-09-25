@@ -3,11 +3,12 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuaworld', 'donghuacli'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
   { id: 'donghuaworld',  file: './public/data/catalog-donghuaworld.json',  index: './public/data/catalog-donghuaworld-index.json',  label: 'DonghuaWorld' },
+  { id: 'donghuacli',    file: './public/data/catalog-donghuacli.json',    index: './public/data/catalog-donghuacli-index.json',    label: 'DonghuaCLI' },
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
@@ -15,6 +16,7 @@ const SRC_LABEL = {
   donghualife: 'DonghuaLife',
   donghuasub: 'DonghuaSub',
   donghuaworld: 'DonghuaWorld',
+  donghuacli: 'DonghuaCLI',
   tiodonghua: 'TioDonghua',
   peliculas: 'Películas',
   doramas: 'Doramas'
@@ -4029,6 +4031,29 @@ function gotoPage(p) {
   );
 }
 
+const serverNameFromUrl = u => {
+  try {
+    const h = new URL(u).hostname.replace(/^www\./, '');
+    const known = [
+      ['dailymotion', 'Dailymotion'],
+      ['streamtape', 'Streamtape'],
+      ['mixdrop', 'Mixdrop'],
+      ['mp4upload', 'MP4Upload'],
+      ['ok.ru', 'OK.ru'],
+      ['dood', 'Doodstream'],
+      ['youtube', 'YouTube'],
+      ['rumble', 'Rumble'],
+      ['vk.com', 'VK']
+    ];
+    for (const [k, n] of known) {
+      if (h.includes(k)) return n;
+    }
+    return h.split('.')[0];
+  } catch (err) {
+    return 'Servidor';
+  }
+};
+
 /* ---------- REPRODUCTOR ---------- */
 
 function episode(slug) {
@@ -4037,6 +4062,59 @@ function episode(slug) {
 
   if (!e) {
     return notfound();
+  }
+
+  /* ── DonghuaCLI: resolver bajo demanda si el episodio no trae servidores ──
+     El catálogo 'donghuacli' guarda las páginas de episodio (estables) y los
+     servidores iframe se resuelven al reproducir contra resolver_service.py.
+     Si no hay backend, este fetch falla en silencio y se muestra el mensaje
+     habitual de "Servidor no disponible". */
+  if (
+    (!e.servers || !e.servers.length) &&
+    !e._dhuaTried
+  ) {
+    e._dhuaTried = true;
+
+    const serie =
+      findSeries(e.seriesId);
+
+    const title =
+      serie
+        ? cleanTitle(serie)
+        : '';
+
+    if (title) {
+      fetch(
+        '/api/resolve?title=' +
+          encodeURIComponent(title) +
+          '&ep=' +
+          e.number
+      )
+        .then(r => r.json())
+        .then(d => {
+          if (
+            d &&
+            d.ok &&
+            Array.isArray(d.servers) &&
+            d.servers.length
+          ) {
+            const langMap = {
+              spa: 'subtitulado',
+              lat: 'latino',
+              cas: 'castellano'
+            };
+
+            e.servers = d.servers.map(s => ({
+              name: serverNameFromUrl(s.url),
+              url: s.url,
+              lang: langMap[s.lang] || null
+            }));
+
+            episode(slug);
+          }
+        })
+        .catch(() => {});
+    }
   }
 
   currentEpisode =
