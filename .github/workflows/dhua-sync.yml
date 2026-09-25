@@ -1,13 +1,17 @@
 # .github/workflows/dhua-sync.yml
 # Scrapea catálogo vía donghua-cli y publica los JSON en el repo.
-# Requiere: dhua-titles.txt en la raíz (opcional; si no existe, usa los
-# índices ya existentes en public/data como semilla de títulos).
+# Requiere: requirements.txt en la raíz (con punto: requirements.txt)
 name: donghua-cli sync
 
 on:
   schedule:
-    - cron: "0 4 * * *"   # diario 04:00 UTC
-  workflow_dispatch:       # botón manual en la pestaña Actions
+    - cron: "0 4 * * *"        # diario 04:00 UTC (crawl completo)
+  workflow_dispatch:            # botón manual en la pestaña Actions
+    inputs:
+      max_series:
+        description: "Máx. series a scrapear (0 = todas). Usa p.ej. 30 para probar."
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -26,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip               # OK: ahora existe requirements.txt en la raíz
+          cache: pip
           cache-dependency-path: requirements.txt
 
       - name: Instalar dependencias
@@ -41,10 +45,11 @@ jobs:
           key: dhua-catalog-${{ github.run_id }}
           restore-keys: dhua-catalog-
 
-      - name: Scrapear catálogo con donghua-cli
+      - name: Scrapear catálogo con donghua-cli (crawl completo de las fuentes)
         env:
           PYTHONUNBUFFERED: "1"
-        run: python sync-donghuacli.py
+          DHUA_MAX_SERIES: ${{ github.event.inputs.max_series || '0' }}
+        run: python sync-donghua-cli.py --crawl-sites --workers 8 --max-series "$DHUA_MAX_SERIES"
 
       - name: Commit y push de los JSON
         run: |
@@ -56,13 +61,11 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios, nada que commitear."
           else
-            git commit -m "chore(dhua): sync catálogo donghua-cli [skip ci]"
+            git commit -m "chore(dhua): sync catálogo donghua-cli"
             git push
           fi
 
   # ── Opcional: despliega/reinicia el servicio de resolución ─────────
-  # Solo si tu hosting lo soporta (VPS con deploy hook/SSH). Si tu
-  # donghuaflix es 100% estático en GitHub Pages, puedes borrar este job.
   resolver:
     needs: sync
     if: false   # ← ponlo en true cuando tengas dónde desplegarlo
