@@ -13,7 +13,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="styles.css?v=15">
   <link rel="stylesheet" href="dfx.css">
-  <link rel="stylesheet" href="dfx-final.css">
   <!-- RENACER: fases 1-6 + 8 (sobre la base Pro) -->
   <link rel="stylesheet" href="dfx-renacer.css">
   <link rel="stylesheet" href="dfx-renacer-fase2.css">
@@ -21,7 +20,10 @@
   <link rel="stylesheet" href="dfx-renacer-fase4.css">
   <link rel="stylesheet" href="dfx-renacer-fase5.css">
   <link rel="stylesheet" href="dfx-renacer-fase6.css">
+  <link rel="stylesheet" href="dfx-renacer-fase7.css">
   <link rel="stylesheet" href="dfx-renacer-fase8.css">
+  <!-- FASE FINAL: parques visuales — SIEMPRE el último CSS -->
+  <link rel="stylesheet" href="dfx-final.css?v=2">
 </head>
 <body>
 
@@ -132,9 +134,15 @@
             var s5 = document.createElement('script');
             s5.src = 'dfx-renacer-fase5.js';
             s5.onload = function () {
-              var s8 = document.createElement('script');
-              s8.src = 'dfx-renacer-fase8.js';
-              document.body.appendChild(s8);
+              // RENACER FASE 7: Descubrir + personalización
+              var s7 = document.createElement('script');
+              s7.src = 'dfx-renacer-fase7.js';
+              s7.onload = function () {
+                var s8 = document.createElement('script');
+                s8.src = 'dfx-renacer-fase8.js';
+                document.body.appendChild(s8);
+              };
+              document.body.appendChild(s7);
             };
             document.body.appendChild(s5);
           };
