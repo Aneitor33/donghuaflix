@@ -140,3 +140,32 @@ body{
   bottom:56px;
   min-width:170px;
 }
+
+/* === FASE FINAL v5 — Header blindado === */
+
+/* La fila de pestañas puede hacer scroll horizontal si es estrecha,
+   pero las acciones de la derecha NUNCA se salen del viewport. */
+.nav{
+  flex-wrap:nowrap !important;
+}
+.nav nav{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  overflow-x:auto !important;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.nav nav::-webkit-scrollbar{ display:none; }
+.nav nav a{ white-space:nowrap; flex:none; }
+.nav-actions{
+  flex:none !important;
+  margin-left:auto !important;
+}
+#catalogWrap{
+  flex:none !important;
+  margin-left:0 !important;
+}
+/* Menú de catálogos por encima de cualquier capa */
+#catalogWrap .catalog-menu{
+  z-index:97 !important;
+}
