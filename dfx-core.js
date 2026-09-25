@@ -177,6 +177,12 @@
 
   /* ---------- splash ---------- */
   function splash() {
+    /* Parche Fase FINAL: el splash solo se muestra la primera vez por sesión,
+       no en cada cambio de catálogo o recarga. */
+    try {
+      if (sessionStorage.getItem('dfx_splash')) return;
+      sessionStorage.setItem('dfx_splash', '1');
+    } catch {}
     const s = document.createElement('div');
     s.id = 'dfxSplash';
     s.innerHTML = `<img src="icon-192.png" alt="DonghuaFlix"><div class="dfxBar"><i></i></div>`;
@@ -382,9 +388,18 @@
   function randomEp() {
     try {
       const eps = (window.DB && window.DB.episodes) || [];
-      if (!eps.length) return toast('No hay episodios en el catálogo');
-      const e = eps[Math.floor(Math.random() * eps.length)];
-      location.hash = '#/episode/' + encodeURIComponent(e.slug || e.id);
+      if (eps.length) {
+        const e = eps[Math.floor(Math.random() * eps.length)];
+        location.hash = '#/episode/' + encodeURIComponent(e.slug || e.id);
+        return;
+      }
+      /* Parche Fase FINAL: catálogos LITE no cargan episodios hasta abrir
+         una ficha → "Sorpréndeme" abre una serie aleatoria en su lugar. */
+      const series = (window.DB && window.DB.series) || [];
+      if (!series.length) return toast('Catálogo todavía vacío');
+      const s = series[Math.floor(Math.random() * series.length)];
+      location.hash = '#/series/' + encodeURIComponent(s.slug || s.id);
+      toast('🎲 ' + (window.cleanTitle ? window.cleanTitle(s) : s.title));
     } catch { toast('No se pudo elegir episodio'); }
   }
 
@@ -923,7 +938,13 @@
       $('#dfxRandBtn').onclick = randomEp;
       $('#dfxMarathonBtn').onclick = () => {
         if (DFX.marathon.key) { stopMarathon(); $('#dfxMarathonBtn').classList.remove('on'); }
-        else { startMarathon(); $('#dfxMarathonBtn').classList.add('on'); }
+        else {
+          if (!(window.detailState && window.detailState.seriesId)) {
+            toast('🏃 Abre una serie y pulsa aquí: contará tus capítulos seguidos');
+            return;
+          }
+          startMarathon(); $('#dfxMarathonBtn').classList.add('on');
+        }
       };
     }
 
