@@ -14,6 +14,14 @@
   <link rel="stylesheet" href="styles.css?v=15">
   <link rel="stylesheet" href="dfx.css">
   <link rel="stylesheet" href="dfx-final.css">
+  <!-- RENACER: fases 1-6 + 8 (sobre la base Pro) -->
+  <link rel="stylesheet" href="dfx-renacer.css">
+  <link rel="stylesheet" href="dfx-renacer-fase2.css">
+  <link rel="stylesheet" href="dfx-renacer-fase3.css">
+  <link rel="stylesheet" href="dfx-renacer-fase4.css">
+  <link rel="stylesheet" href="dfx-renacer-fase5.css">
+  <link rel="stylesheet" href="dfx-renacer-fase6.css">
+  <link rel="stylesheet" href="dfx-renacer-fase8.css">
 </head>
 <body>
 
@@ -104,6 +112,11 @@
   <div id="toast" role="status"></div>
 
   <script src="app.js?v=20"></script>
+  <!-- RENACER: fase 6 envuelve fetch cuanto antes; fases 1-3 son parches aditivos -->
+  <script src="dfx-renacer-fase6.js"></script>
+  <script src="dfx-renacer.js"></script>
+  <script src="dfx-renacer-fase2.js"></script>
+  <script src="dfx-renacer-fase3.js"></script>
   <script type="module" src="firebase-sync.js"></script>
   <script>
     // DonghuaFlix Pro: espera a que app.js registre sus funciones y luego carga los módulos
@@ -112,6 +125,20 @@
         var s1 = document.createElement('script');
         s1.src = 'dfx-core.js';
         s1.onload = function () {
+          // RENACER: fase 4 (Tu DonghuaFlix) → fase 5 (Explorar) → pulido
+          var s4 = document.createElement('script');
+          s4.src = 'dfx-renacer-fase4.js';
+          s4.onload = function () {
+            var s5 = document.createElement('script');
+            s5.src = 'dfx-renacer-fase5.js';
+            s5.onload = function () {
+              var s8 = document.createElement('script');
+              s8.src = 'dfx-renacer-fase8.js';
+              document.body.appendChild(s8);
+            };
+            document.body.appendChild(s5);
+          };
+          document.body.appendChild(s4);
           var s2 = document.createElement('script');
           s2.src = 'dfx-polish.js';
           document.body.appendChild(s2);
