@@ -86,3 +86,57 @@ body{
     bottom:calc(150px + env(safe-area-inset-bottom)) !important;
   }
 }
+
+/* === FASE FINAL v4 — Selector multi-catálogo blindado === */
+
+/* El FAB SIEMPRE visible en móvil (el !important del CSS gana al
+   style="display:none" inline cuando la sonda ya confirmó catálogos).
+   Si aún no hay datos, renderCatBar lo vuelve a ocultar. */
+@media (max-width:900px){
+  #catalogWrap{
+    position:fixed !important;
+    left:auto !important;
+    top:auto !important;
+    right:12px !important;
+    bottom:calc(150px + env(safe-area-inset-bottom)) !important;
+    z-index:96 !important;
+    margin:0 !important;
+    display:block !important;
+  }
+}
+#catalogWrap .catalog-fab{
+  width:50px !important;
+  height:50px !important;
+  border-radius:50% !important;
+  background:#14141a !important;
+  border:1px solid #3a3a44 !important;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 10px 26px rgba(0,0,0,.65);
+  overflow:hidden;
+}
+#catalogWrap .catalog-fab img{
+  width:34px !important;
+  height:34px !important;
+  border-radius:50% !important;
+  object-fit:cover !important;
+}
+#catalogWrap .fab-caret{
+  position:absolute;
+  right:2px;
+  bottom:2px;
+  width:16px;
+  height:16px;
+  background:#e50914;
+  border-radius:50%;
+  stroke:#fff;
+  padding:2px;
+}
+#catalogWrap .catalog-menu{
+  position:absolute;
+  right:0;
+  bottom:56px;
+  min-width:170px;
+}
