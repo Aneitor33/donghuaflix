@@ -39,7 +39,7 @@
       const intro=document.createElement('section');
       intro.className='ren-intro';
       const count=$$('.card').length;
-      intro.innerHTML='<div><span class="ren-intro-kicker">TU CENTRO DE ENTRETENIMIENTO</span><h2>Todo lo que sigues,<br><em>en un solo lugar.</em></h2></div><div class="ren-pills"><span class="ren-pill">'+count.toLocaleString('es-ES')+' elementos visibles</span><span class="ren-pill">Experiencia personalizada</span></div>';
+      intro.innerHTML='<div><span class="ren-intro-kicker">TU CENTRO DE ENTRETENIMIENTO</span><h2>Todo lo que sigues,<br><em>en un solo lugar.</em></h2></div><div class="ren-pills"><span class="ren-pill">'+count.toLocaleString('es-ES')+' títulos esperándote</span><span class="ren-pill">Experiencia personalizada</span></div>';
       firstSection.parentNode.insertBefore(intro,firstSection);
     }
 
