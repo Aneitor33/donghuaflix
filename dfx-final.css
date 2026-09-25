@@ -1,0 +1,22 @@
+/* ============================================================
+   DONGHUAFLIX — FASE FINAL (parches de integración)
+   Cargar DESPUÉS de dfx.css en el <head>.
+   ============================================================ */
+
+/* Hero: aire entre sinopsis y botones (evita solapamientos) */
+.hero .hero-content p#heroSyn { margin-bottom: 6px; }
+.hero .hero-btns { margin-top: 16px; }
+
+/* Episodios: el check se ve siempre; tenue si aún no está visto */
+.watched-btn { opacity: .38; transition: opacity .15s ease; }
+.watched-btn.on { opacity: 1; }
+
+/* Botones de chip deshabilitados / informativos */
+.dfxChip[disabled] { opacity: .45; pointer-events: none; }
+
+/* El FAB de catálogo (móvil) por encima de píldora y toast */
+.catalog-wrap { z-index: 80; }
+
+/* Cabecera: nada se encoge ni desaparece al cargar */
+.nav-actions, .catalog-wrap { flex-shrink: 0; }
+.nav { gap: 12px; }
