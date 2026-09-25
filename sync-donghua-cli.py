@@ -837,6 +837,18 @@ def main() -> int:
 
     save_state(st)
     write_outputs(entries, t0)
+
+    # Con --fresh: borrar fichas huérfanas (de series que ya no están en el índice).
+    # Seguro porque _emit ya preservó los servidores en las fichas nuevas.
+    if args.crawl_sites and args.fresh:
+        keep = {e["s"] for e in entries}
+        removed = 0
+        for fp in DETAILS_DIR.glob("*.json"):
+            if fp.stem not in keep:
+                fp.unlink()
+                removed += 1
+        if removed:
+            print(f"[clean] {removed} fichas huérfanas eliminadas")
     return 0
 
 
