@@ -53,3 +53,36 @@ body{
     color-mix(in srgb, var(--dfx-glow, #e50914) 24%, #0a0a0c) 0%,
     #0a0a0c 62%) fixed !important;
 }
+
+/* === FASE FINAL v3 === */
+
+/* PORTADAS: toda imagen (horizontal o vertical) rellena su tarjeta.
+   Acaba con las franjas negras de "Monarca Malvado", etc. */
+.card .poster img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:top center;
+}
+
+/* HERO: portada nítida (sin nube) + degradado para leer el texto.
+   Si se ve pixelado es que el póster fuente es pequeño: se avisa abajo. */
+.hero::before{
+  filter:blur(0) brightness(.72) saturate(1.2) !important;
+}
+.hero .hero-shade{
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.05) 0%,
+    rgba(0,0,0,0) 28%,
+    rgba(0,0,0,.62) 60%,
+    rgba(0,0,0,.95) 100%) !important;
+}
+
+/* FAB multi-catálogo: por encima de todo lo fijo en móvil */
+@media (max-width:900px){
+  .catalog-wrap{
+    z-index:96 !important;
+    right:12px !important;
+    bottom:calc(150px + env(safe-area-inset-bottom)) !important;
+  }
+}
