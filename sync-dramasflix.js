@@ -33,7 +33,31 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import { gunzipSync } from 'node:zlib';
 import * as cheerio from 'cheerio';
+
+/* fetch que devuelve {status, contentType, text} descomprimiendo gzip a mano
+   (algunos sitemaps llegan gzipeados sin cabecera Content-Encoding). */
+async function fetchRaw(url) {
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    redirect: 'follow',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip'
+    }
+  });
+  const buf = Buffer.from(await res.arrayBuffer());
+  let text;
+  if (buf.length > 2 && buf[0] === 0x1f && buf[1] === 0x8b) {
+    try { text = gunzipSync(buf).toString('utf8'); }
+    catch { text = buf.toString('utf8'); }
+  } else {
+    text = buf.toString('utf8');
+  }
+  return { status: res.status, contentType: res.headers.get('content-type') || '', text };
+}
 
 const OUT_FILE = path.resolve('public/data/catalog-dramasflix.json');
 const FAILURES_FILE = path.resolve('public/data/catalog-dramasflix-failures.json');
@@ -85,7 +109,7 @@ const SOURCE = {
   seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
                     !/\/temporada\//.test(p),
   movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
-  episodeTest: p => /^\/(episodio|episodios|episodes|capitulos?|ver)\/[a-z0-9-]+/i.test(p),
+  episodeTest: p => /^\/(episodio|episodios|episodes|capitulo|capitulos|ver)\/[a-z0-9-]+/i.test(p),
   isPageLink: p => /\/page\/\d+\/?$/.test(p) || /[?&]page=\d+/.test(p),
   pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}?page=${n}`,
   epBelongs: (epSlug, seriesSlug) =>
@@ -412,6 +436,8 @@ function parseServers(html, url) {
 /* Plantillas candidatas de URL de episodio (se sondean si la ficha no
    muestra enlaces; la que devuelva 200 se guarda y se reutiliza). */
 const EP_TEMPLATES = [
+  '/capitulo/{slug}-1x{n}',
+  '/capitulo/{slug}-1x{n}/',
   '/episodio/{slug}-1x{n}',
   '/episodio/{slug}-1x{n}/',
   '/episodios/{slug}-1x{n}/',
@@ -456,6 +482,45 @@ function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
   let best = null, bn = 0;
   for (const [t, c] of counts) if (c > bn) { best = t; bn = c; }
   return best;
+}
+
+/* Lee los chunks JS de Next.js referenciados en el HTML y extrae las
+   rutas /api/ que la propia web usa (donde viven los servidores). */
+const apiEndpointsFound = new Set();
+let apiDiscoveryAttempted = false;
+async function discoverApiEndpoints(html, base) {
+  if (apiEndpointsFound.size) return [...apiEndpointsFound];
+  if (apiDiscoveryAttempted) return [];
+  apiDiscoveryAttempted = true;
+  const chunks = [...new Set(
+    html.split(/[^A-Za-z0-9._/-]+/)
+        .map(t => t.replace(/^\//, ''))
+        .filter(t => /^_next\/static\/chunks\/[A-Za-z0-9._-]+\.js$/.test(t))
+  )].slice(0, 3);
+  console.log(`   🔎 JS: ${chunks.length} chunks referenciados`);
+  for (const ch of chunks) {
+    try {
+      const r = await fetchRaw(absolute(ch, base));
+      console.log(`   🔎 JS ${ch.split('/').pop()}: HTTP ${r.status} · ${r.text.length} bytes`);
+      for (const m of r.text.matchAll(/(\/api\/[A-Za-z0-9_/?=&{}$.-]{3,80})/g)) {
+        const ep = m[1];
+        if (!ep.endsWith('/') && !/[=?&]$/.test(ep)) apiEndpointsFound.add(ep);
+      }
+    } catch (e) {
+      console.log(`   ⚠️  Chunk ilegible (${e.message}): ${ch}`);
+    }
+  }
+  console.log(`   🧭 Endpoints API: ${apiEndpointsFound.size ? [...apiEndpointsFound].join(' | ') : 'ninguno hallado'}`);
+  return [...apiEndpointsFound];
+}
+
+function apiUrlFor(endpoint, fullSlug) {
+  // endpoint tipo /api/xxx/{slug}, /api/xxx/${slug} o /api/xxx?slug=
+  let u = endpoint;
+  u = u.replace(/\{(?:slug|id)\}/, encodeURIComponent(fullSlug));
+  u = u.replace(/\$\{[^}]*\}/g, encodeURIComponent(fullSlug));
+  if (/[?&][a-z_]*=$/.test(u)) u += encodeURIComponent(fullSlug);
+  return absolute(u, SOURCE.base);
 }
 
 /* Sondeo rápido de plantillas (una sola petición, sin reintentos) */
@@ -565,6 +630,10 @@ function parseSeries(html, url, isMovie) {
   if (stM) status = stM[1];
   if (isMovie) status = status || 'Finalizada';
 
+  let country = null;
+  const cM = bodyTxt.match(/\b(China|Corea(?: del Sur)?|Jap[oó]n|Tailandia|Filipinas|Taiw[aá]n|Vietnam|Hong\s?Kong)\b/i);
+  if (cM) country = cM[1];
+
   let year = null;
   const yM = title.match(/\b((?:19|20)\d{2})\b/) ||
             bodyTxt.match(/(?:estreno|año)[^\d]{0,15}((?:19|20)\d{2})/i) ||
@@ -583,7 +652,7 @@ function parseSeries(html, url, isMovie) {
     id: slug, slug, title, image,
     synopsis: synopsis || null,
     status, year, genres,
-    country: 'China',
+    country: country || 'China',
     type: isMovie ? 'movie' : 'dorama'
   };
 }
@@ -616,6 +685,78 @@ function parseLinks(html, pageUrl, test) {
   return uniqueUrls(links);
 }
 
+/* Extrae enlaces también del flight data de Next.js (hrefs escapados
+   dentro de self.__next_f.push) — el scroll infinito vive ahí. */
+function parseLinksRaw(html, pageUrl, test) {
+  const un = html.replace(/\\\//g, '/').replace(/\\"/g, '"');
+  const out = [];
+  for (const re of [/\"href\":\"([^\"]+)\"/g, /href=\"([^\"]+)\"/g]) {
+    for (const m of un.matchAll(re)) {
+      const full = absolute(m[1], pageUrl);
+      if (!full || !sameOrigin(full, SOURCE.base)) continue;
+      try { if (test(new URL(full).pathname)) out.push(full); } catch {}
+    }
+  }
+  return out;
+}
+
+function parseLinksAll(html, pageUrl, test) {
+  return uniqueUrls([...parseLinks(html, pageUrl, test), ...parseLinksRaw(html, pageUrl, test)]);
+}
+
+/* Descubrimiento vía sitemap.xml (robots.txt lo confirma). Si es un índice,
+   se descargan los sub-sitemaps. Devuelve {seriesUrls, movieUrls} o null. */
+async function discoverSitemap() {
+  let xml;
+  try {
+    const r = await fetchRaw(`${SOURCE.base}/sitemap.xml`);
+    if (r.status !== 200 || !r.text.includes('<loc')) {
+      console.log(`   🗺️  Sitemap HTTP ${r.status} · ${r.contentType} · ` +
+                  `muestra: ${r.text.replace(/\s+/g, ' ').slice(0, 140)}`);
+      return null;
+    }
+    xml = r.text;
+  } catch (e) {
+    console.log(`   🗺️  Sitemap no descargable: ${e.message}`);
+    return null;
+  }
+
+  /* URLs absolutas directamente del documento: cubre <loc> estándar y
+     variantes con CDATA (<loc><![CDATA[https://…]]></loc>). */
+  const locsOf = x => [...new Set([...x.matchAll(/https?:\/\/[\w.-]+[^\s<"'\\)\]]*/g)]
+    .map(m => m[0].trim()))];
+  let urls = locsOf(xml);
+  const submaps = urls.filter(u => /\.xml(\?|#|$)/.test(u));
+  if (submaps.length) {
+    console.log(`   🗺️  Sitemap índice: ${submaps.length} sub-sitemaps`);
+    urls = urls.filter(u => !submaps.includes(u));
+    for (const sm of submaps.slice(0, 60)) {
+      if (timeUp()) break;
+      try {
+        const r = await fetchRaw(sm);
+        if (r.status === 200) {
+          urls.push(...locsOf(r.text));
+        } else {
+          console.log(`   ⚠️  Sub-sitemap HTTP ${r.status}: ${sm}`);
+        }
+      } catch (e) {
+        console.log(`   ⚠️  Sub-sitemap falló (${e.message}): ${sm}`);
+      }
+      await sleep(150);
+    }
+  }
+  const series = new Set(), movies = new Set();
+  for (const u of urls) {
+    let path;
+    try { path = new URL(u).pathname; } catch { continue; }
+    if (SOURCE.seriesTest(path)) series.add(u);
+    else if (SOURCE.movieTest(path)) movies.add(u);
+  }
+  console.log(`   🗺️  Sitemap: ${urls.length} URLs → ${series.size} series · ${movies.size} películas`);
+  if (series.size + movies.size < 10) return null;
+  return { seriesUrls: [...series], movieUrls: [...movies] };
+}
+
 async function discover() {
   const series = new Set();
   const movies = new Set();
@@ -635,8 +776,8 @@ async function discover() {
       try { html = await fetchHtml(pageUrl); }
       catch (e) { console.log(`   ⚠️ ${e.message}`); continue; }
 
-      parseLinks(html, pageUrl, SOURCE.seriesTest).forEach(u => series.add(u));
-      parseLinks(html, pageUrl, SOURCE.movieTest).forEach(u => movies.add(u));
+      parseLinksAll(html, pageUrl, SOURCE.seriesTest).forEach(u => series.add(u));
+      parseLinksAll(html, pageUrl, SOURCE.movieTest).forEach(u => movies.add(u));
 
       for (const next of parseLinks(html, pageUrl, SOURCE.isPageLink)) {
         if (!visited.has(next) && !queue.includes(next)) queue.push(next);
@@ -666,12 +807,33 @@ async function discover() {
           continue;
         }
       } else {
-        for (const fmt of PAGE_FORMATS) {
-          url = absolute(`${first}${fmt}${n}`, SOURCE.base);
-          try { html = await fetchHtml(url, FETCH_RETRIES + 1); probeFails = 0; }
-          catch { continue; }
-          const s0 = parseLinks(html, url, SOURCE.seriesTest).filter(l => !series.has(l)).length;
-          if (s0 > 0) { workingFormat = fmt; console.log(`   🧭 Paginación detectada: ${fmt}N`); break; }
+        /* 1) formatos clásicos; 2) variante RSC de Next.js (así pide páginas
+           el scroll infinito: header RSC: 1 → devuelve flight data). */
+        const variants = [
+          ...PAGE_FORMATS.map(fmt => ({ fmt, rsc: false })),
+          { fmt: '?page=', rsc: true }
+        ];
+        for (const v of variants) {
+          url = absolute(`${first}${v.fmt}${n}`, SOURCE.base);
+          try {
+            if (v.rsc) {
+              const res = await fetch(url, {
+                signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+                headers: { 'RSC': '1', 'Next-Url': new URL(first).pathname }
+              });
+              if (!res.ok) continue;
+              html = await res.text();
+            } else {
+              html = await fetchHtml(url, FETCH_RETRIES + 1);
+            }
+            probeFails = 0;
+          } catch { html = null; continue; }
+          const s0 = parseLinksAll(html, url, SOURCE.seriesTest).filter(l => !series.has(l)).length;
+          if (s0 > 0) {
+            workingFormat = v.fmt;
+            console.log(`   🧭 Paginación detectada: ${v.fmt}N${v.rsc ? ' (modo RSC)' : ''}`);
+            break;
+          }
           html = null;
         }
         if (!html) {
@@ -698,8 +860,8 @@ async function discover() {
         }
       }
 
-      const s = parseLinks(html, url, SOURCE.seriesTest);
-      const mv = parseLinks(html, url, SOURCE.movieTest);
+      const s = parseLinksAll(html, url, SOURCE.seriesTest);
+      const mv = parseLinksAll(html, url, SOURCE.movieTest);
       const fresh = s.filter(l => !series.has(l)).length + mv.filter(l => !movies.has(l)).length;
       if (!fresh && workingFormat) {
         console.log(`   🛑 página ${n}: sin novedades — fin del listado`);
@@ -750,6 +912,42 @@ async function scrapeSeriesPage(url) {
     const full = absolute($(el).attr('href'), url);
     if (full) addCandidate(full);
   });
+
+  /* FLIGHT DATA de la ficha (Next.js): los episodios se renderizan SSR, así
+     que sus datos viajan en el payload serializado. Se desescapa y se captura
+     cada objeto con "slug":"{serie}-…" junto a sus urls de servidor. */
+  const preServers = new Map();   // "season|number" → servers[]
+  {
+    const un = html.replace(/\\\//g, '/').replace(/\\u0026/g, '&').replace(/\\"/g, '"');
+    const epObjRe = new RegExp('"slug":"(' + seriesSlug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-[0-9]{1,3}x[0-9]{1,4})"', 'gi');
+    for (const m of un.matchAll(epObjRe)) {
+      const epSlug = m[1];
+      const code = epCode(epSlug, '/' + epSlug);
+      if (code.number == null) continue;
+      const win = un.slice(m.index, m.index + 1200);
+      const srvs = [];
+      for (const pm of win.matchAll(/"(?:url|src|embed|file|link|href)":"(https?:\/\/[^"]{10,600})"/g)) {
+        const u = pm[1];
+        if (isPlayableAbs(u) && !srvs.some(s => s.url === u)) {
+          srvs.push({ name: hostOf(u), url: u, embed: true });
+        }
+      }
+      for (const pm of win.matchAll(/"server_name":"([^"]{2,30})"|"server":"([^"]{2,30})"/g)) {
+        void pm; // el nombre se toma del host; placeholder por si el schema lo trae
+      }
+      const key = `${code.season}|${code.number}`;
+      if (!preServers.has(key)) preServers.set(key, []);
+      for (const s of srvs) {
+        if (!preServers.get(key).some(x => x.url === s.url)) preServers.get(key).push(s);
+      }
+      if (!candidates.has(key)) {
+        candidates.set(key, { season: code.season, number: code.number, urls: [] });
+      }
+      const cand = candidates.get(key);
+      const epUrl = `${SOURCE.base}/capitulo/${epSlug}`;
+      if (!cand.urls.includes(epUrl)) cand.urls.push(epUrl);
+    }
+  }
 
   /* La ficha enlaza a /dorama/{slug}/temporada/{n} (página que SÍ lista los
      episodios): se rastrea para obtener los enlaces reales. */
@@ -807,7 +1005,10 @@ async function scrapeSeriesPage(url) {
     src: SOURCE.id, url, slug: parsed.slug,
     key: titleKey(parsed.title),
     parsed,
-    candidates: [...candidates.values()]
+    candidates: [...candidates.values()].map(c => ({
+      ...c,
+      servers: preServers.get(`${c.season}|${c.number}`) || []
+    }))
   };
 }
 
@@ -966,8 +1167,13 @@ async function main() {
     console.log('🧹 FRESH=1: catálogo, fallos y caché de fichas reiniciados.\n');
   }
 
-  /* ── Fase 1: descubrimiento ── */
-  const { seriesUrls, movieUrls } = await discover();
+  /* ── Fase 1: descubrimiento (sitemap primero; BFS+sondeo como fallback) ── */
+  let discovered = await discoverSitemap().catch(() => null);
+  if (!discovered) {
+    console.log('   🗺️  Sitemap no usable — se usa BFS + sondeo numérico');
+    discovered = await discover();
+  }
+  const { seriesUrls, movieUrls } = discovered;
   const tasks = [
     ...seriesUrls.map(u => ({ url: u, isMovie: false })),
     ...movieUrls.map(u => ({ url: u, isMovie: true }))
@@ -978,7 +1184,20 @@ async function main() {
   const doneUrls = new Set(prevRaws.map(r => r.url));
   const pending = tasks.filter(t => !doneUrls.has(t.url));
   if (prevRaws.length) console.log(`   ↻ ${prevRaws.length} fichas ya analizadas · ${pending.length} pendientes`);
-  const raws = [...prevRaws];
+  let raws = [...prevRaws];
+  /* Filtro de país: el usuario pidió SOLO el contenido de /paises/china.
+     El sitemap mezcla países; se descartan las fichas que declaren otro país. */
+  const dropNonChina = raws.filter(r => {
+    const c = fold(r.parsed && r.parsed.country || '');
+    return c && c !== 'china';
+  }).length;
+  if (dropNonChina) {
+    console.log(`   🌍 Fuera por país (no China): ${dropNonChina} fichas`);
+    raws = raws.filter(r => {
+      const c = fold(r.parsed && r.parsed.country || '');
+      return !c || c === 'china';
+    });
+  }
   const total = tasks.length;
   let done = raws.length;
   const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${total} fichas (${elapsedMin()} min)`), 30000);
@@ -1040,9 +1259,12 @@ async function main() {
     for (const c of r.candidates) {
       const seasonFinal = mapSeason(c.season, offset);
       const k = `${seasonFinal}|${c.number}`;
-      if (!canon.epMap.has(k)) canon.epMap.set(k, { season: seasonFinal, number: c.number, urls: [] });
+      if (!canon.epMap.has(k)) canon.epMap.set(k, { season: seasonFinal, number: c.number, urls: [], servers: [] });
       const slot = canon.epMap.get(k);
       for (const u of c.urls) if (!slot.urls.includes(u)) slot.urls.push(u);
+      for (const s of (c.servers || [])) {
+        if (!slot.servers.some(x => x.url === s.url)) slot.servers.push(s);
+      }
     }
   }
 
@@ -1071,6 +1293,22 @@ async function main() {
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
       if (oldEp && (oldEp.servers || []).length > 0) { skippedExisting++; continue; }
+      if (slot.servers && slot.servers.length) {
+        /* servidores ya extraídos del flight data de la ficha: se guarda
+           directo, sin rastrear la página del episodio */
+        upsert(db.episodes, {
+          id: `${seasonId}-e${slot.number}`,
+          slug: `${seasonId}-e${slot.number}`,
+          title: `Capítulo ${slot.number}`,
+          sourceUrl: slot.urls[0] || null,
+          servers: slot.servers,
+          seriesId: S.id, seasonId, number: slot.number,
+          updatedAt: new Date().toISOString()
+        });
+        existingEp.set(epKey, { servers: slot.servers });
+        newEps++;
+        continue;
+      }
       if (oldEp) recrawlEmpty++;
       if ((failures[epKey] || 0) >= 2) { skippedFailed++; continue; }
       if (epQueue.length >= MAX_EPISODE_CRAWLS) continue;
@@ -1119,6 +1357,45 @@ async function main() {
             if (parsed2.title && !pageTitle) pageTitle = parsed2.title;
             console.log(`      📺 Ver Online → ${parsed.watchUrl}`);
           } catch (e2) { lastErr = e2.message; }
+        }
+        if (!parsed.servers.length) {
+          /* Último recurso: la web tiene /api/* (robots.txt). Primero los
+             endpoints extraídos de sus propios chunks JS; luego rutas típicas. */
+          const fullSlug = slugFromUrl(u);
+          const discovered = await discoverApiEndpoints(lastHtml || html, u);
+          const apiCandidates = [
+            ...discovered.map(ep => apiUrlFor(ep, fullSlug)).filter(Boolean),
+            `/api/capitulo/${fullSlug}`,
+            `/api/episodio/${fullSlug}`,
+            `/api/episode/${fullSlug}`,
+            `/api/player/${fullSlug}`,
+            `/api/servers/${fullSlug}`,
+            `/api/capitulo?slug=${encodeURIComponent(fullSlug)}`,
+            `/api/episode?slug=${encodeURIComponent(fullSlug)}`
+          ];
+          for (const ap of apiCandidates) {
+            try {
+              const apiUrl = absolute(ap, u);
+              const res = await withHostLimit(new URL(apiUrl).hostname, () =>
+                fetch(apiUrl, { signal: AbortSignal.timeout(15000),
+                                headers: { 'Accept': 'application/json' } }));
+              if (!res.ok) continue;
+              const body = await res.text();
+              const added = [];
+              try {
+                for (const u2 of collectUrlsFromJson(JSON.parse(body))) {
+                  if (isPlayableAbs(u2)) added.push({ name: hostOf(u2), url: u2, embed: true });
+                }
+              } catch {}
+              const parsedA = parseEpisode(body.replace(/\\\//g, '/'), apiUrl);
+              for (const s of parsedA.servers) added.push(s);
+              if (added.length) {
+                parsed = { ...parsed, servers: [...parsed.servers, ...added] };
+                console.log(`      ⚡ API ${ap} → +${added.length}`);
+                break;
+              }
+            } catch { /* siguiente candidato */ }
+          }
         }
         if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
           for (const opt of parsed.playerOpts.slice(0, 6)) {
@@ -1264,9 +1541,78 @@ async function main() {
   console.log('====================================================\n');
 }
 
+/* ════════════════════════════════════════════
+   FLIX_PROBE=1 — navegador real (Playwright): abre UN episodio, captura las
+   llamadas /api/ que hace la web y los iframes de cada opción de servidor.
+   Requiere: npm i playwright && npx playwright install --with-deps chromium
+════════════════════════════════════════════ */
+async function probeWithPlaywright() {
+  const { chromium } = await import('playwright');
+  const target = process.env.FLIX_PROBE_URL ||
+    'https://doramasflix.io/capitulo/the-masked-lover-1x1';
+  console.log(`\n🔬 PROBE con navegador real: ${target}\n`);
+
+  const browser = await chromium.launch({ headless: true });
+  const ctx = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    viewport: { width: 1280, height: 800 }
+  });
+  const page = await ctx.newPage();
+
+  const apiCalls = [];
+  page.on('request', req => {
+    const u = req.url();
+    if (u.includes('/api/')) apiCalls.push({ method: req.method(), url: u });
+  });
+
+  await page.goto(target, { waitUntil: 'networkidle', timeout: 90000 }).catch(e => console.log('goto:', e.message));
+  await page.waitForTimeout(4000);
+
+  // captura los botones de opción de servidor y pulsa cada uno
+  const options = await page.$$eval('button, [role="tab"], a', els =>
+    els.map(e => ({ tag: e.tagName, text: (e.textContent || '').trim().slice(0, 60) }))
+       .filter(x => /opci[oó]n|servidor|primeload|dood|filemoon|voe|hd/i.test(x.text)));
+  console.log('🎛️  Opciones de servidor visibles:', JSON.stringify(options.slice(0, 10)));
+
+  const allIframes = new Set();
+  const collect = async label => {
+    const frames = await page.$$eval('iframe', els => els.map(e => e.src).filter(Boolean));
+    frames.forEach(f => allIframes.add(f));
+    console.log(`📺 iframes [${label}]:`, frames);
+  };
+  await collect('inicial');
+
+  for (let i = 0; i < Math.min(options.length, 6); i++) {
+    try {
+      await page.click(`text=${options[i].text.slice(0, 20)}`, { timeout: 3000 });
+      await page.waitForTimeout(2500);
+      await collect(options[i].text.slice(0, 24));
+    } catch { /* opción no clicable */ }
+  }
+
+  const uniqApi = [...new Map(apiCalls.map(c => [c.url, c])).values()];
+  console.log('\n🧭 Llamadas /api/ capturadas:', uniqApi.length);
+  uniqApi.slice(0, 20).forEach(c => console.log(`   ${c.method} ${c.url}`));
+
+  // guarda hallazgos para el sync (endpoints + iframes de muestra)
+  const found = {
+    probedAt: new Date().toISOString(),
+    target,
+    apiCalls: uniqApi,
+    iframes: [...allIframes]
+  };
+  await saveJson(PATTERN_FILE.replace('pattern', 'api'), found);
+  console.log(`\n💾 Guardado: ${PATTERN_FILE.replace('pattern', 'api')}`);
+  console.log('Pégale al chat las líneas 🧭 para fijar los endpoints en el scraper.\n');
+
+  await browser.close();
+}
+
 /* ── Arranque ── */
 if (process.env.FLIX_SELFTEST === '1') {
   selftest();
+} else if (process.env.FLIX_PROBE === '1') {
+  probeWithPlaywright().catch(e => { console.error('💥 PROBE falló:', e.message); process.exitCode = 1; });
 } else {
   main().catch(async e => {
     console.error('\n💥 ERROR FATAL:', e);
