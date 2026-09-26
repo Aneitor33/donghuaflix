@@ -326,7 +326,7 @@ body{
 /* === Zoom discreto dentro del reproductor === */
 .player{position:relative}
 .zoom-fab{
-  position:absolute;right:14px;bottom:14px;z-index:5;
+  position:absolute;left:14px;bottom:14px;z-index:6;
   width:38px;height:38px;border-radius:50%;
   background:rgba(15,15,20,.85);border:1px solid rgba(255,255,255,.25);
   color:#fff;display:flex;align-items:center;justify-content:center;
@@ -335,7 +335,7 @@ body{
 .zoom-fab:hover{border-color:#e50914;transform:scale(1.06)}
 .zoom-fab svg{width:18px;height:18px}
 .zoom-pop{
-  position:absolute;right:14px;bottom:60px;z-index:6;
+  position:absolute;left:14px;bottom:60px;z-index:7;
   display:flex;align-items:center;gap:6px;
   background:rgba(15,15,20,.92);border:1px solid rgba(255,255,255,.22);
   border-radius:99px;padding:6px 10px;backdrop-filter:blur(8px);
@@ -354,3 +354,6 @@ body{
   font-size:12px;min-width:40px;text-align:center;color:#ddd;
   font-variant-numeric:tabular-nums;
 }
+
+/* Pantalla completa propia: siempre visible y por encima del zoom */
+.player .fs-btn{position:absolute !important;right:14px !important;bottom:14px !important;z-index:6 !important}
