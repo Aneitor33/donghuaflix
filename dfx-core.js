@@ -1320,6 +1320,17 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fxInit);
   else fxInit();
 
+  /* Altura real de la navbar -> variable CSS: el contenido nunca
+     queda tapado bajo la barra en ninguna pagina. */
+  function setNavH() {
+    const n = document.querySelector('header.nav');
+    if (n) document.documentElement.style.setProperty('--navh', n.offsetHeight + 'px');
+  }
+  setNavH();
+  addEventListener('resize', setNavH);
+  setTimeout(setNavH, 800);
+  setTimeout(setNavH, 2500);
+
   /* ---------- arranque ---------- */
   function init() {
     splash();
