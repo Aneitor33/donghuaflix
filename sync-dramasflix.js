@@ -82,11 +82,12 @@ const SOURCE = {
   base: 'https://doramasflix.io',
   seeds: ['/paises/china'],
   maxPages: 80,
-  seriesTest: p => /^\/(doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
-  movieTest:  p => /^\/(peliculas?|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
+  seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
+                    !/\/temporada\//.test(p),
+  movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
   episodeTest: p => /^\/(episodios|episodes|ver)\/[a-z0-9-]+/i.test(p),
-  isPageLink: p => /\/page\/\d+\/?$/i.test(p),
-  pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}/page/${n}/`,
+  isPageLink: p => /\/page\/\d+\/?$/.test(p) || /[?&]page=\d+/.test(p),
+  pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}?page=${n}`,
   epBelongs: (epSlug, seriesSlug) =>
     epSlug.toLowerCase().startsWith(seriesSlug.toLowerCase()),
   synthUrl: (slug, n) => `/episodios/${slug}-1x${n}/`
@@ -387,6 +388,71 @@ function parseServers(html, url) {
   return { servers, watchUrl, playerOpts };
 }
 
+/* Plantillas candidatas de URL de episodio (se sondean si la ficha no
+   muestra enlaces; la que devuelva 200 se guarda y se reutiliza). */
+const EP_TEMPLATES = [
+  '/episodio/{slug}-1x{n}',
+  '/episodio/{slug}-1x{n}/',
+  '/episodios/{slug}-1x{n}/',
+  '/episodios/{slug}-{n}/',
+  '/episodios/{slug}/{n}/',
+  '/ver/{slug}-{n}/',
+  '/ver/{slug}-1x{n}/',
+  '/{slug}-capitulo-{n}/',
+  '/capitulo/{slug}-{n}/',
+  '/doramas/{slug}-1x{n}/',
+  '/doramas/{slug}/{n}/',
+  '/episodio/{slug}-{n}/',
+  '/episode/{slug}-{n}/',
+  '/{slug}-1x{n}/',
+  '/{slug}-{n}/'
+];
+const PATTERN_FILE = path.resolve('public/data/catalog-dramasflix-pattern.json');
+
+function epUrlFromTemplate(tpl, slug, n) {
+  return SOURCE.base + tpl.split('{slug}').join(slug).split('{n}').join(String(n));
+}
+
+/* Deriva la plantilla a partir de los enlaces reales de la ficha:
+   sustituye el slug y los números por tokens y se queda con la más frecuente. */
+function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
+  const $ = cheerio.load(html);
+  const counts = new Map();
+  $('a[href]').each((_, el) => {
+    const full = absolute($(el).attr('href'), pageUrl);
+    if (!full || !sameOrigin(full, SOURCE.base)) return;
+    let p;
+    try { p = new URL(full).pathname.toLowerCase(); } catch { return; }
+    const linkSlug = slugFromUrl(full).toLowerCase();
+    const sl = seriesSlug.toLowerCase();
+    if (!linkSlug || linkSlug === sl || !linkSlug.startsWith(sl)) return;
+    let t = p.split(sl).join('{slug}');
+    t = t.replace(/(\d{1,3})x(\d{1,4})/g, '$1x{n}').replace(/-(\d{1,4})(?=\/|$)/g, '-{n}');
+    if (t === p) return;                       // sin número -> no es episodio
+    if (!t.includes('{slug}') || !t.includes('{n}')) return;
+    counts.set(t, (counts.get(t) || 0) + 1);
+  });
+  let best = null, bn = 0;
+  for (const [t, c] of counts) if (c > bn) { best = t; bn = c; }
+  return best;
+}
+
+/* Sondeo rápido de plantillas (una sola petición, sin reintentos) */
+async function probeEpisodeTemplate(seriesSlug) {
+  for (const tpl of EP_TEMPLATES) {
+    const url = epUrlFromTemplate(tpl, seriesSlug, 1);
+    try {
+      const html = await fetchHtml(url, FETCH_RETRIES + 1);   // sin reintentos: 404 = fail rápido
+      if (html && html.length > 500) {
+        console.log(`   🧭 Patrón de episodio detectado: ${tpl}`);
+        return tpl;
+      }
+    } catch { /* 404 -> siguiente */ }
+    await sleep(150);
+  }
+  return null;
+}
+
 function parseEpisode(html, url) {
   const $ = cheerio.load(html);
   const title = clean(
@@ -597,6 +663,8 @@ async function discover() {
    FICHA + CANDIDATOS DE EPISODIOS
 ══════════════════════════════════════════════════════════ */
 
+let EP_TEMPLATE = null;   // patrón aprendido/persistido de URL de episodio
+
 async function scrapeSeriesPage(url) {
   const html = await fetchHtml(url);
   const isMovie = SOURCE.movieTest(new URL(url).pathname);
@@ -609,7 +677,7 @@ async function scrapeSeriesPage(url) {
     if (!sameOrigin(rawUrl, SOURCE.base)) return;
     let pathname = '';
     try { pathname = new URL(rawUrl).pathname; } catch { return; }
-    if (!SOURCE.episodeTest(pathname)) return;
+    if (!SOURCE.episodeTest(pathname) && !(EP_TEMPLATE && pathname.includes(seriesSlug))) return;
     const slug = slugFromUrl(rawUrl);
     if (!SOURCE.epBelongs(slug, seriesSlug)) return;
     const code = epCode(slug, pathname);
@@ -625,19 +693,54 @@ async function scrapeSeriesPage(url) {
     if (full) addCandidate(full);
   });
 
-  /* La ficha no lista episodios (JS): se declara "Capítulos: N" y se
-     sintetizan las URLs, validadas después por el rastreo. */
-  if (!isMovie) {
-    const total = declaredEpCount(html) ?? SYNTH_DEFAULT_EPS;
-    for (let n = 1; n <= total; n++) {
-      if (candidates.has(`1|${n}`)) continue;
-      candidates.set(`1|${n}`, {
-        season: 1, number: n,
-        urls: [`${SOURCE.base}${SOURCE.synthUrl(seriesSlug, n)}`]
+  /* La ficha enlaza a /dorama/{slug}/temporada/{n} (página que SÍ lista los
+     episodios): se rastrea para obtener los enlaces reales. */
+  const seasonLinks = [];
+  $('a[href]').each((_, el) => {
+    const full = absolute($(el).attr('href'), url);
+    if (!full || !sameOrigin(full, SOURCE.base)) return;
+    if (/\/dorama\/[^/]+\/temporada\/\d+\/?$/i.test(new URL(full).pathname) &&
+        !seasonLinks.includes(full)) seasonLinks.push(full);
+  });
+  for (const sl of seasonLinks.slice(0, 4)) {
+    if (timeUp()) break;
+    try {
+      const sh = await fetchHtml(sl, FETCH_RETRIES + 1);
+      const $s = cheerio.load(sh);
+      $s('a[href]').each((_, el) => {
+        const full = absolute($s(el).attr('href'), sl);
+        if (full) addCandidate(full);
       });
+      console.log(`   📑 Temporada: ${sl} → ${[...candidates.values()].length} eps acumulados`);
+    } catch { /* temporada caída: se sigue con síntesis */ }
+    await sleep(POLITENESS_MS);
+  }
+
+  /* Sin enlaces de episodio en la ficha: aprender el patrón REAL.
+     1) de los enlaces propios de la página (aunque no casen episodeTest),
+     2) del patrón persistido entre runs,
+     3) sondeando plantillas candidatas con la serie actual. */
+  if (!isMovie && !candidates.size) {
+    let tpl = detectTemplateFromLinks(html, seriesSlug, url);
+    if (tpl) console.log(`   🧭 Plantilla desde enlaces: ${tpl} (${seriesSlug})`);
+    if (!tpl && EP_TEMPLATE) tpl = EP_TEMPLATE;
+    if (!tpl) {
+      tpl = await probeEpisodeTemplate(seriesSlug);
+      if (tpl) {
+        EP_TEMPLATE = tpl;
+        await saveJson(PATTERN_FILE, { template: tpl, updatedAt: new Date().toISOString() });
+      }
     }
-  } else if (!candidates.size) {
-    /* Película sin página de reproducción enlazada: la propia ficha se rastrea */
+    if (tpl) {
+      const total = declaredEpCount(html) ?? SYNTH_DEFAULT_EPS;
+      for (let n = 1; n <= total; n++) {
+        candidates.set(`1|${n}`, {
+          season: 1, number: n,
+          urls: [epUrlFromTemplate(tpl, seriesSlug, n)]
+        });
+      }
+    }
+  } else if (isMovie && !candidates.size) {
     candidates.set('1|1', { season: 1, number: 1, urls: [url] });
   }
 
@@ -746,6 +849,8 @@ function selftest() {
   eq(epCode('mi-drama-1x7', '/episodios/x'), { season: 1, number: 7 }, '1x7');
   eq(epCode('mi-drama-temporada-2-capitulo-5', '/x'), { season: 2, number: 5 }, 'temporada+capítulo');
   eq(epCode('mi-drama-capitulo-30', '/x'), { season: 1, number: 30 }, 'capítulo básico');
+  eq(SOURCE.seriesTest('/dorama/the-masked-lover'), true, 'seriesTest /dorama/ (real)');
+  eq(SOURCE.seriesTest('/dorama/a-prophet/temporada/1'), false, 'seriesTest excluye temporada');
   eq(SOURCE.seriesTest('/doramas/pull-strings/'), true, 'seriesTest /doramas/');
   eq(SOURCE.seriesTest('/series/pull-strings/'), true, 'seriesTest /series/');
   eq(SOURCE.seriesTest('/doramas/page/2/'), false, 'seriesTest excluye paginación');
@@ -756,6 +861,11 @@ function selftest() {
   eq(cleanTitle('Ver Pull Strings Capitulos Online Sub Español - DoramasFlix'), 'Pull Strings', 'plantilla web');
   eq(cleanTitle('Nombre » DoramasFlix'), 'Nombre', 'separador »');
   eq(titleKey('Mi Drama Temporada 2').offset, 2, 'temporada en título');
+  eq(epUrlFromTemplate('/episodios/{slug}-1x{n}/', 'the-masked-lover', 7),
+     'https://doramasflix.io/episodios/the-masked-lover-1x7/', 'template epUrl');
+  eq(epUrlFromTemplate('/ver/{slug}-{n}/', 'amante-enmascarado', 1),
+     'https://doramasflix.io/ver/amante-enmascarado-1/', 'template sin 1x');
+  eq(SOURCE.pageProbe('/paises/china', 2), '/paises/china?page=2', 'pageProbe ?page=N');
   console.log('\nSelftest terminado.');
 }
 
@@ -783,6 +893,13 @@ async function main() {
   let db = await loadCatalog();
   let failures = await loadJson(FAILURES_FILE, {});
   const startedAt = new Date().toISOString();
+
+  /* Patrón de URL de episodio aprendido en runs anteriores (si existe) */
+  const pat = await loadJson(PATTERN_FILE, null);
+  if (pat && pat.template) {
+    EP_TEMPLATE = pat.template;
+    console.log(`   🧭 Patrón de episodio persistido: ${EP_TEMPLATE}`);
+  }
 
   if (FRESH) {
     db = { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
