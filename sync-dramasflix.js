@@ -33,7 +33,31 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import { gunzipSync } from 'node:zlib';
 import * as cheerio from 'cheerio';
+
+/* fetch que devuelve {status, contentType, text} descomprimiendo gzip a mano
+   (algunos sitemaps llegan gzipeados sin cabecera Content-Encoding). */
+async function fetchRaw(url) {
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    redirect: 'follow',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip'
+    }
+  });
+  const buf = Buffer.from(await res.arrayBuffer());
+  let text;
+  if (buf.length > 2 && buf[0] === 0x1f && buf[1] === 0x8b) {
+    try { text = gunzipSync(buf).toString('utf8'); }
+    catch { text = buf.toString('utf8'); }
+  } else {
+    text = buf.toString('utf8');
+  }
+  return { status: res.status, contentType: res.headers.get('content-type') || '', text };
+}
 
 const OUT_FILE = path.resolve('public/data/catalog-dramasflix.json');
 const FAILURES_FILE = path.resolve('public/data/catalog-dramasflix-failures.json');
@@ -460,6 +484,36 @@ function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
   return best;
 }
 
+/* Lee los chunks JS de Next.js referenciados en el HTML y extrae las
+   rutas /api/ que la propia web usa (donde viven los servidores). */
+const apiEndpointsFound = new Set();
+async function discoverApiEndpoints(html, base) {
+  if (apiEndpointsFound.size) return [...apiEndpointsFound];
+  const chunks = [...new Set([...(html.matchAll(/\"\/_next\/static\/chunks\/[A-Za-z0-9._-]+\.js\"/g))]
+    .map(m => m[0].replace(/\"/g, '').replace(/\//g, '/')).slice(0, 3))];
+  for (const ch of chunks) {
+    try {
+      const r = await fetchRaw(absolute(ch, base));
+      for (const m of r.text.matchAll(/["'`](\/api\/[A-Za-z0-9_/?=&{}$.-]{3,80})["'`]/g)) {
+        apiEndpointsFound.add(m[1]);
+      }
+    } catch { /* chunk ilegible: se ignora */ }
+  }
+  if (apiEndpointsFound.size) {
+    console.log(`   🧭 Endpoints API descubiertos: ${[...apiEndpointsFound].join(' | ')}`);
+  }
+  return [...apiEndpointsFound];
+}
+
+function apiUrlFor(endpoint, fullSlug) {
+  // endpoint tipo /api/xxx/{slug}, /api/xxx/${slug} o /api/xxx?slug=
+  let u = endpoint;
+  u = u.replace(/\{(?:slug|id)\}/, encodeURIComponent(fullSlug));
+  u = u.replace(/\$\{[^}]*\}/g, encodeURIComponent(fullSlug));
+  if (/[?&][a-z_]*=$/.test(u)) u += encodeURIComponent(fullSlug);
+  return absolute(u, SOURCE.base);
+}
+
 /* Sondeo rápido de plantillas (una sola petición, sin reintentos) */
 async function probeEpisodeTemplate(seriesSlug) {
   for (const tpl of EP_TEMPLATES) {
@@ -645,9 +699,18 @@ function parseLinksAll(html, pageUrl, test) {
    se descargan los sub-sitemaps. Devuelve {seriesUrls, movieUrls} o null. */
 async function discoverSitemap() {
   let xml;
-  try { xml = await fetchHtml(`${SOURCE.base}/sitemap.xml`, FETCH_RETRIES + 1); }
-  catch { return null; }
-  if (!xml || !xml.includes('<loc>')) return null;
+  try {
+    const r = await fetchRaw(`${SOURCE.base}/sitemap.xml`);
+    if (r.status !== 200 || !r.text.includes('<loc')) {
+      console.log(`   🗺️  Sitemap HTTP ${r.status} · ${r.contentType} · ` +
+                  `muestra: ${r.text.replace(/\s+/g, ' ').slice(0, 140)}`);
+      return null;
+    }
+    xml = r.text;
+  } catch (e) {
+    console.log(`   🗺️  Sitemap no descargable: ${e.message}`);
+    return null;
+  }
 
   const locsOf = x => [...x.matchAll(/<loc>\s*([^<]+?)\s*\/loc>/g)].map(m => m[1].trim());
   let urls = locsOf(xml);
@@ -1277,10 +1340,12 @@ async function main() {
           } catch (e2) { lastErr = e2.message; }
         }
         if (!parsed.servers.length) {
-          /* Último recurso: la web tiene /api/* (lo confirma robots.txt).
-             Se prueban rutas API típicas de Next.js para este episodio. */
+          /* Último recurso: la web tiene /api/* (robots.txt). Primero los
+             endpoints extraídos de sus propios chunks JS; luego rutas típicas. */
           const fullSlug = slugFromUrl(u);
+          const discovered = await discoverApiEndpoints(lastHtml || html, u);
           const apiCandidates = [
+            ...discovered.map(ep => apiUrlFor(ep, fullSlug)).filter(Boolean),
             `/api/capitulo/${fullSlug}`,
             `/api/episodio/${fullSlug}`,
             `/api/episode/${fullSlug}`,
