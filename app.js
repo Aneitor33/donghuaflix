@@ -948,6 +948,52 @@ function setPlayerZoom(z) {
 /* Delegación: la lupa y sus controles viven dentro del HTML que repinta
    render() al cambiar de servidor — así el clic funciona siempre. */
 document.addEventListener('click', e => {
+  /* Auto-siguiente desde la barra del reproductor */
+  const an = e.target.closest('[data-act="autonext"]');
+  if (an) {
+    if (typeof toggleAutoNext === 'function') toggleAutoNext();
+    return;
+  }
+
+  /* Filtros del panel lateral de episodios */
+  const ef = e.target.closest('[data-epf]');
+  if (ef) {
+    const box = ef.closest('.ep-side-tools');
+    if (box) {
+      box
+        .querySelectorAll('.tbtn')
+        .forEach(b =>
+          b.classList.toggle(
+            'on',
+            b === ef
+          )
+        );
+    }
+    const f =
+      ef.getAttribute(
+        'data-epf'
+      );
+    const list = document.querySelector(
+      '.ep-side-list'
+    );
+    if (list) {
+      list
+        .querySelectorAll(
+          '.eprow'
+        )
+        .forEach(r =>
+          r.classList.toggle(
+            'hide',
+            f !== 'all' &&
+              r.getAttribute(
+                'data-seen'
+              ) !== f
+          )
+        );
+    }
+    return;
+  }
+
   const pop = document.getElementById('zoomPop');
   if (!pop) return;
   if (e.target.closest('#zoomFab')) {
@@ -3259,6 +3305,84 @@ async function ensureDetail(slug) {
   }
 }
 
+/* ---------- PROGRESO DEL REPRODUCTOR (Dailymotion) ---------- */
+window.addEventListener(
+  'message',
+  ev => {
+    if (
+      !/dailymotion|dmcdn/i.test(
+        String(
+          ev.origin || ''
+        )
+      )
+    ) {
+      return;
+    }
+    let d = ev.data;
+    if (
+      typeof d === 'string'
+    ) {
+      try {
+        d = JSON.parse(d);
+      } catch {
+        return;
+      }
+    }
+    const t =
+      d &&
+      (d.time ||
+        (d.player &&
+          d.player.currentTime));
+    const dur =
+      d &&
+      (d.duration ||
+        (d.player &&
+          d.player.duration));
+    if (
+      t == null ||
+      !dur
+    ) {
+      return;
+    }
+    const bar =
+      document.getElementById(
+        'plProg'
+      );
+    const lab =
+      document.getElementById(
+        'plTime'
+      );
+    const fmt = s => {
+      s = Math.max(
+        0,
+        Math.floor(s)
+      );
+      return (
+        Math.floor(
+          s / 60
+        ) +
+        ':' +
+        String(
+          s % 60
+        ).padStart(2, '0')
+      );
+    };
+    if (bar) {
+      bar.style.width =
+        Math.min(
+          100,
+          (t / dur) * 100
+        ) + '%';
+    }
+    if (lab) {
+      lab.textContent =
+        fmt(t) +
+        ' / ' +
+        fmt(dur);
+    }
+  }
+);
+
 /* ---------- POSTER BAJO DEMANDA ----------
    Si una tarjeta visible no tiene imagen en el indice (p. ej. Peliculas),
    se pide su JSON de detalle y se rellena la portada cuando llega. */
@@ -4286,22 +4410,75 @@ function episode(slug) {
               loading="lazy"
             ></iframe>
 
-            <button
-              class="fs-btn"
-              onclick="togglePlayerFS()"
-              title="Pantalla completa"
-            >
-              ${ICONS.full}
-            </button>
+            <div class="pl-overlay">
+              <div class="pl-top">
+                <span class="pl-chip">${
+                  season
+                    ? esc(
+                        seasonTitle(
+                          season,
+                          0
+                        )
+                      )
+                    : ''
+                } · EPISODIO ${
+                  e.number
+                }${
+                  isWatched(
+                    e.seasonId,
+                    e.number
+                  )
+                    ? ' · VISTO'
+                    : ''
+                }</span>
+                <span class="pl-chip">${esc(
+                  cleanEpisodeTitle(e)
+                )}</span>
+              </div>
 
-            <button
-              class="zoom-fab"
-              id="zoomFab"
-              title="Zoom del video"
-              aria-label="Zoom del video"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            </button>
+              <div class="pl-bottom">
+                <div class="pl-prog"><i id="plProg"></i></div>
+                <div class="pl-ctrl">
+                  <span class="pl-time" id="plTime">E${
+                    e.number
+                  } · ${esc(
+                    (
+                      e.servers?.[0]?.name ||
+                      ''
+                    )
+                  )}</span>
+                  <span style="flex:1"></span>
+                  <button
+                    class="pl-btn"
+                    id="autoNextBtn"
+                    data-act="autonext"
+                    title="Auto-siguiente"
+                  >
+                    ${ICONS.repeat}
+                    <span>Auto: ${
+                      autoNextEnabled
+                        ? 'ON'
+                        : 'OFF'
+                    }</span>
+                  </button>
+                  <button
+                    class="pl-btn"
+                    id="zoomFab"
+                    title="Zoom del video"
+                    aria-label="Zoom del video"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                  </button>
+                  <button
+                    class="pl-btn"
+                    onclick="togglePlayerFS()"
+                    title="Pantalla completa"
+                  >
+                    ${ICONS.full}
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <div
               class="zoom-pop"
@@ -4341,6 +4518,8 @@ function episode(slug) {
 
   app.innerHTML = `
   <section class="detail page-top">
+  <div class="ep-layout">
+    <div class="ep-main">
 
     <div class="eyebrow">
       ${(() => {
@@ -4409,81 +4588,53 @@ function episode(slug) {
       id="serverGroups"
     ></div>
 
-    <div class="ep-nav">
-
+    <div class="ep-actions">
       ${
         prevEp
           ? `<a
-              class="btn-x glass"
+              class="abtn"
               href="#/episode/${qs(
                 prevEp.slug ||
                   prevEp.id
               )}"
             >
-              ${ICONS.prev}
-              <span>Anterior</span>
+              ‹ Anterior
             </a>`
           : `<button
-              class="btn-x glass"
+              class="abtn"
               disabled
             >
-              ${ICONS.prev}
-              <span>Anterior</span>
+              ‹ Anterior
             </button>`
       }
 
       <a
-        class="btn-x glass"
+        class="abtn"
         href="#/series/${qs(
           serieRef
         )}"
       >
-        ${ICONS.list}
-        <span>Serie</span>
+        ☰ Serie
       </a>
 
       ${
         nextEp
           ? `<a
-              class="btn-x glass"
+              class="abtn"
               href="#/episode/${qs(
                 nextEp.slug ||
                   nextEp.id
               )}"
             >
-              <span>Siguiente</span>
-              ${ICONS.next}
+              Siguiente ›
             </a>`
           : `<button
-              class="btn-x glass"
+              class="abtn"
               disabled
             >
-              <span>Siguiente</span>
-              ${ICONS.next}
+              Siguiente ›
             </button>`
       }
-
-    </div>
-
-    <div
-      class="ep-nav"
-      style="margin-top:10px"
-    >
-      <button
-        class="btn-x glass"
-        id="autoNextBtn"
-        onclick="toggleAutoNext()"
-      >
-        ${ICONS.repeat}
-        <span>
-          Auto:
-          ${
-            autoNextEnabled
-              ? 'ON'
-              : 'OFF'
-          }
-        </span>
-      </button>
     </div>
 
     ${(() => {
@@ -4519,11 +4670,178 @@ function episode(slug) {
         : '';
     })()}
 
+
+    </div>
+
+    ${(() => {
+      const w =
+        getWatched()[
+          e.seasonId
+        ] || {};
+      const now =
+        Date.now();
+      const WEEK =
+        7 *
+        24 *
+        3600 *
+        1000;
+      const rows =
+        seasonEps
+          .map(ep => {
+            const seen =
+              Boolean(
+                w[
+                  ep.number
+                ]
+              );
+            const isNew =
+              !seen &&
+              (Date.parse(
+                ep.updatedAt ||
+                  0
+              ) || 0) >
+                now -
+                  WEEK;
+            const serv =
+              (
+                ep.servers ||
+                []
+              )
+                .slice(
+                  0,
+                  2
+                )
+                .map(
+                  s =>
+                    `<i>${esc(
+                      String(
+                        s.name ||
+                          ''
+                      )
+                        .replace(
+                          /^www\./,
+                          ''
+                        )
+                        .split(
+                          '.'
+                        )[0]
+                        .slice(
+                          0,
+                          6
+                        )
+                    )}</i>`
+                )
+                .join(
+                  ''
+                );
+            return `<a class="eprow ${
+              ep.id ===
+              e.id
+                ? 'cur'
+                : ''
+            }" data-seen="${
+              seen
+                ? 1
+                : 0
+            }" href="#/episode/${qs(
+              ep.slug ||
+                ep.id
+            )}">
+      <span class="enum">${ep.number}</span>
+      <span class="einfo"><b>Episodio ${ep.number}</b><span>${esc(
+        cleanEpisodeTitle(
+          ep
+        )
+      )}</span></span>
+      <span class="es">${serv}</span>
+      ${
+        isNew
+          ? '<span class="newb">NUEVO</span>'
+          : ''
+      }
+      <span class="est ${
+        seen
+          ? 'ok'
+          : ''
+      }">${
+        seen
+          ? '✓'
+          : ''
+      }</span>
+    </a>`;
+          })
+          .join(
+            ''
+          );
+
+      return `<aside class="ep-side">
+    <div class="ep-side-head">
+      <b>Episodios</b>
+      <span class="ep-count">E${e.number} de ${seasonEps.length}</span>
+    </div>
+    <div class="ep-side-tools">
+      <button class="tbtn on" data-epf="all">Todos</button>
+      <button class="tbtn" data-epf="0">Sin ver</button>
+      <button class="tbtn" data-epf="1">Vistos</button>
+    </div>
+    <div class="ep-side-list">${rows}</div>
+  </aside>`;
+    })()}
+  </div>
   </section>`;
 
   render();
   renderServers();
   applyPlayerZoom();
+
+  /* La barra se oculta sola al reproducir y reaparece al mover/tocar */
+  const plBox =
+    document.getElementById(
+      'player'
+    );
+  if (
+    plBox &&
+    !plBox.__idleBound
+  ) {
+    plBox.__idleBound = 1;
+    let idleT = null;
+    const wake = () => {
+      plBox.classList.remove(
+        'pl-idle'
+      );
+      clearTimeout(idleT);
+      idleT = setTimeout(
+        () => {
+          const pop =
+            document.getElementById(
+              'zoomPop'
+            );
+          if (
+            pop &&
+            !pop.hidden
+          ) {
+            return;
+          }
+          plBox.classList.add(
+            'pl-idle'
+          );
+        },
+        2600
+      );
+    };
+    [
+      'pointermove',
+      'pointerdown',
+      'touchstart'
+    ].forEach(ev =>
+      plBox.addEventListener(
+        ev,
+        wake,
+        { passive: true }
+      )
+    );
+    wake();
+  }
 }
 
 function notfound() {
