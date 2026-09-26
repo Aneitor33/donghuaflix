@@ -85,7 +85,7 @@ const SOURCE = {
   seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
                     !/\/temporada\//.test(p),
   movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
-  episodeTest: p => /^\/(episodio|episodios|episodes|capitulos?|ver)\/[a-z0-9-]+/i.test(p),
+  episodeTest: p => /^\/(episodio|episodios|episodes|capitulo|capitulos|ver)\/[a-z0-9-]+/i.test(p),
   isPageLink: p => /\/page\/\d+\/?$/.test(p) || /[?&]page=\d+/.test(p),
   pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}?page=${n}`,
   epBelongs: (epSlug, seriesSlug) =>
@@ -412,6 +412,8 @@ function parseServers(html, url) {
 /* Plantillas candidatas de URL de episodio (se sondean si la ficha no
    muestra enlaces; la que devuelva 200 se guarda y se reutiliza). */
 const EP_TEMPLATES = [
+  '/capitulo/{slug}-1x{n}',
+  '/capitulo/{slug}-1x{n}/',
   '/episodio/{slug}-1x{n}',
   '/episodio/{slug}-1x{n}/',
   '/episodios/{slug}-1x{n}/',
@@ -616,6 +618,25 @@ function parseLinks(html, pageUrl, test) {
   return uniqueUrls(links);
 }
 
+/* Extrae enlaces también del flight data de Next.js (hrefs escapados
+   dentro de self.__next_f.push) — el scroll infinito vive ahí. */
+function parseLinksRaw(html, pageUrl, test) {
+  const un = html.replace(/\\\//g, '/').replace(/\\"/g, '"');
+  const out = [];
+  for (const re of [/\"href\":\"([^\"]+)\"/g, /href=\"([^\"]+)\"/g]) {
+    for (const m of un.matchAll(re)) {
+      const full = absolute(m[1], pageUrl);
+      if (!full || !sameOrigin(full, SOURCE.base)) continue;
+      try { if (test(new URL(full).pathname)) out.push(full); } catch {}
+    }
+  }
+  return out;
+}
+
+function parseLinksAll(html, pageUrl, test) {
+  return uniqueUrls([...parseLinks(html, pageUrl, test), ...parseLinksRaw(html, pageUrl, test)]);
+}
+
 async function discover() {
   const series = new Set();
   const movies = new Set();
@@ -635,8 +656,8 @@ async function discover() {
       try { html = await fetchHtml(pageUrl); }
       catch (e) { console.log(`   ⚠️ ${e.message}`); continue; }
 
-      parseLinks(html, pageUrl, SOURCE.seriesTest).forEach(u => series.add(u));
-      parseLinks(html, pageUrl, SOURCE.movieTest).forEach(u => movies.add(u));
+      parseLinksAll(html, pageUrl, SOURCE.seriesTest).forEach(u => series.add(u));
+      parseLinksAll(html, pageUrl, SOURCE.movieTest).forEach(u => movies.add(u));
 
       for (const next of parseLinks(html, pageUrl, SOURCE.isPageLink)) {
         if (!visited.has(next) && !queue.includes(next)) queue.push(next);
@@ -666,12 +687,33 @@ async function discover() {
           continue;
         }
       } else {
-        for (const fmt of PAGE_FORMATS) {
-          url = absolute(`${first}${fmt}${n}`, SOURCE.base);
-          try { html = await fetchHtml(url, FETCH_RETRIES + 1); probeFails = 0; }
-          catch { continue; }
-          const s0 = parseLinks(html, url, SOURCE.seriesTest).filter(l => !series.has(l)).length;
-          if (s0 > 0) { workingFormat = fmt; console.log(`   🧭 Paginación detectada: ${fmt}N`); break; }
+        /* 1) formatos clásicos; 2) variante RSC de Next.js (así pide páginas
+           el scroll infinito: header RSC: 1 → devuelve flight data). */
+        const variants = [
+          ...PAGE_FORMATS.map(fmt => ({ fmt, rsc: false })),
+          { fmt: '?page=', rsc: true }
+        ];
+        for (const v of variants) {
+          url = absolute(`${first}${v.fmt}${n}`, SOURCE.base);
+          try {
+            if (v.rsc) {
+              const res = await fetch(url, {
+                signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+                headers: { 'RSC': '1', 'Next-Url': new URL(first).pathname }
+              });
+              if (!res.ok) continue;
+              html = await res.text();
+            } else {
+              html = await fetchHtml(url, FETCH_RETRIES + 1);
+            }
+            probeFails = 0;
+          } catch { html = null; continue; }
+          const s0 = parseLinksAll(html, url, SOURCE.seriesTest).filter(l => !series.has(l)).length;
+          if (s0 > 0) {
+            workingFormat = v.fmt;
+            console.log(`   🧭 Paginación detectada: ${v.fmt}N${v.rsc ? ' (modo RSC)' : ''}`);
+            break;
+          }
           html = null;
         }
         if (!html) {
@@ -698,8 +740,8 @@ async function discover() {
         }
       }
 
-      const s = parseLinks(html, url, SOURCE.seriesTest);
-      const mv = parseLinks(html, url, SOURCE.movieTest);
+      const s = parseLinksAll(html, url, SOURCE.seriesTest);
+      const mv = parseLinksAll(html, url, SOURCE.movieTest);
       const fresh = s.filter(l => !series.has(l)).length + mv.filter(l => !movies.has(l)).length;
       if (!fresh && workingFormat) {
         console.log(`   🛑 página ${n}: sin novedades — fin del listado`);
