@@ -48,7 +48,7 @@ POSTERS_DIR = ROOT / "public" / "img" / "posters-dramasyt"
 CHANNEL_HANDLE = "@youkuspanish"
 CHANNEL_NAME = "YOUKU Spanish"
 MIN_EPISODES = 2          # el tab Series está curado por el canal; con 2 basta
-MIN_DUR = 600             # videos <10 min = promo/avance
+MIN_DUR = 1200            # videos <20 min = promo/avance/clip (series Y películas)
 
 # ── Títulos ──────────────────────────────────────────────────────────
 EP_NUM_RX = re.compile(
@@ -62,6 +62,12 @@ LEAD_MARKER_RX = re.compile(
     r"^(?:【[^】]*】|\[[^\]]{0,30}\]|\([^)]{0,30}\)|"
     r"(?:espsub|sub\s*esp(?:a[ñn]ol)?|subtitulad[oa]|doblado(?:\s+esp)?|"
     r"dub(?:\s+latino)?|audio\s+latino|multi\s*sub)\b)\s*[|\-–—:·]?\s*", re.I)
+PLAYLIST_DROP_RX = re.compile(
+    r"obt[eé]n\s+la\s+app|app\s+ahora|suscr[ií]bete|descarga(?:r)?\s+(?:la\s+)?app|"
+    r"\bclip\b|shorts|tr[aá]iler|\bost\b|pel[ií]cula|mini\s*dramas|"
+    r"momentos\s+destacados|versi[oó]n\s+pel[ií]cula|versiones\s+completas|"
+    r"estreno\s+en\s+la\s+app|la\s+mejor\s+lista|lista\s+para\s+usted", re.I)
+
 DROP_VIDEO_RX = re.compile(
     r"trailer|avance|teaser|promo|making|behind|recap|resumen|app\s*ahora|"
     r"obt[eé]n|descarga", re.I)
@@ -130,6 +136,7 @@ def clean_series_name(t: str) -> str:
                r"fantas[ií]a|romance|misterio|suspenso|comed(?:ia|y))"
                r"(?:[\s/\-\|,]+(?:de|con|y|en)?[\s/\-\|,]*[a-záéíóúñü]+)*\s*$",
                "", t, flags=re.I).strip()
+    t = re.sub(r"[\s\-|·]*suscr[ií]bete.*$", "", t, flags=re.I | re.S)
     t = re.sub(r"[《》]", " ", t)
     t = re.sub(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af]+", " ", t)
     t = re.sub(r"\s+", " ", t)
@@ -339,12 +346,13 @@ def infer_genres(title: str, synopsis: str = "") -> list:
     return out[:4]
 
 
-def build_detail(slug, title, poster, synopsis, source_url, eps, ch_name, year):
+def build_detail(slug, title, poster, synopsis, source_url, eps, ch_name, year,
+                 type_="drama", status="En Emisión"):
     season_id = f"{slug}-s1"
     now = datetime.now(timezone.utc).isoformat()
     return {
         "series": {"id": slug, "slug": slug, "title": title, "image": poster or "",
-                   "status": "En Emisión", "type": "drama", "synopsis": synopsis,
+                   "status": status, "type": type_, "synopsis": synopsis,
                    "year": year, "updatedAt": now, "sourceUrl": source_url or "",
                    "channel": ch_name},
         "seasons": [{"id": season_id, "seriesId": slug, "number": 1, "title": "Temporada 1"}],
@@ -357,6 +365,90 @@ def build_detail(slug, title, poster, synopsis, source_url, eps, ch_name, year):
             for n, vid in eps
         ],
     }
+
+
+MOVIE_PL_RX = re.compile(r"pel[ií]cula", re.I)
+MOVIE_PL_EXCLUDE_RX = re.compile(
+    r"clip|tr[aá]iler|shorts|descarga|suscr[ií]bete|obt[eé]n\s+la\s+app|"
+    r"momentos\s+destacados", re.I)
+EMOJI_RX = re.compile(
+    "[\U0001F000-\U0001FAFF\U00002700-\U000027BF\U000024C2-\U0001F251"
+    "\u200d\ufe0f\u2190-\u21FF\u2B00-\u2BFF\uFE00-\uFE0F]+")
+MOVIE_WORDS_RX = re.compile(
+    r"(?i)\b(?:pel[ií]cula|complet[ao]s?|full\s*movie|movie|hd|4k|sub|subtitulad[ao]s?|"
+    r"doblad[ao]s?|espa[ñn]ol(?:\s*latino)?|latino|castellano|audio\s*latino|"
+    r"multi\s*sub|versi[oó]n|wuxia|xianxia|traje|antiguo)\b")
+
+
+def clean_movie_title(t: str) -> str:
+    """Nombre de película desde el título del video (sin marketing ni idiomas)."""
+    t = urllib.parse.unquote(t or "")
+    prev = None
+    while prev != t:
+        prev = t
+        t = LEAD_MARKER_RX.sub("", t).strip()
+    parts = [pp.strip() for pp in re.split(r"[|｜]", t) if pp.strip()]
+    kept = []
+    for pp in parts:
+        if CH_TAG_RX.fullmatch(pp):
+            continue
+        if ACTOR_LIST_RX.fullmatch(pp):
+            continue
+        if DROP_VIDEO_RX.search(pp):
+            continue
+        kept.append(pp)
+    t = " ".join(kept) if kept else t
+    t = MOVIE_WORDS_RX.sub(" ", t)
+    t = re.sub(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"
+               r"\u3040-\u30ff\uac00-\ud7af]+", " ", t)
+    t = EMOJI_RX.sub(" ", t)
+    t = re.sub(r"\[\s*\]|\(\s*\)|【\s*】", " ", t)   # corchetes vacíos
+    t = re.sub(r"\s+", " ", t)
+    t = re.sub(r"(?:\s+(?:de|del|en|y|con|para|al))+\s*$", "", t, flags=re.I)  # conectores colgando
+    return t.strip(" -|·•—–🎬")
+
+
+def process_movie_playlist(data, pl, total, st):
+    """Cada VIDEO de la playlist = UNA película: ficha propia, portada de YT,
+    tipo 'movie', 1 episodio (la película entera). Repetidas -> fuera."""
+    entries = [e for e in (data.get("entries") or []) if e and e.get("id")]
+    entries = [e for e in entries if not DROP_VIDEO_RX.search(e.get("title") or "")]
+    entries = [e for e in entries if not e.get("duration") or e["duration"] >= MIN_DUR]
+    vcache = st.setdefault("vid_cache", {})
+    added = 0
+    for e in entries:
+        title = clean_movie_title(e.get("title") or "")
+        if not title or len(title) < 3:
+            continue
+        slug = slugify(title)
+        fp = DETAILS_DIR / f"{slug}.json"
+        if fp.exists() or any(x["s"] == slug for x in st["entries"]):
+            continue                              # película repetida -> fuera
+        vid = e["id"]
+        if vid in vcache:
+            synopsis = vcache[vid]
+        else:
+            synopsis = clean_synopsis(run_ytdlp_video_desc(vid))
+            vcache[vid] = synopsis
+        poster = local_poster_from_yt(vid, slug) or best_thumb(vid)
+        detail = build_detail(slug, title, poster, synopsis, f"https://www.youtube.com/watch?v={vid}",
+                              [(1, vid)], CHANNEL_NAME, None,
+                              type_="movie", status="Finalizada")
+        fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
+        st["entries"] = list({**{x["s"]: x for x in st["entries"]},
+                              slug: {"i": slug, "s": slug, "t": title, "p": poster,
+                                     "g_names": infer_genres(title, synopsis),
+                                     "st": "Finalizada", "ty": "movie", "y": None,
+                                     "e": 1, "pl": 1,
+                                     "u": datetime.now(timezone.utc).isoformat()}}.values())
+        added += 1
+        with _lock:
+            _prog["hits"] += 1
+            hits = _prog["hits"]
+        print(f"    🎬 {title} [{hits}]", flush=True)
+    print(f"[playlist películas] {pl['title'][:50]} -> {added} películas añadidas "
+          f"(de {len(entries)} videos)", flush=True)
+    return "MOVIES"     # señal para no hacer stash de entry de serie
 
 
 def process_playlist(pl, total, st, solo_nicho):
@@ -375,8 +467,14 @@ def process_playlist(pl, total, st, solo_nicho):
         return None
 
     raw_name = data.get("title") or pl["title"] or ""
+    if MOVIE_PL_RX.search(raw_name) and not MOVIE_PL_EXCLUDE_RX.search(raw_name):
+        st["done"].append(pl_id)
+        return process_movie_playlist(data, pl, total, st)   # cada video = 1 película
+    if PLAYLIST_DROP_RX.search(raw_name):
+        st["done"].append(pl_id)
+        return None                      # promos/clips/compilaciones: fuera
     name = clean_series_name(raw_name)
-    if not name or len(name) < 3:
+    if not name or len(name) < 3 or PLAYLIST_DROP_RX.search(name):
         st["done"].append(pl_id)
         return None
 
@@ -401,15 +499,24 @@ def process_playlist(pl, total, st, solo_nicho):
         seen.add(n)
         eps.append((n, e["id"]))
     eps.sort(key=lambda x: x[0])
+    if len(eps) < MIN_EPISODES:
+        st["done"].append(pl_id)
+        return None
 
-    # TMDB: nombre oficial es-ES + poster + sinopsis + géneros + año
+    # TMDB: nombre oficial es-ES + poster + sinopsis + géneros + año.
+    # IMPORTANTE: el slug se calcula SOLO desde el nombre limpio de YouTube;
+    # TMDB nunca roba el slug (evita que un promo de 3 videos secuestre la
+    # serie real, como pasó con "Moviendo los Hilos Ao Ruipeng Suscríbete").
     title, poster, synopsis, year = name, None, "", None
     tmdb_genres = None
     tmdb_data = tmdb_enrich(name, st.setdefault("tmdb_cache", {})) if _tmdb_key else None
     if tmdb_data:
         tmdb_genres = list(tmdb_data.get("genres") or [])
         if tmdb_data.get("title"):
-            title = tmdb_data["title"]
+            ratio = difflib.SequenceMatcher(
+                None, norm_title(name), norm_title(tmdb_data["title"])).ratio()
+            if ratio >= 0.7:
+                title = tmdb_data["title"]     # nombre oficial SOLO si es el mismo título
         synopsis = (tmdb_data.get("overview") or "")[:600]
         poster = tmdb_data.get("poster")
         year = tmdb_data.get("year")
@@ -447,7 +554,7 @@ def process_playlist(pl, total, st, solo_nicho):
 def list_channel_series():
     """Tab 'Series' del canal; fallback a 'playlists' si yt-dlp no lo soporta."""
     for tab in ("series", "playlists"):
-        data = run_ytdlp(f"https://www.youtube.com/{CHANNEL_HANDLE}/{tab}")
+        data = run_ytdlp(f"https://www.youtube.com/{CHANNEL_HANDLE}/{tab}", timeout=600)
         if not data:
             continue
         out = []
@@ -541,9 +648,14 @@ def main() -> int:
                 continue
             if r == "SKIP":
                 continue
+            if r == "MOVIES":
+                st["done"].append(pl["id"])
+                save_state(st)
+                continue
             stash(r if r else None, pl["id"])
 
     save_state(st)
+    by_slug = {e["s"]: e for e in st["entries"]}
     write_outputs(list(by_slug.values()), t0)
 
     if args.fresh:
