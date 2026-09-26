@@ -83,32 +83,13 @@
 .dfxTop b{color:#fff;font-size:13px}
 .dfxTop span{color:#9a9aa5;font-size:12px}
 .dfxTop .dfxGo{background:#e50914;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
-.dfxDot{position:fixed;top:70px;right:16px;z-index:9999;width:12px;height:12px;border-radius:50%;background:#e50914;box-shadow:0 0 0 4px rgba(229,9,20,.3);animation:dfxPulse 1.5s infinite}
 .dfxGrid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.dfxGrid2{grid-template-columns:1fr}}
-.dfxVsCard{position:relative;border-radius:14px;overflow:hidden;background:#141419;border:1px solid #2a2a33;cursor:pointer;transition:transform .2s ease,border-color .2s ease}
-.dfxVsCard:hover{transform:translateY(-4px);border-color:#e50914}
-.dfxVsCard img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block}
-.dfxVsCard .dfxVsTitle{position:absolute;inset:auto 0 0 0;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.9));color:#fff;font-weight:700;font-size:13px}
-.dfxVsCard.sel{border-color:#e50914;box-shadow:0 0 0 2px #e50914}
-.dfxVsCard.sel::after{content:'✓';position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#e50914;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
-.dfxVsTable{width:100%;border-collapse:collapse;margin-top:14px;color:#ddd;font-size:13px}
-.dfxVsTable td,.dfxVsTable th{padding:9px 10px;border-bottom:1px solid #222;text-align:left}
-.dfxVsTable th{color:#9a9aa5;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
 .dfxBadgeRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
 .dfxBadge{width:64px;text-align:center}
 .dfxBadge .dfxBIcon{width:52px;height:52px;margin:0 auto;border-radius:50%;background:linear-gradient(145deg,#1d1d24,#111);border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:22px}
 .dfxBadge.owned .dfxBIcon{border-color:#e50914;background:linear-gradient(145deg,#2a0a0c,#150607)}
 .dfxBadge span{display:block;font-size:9px;color:#9a9aa5;margin-top:4px;line-height:1.2}
-.dfxCalWrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.dfxCalDay{background:#141419;border:1px solid #2a2a33;border-radius:12px;padding:10px;min-height:120px}
-.dfxCalDay.today{border-color:#e50914;box-shadow:0 0 0 1px #e50914}
-.dfxCalDay h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#9a9aa5;text-align:center}
-.dfxCalDay.today h4{color:#e50914}
-.dfxCalItem{display:flex;gap:6px;align-items:center;padding:4px;border-radius:6px;cursor:pointer;margin-bottom:4px}
-.dfxCalItem:hover{background:#1d1d24}
-.dfxCalItem img{width:26px;height:38px;object-fit:cover;border-radius:4px}
-.dfxCalItem span{font-size:10px;color:#ddd;line-height:1.2}
 .dfxProfileCard{display:flex;align-items:center;gap:12px;background:#141419;border:1px solid #2a2a33;border-radius:14px;padding:14px;margin-bottom:14px}
 .dfxProfileCard .dfxAv{width:52px;height:52px;border-radius:50%;background:linear-gradient(145deg,#e50914,#7a0510);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
 .dfxProfileCard b{color:#fff;font-size:16px}
@@ -150,7 +131,6 @@
 .dfxKbdCard h3{margin:0 0 14px;font-size:16px}
 .dfxKbdRow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1d1d24;font-size:13px;color:#ddd}
 .dfxKbdRow kbd{background:#1d1d24;border:1px solid #333;border-radius:6px;padding:2px 8px;font-size:11px;font-family:monospace}
-.dfxMarathonChip{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#2a0a0c,#150607);border:1px solid #e50914;color:#fff;border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700}
   `;
   const st = document.createElement('style');
   st.id = 'dfxStyles';
@@ -906,6 +886,7 @@
     labels: {
       donghualife: "DonghuaLife", donghuasub: "DonghuaSub",
  donghuacli: "DonghuaCLI",
+      dramasyt: "DramasYT",
       peliculas: "Películas", doramas: "Doramas"
     },
     maxPerSection: 12,
@@ -1005,7 +986,7 @@
     var cat = CFG.labels[x._cat] || x._cat;
     var badge = opts.badge || "";
     return '' +
-      '<a class="dfx7-card" href="#/title/' + esc(id) + '">' +
+      '<a class="dfx7-card" href="#/series/' + esc(id) + '">' +
         '<div class="dfx7-card-poster">' +
           (src ? '<img loading="lazy" src="' + esc(src) + '" alt="">' : '') +
           '<span class="dfx7-card-cat">' + esc(cat) + '</span>' +
@@ -1154,7 +1135,7 @@
     if (!pool.length) pool = rows;
     if (!pool.length) return;
     var pick = pool[Math.floor(Math.random() * pool.length)];
-    location.hash = "#/title/" + (pick.i || pick.id);
+    location.hash = "#/series/" + (pick.i || pick.id);
   }
 
   /* ---------- RENDER ---------- */
