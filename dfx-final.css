@@ -357,3 +357,53 @@ body{
 
 /* Pantalla completa propia: siempre visible y por encima del zoom */
 .player .fs-btn{position:absolute !important;right:14px !important;bottom:14px !important;z-index:6 !important}
+
+/* === Reproductor: barra de controles integrada (v29) === */
+.player{position:relative;overflow:hidden}
+.pl-overlay{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;justify-content:space-between;transition:opacity .25s ease;pointer-events:none}
+.pl-overlay>*{pointer-events:auto}
+.pl-top{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;background:linear-gradient(rgba(0,0,0,.65),transparent);font-size:11px}
+.pl-chip{padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);color:#eee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.pl-bottom{padding:10px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.pl-prog{height:4px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;margin-bottom:8px}
+.pl-prog i{display:block;height:100%;background:#e50914;width:0%;transition:width .5s linear}
+.pl-ctrl{display:flex;align-items:center;gap:8px}
+.pl-btn{height:32px;min-width:32px;border-radius:99px;border:1px solid rgba(255,255,255,.25);background:rgba(15,15,20,.82);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 10px;cursor:pointer;backdrop-filter:blur(6px);font-family:inherit}
+.pl-btn svg{width:15px;height:15px}
+.pl-btn:hover{border-color:#e50914}
+.pl-time{font-size:11px;color:#ddd;font-variant-numeric:tabular-nums;white-space:nowrap}
+#player.pl-idle{cursor:none}
+#player.pl-idle .pl-overlay{opacity:0}
+#player.pl-idle .pl-overlay *{pointer-events:none !important}
+
+/* === Pagina de episodio: contenido + panel lateral === */
+.ep-layout{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.ep-layout{grid-template-columns:1fr 320px}}
+.ep-side{border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;background:#101015;max-height:560px}
+.ep-side-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ep-side-head b{font-size:14px}
+.ep-count{font-size:11px;color:#8b8b96}
+.ep-side-tools{display:flex;gap:5px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.ep-side .tbtn{font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:transparent;color:#9a9aa5;cursor:pointer}
+.ep-side .tbtn.on{color:#fff;border-color:#fff}
+.ep-side-list{overflow-y:auto;padding:6px}
+.ep-side-list .eprow{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:8px;text-decoration:none;color:inherit}
+.ep-side-list .eprow:hover{background:#1a1a20}
+.ep-side-list .eprow.cur{background:#1a1a20;border:1px solid rgba(255,255,255,.12)}
+.ep-side-list .eprow.hide{display:none}
+.ep-side-list .enum{flex:none;width:26px;height:26px;border-radius:7px;background:#17171c;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.ep-side-list .eprow.cur .enum{background:#e50914;border-color:#e50914;color:#fff}
+.ep-side-list .einfo{flex:1;min-width:0}
+.ep-side-list .einfo b{display:block;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ep-side-list .einfo span{font-size:10px;color:#8b8b96}
+.ep-side-list .es{display:flex;gap:3px}
+.ep-side-list .es i{font-style:normal;font-size:9px;padding:1px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.12);color:#8b8b96}
+.ep-side-list .est{flex:none;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid rgba(255,255,255,.14);color:#8b8b96}
+.ep-side-list .est.ok{background:#e50914;border-color:#e50914;color:#fff}
+.ep-side-list .newb{font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:5px;background:#e50914;color:#fff}
+
+/* Acciones compactas bajo el reproductor */
+.ep-actions{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+.ep-actions .abtn{font-size:12px;padding:6px 13px;border-radius:99px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#cfcfda;cursor:pointer;text-decoration:none;font-family:inherit}
+.ep-actions .abtn:hover{border-color:#fff;color:#fff}
+.ep-actions .abtn[disabled]{opacity:.4;pointer-events:none}
