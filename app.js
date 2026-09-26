@@ -3,12 +3,13 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuacli', 'dramasyt'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuacli', 'dramasyt', 'dramasflix'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
   { id: 'donghuacli',    file: './public/data/catalog-donghuacli.json',    index: './public/data/catalog-donghuacli-index.json',    label: 'DonghuaCLI' },
   { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
+  { id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  label: 'DramasFlix' },   // catálogo completo (sin índice lite)
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
@@ -17,6 +18,7 @@ const SRC_LABEL = {
   donghuasub: 'DonghuaSub',
   donghuacli: 'DonghuaCLI',
   dramasyt: 'DramasYT',
+  dramasflix: 'DramasFlix',
   peliculas: 'Películas',
   doramas: 'Doramas'
 };
