@@ -4794,54 +4794,8 @@ function episode(slug) {
   renderServers();
   applyPlayerZoom();
 
-  /* La barra se oculta sola al reproducir y reaparece al mover/tocar */
-  const plBox =
-    document.getElementById(
-      'player'
-    );
-  if (
-    plBox &&
-    !plBox.__idleBound
-  ) {
-    plBox.__idleBound = 1;
-    let idleT = null;
-    const wake = () => {
-      plBox.classList.remove(
-        'pl-idle'
-      );
-      clearTimeout(idleT);
-      idleT = setTimeout(
-        () => {
-          const pop =
-            document.getElementById(
-              'zoomPop'
-            );
-          if (
-            pop &&
-            !pop.hidden
-          ) {
-            return;
-          }
-          plBox.classList.add(
-            'pl-idle'
-          );
-        },
-        2600
-      );
-    };
-    [
-      'pointermove',
-      'pointerdown',
-      'touchstart'
-    ].forEach(ev =>
-      plBox.addEventListener(
-        ev,
-        wake,
-        { passive: true }
-      )
-    );
-    wake();
-  }
+  /* La barra es PERMANENTE: un iframe cross-origin se come los eventos
+     de ratón/táctil, así que el auto-ocultado no se puede recuperar. */
 }
 
 function notfound() {
