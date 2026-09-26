@@ -553,24 +553,39 @@ def process_playlist(pl, total, st, solo_nicho):
 
 
 def list_channel_series():
-    """Tab 'Series' del canal; fallback a 'playlists' si yt-dlp no lo soporta."""
-    for tab in ("series", "playlists"):
-        data = run_ytdlp(f"https://www.youtube.com/{CHANNEL_HANDLE}/{tab}", timeout=600)
-        if not data:
-            continue
-        out = []
-        for e in (data.get("entries") or []):
-            if not e:
+    """Tab 'Series'/'Playlists' del canal. YouTube a veces devuelve el listado
+    INCOMPLETO (227 en vez de 487) sin error: por eso se intenta varias veces
+    y se conserva el resultado MÁS LARGO."""
+    best: list = []
+    seen_ids: set = set()
+    for attempt in range(1, 5):
+        got_this = 0
+        for tab in ("series", "playlists"):
+            data = run_ytdlp(f"https://www.youtube.com/{CHANNEL_HANDLE}/{tab}", timeout=600)
+            if not data:
                 continue
-            url = e.get("url") or ""
-            if url and not url.startswith("http"):
-                url = f"https://www.youtube.com/playlist?list={url}"
-            if url:
-                out.append({"id": e.get("id") or url, "title": e.get("title") or "", "url": url})
-        if out:
-            print(f"[channel] tab /{tab}: {len(out)} playlists", flush=True)
-            return out
-    return []
+            for e in (data.get("entries") or []):
+                if not e:
+                    continue
+                url = e.get("url") or ""
+                if url and not url.startswith("http"):
+                    url = f"https://www.youtube.com/playlist?list={url}"
+                if not url:
+                    continue
+                pid = e.get("id") or url
+                if pid in seen_ids:
+                    continue
+                seen_ids.add(pid)
+                best.append({"id": pid, "title": e.get("title") or "", "url": url})
+                got_this += 1
+        print(f"[channel] intento {attempt}: +{got_this} playlists (total acumulado {len(best)})",
+              flush=True)
+        if got_this == 0 and best:
+            break
+        if got_this == 0:
+            time.sleep(5)
+    print(f"[channel] listado final: {len(best)} playlists únicas", flush=True)
+    return best
 
 
 def write_outputs(entries, t0):
