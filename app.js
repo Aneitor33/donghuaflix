@@ -939,6 +939,33 @@ function applyPlayerZoom() {
   }
 }
 
+function setPlayerZoom(z) {
+  playerZoom = Math.min(3, Math.max(1, Math.round(z * 100) / 100));
+  localStorage.setItem('donghuaflix_zoom', String(playerZoom));
+  applyPlayerZoom();
+}
+
+/* Delegación: la lupa y sus controles viven dentro del HTML que repinta
+   render() al cambiar de servidor — así el clic funciona siempre. */
+document.addEventListener('click', e => {
+  const pop = document.getElementById('zoomPop');
+  if (!pop) return;
+  if (e.target.closest('#zoomFab')) {
+    pop.hidden = !pop.hidden;
+    return;
+  }
+  const zb = e.target.closest('[data-zoom]');
+  if (zb) {
+    const v = zb.getAttribute('data-zoom');
+    if (v === 'reset') setPlayerZoom(1);
+    else setPlayerZoom(playerZoom + Number(v));
+    return;
+  }
+  if (!pop.hidden && !e.target.closest('#zoomPop')) {
+    pop.hidden = true;
+  }
+});
+
 let autoNextEnabled =
   localStorage.getItem(
     'donghuaflix_autonext'
@@ -4265,7 +4292,45 @@ function episode(slug) {
               title="Pantalla completa"
             >
               ${ICONS.full}
-            </button>`
+            </button>
+
+            <button
+              class="zoom-fab"
+              id="zoomFab"
+              title="Zoom del video"
+              aria-label="Zoom del video"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </button>
+
+            <div
+              class="zoom-pop"
+              id="zoomPop"
+              hidden
+            >
+              <button
+                class="zbtn"
+                data-zoom="-0.1"
+                title="Alejar"
+              >
+                －
+              </button>
+              <span id="zoomLabel">100%</span>
+              <button
+                class="zbtn"
+                data-zoom="0.1"
+                title="Acercar (recorta bandas negras)"
+              >
+                ＋
+              </button>
+              <button
+                class="zbtn zbtn-wide"
+                data-zoom="reset"
+                title="Restablecer zoom"
+              >
+                Ajustar
+              </button>
+            </div>`
           : '<div class="empty">Servidor no disponible.</div>';
 
       /* El iframe se repinta al cambiar de servidor:
@@ -4343,42 +4408,6 @@ function episode(slug) {
     <div
       id="serverGroups"
     ></div>
-
-    <div
-      class="ep-nav"
-      style="margin-top:10px"
-    >
-      <button
-        class="btn-x glass"
-        id="zoomOutBtn"
-        title="Alejar"
-      >
-        <span>－</span>
-      </button>
-
-      <span
-        class="muted"
-        id="zoomLabel"
-        style="min-width:48px;text-align:center"
-      >100%</span>
-
-      <button
-        class="btn-x glass"
-        id="zoomInBtn"
-        title="Acercar (recorta bandas negras)"
-      >
-        <span>＋</span>
-      </button>
-
-      <button
-        class="btn-x glass"
-        id="zoomResetBtn"
-        title="Restablecer zoom"
-      >
-        ${ICONS.reload}
-        <span>Ajustar</span>
-      </button>
-    </div>
 
     <div class="ep-nav">
 
@@ -4491,20 +4520,6 @@ function episode(slug) {
     })()}
 
   </section>`;
-
-  function setPlayerZoom(z) {
-    playerZoom = Math.min(3, Math.max(1, Math.round(z * 100) / 100));
-    localStorage.setItem('donghuaflix_zoom', String(playerZoom));
-    applyPlayerZoom();
-  }
-
-  const bindZoom = (id, fn) => {
-    const b = document.getElementById(id);
-    if (b) b.onclick = fn;
-  };
-  bindZoom('zoomOutBtn', () => setPlayerZoom(playerZoom - 0.10));
-  bindZoom('zoomInBtn', () => setPlayerZoom(playerZoom + 0.10));
-  bindZoom('zoomResetBtn', () => setPlayerZoom(1));
 
   render();
   renderServers();
