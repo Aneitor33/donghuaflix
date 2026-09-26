@@ -66,11 +66,12 @@ DROP_VIDEO_RX = re.compile(r"trailer|avance|teaser|promo|making|behind|recap", r
 PROMO_PL_RX = re.compile(
     r"estreno|próxim|proxim|novedad|trailer|promo|clip|momentos|highlights|recap|"
     r"escenas|recopilaci[oó]n|preview|extra\b|avance|behind|making|official|"
-    r"bienvenid|presentaci|lo mejor|top\s*\d", re.I)
+    r"resumen|recap|app ahora|obt[eé]n|descarga|bienvenid|presentaci|"
+    r"lo mejor|top\s*\d", re.I)
 # Frases de marketing dentro de los títulos
 MARKETING_RX = re.compile(
     r"\b(todos los (episodios|cap[ií]tulos)|episodios?\s+completos?|"
-    r"serie completa|temporada completa|completas?|en espa[ñn]ol|sub espa[ñn]ol|"
+    r"serie completa|temporada completa|complet[ao]s?|en espa[ñn]ol|sub espa[ñn]ol|"
     r"subtitulad[oa]|audio latino|latino|castellano|full hd|hd|4k|"
     r"nueva temporada)\b", re.I)
 # Emojis y símbolos decorativos
@@ -186,11 +187,22 @@ def infer_genres(title: str, synopsis: str = "") -> list:
     return out[:4]
 
 
+NICHE_STRONG_RX = re.compile(
+    r"cultivo|cultivador|inmortal|ascensi[oó]n|secta|xianxia|wuxia|jianghu|"
+    r"pugilista|artes marciales|marcial|kung fu|shaolin|wushu|espadach[ií]n|"
+    r"demonio|diablo|fantasma|hechic|bruj|magia|tribulaci|templo|monje|"
+    r"emperador|emperatriz|dinast[ií]a|palacio|imperial|guerrer|asesin|venganza", re.I)
+
+
 def is_niche(title: str, synopsis: str = "", tmdb_genres=None) -> bool:
-    """¿Pertenece al nicho wuxia/xianxia/cultivo/fantasía?"""
+    """¿Pertenece al nicho wuxia/xianxia/cultivo/fantasía?
+    Solo keywords FUERTES (un 'príncipe' suelto en la sinopsis no basta)
+    o géneros TMDB de nicho."""
     if set(tmdb_genres or []) & NICHE_TMDB:
         return True
-    return bool(NICHE_RX.search(f"{title} {synopsis or ''}"))
+    if NICHE_STRONG_RX.search(title or ""):
+        return True
+    return bool(NICHE_STRONG_RX.search(synopsis or ""))
 
 
 def slugify(title: str) -> str:
@@ -201,15 +213,86 @@ def slugify(title: str) -> str:
     return s.strip("-")
 
 
+# Segmentos que NO aportan nombre de serie (separados por | en el título):
+# marcadores de episodio, idioma, calidad, canal, actores, etc.
+APP_PROMO_RX = re.compile(r"app\s*ahora|obt[eé]n|descarga", re.I)
+
+SEG_EP_RX = re.compile(
+    r"(?:(?:ep|eps|episodio|episodios|cap|caps|cap[ií]tulo|cap[ií]tulos|parte?)"
+    r"\.?\s*\d{1,4}(?:\s*[-–]\s*\d{1,4})?(?:\s*(?:completo?s?|full))?|"
+    r"\d{1,4}\s*[-–]\s*\d{1,4}\s*(?:completo?s?|full)?|"
+    r"(?:sub|subtitulad[oa]|doblado|dub|audio|multi)\s*"
+    r"(?:esp|espa[ñn]ol|latino|castellano|sub)?|"
+    r"espa[ñn]ol|latino|castellano|multi\s*sub|completo?s?|full|hd|4k|full\s*hd|"
+    r"resumen|recap|official(?:\s+channel)?|trailer|avance|"
+    r"obt[eé]n la app|descarga(?:r)?\s*(?:la)?\s*app|"
+    r"season\s*\d{1,2}|temporada\s*\d{1,2}|"
+    r"[A-ZÁÉÍÓÚÑ][\wáéíóúñü'\-]*(?:\s+[A-ZÁÉÍÓÚÑ][\wáéíóúñü'\-]*)*"
+    r"(?:\s*(?:/|,)\s*[A-ZÁÉÍÓÚÑ][\wáéíóúñü'\-]*(?:\s+[A-ZÁÉÍÓÚÑ][\wáéíóúñü'\-]*)*)+|"
+    r"(?:protagonistas?|cast|reparto|starring|con)\s*:.*|"
+    r"(?:youku|wetv|iqiyi|mangotv|huace|croton|tencent|viki|yoyo|dramas\s*chinos)"
+    r"(?:\s+(?:spanish|espa[ñn]ol|tv|channel|original|oficial))*)", re.I)
+
+
 def clean_title(t: str) -> str:
     """Quita etiquetas de idioma y promo: 【SUB ESPAÑOL】, [Doblado ESP], ESPSUB..."""
     t = re.sub(r"【[^】]*】", " ", t or "")
     # 《...》: conserva el contenido si es latino (título oficial), lo borra si es CJK
     t = re.sub(r"《([^》]*)》",
                lambda m: (" " if re.search(r"[\u3400-\u4dbf\u4e00-\u9fff]", m.group(1))
-                          else f" {m.group(1)} "), t or "")
-    t = re.sub(r"\[([^\]]{0,50})\]",
-               lambda m: " " if SPANISH_RX.search(m.group(1)) else m.group(0), t)
+                          else f" {m.group(1)} "), t)
+
+    # Separar "][", "] Protagonistas:" -> para que el split por | los vea
+    t = re.sub(r"\]\s*(?=\[|protagonistas?:|cast:|reparto:|starring:)", "] | ", t, flags=re.I)
+
+    # Proteger corchetes (pueden contener |) con placeholders
+    stash = []
+    def _stash(m):
+        stash.append(m.group(0))
+        return f"\x00{len(stash) - 1}\x00"
+    t = re.sub(r"\[[^\]]{0,160}\]", _stash, t)
+
+    # LIMPIEZA POR SEGMENTOS: "Nombre | EP19 | Sub Español | YOUKU" -> solo el nombre.
+    parts = re.split(r"[|｜•]", t)
+    kept = []
+    for pseg in parts:
+        pseg = pseg.strip(" -·•\t")
+        if not pseg:
+            continue
+        if "\x00" in pseg:
+            # segmento con corchetes protegidos: JAMÁS tirar el placeholder
+            # (es el título real); solo quitar marcadores sueltos junto a él
+            pseg2 = re.sub(r"(?i)\s*\b(?:completo?s?|full|resumen|recap|hd|4k)\b\s*", " ", pseg)
+            pseg2 = pseg2.strip(" -·•\t")
+            if pseg2:
+                kept.append(pseg2)
+            continue
+        if SEG_EP_RX.fullmatch(pseg):
+            continue                                  # segmento puro marcador
+        kept.append(pseg)
+    if kept:
+        t = " ".join(kept)
+
+    # Restaurar corchetes, limpiando su interior de marcadores
+    def _unstash(m):
+        inner = stash[int(m.group(1))][1:-1]
+        if SPANISH_RX.search(inner) or APP_PROMO_RX.search(inner):
+            return " "
+        inner = MARKETING_RX.sub(" ", inner)
+        inner = SPANISH_RX.sub(" ", inner)
+        inner = re.sub(r"(?i)\b(?:resumen|recap)\b", " ", inner)
+        inner = re.sub(r"\s+", " ", inner).strip(" -|·•")
+        return f" {inner} " if inner else " "
+    t = re.sub(r"\x00(\d+)\x00", _unstash, t)
+    def _bracket(m):
+        inner = m.group(1)
+        if SPANISH_RX.search(inner) or APP_PROMO_RX.search(inner):
+            return " "
+        inner = MARKETING_RX.sub(" ", inner)
+        inner = SPANISH_RX.sub(" ", inner)
+        inner = re.sub(r"\s+", " ", inner).strip(" -|·•")
+        return f" {inner} " if inner else " "
+    t = re.sub(r"\[([^\]]{0,80})\]", _bracket, t)
     # 1) frases de marketing ANTES que los marcadores sueltos (evita que
     #    "sub\s*esp" se coma medio "Español" dejando "añol")
     t = MARKETING_RX.sub(" ", t)
@@ -227,13 +310,13 @@ def clean_title(t: str) -> str:
     return t.strip(" -|·•")
 
 
-def run_ytdlp(url: str):
+def run_ytdlp(url: str, timeout: int = 180):
     """Ejecuta yt-dlp en modo JSON. None si falla."""
     try:
         r = subprocess.run(
             ["yt-dlp", "-J", "--flat-playlist", "--no-warnings",
              "--ignore-errors", "--socket-timeout", "20", url],
-            capture_output=True, text=True, timeout=180)
+            capture_output=True, text=True, timeout=timeout)
         if r.returncode != 0 or not r.stdout.strip():
             return None
         return json.loads(r.stdout)
@@ -424,8 +507,9 @@ def norm_base(t: str) -> str:
 
 
 def scan_channel_videos(ch):
-    """Tab 'Vídeos' del canal: videos >15 min, español, no promo. (flat, pagina todo)"""
-    data = run_ytdlp(f"https://www.youtube.com/{ch['handle']}/videos")
+    """Tab 'Vídeos' del canal: videos >15 min, español, no promo.
+    (flat; pagina TODO el canal -> timeout generoso)"""
+    data = run_ytdlp(f"https://www.youtube.com/{ch['handle']}/videos", timeout=900)
     if not data:
         return []
     out = []
@@ -637,6 +721,57 @@ def process_playlist(pl, ch, total, st):
             "e": len(eps), "pl": 1, "u": datetime.now(timezone.utc).isoformat()}
 
 
+def organize_catalog(by_slug: dict) -> int:
+    """Pasada final: fusiona fichas/entradas que representan la MISMA serie
+    (título normalizado igual, p.ej. detectada por playlist y por sondeo,
+    o en playlists distintas del canal) uniendo episodios por número."""
+    buckets = {}
+    for slug in list(by_slug.keys()):
+        fp = DETAILS_DIR / f"{slug}.json"
+        try:
+            d = json.loads(fp.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        key = norm_base((d.get("series") or {}).get("title", ""))
+        if key:
+            buckets.setdefault(key, []).append((slug, d))
+    merged = 0
+    for key, items in buckets.items():
+        if len(items) < 2:
+            continue
+        items.sort(key=lambda x: (-len(x[1].get("episodes", [])),
+                                  len((x[1].get("series") or {}).get("title", ""))))
+        canon_slug, canon = items[0]
+        eps = {ep["number"]: ep for ep in canon.get("episodes", [])}
+        season_id = (canon.get("seasons") or [{}])[0].get("id", f"{canon_slug}-s1")
+        added = 0
+        for slug, d in items[1:]:
+            for ep in d.get("episodes", []):
+                n = ep.get("number")
+                if n is None or n in eps:
+                    continue
+                ep = dict(ep)
+                ep["seriesId"] = canon_slug
+                ep["seasonId"] = season_id
+                ep["id"] = f"{canon_slug}-ep-{n}"
+                ep["slug"] = ep["id"]
+                eps[n] = ep
+                added += 1
+            try:
+                (DETAILS_DIR / f"{slug}.json").unlink()
+            except Exception:
+                pass
+            by_slug.pop(slug, None)
+            merged += 1
+        canon["episodes"] = [eps[n] for n in sorted(eps)]
+        (DETAILS_DIR / f"{canon_slug}.json").write_text(
+            json.dumps(canon, ensure_ascii=False), encoding="utf-8")
+        e = by_slug.get(canon_slug)
+        if e:
+            e["e"] = len(eps)
+    return merged
+
+
 def write_outputs(entries, t0):
     entries = sorted(entries, key=lambda x: x["t"].lower())
     # Géneros: nombres -> índices sobre la lista maestra (formato lite de la app)
@@ -748,6 +883,11 @@ def main() -> int:
                     elif added and slug in by_slug:
                         by_slug[slug]["e"] += added
         save_state(st)
+
+    # Organización final: fusionar series duplicadas (playlist/sondeo/canales)
+    merged = organize_catalog(by_slug)
+    if merged:
+        print(f"[org] {merged} fichas duplicadas fusionadas")
 
     save_state(st)
     write_outputs(list(by_slug.values()), t0)
