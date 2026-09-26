@@ -487,8 +487,11 @@ function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
 /* Lee los chunks JS de Next.js referenciados en el HTML y extrae las
    rutas /api/ que la propia web usa (donde viven los servidores). */
 const apiEndpointsFound = new Set();
+let apiDiscoveryAttempted = false;
 async function discoverApiEndpoints(html, base) {
   if (apiEndpointsFound.size) return [...apiEndpointsFound];
+  if (apiDiscoveryAttempted) return [];
+  apiDiscoveryAttempted = true;
   const chunks = [...new Set(
     html.split(/[^A-Za-z0-9._/-]+/)
         .map(t => t.replace(/^\//, ''))
@@ -1538,9 +1541,78 @@ async function main() {
   console.log('====================================================\n');
 }
 
+/* ════════════════════════════════════════════
+   FLIX_PROBE=1 — navegador real (Playwright): abre UN episodio, captura las
+   llamadas /api/ que hace la web y los iframes de cada opción de servidor.
+   Requiere: npm i playwright && npx playwright install --with-deps chromium
+════════════════════════════════════════════ */
+async function probeWithPlaywright() {
+  const { chromium } = await import('playwright');
+  const target = process.env.FLIX_PROBE_URL ||
+    'https://doramasflix.io/capitulo/the-masked-lover-1x1';
+  console.log(`\n🔬 PROBE con navegador real: ${target}\n`);
+
+  const browser = await chromium.launch({ headless: true });
+  const ctx = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    viewport: { width: 1280, height: 800 }
+  });
+  const page = await ctx.newPage();
+
+  const apiCalls = [];
+  page.on('request', req => {
+    const u = req.url();
+    if (u.includes('/api/')) apiCalls.push({ method: req.method(), url: u });
+  });
+
+  await page.goto(target, { waitUntil: 'networkidle', timeout: 90000 }).catch(e => console.log('goto:', e.message));
+  await page.waitForTimeout(4000);
+
+  // captura los botones de opción de servidor y pulsa cada uno
+  const options = await page.$$eval('button, [role="tab"], a', els =>
+    els.map(e => ({ tag: e.tagName, text: (e.textContent || '').trim().slice(0, 60) }))
+       .filter(x => /opci[oó]n|servidor|primeload|dood|filemoon|voe|hd/i.test(x.text)));
+  console.log('🎛️  Opciones de servidor visibles:', JSON.stringify(options.slice(0, 10)));
+
+  const allIframes = new Set();
+  const collect = async label => {
+    const frames = await page.$$eval('iframe', els => els.map(e => e.src).filter(Boolean));
+    frames.forEach(f => allIframes.add(f));
+    console.log(`📺 iframes [${label}]:`, frames);
+  };
+  await collect('inicial');
+
+  for (let i = 0; i < Math.min(options.length, 6); i++) {
+    try {
+      await page.click(`text=${options[i].text.slice(0, 20)}`, { timeout: 3000 });
+      await page.waitForTimeout(2500);
+      await collect(options[i].text.slice(0, 24));
+    } catch { /* opción no clicable */ }
+  }
+
+  const uniqApi = [...new Map(apiCalls.map(c => [c.url, c])).values()];
+  console.log('\n🧭 Llamadas /api/ capturadas:', uniqApi.length);
+  uniqApi.slice(0, 20).forEach(c => console.log(`   ${c.method} ${c.url}`));
+
+  // guarda hallazgos para el sync (endpoints + iframes de muestra)
+  const found = {
+    probedAt: new Date().toISOString(),
+    target,
+    apiCalls: uniqApi,
+    iframes: [...allIframes]
+  };
+  await saveJson(PATTERN_FILE.replace('pattern', 'api'), found);
+  console.log(`\n💾 Guardado: ${PATTERN_FILE.replace('pattern', 'api')}`);
+  console.log('Pégale al chat las líneas 🧭 para fijar los endpoints en el scraper.\n');
+
+  await browser.close();
+}
+
 /* ── Arranque ── */
 if (process.env.FLIX_SELFTEST === '1') {
   selftest();
+} else if (process.env.FLIX_PROBE === '1') {
+  probeWithPlaywright().catch(e => { console.error('💥 PROBE falló:', e.message); process.exitCode = 1; });
 } else {
   main().catch(async e => {
     console.error('\n💥 ERROR FATAL:', e);
