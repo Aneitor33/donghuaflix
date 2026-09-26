@@ -1287,6 +1287,8 @@ function renderProgressiveGrid({
   activeGridObserver.observe(
     sentinel
   );
+
+  watchPosters(container);
 }
 
 /* ---------- PAGINACIÓN (20 por página, elipsis + salto directo) ---------- */
@@ -1335,6 +1337,8 @@ function renderPagedGrid({ container, items, emptyText = 'No hay elementos dispo
       .slice(page * perPage, (page + 1) * perPage)
       .map(card)
       .join('');
+
+    watchPosters(container);
 
     const win = pagerWindow(page, pages);
     pager.innerHTML = `
@@ -1455,7 +1459,7 @@ function card(s) {
   const progress =
     seriesProgress(s);
 
-  return `<article class="card" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
+  return `<article class="card" data-slug="${esc(s.slug || s.id)}" onclick="location.hash='#/series/${qs(s.slug || s.id)}'">
     <div class="poster">
       ${
         imgUrl
@@ -1514,6 +1518,7 @@ function refreshFavUI(
 }
 
 function rail(items) {
+  setTimeout(() => watchPosters(document.getElementById('app')), 60);
   return `<div class="rail">${
     items
       .map(
@@ -3202,6 +3207,51 @@ async function ensureDetail(slug) {
   }
 }
 
+/* ---------- POSTER BAJO DEMANDA ----------
+   Si una tarjeta visible no tiene imagen en el indice (p. ej. Peliculas),
+   se pide su JSON de detalle y se rellena la portada cuando llega. */
+const posterIO =
+  'IntersectionObserver' in window
+    ? new IntersectionObserver(
+        entries => {
+          entries.forEach(en => {
+            if (!en.isIntersecting) return;
+            posterIO.unobserve(en.target);
+            fillPoster(en.target);
+          });
+        },
+        { rootMargin: '500px 0px' }
+      )
+    : null;
+
+function fillPoster(cardEl) {
+  if (!cardEl || cardEl.__posterTried || !cardEl.querySelector('.no-img')) return;
+  cardEl.__posterTried = true;
+  const slug = cardEl.dataset.slug;
+  if (!slug || typeof ensureDetail !== 'function') return;
+  ensureDetail(slug).then(() => {
+    const s = typeof findSeries === 'function' ? findSeries(slug) : null;
+    if (!s) return;
+    const img = typeof getSeriesImage === 'function' ? getSeriesImage(s) : s.image;
+    if (!img) return;
+    const ph = cardEl.querySelector('.no-img');
+    if (!ph) return;
+    ph.insertAdjacentHTML('beforebegin',
+      `<img loading="lazy" src="${esc(img)}" alt="" onload="imgLoaded(this)" onerror="this.remove()">`);
+    ph.remove();
+  });
+}
+
+function watchPosters(root) {
+  if (!posterIO || !root) return;
+  const cards = [];
+  if (root.matches && root.matches('.card[data-slug]')) cards.push(root);
+  if (root.querySelectorAll) root.querySelectorAll('.card[data-slug]').forEach(c => cards.push(c));
+  cards.forEach(c => {
+    if (c.querySelector('.no-img') && !c.__posterTried) posterIO.observe(c);
+  });
+}
+
 /* ---------- DETALLE DE SERIE ---------- */
 
 let detailState = {
@@ -4582,7 +4632,7 @@ function route() {
 
 window.addEventListener(
   'hashchange',
-  route
+  () => route()
 );
 
 window.addEventListener(
