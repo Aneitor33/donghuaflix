@@ -567,6 +567,10 @@ function parseSeries(html, url, isMovie) {
   if (stM) status = stM[1];
   if (isMovie) status = status || 'Finalizada';
 
+  let country = null;
+  const cM = bodyTxt.match(/\b(China|Corea(?: del Sur)?|Jap[oó]n|Tailandia|Filipinas|Taiw[aá]n|Vietnam|Hong\s?Kong)\b/i);
+  if (cM) country = cM[1];
+
   let year = null;
   const yM = title.match(/\b((?:19|20)\d{2})\b/) ||
             bodyTxt.match(/(?:estreno|año)[^\d]{0,15}((?:19|20)\d{2})/i) ||
@@ -585,7 +589,7 @@ function parseSeries(html, url, isMovie) {
     id: slug, slug, title, image,
     synopsis: synopsis || null,
     status, year, genres,
-    country: 'China',
+    country: country || 'China',
     type: isMovie ? 'movie' : 'dorama'
   };
 }
@@ -635,6 +639,40 @@ function parseLinksRaw(html, pageUrl, test) {
 
 function parseLinksAll(html, pageUrl, test) {
   return uniqueUrls([...parseLinks(html, pageUrl, test), ...parseLinksRaw(html, pageUrl, test)]);
+}
+
+/* Descubrimiento vía sitemap.xml (robots.txt lo confirma). Si es un índice,
+   se descargan los sub-sitemaps. Devuelve {seriesUrls, movieUrls} o null. */
+async function discoverSitemap() {
+  let xml;
+  try { xml = await fetchHtml(`${SOURCE.base}/sitemap.xml`, FETCH_RETRIES + 1); }
+  catch { return null; }
+  if (!xml || !xml.includes('<loc>')) return null;
+
+  const locsOf = x => [...x.matchAll(/<loc>\s*([^<]+?)\s*\/loc>/g)].map(m => m[1].trim());
+  let urls = locsOf(xml);
+  const submaps = urls.filter(u => /\.xml(\?|$)/.test(u));
+  if (submaps.length) {
+    urls = [];
+    for (const sm of submaps.slice(0, 60)) {
+      if (timeUp()) break;
+      try {
+        const sx = await fetchHtml(sm, FETCH_RETRIES + 1);
+        urls.push(...locsOf(sx));
+      } catch { /* sub-sitemap caído: se ignora */ }
+      await sleep(150);
+    }
+  }
+  const series = new Set(), movies = new Set();
+  for (const u of urls) {
+    let path;
+    try { path = new URL(u).pathname; } catch { continue; }
+    if (SOURCE.seriesTest(path)) series.add(u);
+    else if (SOURCE.movieTest(path)) movies.add(u);
+  }
+  console.log(`   🗺️  Sitemap: ${urls.length} URLs → ${series.size} series · ${movies.size} películas`);
+  if (series.size + movies.size < 10) return null;
+  return { seriesUrls: [...series], movieUrls: [...movies] };
 }
 
 async function discover() {
@@ -793,6 +831,42 @@ async function scrapeSeriesPage(url) {
     if (full) addCandidate(full);
   });
 
+  /* FLIGHT DATA de la ficha (Next.js): los episodios se renderizan SSR, así
+     que sus datos viajan en el payload serializado. Se desescapa y se captura
+     cada objeto con "slug":"{serie}-…" junto a sus urls de servidor. */
+  const preServers = new Map();   // "season|number" → servers[]
+  {
+    const un = html.replace(/\\\//g, '/').replace(/\\u0026/g, '&').replace(/\\"/g, '"');
+    const epObjRe = new RegExp('"slug":"(' + seriesSlug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-[0-9]{1,3}x[0-9]{1,4})"', 'gi');
+    for (const m of un.matchAll(epObjRe)) {
+      const epSlug = m[1];
+      const code = epCode(epSlug, '/' + epSlug);
+      if (code.number == null) continue;
+      const win = un.slice(m.index, m.index + 1200);
+      const srvs = [];
+      for (const pm of win.matchAll(/"(?:url|src|embed|file|link|href)":"(https?:\/\/[^"]{10,600})"/g)) {
+        const u = pm[1];
+        if (isPlayableAbs(u) && !srvs.some(s => s.url === u)) {
+          srvs.push({ name: hostOf(u), url: u, embed: true });
+        }
+      }
+      for (const pm of win.matchAll(/"server_name":"([^"]{2,30})"|"server":"([^"]{2,30})"/g)) {
+        void pm; // el nombre se toma del host; placeholder por si el schema lo trae
+      }
+      const key = `${code.season}|${code.number}`;
+      if (!preServers.has(key)) preServers.set(key, []);
+      for (const s of srvs) {
+        if (!preServers.get(key).some(x => x.url === s.url)) preServers.get(key).push(s);
+      }
+      if (!candidates.has(key)) {
+        candidates.set(key, { season: code.season, number: code.number, urls: [] });
+      }
+      const cand = candidates.get(key);
+      const epUrl = `${SOURCE.base}/capitulo/${epSlug}`;
+      if (!cand.urls.includes(epUrl)) cand.urls.push(epUrl);
+    }
+  }
+
   /* La ficha enlaza a /dorama/{slug}/temporada/{n} (página que SÍ lista los
      episodios): se rastrea para obtener los enlaces reales. */
   const seasonLinks = [];
@@ -849,7 +923,10 @@ async function scrapeSeriesPage(url) {
     src: SOURCE.id, url, slug: parsed.slug,
     key: titleKey(parsed.title),
     parsed,
-    candidates: [...candidates.values()]
+    candidates: [...candidates.values()].map(c => ({
+      ...c,
+      servers: preServers.get(`${c.season}|${c.number}`) || []
+    }))
   };
 }
 
@@ -1008,8 +1085,13 @@ async function main() {
     console.log('🧹 FRESH=1: catálogo, fallos y caché de fichas reiniciados.\n');
   }
 
-  /* ── Fase 1: descubrimiento ── */
-  const { seriesUrls, movieUrls } = await discover();
+  /* ── Fase 1: descubrimiento (sitemap primero; BFS+sondeo como fallback) ── */
+  let discovered = await discoverSitemap().catch(() => null);
+  if (!discovered) {
+    console.log('   🗺️  Sitemap no usable — se usa BFS + sondeo numérico');
+    discovered = await discover();
+  }
+  const { seriesUrls, movieUrls } = discovered;
   const tasks = [
     ...seriesUrls.map(u => ({ url: u, isMovie: false })),
     ...movieUrls.map(u => ({ url: u, isMovie: true }))
@@ -1020,7 +1102,20 @@ async function main() {
   const doneUrls = new Set(prevRaws.map(r => r.url));
   const pending = tasks.filter(t => !doneUrls.has(t.url));
   if (prevRaws.length) console.log(`   ↻ ${prevRaws.length} fichas ya analizadas · ${pending.length} pendientes`);
-  const raws = [...prevRaws];
+  let raws = [...prevRaws];
+  /* Filtro de país: el usuario pidió SOLO el contenido de /paises/china.
+     El sitemap mezcla países; se descartan las fichas que declaren otro país. */
+  const dropNonChina = raws.filter(r => {
+    const c = fold(r.parsed && r.parsed.country || '');
+    return c && c !== 'china';
+  }).length;
+  if (dropNonChina) {
+    console.log(`   🌍 Fuera por país (no China): ${dropNonChina} fichas`);
+    raws = raws.filter(r => {
+      const c = fold(r.parsed && r.parsed.country || '');
+      return !c || c === 'china';
+    });
+  }
   const total = tasks.length;
   let done = raws.length;
   const hb = setInterval(() => console.log(`   💓 vivo: ${done}/${total} fichas (${elapsedMin()} min)`), 30000);
@@ -1082,9 +1177,12 @@ async function main() {
     for (const c of r.candidates) {
       const seasonFinal = mapSeason(c.season, offset);
       const k = `${seasonFinal}|${c.number}`;
-      if (!canon.epMap.has(k)) canon.epMap.set(k, { season: seasonFinal, number: c.number, urls: [] });
+      if (!canon.epMap.has(k)) canon.epMap.set(k, { season: seasonFinal, number: c.number, urls: [], servers: [] });
       const slot = canon.epMap.get(k);
       for (const u of c.urls) if (!slot.urls.includes(u)) slot.urls.push(u);
+      for (const s of (c.servers || [])) {
+        if (!slot.servers.some(x => x.url === s.url)) slot.servers.push(s);
+      }
     }
   }
 
@@ -1113,6 +1211,22 @@ async function main() {
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
       if (oldEp && (oldEp.servers || []).length > 0) { skippedExisting++; continue; }
+      if (slot.servers && slot.servers.length) {
+        /* servidores ya extraídos del flight data de la ficha: se guarda
+           directo, sin rastrear la página del episodio */
+        upsert(db.episodes, {
+          id: `${seasonId}-e${slot.number}`,
+          slug: `${seasonId}-e${slot.number}`,
+          title: `Capítulo ${slot.number}`,
+          sourceUrl: slot.urls[0] || null,
+          servers: slot.servers,
+          seriesId: S.id, seasonId, number: slot.number,
+          updatedAt: new Date().toISOString()
+        });
+        existingEp.set(epKey, { servers: slot.servers });
+        newEps++;
+        continue;
+      }
       if (oldEp) recrawlEmpty++;
       if ((failures[epKey] || 0) >= 2) { skippedFailed++; continue; }
       if (epQueue.length >= MAX_EPISODE_CRAWLS) continue;
@@ -1161,6 +1275,43 @@ async function main() {
             if (parsed2.title && !pageTitle) pageTitle = parsed2.title;
             console.log(`      📺 Ver Online → ${parsed.watchUrl}`);
           } catch (e2) { lastErr = e2.message; }
+        }
+        if (!parsed.servers.length) {
+          /* Último recurso: la web tiene /api/* (lo confirma robots.txt).
+             Se prueban rutas API típicas de Next.js para este episodio. */
+          const fullSlug = slugFromUrl(u);
+          const apiCandidates = [
+            `/api/capitulo/${fullSlug}`,
+            `/api/episodio/${fullSlug}`,
+            `/api/episode/${fullSlug}`,
+            `/api/player/${fullSlug}`,
+            `/api/servers/${fullSlug}`,
+            `/api/capitulo?slug=${encodeURIComponent(fullSlug)}`,
+            `/api/episode?slug=${encodeURIComponent(fullSlug)}`
+          ];
+          for (const ap of apiCandidates) {
+            try {
+              const apiUrl = absolute(ap, u);
+              const res = await withHostLimit(new URL(apiUrl).hostname, () =>
+                fetch(apiUrl, { signal: AbortSignal.timeout(15000),
+                                headers: { 'Accept': 'application/json' } }));
+              if (!res.ok) continue;
+              const body = await res.text();
+              const added = [];
+              try {
+                for (const u2 of collectUrlsFromJson(JSON.parse(body))) {
+                  if (isPlayableAbs(u2)) added.push({ name: hostOf(u2), url: u2, embed: true });
+                }
+              } catch {}
+              const parsedA = parseEpisode(body.replace(/\\\//g, '/'), apiUrl);
+              for (const s of parsedA.servers) added.push(s);
+              if (added.length) {
+                parsed = { ...parsed, servers: [...parsed.servers, ...added] };
+                console.log(`      ⚡ API ${ap} → +${added.length}`);
+                break;
+              }
+            } catch { /* siguiente candidato */ }
+          }
         }
         if (!parsed.servers.length && parsed.playerOpts && parsed.playerOpts.length) {
           for (const opt of parsed.playerOpts.slice(0, 6)) {
