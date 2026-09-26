@@ -43,11 +43,8 @@ STATE_FILE = DATA_DIR / "catalog-dramasyt-state.json"
 # ── Canales oficiales en español ─────────────────────────────────────
 # filter=True → solo playlists cuyo título indique subs/doblaje en español.
 CHANNELS = [
-    {"name": "WeTV Spanish",             "handle": "@WeTVSpanish",          "filter": True},
-    {"name": "iQIYI Spanish",            "handle": "@iQIYISpanish",         "filter": True},
-    {"name": "Huace Croton TV Español",  "handle": "@HuaceCrotonTVEspanol", "filter": True},
-    {"name": "YOUKU Spanish",            "handle": "@YOUKUSpanish",         "filter": True},
-    {"name": "MangoTV Spanish",          "handle": "@MangoTVSpanish",       "filter": True},
+    {"name": "iQIYI Spanish", "handle": "@iQIYISpanish", "filter": True},
+    {"name": "YOUKU Spanish", "handle": "@YOUKUSpanish", "filter": True},
 ]
 
 SPANISH_RX = re.compile(
@@ -216,6 +213,12 @@ def slugify(title: str) -> str:
 # Segmentos que NO aportan nombre de serie (separados por | en el título):
 # marcadores de episodio, idioma, calidad, canal, actores, etc.
 APP_PROMO_RX = re.compile(r"app\s*ahora|obt[eé]n|descarga", re.I)
+# "Serie EP11 Título del capítulo ..." -> cortar TODO desde el EP: lo que sigue
+# al número de episodio es el título del capítulo, no de la serie.
+EP_CUT_RX = re.compile(
+    r"(?:^|[\s|·\-])(?:ep|eps|cap|caps|episodio|episodios|cap[ií]tulo|cap[ií]tulos)"
+    r"\s*#?\.?\s*\d{1,4}(?:\s*[-–]\s*\d{1,4})?", re.I)
+GRATIS_RX = re.compile(r"\s+gratis\b.*$", re.I | re.S)
 
 SEG_EP_RX = re.compile(
     r"(?:(?:ep|eps|episodio|episodios|cap|caps|cap[ií]tulo|cap[ií]tulos|parte?)"
@@ -293,6 +296,13 @@ def clean_title(t: str) -> str:
         inner = re.sub(r"\s+", " ", inner).strip(" -|·•")
         return f" {inner} " if inner else " "
     t = re.sub(r"\[([^\]]{0,80})\]", _bracket, t)
+    # 0) Cortar en el primer marcador de episodio ("Serie EP11 Un amor..."
+    #    -> "Serie"). Sin esto, cada episodio queda como serie distinta.
+    m = EP_CUT_RX.search(t)
+    if m:
+        t = t[:m.start()]
+    t = GRATIS_RX.sub("", t)
+
     # 1) frases de marketing ANTES que los marcadores sueltos (evita que
     #    "sub\s*esp" se coma medio "Español" dejando "añol")
     t = MARKETING_RX.sub(" ", t)
@@ -427,12 +437,16 @@ def parse_ep_number(title: str):
 
 
 def load_state(fresh: bool) -> dict:
-    if not fresh and STATE_FILE.exists():
+    if STATE_FILE.exists():
         try:
-            st = json.loads(STATE_FILE.read_text(encoding="utf-8"))
-            if isinstance(st, dict) and "done" in st:
-                print(f"[state] retomando: {len(st['done'])} series ya hechas")
-                return st
+            old = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+            if isinstance(old, dict):
+                if not fresh and "done" in old:
+                    print(f"[state] retomando: {len(old['done'])} series ya hechas")
+                    return old
+                if fresh and old.get("tmdb_cache"):
+                    # --fresh rehace el catálogo pero conserva la caché TMDB
+                    return {"done": [], "entries": [], "tmdb_cache": old["tmdb_cache"]}
         except Exception:
             pass
     return {"done": [], "entries": []}
@@ -475,6 +489,49 @@ def build_detail(slug, title, poster, synopsis, source_url, eps, ch_name):
             for n, vid in eps
         ],
     }
+
+
+def upsert_series(slug, title, poster, synopsis, source_url, eps, ch_name):
+    """Crea la ficha de una serie o FUSIONA sus episodios con la existente
+    (uniendo por número y reordenando). Única vía de escritura: playlists
+    duplicadas del mismo canal ya no se sobrescriben entre sí.
+    Devuelve (entry | None, añadidos, total_episodios)."""
+    fp = DETAILS_DIR / f"{slug}.json"
+    now = datetime.now(timezone.utc).isoformat()
+
+    if fp.exists():
+        try:
+            d = json.loads(fp.read_text(encoding="utf-8"))
+        except Exception:
+            return None, 0, 0
+        existing = {ep["number"] for ep in d.get("episodes", [])}
+        season_id = (d.get("seasons") or [{}])[0].get("id", f"{slug}-s1")
+        added = 0
+        for n, vid in eps:
+            if n in existing:
+                continue
+            d["episodes"].append({
+                "id": f"{slug}-ep-{n}", "slug": f"{slug}-ep-{n}", "seriesId": slug,
+                "seasonId": season_id, "number": n, "title": f"Episodio {n}",
+                "servers": [{"name": "YouTube",
+                             "url": f"https://www.youtube.com/embed/{vid}"}],
+                "updatedAt": now})
+            added += 1
+        if added:
+            d["episodes"].sort(key=lambda x: x["number"])
+            fp.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+        return None, added, len(d.get("episodes", []))
+
+    if len(eps) < MIN_EPISODES:
+        return None, 0, 0
+
+    detail = build_detail(slug, title, poster, synopsis, source_url, eps, ch_name)
+    fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
+    entry = {"i": slug, "s": slug, "t": title, "p": poster,
+             "g_names": infer_genres(title, synopsis),
+             "st": "En Emisión", "ty": "drama", "y": None,
+             "e": len(eps), "pl": 1, "u": now}
+    return entry, len(eps), len(eps)
 
 
 def build_episode_pairs(entries):
@@ -542,9 +599,8 @@ def group_videos(videos):
 
 
 def merge_scan_group(group, ch, st):
-    """Enriquece con TMDB, aplica filtro de nicho y FUSIONA episodios con la
-    ficha existente (misma serie detectada por playlists) o crea una nueva.
-    Devuelve (entry | None, slug, episodios_añadidos)."""
+    """Enriquece con TMDB, aplica filtro de nicho y FUSIONA el grupo de videos
+    sueltos con la ficha existente (o crea una nueva)."""
     base, season, vids = group["base"], group["season"], group["vids"]
     title = base
     synopsis = ""
@@ -563,54 +619,26 @@ def merge_scan_group(group, ch, st):
         title = f"{title} Season {season}"
 
     if not is_niche(title, synopsis or base, tmdb_genres):
-        return None, slugify(title), 0
+        return None, slugify(title), 0, 0
 
     slug = slugify(title)
     eps = build_episode_pairs(vids)
-    fp = DETAILS_DIR / f"{slug}.json"
-    now = datetime.now(timezone.utc).isoformat()
 
-    if fp.exists():
-        # fusión: añadir solo los episodios que faltan (por número)
-        try:
-            d = json.loads(fp.read_text(encoding="utf-8"))
-        except Exception:
-            return None, slug, 0
-        existing = {ep["number"] for ep in d.get("episodes", [])}
-        season_id = (d.get("seasons") or [{}])[0].get("id", f"{slug}-s1")
-        added = 0
-        for n, vid in eps:
-            if n in existing:
-                continue
-            d["episodes"].append({
-                "id": f"{slug}-ep-{n}", "slug": f"{slug}-ep-{n}", "seriesId": slug,
-                "seasonId": season_id, "number": n, "title": f"Episodio {n}",
-                "servers": [{"name": "YouTube",
-                             "url": f"https://www.youtube.com/embed/{vid}"}],
-                "updatedAt": now})
-            added += 1
-        if added:
-            d["episodes"].sort(key=lambda x: x["number"])
-            fp.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
-        return None, slug, added
-
-    # serie nueva detectada por el sondeo
     if not poster and vids:
         poster_local = local_poster_from_yt(vids[0]["id"], slug)
         poster = poster_local or best_thumb(vids[0]["id"])
-    genres_kws = infer_genres(title, synopsis)
-    if tmdb_genres:
-        for g in ("Cultivo", "Artes Marciales"):
-            if g in genres_kws and g not in tmdb_genres:
-                tmdb_genres.append(g)
-        genres_kws = tmdb_genres
-    detail = build_detail(slug, title, poster, synopsis, "", eps, ch["name"])
-    fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
-    entry = {"i": slug, "s": slug, "t": title, "p": poster,
-             "g_names": genres_kws,
-             "st": "En Emisión", "ty": "drama", "y": year,
-             "e": len(eps), "pl": 1, "u": now}
-    return entry, slug, len(eps)
+
+    entry, added, total_eps = upsert_series(slug, title, poster, synopsis, "", eps, ch["name"])
+    if entry is not None:
+        genres_kws = infer_genres(title, synopsis)
+        if tmdb_genres:
+            for g in ("Cultivo", "Artes Marciales"):
+                if g in genres_kws and g not in tmdb_genres:
+                    tmdb_genres.append(g)
+            genres_kws = tmdb_genres
+        entry["g_names"] = genres_kws
+        entry["y"] = year
+    return entry, slug, added, total_eps
 
 
 def process_playlist(pl, ch, total, st):
@@ -705,20 +733,22 @@ def process_playlist(pl, ch, total, st):
         st["done"].append(pl_id)
         return None
 
-    detail = build_detail(slug, title, poster, synopsis, pl["url"], eps, ch["name"])
-    (DETAILS_DIR / f"{slug}.json").write_text(
-        json.dumps(detail, ensure_ascii=False), encoding="utf-8")
+    entry, added, total_eps = upsert_series(slug, title, poster, synopsis,
+                                            pl["url"], eps, ch["name"])
+    if entry is not None:
+        entry["g_names"] = genres_kws
+        entry["y"] = year
 
     with _progress_lock:
         _progress["hits"] += 1
         hits = _progress["hits"]
-    print(f"[{n_done}/{total}] {title} -> {len(eps)} episodios "
-          f"({ch['name']}) [{hits} series]", flush=True)
+    print(f"[{n_done}/{total}] {title} -> {total_eps} episodios "
+          f"(+{added}) ({ch['name']}) [{hits} series]", flush=True)
 
-    return {"i": slug, "s": slug, "t": title, "p": poster,
-            "g_names": genres_kws,
-            "st": "En Emisión", "ty": "drama", "y": year,
-            "e": len(eps), "pl": 1, "u": datetime.now(timezone.utc).isoformat()}
+    bs = globals().get("_BY_SLUG")
+    if entry is None and added and bs is not None and slug in bs:
+        bs[slug]["e"] = total_eps
+    return entry
 
 
 def organize_catalog(by_slug: dict) -> int:
@@ -833,6 +863,7 @@ def main() -> int:
     print(f"[start] {len(tasks)} playlists, workers={args.workers}", flush=True)
 
     by_slug: dict[str, dict] = {e["s"]: e for e in st["entries"]}
+    globals()["_BY_SLUG"] = by_slug
     flush = {"i": 0}
 
     def stash(entry, pl_id):
@@ -872,16 +903,14 @@ def main() -> int:
                 futs = {pool.submit(merge_scan_group, g, ch, st): g for g in groups}
                 for fut, g in futs.items():
                     try:
-                        entry, slug, added = fut.result()
+                        entry, slug, added, total_eps = fut.result()
                     except Exception as e:
                         print(f"  [warn] scan {g['base'][:40]}: {e}", flush=True)
                         continue
                     if entry:
-                        old_e = by_slug.get(entry["s"])
-                        if not old_e or old_e["e"] < entry["e"]:
-                            by_slug[entry["s"]] = entry
+                        by_slug[entry["s"]] = entry
                     elif added and slug in by_slug:
-                        by_slug[slug]["e"] += added
+                        by_slug[slug]["e"] = total_eps
         save_state(st)
 
     # Organización final: fusionar series duplicadas (playlist/sondeo/canales)
