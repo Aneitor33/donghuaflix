@@ -17,7 +17,6 @@ const SRC_LABEL = {
   donghuasub: 'DonghuaSub',
   donghuacli: 'DonghuaCLI',
   dramasyt: 'DramasYT',
-  tiodonghua: 'TioDonghua',
   peliculas: 'Películas',
   doramas: 'Doramas'
 };
@@ -163,9 +162,9 @@ async function probeCatalogs() {
     }
 
     try {
-      /* Parche Fase FINAL: probar el índice LIGERO (~80 KB) en vez del
-         JSON completo (15-30 MB). Así el selector de catálogos aparece
-         en segundos incluso en móvil. */
+      /* Sondeo por el ÍNDICE LIGERO (~80 KB) en vez del JSON completo
+         (15-30 MB): el selector de catálogos aparece en segundos,
+         también en móvil. */
       const r = await fetch(c.index || c.file, {
         cache: 'default'
       });
@@ -192,8 +191,8 @@ function renderCatBar() {
 
   if (!menu || !wrap) return;
 
-  /* Parche Fase FINAL: construir los botones desde CATALOGS para que
-     el menú siempre coincida con la lista real (incluido donghuacli). */
+  /* Los botones se construyen desde CATALOGS: el menú siempre coincide
+     con la lista real de catálogos. */
   CATALOGS.forEach(c => {
     if (!menu.querySelector('button[data-cat="' + c.id + '"]')) {
       const b = document.createElement('button');
@@ -1290,12 +1289,38 @@ function renderProgressiveGrid({
   );
 }
 
-/* ---------- PAGINACIÓN (20 por página) ---------- */
+/* ---------- PAGINACIÓN (20 por página, elipsis + salto directo) ---------- */
 const PER_PAGE = 20;
+
+/* Ventana de páginas con elipsis:
+   pág 1/30  → ‹ 1 2 3 4 5 … 30 ›
+   pág 50/100 → ‹ 1 … 48 49 50 51 52 … 100 › */
+function pagerWindow(page, pages) {
+  const set = new Set(
+    [0, pages - 1, page - 2, page - 1, page, page + 1, page + 2]
+      .filter(i => i >= 0 && i < pages)
+  );
+  const arr = [...set].sort((x, y) => x - y);
+  const out = [];
+  let prev = -1;
+  for (const i of arr) {
+    if (prev !== -1 && i - prev > 1) out.push(null);
+    out.push(i);
+    prev = i;
+  }
+  return out;
+}
 
 function renderPagedGrid({ container, items, emptyText = 'No hay elementos disponibles.', perPage = PER_PAGE }) {
   if (!container) return;
   stopProgressiveGrid();
+
+  /* El pager se recrea siempre: cambiar filtros reinicia a página 1. */
+  let pager = container.nextElementSibling;
+  if (pager && pager.classList.contains('pager')) pager.remove();
+  pager = document.createElement('nav');
+  pager.className = 'pager';
+  container.after(pager);
 
   if (!items.length) {
     container.innerHTML = `<p class="muted" style="grid-column:1/-1">${emptyText}</p>`;
@@ -1305,38 +1330,48 @@ function renderPagedGrid({ container, items, emptyText = 'No hay elementos dispo
   const pages = Math.ceil(items.length / perPage);
   let page = 0;
 
-  let pager = container.nextElementSibling;
-  if (!pager || !pager.classList.contains('pager')) {
-    pager = document.createElement('nav');
-    pager.className = 'pager';
-    container.after(pager);
-  }
-
   const draw = () => {
     container.innerHTML = items
       .slice(page * perPage, (page + 1) * perPage)
       .map(card)
       .join('');
 
-    const win = [];
-    const from = Math.max(0, Math.min(page - 2, pages - 5));
-    for (let i = from; i < Math.min(pages, from + 5); i++) win.push(i);
-
+    const win = pagerWindow(page, pages);
     pager.innerHTML = `
       <button class="pg-btn" data-go="${page - 1}" ${page === 0 ? 'disabled' : ''}>‹</button>
-      ${win.map(i => `<button class="pg-btn ${i === page ? 'on' : ''}" data-go="${i}">${i + 1}</button>`).join('')}
+      ${win.map(i => i === null
+        ? '<span class="pg-dots">…</span>'
+        : `<button class="pg-btn ${i === page ? 'on' : ''}" data-go="${i}">${i + 1}</button>`).join('')}
       <button class="pg-btn" data-go="${page + 1}" ${page >= pages - 1 ? 'disabled' : ''}>›</button>
-      <span class="pg-info">Página ${page + 1} de ${pages}</span>`;
+      <span class="pg-info">Página ${page + 1} de ${pages}</span>
+      ${pages > 5
+        ? `<span class="pg-jump">Ir a <input id="pgJump" type="number" min="1" max="${pages}" value="${page + 1}"> <button class="pg-btn" id="pgGo">Ir</button></span>`
+        : ''}`;
 
-    pager.querySelectorAll('.pg-btn').forEach(b => {
-      b.onclick = () => {
-        const go = Number(b.dataset.go);
+    pager.querySelectorAll('.pg-btn[data-go]').forEach(btn => {
+      btn.onclick = () => {
+        const go = Number(btn.dataset.go);
         if (isNaN(go) || go < 0 || go >= pages || go === page) return;
         page = go;
         draw();
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
     });
+
+    const goBtn = pager.querySelector('#pgGo');
+    if (goBtn) {
+      goBtn.onclick = () => {
+        const v = Number(pager.querySelector('#pgJump').value);
+        if (isNaN(v)) return;
+        const go = Math.min(pages - 1, Math.max(0, v - 1));
+        if (go === page) return;
+        page = go;
+        draw();
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      const inp = pager.querySelector('#pgJump');
+      if (inp) inp.onkeydown = e => { if (e.key === 'Enter') goBtn.click(); };
+    }
   };
 
   draw();
@@ -1935,23 +1970,6 @@ function home() {
           .includes('finaliz')
     );
 
-  const moviesList =
-    DB.series.filter(
-      s =>
-        (
-          s.type || ''
-        )
-          .toLowerCase() ===
-          'movie' ||
-        (
-          s.title || ''
-        )
-          .toLowerCase()
-          .includes(
-            'película'
-          )
-    );
-
   const top10 =
     bySize.slice(0, 10);
 
@@ -2014,56 +2032,7 @@ function home() {
     </section>`);
   }
 
-  /* En Cine */
-  if (
-    currentCatalog ===
-      'series' ||
-    currentCatalog ===
-      'peliculas'
-  ) {
-    const cineMovies =
-      DB.series.filter(
-        s =>
-          contentTypeOf(s) ===
-          'movie'
-      );
-
-    const cineSeries =
-      DB.series.filter(
-        s =>
-          contentTypeOf(s) ===
-          'series'
-      );
-
-    if (cineMovies.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>🎬 Películas</h2>
-          <span class="muted">${cineMovies.length}</span>
-        </div>
-
-        ${rail(cineMovies)}
-      </section>`);
-    }
-
-    if (cineSeries.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>📺 Series</h2>
-          <span class="muted">${cineSeries.length}</span>
-        </div>
-
-        ${rail(cineSeries)}
-      </section>`);
-    }
-  }
-
-  if (
-    airingList.length ||
-    top10.length
-  ) {
+  if (top10.length) {
     sections.push(`
     <section class="section">
       <div class="section-head">
@@ -2072,30 +2041,6 @@ function home() {
       </div>
 
       ${top10Rail(top10)}
-    </section>`);
-
-    if (airingList.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>En Emisión</h2>
-          <span class="muted">${airingList.length}</span>
-        </div>
-
-        ${rail(airingList)}
-      </section>`);
-    }
-  }
-
-  if (completedList.length) {
-    sections.push(`
-    <section class="section">
-      <div class="section-head">
-        <h2>Finalizadas</h2>
-        <span class="muted">${completedList.length}</span>
-      </div>
-
-      ${rail(completedList)}
     </section>`);
   }
 
@@ -2154,141 +2099,50 @@ function home() {
     }
   }
 
-  /* ── Para maratonear: los títulos más largos ── */
-  {
-    const marathon =
-      DB.series
-        .slice()
-        .sort(
-          (a, b) =>
-            seriesEpisodeCount(
-              b
-            ) -
-            seriesEpisodeCount(
-              a
-            )
-        )
-        .filter(
-          s =>
-            seriesEpisodeCount(
-              s
-            ) >= 50
-        )
-        .slice(0, 12);
-    if (marathon.length) {
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>🏃 Para maratonear</h2>
-          <span class="muted">${marathon.length}</span>
-        </div>
-        ${rail(marathon)}
-      </section>`);
-    }
-  }
-
-  /* ── Raíles por género: los 3 géneros con más títulos ── */
-  {
-    const genreCount =
-      new Map();
-    for (const s of DB.series) {
-      for (const g of seriesGenres(
-        s
-      )) {
-        const k =
-          fold(g);
-        genreCount.set(
-          k,
-          (genreCount.get(
-            k
-          ) || 0) + 1
-        );
-      }
-    }
-    const topGenres =
-      [
-        ...genreCount.entries()
-      ]
-        .sort(
-          (a, b) =>
-            b[1] - a[1]
-        )
-        .slice(0, 3);
-    let lastGenreSig = '';
-    for (const [
-      gKey
-    ] of topGenres) {
-      const inGenre =
-        DB.series
-          .filter(
-            s =>
-              seriesGenres(
-                s
-              ).some(
-                g =>
-                  fold(
-                    g
-                  ) ===
-                  gKey
-              )
-          )
-          .slice(0, 14);
-      if (
-        inGenre.length < 4
-      ) {
-        continue;
-      }
-      /* Parche Fase FINAL (B1): si este carrusel repite exactamente el
-         anterior (datos con todos los géneros por título), no se pinta. */
-      const sig = inGenre
-        .slice(0, 6)
-        .map(s => String(s.id))
-        .join('|');
-      if (sig === lastGenreSig) {
-        continue;
-      }
-      lastGenreSig = sig;
-      const gName =
-        seriesGenres(
-          inGenre[0]
-        ).find(
-          g =>
-            fold(g) ===
-            gKey
-        ) || gKey;
-      sections.push(`
-      <section class="section">
-        <div class="section-head">
-          <h2>${esc(gName)}</h2>
-          <span class="muted">${inGenre.length}</span>
-        </div>
-        ${rail(inGenre)}
-      </section>`);
-    }
-  }
-
-  /*
-   * Importante:
-   * Esta sección puede contener miles de películas.
-   *
-   * En lugar de meter las 11.000 tarjetas en el DOM,
-   * mostramos únicamente una muestra inicial.
-   *
-   * El catálogo completo sigue estando disponible
-   * mediante "Ver catálogo completo".
-   */
-  if (moviesList.length) {
+  if (airingList.length) {
     sections.push(`
     <section class="section">
       <div class="section-head">
-        <h2>Películas y Especiales</h2>
-        <span class="muted">${moviesList.length}</span>
+        <h2>En Emisión</h2>
+        <span class="muted">${airingList.length}</span>
       </div>
 
-      ${rail(
-        moviesList.slice(0, 20)
-      )}
+      ${rail(airingList)}
     </section>`);
+  }
+
+  /* ── Recomendados para ti (semilla: último visto o favorito) ── */
+  {
+    const seed =
+      historyList[0] ||
+      favList[0];
+    const recos = seed
+      ? getRecommendedSeries(
+          seed,
+          12
+        )
+      : [];
+    const recoItems =
+      recos.length
+        ? recos
+        : recent
+            .filter(
+              s =>
+                !historyData[
+                  s.id
+                ]
+            )
+            .slice(0, 12);
+    if (recoItems.length) {
+      sections.push(`
+      <section class="section">
+        <div class="section-head">
+          <h2>Recomendados para ti</h2>
+          <span class="muted">${recoItems.length}</span>
+        </div>
+        ${rail(recoItems)}
+      </section>`);
+    }
   }
 
   sections.push(`
@@ -3246,7 +3100,7 @@ async function updateSearchResults(
   });
 }
 
-/* Búsqueda conjunta: los catálogos principales a la vez
+/* Búsqueda conjunta: los 3 catálogos de donghua a la vez
    (más el catálogo activo si es otro). Cada resultado lleva
    _cat = su catálogo de origen. */
 async function getSearchPool() {
@@ -3937,11 +3791,6 @@ function renderEpisodePage(
                 w
                   ? 'on'
                   : ''
-              }"
-              style="${
-                w
-                  ? ''
-                  : 'opacity:.38'
               }"
               title="${
                 w
