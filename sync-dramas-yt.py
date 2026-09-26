@@ -619,6 +619,33 @@ def main() -> int:
     DETAILS_DIR.mkdir(parents=True, exist_ok=True)
     st = load_state(args.fresh)
 
+    # Precargar en el índice TODAS las fichas ya existentes en disco. Así lo que
+    # este run se salte (YA EXISTE) sigue en el catálogo y la limpieza de --fresh
+    # no lo borra. El índice = unión de (fichas en disco) + (lo procesado hoy).
+    pre = 0
+    for fpx in sorted(DETAILS_DIR.glob("*.json")):
+        try:
+            d = json.loads(fpx.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        s = d.get("series") or {}
+        slug = s.get("slug") or fpx.stem
+        if any(x["s"] == slug for x in st["entries"]):
+            continue
+        typ = s.get("type") or "drama"
+        st["entries"].append({
+            "i": slug, "s": slug,
+            "t": s.get("title") or slug,
+            "p": s.get("image") or None,
+            "st": s.get("status") or ("Finalizada" if typ == "movie" else "En Emisión"),
+            "ty": typ, "y": s.get("year"),
+            "e": len(d.get("episodes") or []), "pl": 1,
+            "u": s.get("updatedAt") or datetime.now(timezone.utc).isoformat(),
+        })
+        pre += 1
+    if pre:
+        print(f"[state] {pre} fichas existentes precargadas en el índice", flush=True)
+
     playlists = list_channel_series()
     if not playlists:
         print("[error] no se pudo listar el apartado Series del canal")
