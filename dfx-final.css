@@ -407,3 +407,8 @@ body{
 .ep-actions .abtn{font-size:12px;padding:6px 13px;border-radius:99px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#cfcfda;cursor:pointer;text-decoration:none;font-family:inherit}
 .ep-actions .abtn:hover{border-color:#fff;color:#fff}
 .ep-actions .abtn[disabled]{opacity:.4;pointer-events:none}
+
+/* === La navbar NO se traga el contenido ===
+   --navh la mide dfx-core.js con la altura real de la barra. */
+.page-top{padding-top:calc(var(--navh, 60px) + 16px) !important}
+.detail-v2{padding-top:calc(var(--navh, 60px) + 12px) !important}
