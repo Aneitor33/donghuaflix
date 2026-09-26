@@ -77,6 +77,20 @@ MARKETING_RX = re.compile(
 EMOJI_RX = re.compile(
     "[\U0001F000-\U0001FAFF\U00002700-\U000027BF\U000024C2-\U0001F251"
     "\u200d\ufe0f\u2190-\u21FF\u2B00-\u2BFF\uFE00-\uFE0F]+")
+# Filtro de nicho: SOLO wuxia/xianxia/cultivo/marcial/fantasía (nada de
+# románticas modernas/urbanas). Se acepta si hay señales de nicho por
+# palabras clave del título/sinopsis o por géneros TMDB de nicho.
+NICHE_TMDB = {"Acción y Aventura", "Ciencia ficción y fantasía", "Guerra y Política"}
+NICHE_RX = re.compile(
+    r"cultivo|cultivador|inmortal|secta|xianxia|wuxia|jianghu|pugilista|"
+    r"artes marciales|marcial|kung fu|shaolin|wushu|espada|sable|espadach[ií]n|"
+    r"demonio|diablo|fantasma|esp[ií]ritu|monstruo|dios|diosa|deidad|celestial|"
+    r"divin|magia|hechic|bruj|emperador|emperatriz|dinast[ií]a|palacio|realeza|"
+    r"rey|reina|pr[ií]ncipe|princesa|consorte|concubina|imperial|general|"
+    r"guerrer|asesin|venganza|templo|monje|tao[ií]smo|bud[io]smo", re.I)
+
+SCAN_MIN_DUR = 900    # el sondeo de vídeos sueltos exige >15 min
+
 MIN_DUR = 600         # segundos (10 min): por debajo = promo/clip/avance
 MIN_EPISODES = 5    # mínimo de episodios para considerar una playlist una serie
 CLIPS_PL_RATIO = 0.6  # si >60% de los videos con duración son cortos = playlist de clips
@@ -172,6 +186,13 @@ def infer_genres(title: str, synopsis: str = "") -> list:
     return out[:4]
 
 
+def is_niche(title: str, synopsis: str = "", tmdb_genres=None) -> bool:
+    """¿Pertenece al nicho wuxia/xianxia/cultivo/fantasía?"""
+    if set(tmdb_genres or []) & NICHE_TMDB:
+        return True
+    return bool(NICHE_RX.search(f"{title} {synopsis or ''}"))
+
+
 def slugify(title: str) -> str:
     s = title.lower().strip()
     s = re.sub(r"[^a-z0-9áéíóúñü]+", "-", s)
@@ -259,6 +280,50 @@ def clean_synopsis(desc: str) -> str:
     return " ".join(out)[:600].strip()
 
 
+POSTERS_DIR = ROOT / "public" / "img" / "posters-dramasyt"
+
+
+def crop_2_3_box(w: int, h: int):
+    """Caja de recorte centrada con proporción 2:3 (vertical, estilo póster)."""
+    target = 2 / 3
+    if w / h > target:          # demasiado ancha -> recortar lados
+        nw = int(h * target)
+        x = (w - nw) // 2
+        return (x, 0, x + nw, h)
+    nh = int(w / target)        # demasiado alta -> recortar arriba/abajo
+    y = (h - nh) // 2
+    return (0, y, w, y + nh)
+
+
+def local_poster_from_yt(video_id: str, slug: str) -> str | None:
+    """Descarga la mejor miniatura de YouTube y la recorta a vertical 2:3,
+    guardada en ./public/img/posters-dramasyt/. None si falla."""
+    try:
+        from PIL import Image
+        import io
+        data = None
+        for name in ("maxresdefault", "sddefault", "hqdefault"):
+            u = f"https://i.ytimg.com/vi/{video_id}/{name}.jpg"
+            try:
+                req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=15) as r:
+                    if r.status == 200:
+                        data = r.read()
+                        break
+            except Exception:
+                continue
+        if not data:
+            return None
+        img = Image.open(io.BytesIO(data)).convert("RGB")
+        img = img.crop(crop_2_3_box(*img.size))
+        POSTERS_DIR.mkdir(parents=True, exist_ok=True)
+        fp = POSTERS_DIR / f"{slug}.jpg"
+        img.save(fp, "JPEG", quality=85)
+        return f"./public/img/posters-dramasyt/{slug}.jpg"
+    except Exception:
+        return None
+
+
 def best_thumb(video_id: str) -> str:
     """La mejor miniatura disponible del video (maxres → sd → hq)."""
     for name in ("maxresdefault", "sddefault", "hqdefault"):
@@ -340,6 +405,130 @@ def build_episode_pairs(entries):
     return [(i + 1, vid) for i, (_n, vid) in enumerate(parsed)]
 
 
+SEASON_RX = re.compile(r"(?:season|temporada)\s*(\d{1,2})", re.I)
+
+
+def series_base_from_video(title: str):
+    """Nombre de serie + temporada extraídos del título de un video suelto."""
+    season = 0
+    m = SEASON_RX.search(title or "")
+    if m:
+        season = int(m.group(1))
+    base = clean_title(title)
+    base = re.sub(r"\s+(?:season|temporada)\s*\d{1,2}.*$", "", base, flags=re.I)
+    return base.strip(" -|·•"), season
+
+
+def norm_base(t: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", (t or "").lower())
+
+
+def scan_channel_videos(ch):
+    """Tab 'Vídeos' del canal: videos >15 min, español, no promo. (flat, pagina todo)"""
+    data = run_ytdlp(f"https://www.youtube.com/{ch['handle']}/videos")
+    if not data:
+        return []
+    out = []
+    for e in (data.get("entries") or []):
+        if not e or not e.get("id"):
+            continue
+        title = e.get("title") or ""
+        d = e.get("duration") or 0
+        if d and d < SCAN_MIN_DUR:
+            continue
+        if DROP_VIDEO_RX.search(title) or PROMO_PL_RX.search(title):
+            continue
+        if ch["filter"] and not SPANISH_RX.search(title):
+            continue
+        out.append({"id": e["id"], "title": title, "duration": d})
+    return out
+
+
+def group_videos(videos):
+    """Agrupa videos sueltos por (nombre base, temporada)."""
+    groups = {}
+    for v in videos:
+        base, season = series_base_from_video(v["title"])
+        if not base or len(base) < 3:
+            continue
+        key = (norm_base(base), season)
+        g = groups.setdefault(key, {"base": base, "season": season, "vids": []})
+        g["vids"].append(v)
+    return list(groups.values())
+
+
+def merge_scan_group(group, ch, st):
+    """Enriquece con TMDB, aplica filtro de nicho y FUSIONA episodios con la
+    ficha existente (misma serie detectada por playlists) o crea una nueva.
+    Devuelve (entry | None, slug, episodios_añadidos)."""
+    base, season, vids = group["base"], group["season"], group["vids"]
+    title = base
+    synopsis = ""
+    poster = None
+    year = None
+    tmdb_genres = None
+    tmdb_data = tmdb_enrich(base, st.setdefault("tmdb_cache", {})) if _tmdb_key else None
+    if tmdb_data:
+        tmdb_genres = list(tmdb_data.get("genres") or [])
+        if tmdb_data.get("title"):
+            title = tmdb_data["title"]
+        synopsis = (tmdb_data.get("overview") or "")[:600]
+        poster = tmdb_data.get("poster")
+        year = tmdb_data.get("year")
+    if season and season >= 2 and not re.search(r"(?:season|temporada)\s*\d", title, re.I):
+        title = f"{title} Season {season}"
+
+    if not is_niche(title, synopsis or base, tmdb_genres):
+        return None, slugify(title), 0
+
+    slug = slugify(title)
+    eps = build_episode_pairs(vids)
+    fp = DETAILS_DIR / f"{slug}.json"
+    now = datetime.now(timezone.utc).isoformat()
+
+    if fp.exists():
+        # fusión: añadir solo los episodios que faltan (por número)
+        try:
+            d = json.loads(fp.read_text(encoding="utf-8"))
+        except Exception:
+            return None, slug, 0
+        existing = {ep["number"] for ep in d.get("episodes", [])}
+        season_id = (d.get("seasons") or [{}])[0].get("id", f"{slug}-s1")
+        added = 0
+        for n, vid in eps:
+            if n in existing:
+                continue
+            d["episodes"].append({
+                "id": f"{slug}-ep-{n}", "slug": f"{slug}-ep-{n}", "seriesId": slug,
+                "seasonId": season_id, "number": n, "title": f"Episodio {n}",
+                "servers": [{"name": "YouTube",
+                             "url": f"https://www.youtube.com/embed/{vid}"}],
+                "updatedAt": now})
+            added += 1
+        if added:
+            d["episodes"].sort(key=lambda x: x["number"])
+            fp.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+        return None, slug, added
+
+    # serie nueva detectada por el sondeo
+    if not poster and vids:
+        poster_local = local_poster_from_yt(vids[0]["id"], slug)
+        poster = poster_local or best_thumb(vids[0]["id"])
+    genres_kws = infer_genres(title, synopsis)
+    if tmdb_genres:
+        for g in ("Cultivo", "Artes Marciales"):
+            if g in genres_kws and g not in tmdb_genres:
+                tmdb_genres.append(g)
+        genres_kws = tmdb_genres
+    detail = build_detail(slug, title, poster, synopsis, "", eps, ch["name"])
+    fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
+    entry = {"i": slug, "s": slug, "t": title, "p": poster,
+             "g_names": genres_kws,
+             "st": "En Emisión", "ty": "drama", "y": year,
+             "e": len(eps), "pl": 1, "u": now}
+    return entry, slug, len(eps)
+
+
 def process_playlist(pl, ch, total, st):
     pl_id = pl["id"]
     if pl_id in st["done"]:
@@ -389,17 +578,20 @@ def process_playlist(pl, ch, total, st):
 
     first_id = entries[0]["id"]
     synopsis = clean_synopsis(run_ytdlp_video_desc(first_id))
-    poster = best_thumb(first_id)
+    poster = None                      # se decide en la cadena TMDB -> recorte local -> hotlink
+    tmdb_genres = None
     slug = slugify(title)
     year = None
     genres_kws = infer_genres(title, synopsis)
 
     # Enriquecimiento TMDB: géneros oficiales (es-ES) + sinopsis/poster/año verificados.
     # Cultivo/Artes Marciales por keywords siempre se añaden (TMDB no tiene esos géneros).
+    poster_local = None
     if _tmdb_key:
         tmdb_data = tmdb_enrich(title, st.setdefault("tmdb_cache", {}))
         if tmdb_data:
             official = list(tmdb_data.get("genres") or [])
+            tmdb_genres = official
             for g in ("Cultivo", "Artes Marciales"):
                 if g in genres_kws and g not in official:
                     official.append(g)
@@ -407,13 +599,27 @@ def process_playlist(pl, ch, total, st):
             if len(tmdb_data.get("overview") or "") > len(synopsis or ""):
                 synopsis = tmdb_data["overview"][:600]
             if tmdb_data.get("poster"):
-                poster = tmdb_data["poster"]
+                poster = tmdb_data["poster"]     # vertical 2:3 oficial de TMDB
             year = tmdb_data.get("year")
             # El título CANÓNICO es el de TMDB (español, limpio); el de YouTube
             # solo es un fallback. Esto arregla de raíz los títulos sucios.
             if tmdb_data.get("title"):
                 title = tmdb_data["title"]
                 slug = slugify(title)
+
+    # Sin póster de TMDB: recortar la miniatura de YouTube a vertical 2:3
+    # y guardarla local (si falla, último recurso = hotlink horizontal).
+    if not poster:
+        poster_local = local_poster_from_yt(first_id, slug)
+        if poster_local:
+            poster = poster_local
+        else:
+            poster = best_thumb(first_id)
+
+    # FILTRO DE NICHO: fuera románticas/modernas/urbanas
+    if not is_niche(title, synopsis, tmdb_genres):
+        st["done"].append(pl_id)
+        return None
 
     detail = build_detail(slug, title, poster, synopsis, pl["url"], eps, ch["name"])
     (DETAILS_DIR / f"{slug}.json").write_text(
@@ -465,6 +671,8 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--max-series", type=int, default=0)
     ap.add_argument("--fresh", action="store_true")
+    ap.add_argument("--skip-scan", action="store_true",
+                    help="No sondear los videos sueltos de los canales (solo playlists)")
     ap.add_argument("--tmdb-key", default=os.environ.get("TMDB_API_KEY", ""),
                     help="API key de TMDB (o env TMDB_API_KEY). Activa géneros oficiales "
                          "en español + sinopsis/poster/año verificados.")
@@ -516,6 +724,30 @@ def main() -> int:
             if r == "SKIP":
                 continue
             stash(r if r else None, pl["id"])
+
+    # ── SONDE: vídeos sueltos del canal (>15 min) agrupados por serie ──
+    # Captura series que los canales NO organizan en playlists.
+    if not args.skip_scan:
+        for ch in CHANNELS:
+            vids = scan_channel_videos(ch)
+            groups = group_videos(vids)
+            print(f"[scan] {ch['name']}: {len(vids)} vídeos >15min -> "
+                  f"{len(groups)} grupos", flush=True)
+            with ThreadPoolExecutor(max_workers=args.workers) as pool:
+                futs = {pool.submit(merge_scan_group, g, ch, st): g for g in groups}
+                for fut, g in futs.items():
+                    try:
+                        entry, slug, added = fut.result()
+                    except Exception as e:
+                        print(f"  [warn] scan {g['base'][:40]}: {e}", flush=True)
+                        continue
+                    if entry:
+                        old_e = by_slug.get(entry["s"])
+                        if not old_e or old_e["e"] < entry["e"]:
+                            by_slug[entry["s"]] = entry
+                    elif added and slug in by_slug:
+                        by_slug[slug]["e"] += added
+        save_state(st)
 
     save_state(st)
     write_outputs(list(by_slug.values()), t0)
