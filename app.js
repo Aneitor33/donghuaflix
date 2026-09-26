@@ -109,7 +109,7 @@ async function ensureCatalog(id) {
               id: r.i,
               slug: r.s,
               title: r.t,
-              image: r.p ? (r.p.startsWith('http') || r.p.startsWith('./') || r.p.startsWith('/') ? r.p : ib + r.p) : null,
+              image: r.p ? (r.p.startsWith('http') || r.p.startsWith('./') || r.p.startsWith('/') ? r.p : (ib.endsWith('/') ? ib : ib + '/') + r.p) : null,
               status: r.st || null,
               type: r.ty || null,
               year: r.y || null,
@@ -914,29 +914,6 @@ function lastWatchedEpisode(s) {
 
 let currentEpisode = null;
 
-/* Zoom del reproductor: escala el iframe dentro de un contenedor que recorta
-   el sobrante (mata bandas negras de videos verticales o con formato raro).
-   Persistente entre episodios/sesiones. */
-let playerZoom = Number(localStorage.getItem('donghuaflix_zoom') || 1);
-
-function applyPlayerZoom() {
-  const box = document.getElementById('player');
-  const frame = box ? box.querySelector('iframe') : null;
-  const label = document.getElementById('zoomLabel');
-  if (label) {
-    label.textContent = Math.round(playerZoom * 100) + '%';
-  }
-  if (!frame) return;
-  if (playerZoom !== 1) {
-    box.style.overflow = 'hidden';
-    frame.style.transformOrigin = 'center center';
-    frame.style.transform = 'scale(' + playerZoom + ')';
-  } else {
-    box.style.overflow = '';
-    frame.style.transform = '';
-  }
-}
-
 let autoNextEnabled =
   localStorage.getItem(
     'donghuaflix_autonext'
@@ -1730,14 +1707,14 @@ function renderHero(dir = 0) {
         '#/episode/' +
         qs(
           ep.slug ||
-          ep.id
+            ep.id
         );
     } else {
       location.hash =
         '#/series/' +
         qs(
           hero.slug ||
-          hero.id
+            hero.id
         );
     }
   };
@@ -1986,6 +1963,16 @@ function home() {
         )
           .toLowerCase()
           .includes('emisión')
+    );
+
+  const completedList =
+    DB.series.filter(
+      s =>
+        (
+          s.status || ''
+        )
+          .toLowerCase()
+          .includes('finaliz')
     );
 
   const top10 =
@@ -4440,23 +4427,8 @@ function episode(slug) {
 
   </section>`;
 
-  function setPlayerZoom(z) {
-    playerZoom = Math.min(3, Math.max(1, Math.round(z * 100) / 100));
-    localStorage.setItem('donghuaflix_zoom', String(playerZoom));
-    applyPlayerZoom();
-  }
-
-  const bindZoom = (id, fn) => {
-    const b = document.getElementById(id);
-    if (b) b.onclick = fn;
-  };
-  bindZoom('zoomOutBtn', () => setPlayerZoom(playerZoom - 0.25));
-  bindZoom('zoomInBtn', () => setPlayerZoom(playerZoom + 0.25));
-  bindZoom('zoomResetBtn', () => setPlayerZoom(1));
-
   render();
   renderServers();
-  applyPlayerZoom();
 }
 
 function notfound() {
