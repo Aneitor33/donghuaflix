@@ -489,19 +489,25 @@ function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
 const apiEndpointsFound = new Set();
 async function discoverApiEndpoints(html, base) {
   if (apiEndpointsFound.size) return [...apiEndpointsFound];
-  const chunks = [...new Set([...(html.matchAll(/\"\/_next\/static\/chunks\/[A-Za-z0-9._-]+\.js\"/g))]
-    .map(m => m[0].replace(/\"/g, '').replace(/\//g, '/')).slice(0, 3))];
+  const chunks = [...new Set(
+    html.split(/[^A-Za-z0-9._/-]+/)
+        .map(t => t.replace(/^\//, ''))
+        .filter(t => /^_next\/static\/chunks\/[A-Za-z0-9._-]+\.js$/.test(t))
+  )].slice(0, 3);
+  console.log(`   🔎 JS: ${chunks.length} chunks referenciados`);
   for (const ch of chunks) {
     try {
       const r = await fetchRaw(absolute(ch, base));
-      for (const m of r.text.matchAll(/["'`](\/api\/[A-Za-z0-9_/?=&{}$.-]{3,80})["'`]/g)) {
-        apiEndpointsFound.add(m[1]);
+      console.log(`   🔎 JS ${ch.split('/').pop()}: HTTP ${r.status} · ${r.text.length} bytes`);
+      for (const m of r.text.matchAll(/(\/api\/[A-Za-z0-9_/?=&{}$.-]{3,80})/g)) {
+        const ep = m[1];
+        if (!ep.endsWith('/') && !/[=?&]$/.test(ep)) apiEndpointsFound.add(ep);
       }
-    } catch { /* chunk ilegible: se ignora */ }
+    } catch (e) {
+      console.log(`   ⚠️  Chunk ilegible (${e.message}): ${ch}`);
+    }
   }
-  if (apiEndpointsFound.size) {
-    console.log(`   🧭 Endpoints API descubiertos: ${[...apiEndpointsFound].join(' | ')}`);
-  }
+  console.log(`   🧭 Endpoints API: ${apiEndpointsFound.size ? [...apiEndpointsFound].join(' | ') : 'ninguno hallado'}`);
   return [...apiEndpointsFound];
 }
 
@@ -712,17 +718,27 @@ async function discoverSitemap() {
     return null;
   }
 
-  const locsOf = x => [...x.matchAll(/<loc>\s*([^<]+?)\s*\/loc>/g)].map(m => m[1].trim());
+  /* URLs absolutas directamente del documento: cubre <loc> estándar y
+     variantes con CDATA (<loc><![CDATA[https://…]]></loc>). */
+  const locsOf = x => [...new Set([...x.matchAll(/https?:\/\/[\w.-]+[^\s<"'\\)\]]*/g)]
+    .map(m => m[0].trim()))];
   let urls = locsOf(xml);
-  const submaps = urls.filter(u => /\.xml(\?|$)/.test(u));
+  const submaps = urls.filter(u => /\.xml(\?|#|$)/.test(u));
   if (submaps.length) {
-    urls = [];
+    console.log(`   🗺️  Sitemap índice: ${submaps.length} sub-sitemaps`);
+    urls = urls.filter(u => !submaps.includes(u));
     for (const sm of submaps.slice(0, 60)) {
       if (timeUp()) break;
       try {
-        const sx = await fetchHtml(sm, FETCH_RETRIES + 1);
-        urls.push(...locsOf(sx));
-      } catch { /* sub-sitemap caído: se ignora */ }
+        const r = await fetchRaw(sm);
+        if (r.status === 200) {
+          urls.push(...locsOf(r.text));
+        } else {
+          console.log(`   ⚠️  Sub-sitemap HTTP ${r.status}: ${sm}`);
+        }
+      } catch (e) {
+        console.log(`   ⚠️  Sub-sitemap falló (${e.message}): ${sm}`);
+      }
       await sleep(150);
     }
   }
