@@ -282,13 +282,16 @@ def tmdb_enrich(title: str, cache: dict):
         nt = norm_title(title)
         best, best_ratio = None, 0.0
         for r in res["results"][:5]:
+            oc = r.get("origin_country") or []
+            if oc and "CN" not in oc:
+                continue          # no es un drama chino -> match falso (p.ej. "My Girl" USA)
             for cand in (r.get("name"), r.get("original_name")):
                 if not cand:
                     continue
                 ratio = difflib.SequenceMatcher(None, nt, norm_title(cand)).ratio()
                 if ratio > best_ratio:
                     best_ratio, best = ratio, r
-        if best and best_ratio >= 0.45:
+        if best and best_ratio >= 0.5:
             det = tmdb_get(f"/tv/{best['id']}", language="es-ES")
             if det:
                 out = {
@@ -311,8 +314,8 @@ def load_state(fresh: bool) -> dict:
                 if not fresh and "done" in old:
                     print(f"[state] retomando: {len(old['done'])} playlists ya hechas")
                     return old
-                if fresh and old.get("tmdb_cache"):
-                    return {"done": [], "entries": [], "tmdb_cache": old["tmdb_cache"]}
+                # --fresh vacía también la caché de TMDB: los matches se recalculan
+                # con las reglas nuevas (evita falsos positivos cacheados de runs viejos).
         except Exception:
             pass
     return {"done": [], "entries": []}
@@ -437,7 +440,6 @@ def process_movie_playlist(data, pl, total, st):
         fp.write_text(json.dumps(detail, ensure_ascii=False), encoding="utf-8")
         st["entries"] = list({**{x["s"]: x for x in st["entries"]},
                               slug: {"i": slug, "s": slug, "t": title, "p": poster,
-                                     "g_names": infer_genres(title, synopsis),
                                      "st": "Finalizada", "ty": "movie", "y": None,
                                      "e": 1, "pl": 1,
                                      "u": datetime.now(timezone.utc).isoformat()}}.values())
@@ -546,7 +548,6 @@ def process_playlist(pl, total, st, solo_nicho):
     print(f"[{n_done}/{total}] {title} -> {len(eps)} episodios [{hits} series]", flush=True)
 
     return {"i": slug, "s": slug, "t": title, "p": poster,
-            "g_names": infer_genres(title, synopsis),
             "st": "En Emisión", "ty": "drama", "y": year,
             "e": len(eps), "pl": 1, "u": datetime.now(timezone.utc).isoformat()}
 
@@ -625,14 +626,15 @@ def main() -> int:
     if args.max_series and args.max_series > 0:
         playlists = playlists[:args.max_series]
 
-    existing_slugs = {e["s"] for e in st["entries"]}
-    by_slug = {e["s"]: e for e in st["entries"]}
     total = len(playlists)
 
     def stash(entry, pl_id):
         if entry:
-            by_slug[entry["s"]] = entry
-            st["entries"] = list(by_slug.values())
+            # FUSIONAR con lo existente (series y películas conviven en st["entries"]);
+            # nunca sobreescribir: eso borraba las películas añadidas por su procesador.
+            existing = {x["s"]: x for x in st["entries"]}
+            existing[entry["s"]] = entry
+            st["entries"] = list(existing.values())
         if pl_id:
             st["done"].append(pl_id)
         save_state(st)
