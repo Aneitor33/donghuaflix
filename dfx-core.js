@@ -44,7 +44,6 @@
   DFX.current = load('dfx_current', null);
   DFX.badge = load('dfx_badge', {});
   DFX.waitlist = load('dfx_waitlist', {});
-  DFX.marathon = load('dfx_marathon', { key: null, count: 0, best: load('dfx_marathon_best', 0) });
   DFX.seen = load('dfx_seen_eps', {});
   DFX.settings = Object.assign({ textSize: 'm', autoplay: true, reduceMotion: false, imgQ: 'hd', sleepTimer: 0 }, load('dfx_settings', {}));
   DFX.account = load('dfx_account', null); // { uid, email, name, public: bool, bio: '' }
@@ -177,8 +176,6 @@
 
   /* ---------- splash ---------- */
   function splash() {
-    /* Parche Fase FINAL: el splash solo se muestra la primera vez por sesión,
-       no en cada cambio de catálogo o recarga. */
     try {
       if (sessionStorage.getItem('dfx_splash')) return;
       sessionStorage.setItem('dfx_splash', '1');
@@ -242,9 +239,6 @@
     { id: 'fan25', name: 'Fan · 250 caps', icon: '🔥', test: s => s.total >= 250 },
     { id: 'fan50', name: 'Fan · 500 caps', icon: '💎', test: s => s.total >= 500 },
     { id: 'fan100', name: 'Leyenda · 1000 caps', icon: '👑', test: s => s.total >= 1000 },
-    { id: 'marathon5', name: 'Maratón ×5', icon: '🏃', test: s => s.best >= 5 },
-    { id: 'marathon10', name: 'Maratón ×10', icon: '🏆', test: s => s.best >= 10 },
-    { id: 'marathon25', name: 'Maratón ×25', icon: '🚀', test: s => s.best >= 25 },
     { id: 'genres5', name: 'Explorador', icon: '🧭', test: s => s.genres >= 5 },
     { id: 'list20', name: 'Coleccionista', icon: '❤️', test: s => s.list >= 20 },
     { id: 'genres10', name: 'Trotamundos', icon: '🌍', test: s => s.genres >= 10 }
@@ -303,87 +297,6 @@
     return s;
   }
 
-  /* ---------- radar de episodios nuevos ---------- */
-  function newEpisodesCount() {
-    try {
-      const seen = DFX.seen || {};
-      const eps = (window.DB && window.DB.episodes) || [];
-      const favs = window.getFavs ? window.getFavs() : [];
-      const hist = window.getHistory ? window.getHistory() : {};
-      const follow = new Set([...favs, ...Object.keys(hist)]);
-      const series = (window.DB.series || []);
-      let count = 0;
-      const items = [];
-      for (const s of series) {
-        if (!follow.has(s.id)) continue;
-        const sEps = eps.filter(e => e.seriesId === s.id);
-        let newOnes = 0;
-        for (const e of sEps) {
-          const k = s.id + ':' + e.number;
-          if (!seen[k]) newOnes++;
-        }
-        if (newOnes > 0) { count += newOnes; items.push({ s, n: newOnes }); }
-      }
-      items.sort((a, b) => b.n - a.n);
-      return { count, items: items.slice(0, 6) };
-    } catch { return { count: 0, items: [] }; }
-  }
-
-  function markSeenCurrent() {
-    try {
-      const eps = (window.DB && window.DB.episodes) || [];
-      const favs = window.getFavs ? window.getFavs() : [];
-      const hist = window.getHistory ? window.getHistory() : {};
-      const follow = new Set([...favs, ...Object.keys(hist)]);
-      let changed = false;
-      for (const e of eps) {
-        if (!follow.has(e.seriesId)) continue;
-        const k = e.seriesId + ':' + e.number;
-        if (!DFX.seen[k]) { DFX.seen[k] = 1; changed = true; }
-      }
-      if (changed) save('dfx_seen_eps', DFX.seen);
-    } catch {}
-  }
-
-  function injectRadar() {
-    const r = newEpisodesCount();
-    let bar = $('#dfxRadarBar');
-    if (r.count > 0) {
-      if (!bar) {
-        bar = document.createElement('div');
-        bar.id = 'dfxRadarBar';
-        bar.className = 'dfxTop';
-        document.body.appendChild(bar);
-      }
-      bar.innerHTML = `<span style="font-size:20px">📡</span><div style="flex:1;min-width:0"><b>${r.count} episodio${r.count === 1 ? '' : 's'} nuevo${r.count === 1 ? '' : 's'}</b> <span>de series que sigues</span></div><button class="dfxGo" id="dfxRadarGo">Ver</button>`;
-      $('#dfxRadarGo').onclick = () => { location.hash = '#/radar'; };
-      let dot = $('#dfxRadarDot');
-      if (!dot) { dot = document.createElement('div'); dot.id = 'dfxRadarDot'; dot.className = 'dfxDot'; document.body.appendChild(dot); }
-    } else {
-      bar && bar.remove();
-      $('#dfxRadarDot') && $('#dfxRadarDot').remove();
-    }
-    return r;
-  }
-
-  function radarPage() {
-    const r = newEpisodesCount();
-    let html = '<section class="section page-top"><div class="section-head"><h2>📡 Radar de episodios</h2><span class="muted">' + r.count + '</span></div>';
-    if (!r.items.length) {
-      html += '<div class="dfxEmpty"><span class="dfxBig">📡</span>Añade series a Mi lista o empieza a verlas: aquí aparecerán sus capítulos nuevos tras cada sincronización.</div></section>';
-    } else {
-      html += '<div class="grid">';
-      for (const it of r.items) {
-        const s = it.s;
-        const img = window.getSeriesImage ? window.getSeriesImage(s) : (s.image || '');
-        html += `<article class="card" onclick="location.hash='#/series/${encodeURIComponent(s.slug || s.id)}'"><div class="poster">${img ? `<img loading="lazy" src="${esc(img)}" alt="">` : '<div class="no-img">DFX</div>'}<span class="badge" style="background:#e50914">${it.n} NUEVO${it.n === 1 ? '' : 'S'}</span></div><h3>${esc(window.cleanTitle ? window.cleanTitle(s) : s.title)}</h3></article>`;
-      }
-      html += '</div></section>';
-    }
-    const app = document.getElementById('app');
-    if (app) { app.innerHTML = html; }
-  }
-
   /* ---------- episodio aleatorio ---------- */
   function randomEp() {
     try {
@@ -393,36 +306,14 @@
         location.hash = '#/episode/' + encodeURIComponent(e.slug || e.id);
         return;
       }
-      /* Parche Fase FINAL: catálogos LITE no cargan episodios hasta abrir
-         una ficha → "Sorpréndeme" abre una serie aleatoria en su lugar. */
+      /* Catálogos LITE: no hay episodios hasta abrir la ficha →
+         se abre una serie aleatoria en su lugar. */
       const series = (window.DB && window.DB.series) || [];
       if (!series.length) return toast('Catálogo todavía vacío');
       const s = series[Math.floor(Math.random() * series.length)];
       location.hash = '#/series/' + encodeURIComponent(s.slug || s.id);
       toast('🎲 ' + (window.cleanTitle ? window.cleanTitle(s) : s.title));
     } catch { toast('No se pudo elegir episodio'); }
-  }
-
-  /* ---------- cronómetro de maratón ---------- */
-  let marathonTimer = null;
-  function startMarathon() {
-    const s = window.detailState && window.detailState.seriesId;
-    if (!s) return toast('Abre una serie primero');
-    DFX.marathon = { key: s, count: 0, best: DFX.marathon.best || 0 };
-    save('dfx_marathon', DFX.marathon);
-    clearTimeout(marathonTimer);
-    marathonTimer = setTimeout(() => {
-      if (DFX.marathon.key === s && DFX.marathon.count > 0) {
-        DFX.marathon.count = 0;
-        save('dfx_marathon', DFX.marathon);
-      }
-    }, 3 * 3600 * 1000);
-    toast('🏃 Modo maratón activado — a ver esos capítulos');
-  }
-  function stopMarathon() {
-    DFX.marathon.key = null; DFX.marathon.count = 0;
-    save('dfx_marathon', DFX.marathon);
-    toast('Maratón finalizado');
   }
 
   wrap('episode', () => {
@@ -467,87 +358,6 @@
       save('dfx_resume', DFX.resume);
     }
   });
-
-  /* ---------- calendario ---------- */
-  function calendarPage() {
-    const eps = (window.DB && window.DB.episodes) || [];
-    const byDay = {};
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    for (let i = 0; i < 7; i++) byDay[i] = [];
-    for (const e of eps) {
-      const t = Date.parse(e.updatedAt || 0);
-      if (!t) continue;
-      const d = new Date(t).getDay();
-      byDay[d].push(e);
-    }
-    for (const k of Object.keys(byDay)) {
-      byDay[k].sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
-      byDay[k] = byDay[k].slice(0, 8);
-    }
-    const today = new Date().getDay();
-    let html = '<section class="section page-top"><div class="section-head"><h2>📅 Calendario de estrenos</h2><span class="muted">por día de actualización</span></div><div class="dfxCalWrap">';
-    const order = [1, 2, 3, 4, 5, 6, 0];
-    for (const d of order) {
-      html += `<div class="dfxCalDay ${d === today ? 'today' : ''}"><h4>${days[d]}${d === today ? ' · hoy' : ''}</h4>`;
-      if (!byDay[d].length) html += '<div style="color:#555;font-size:10px;text-align:center;padding:14px 0">Sin estrenos</div>';
-      for (const e of byDay[d]) {
-        const s = window.findSeries ? window.findSeries(e.seriesId) : null;
-        const img = s && window.getSeriesImage ? window.getSeriesImage(s) : '';
-        html += `<div class="dfxCalItem" onclick="location.hash='#/episode/${encodeURIComponent(e.slug || e.id)}'">${img ? `<img src="${esc(img)}" alt="">` : '<div style="width:26px;height:38px;background:#222;border-radius:4px"></div>'}<span>${esc(s ? (window.cleanTitle ? window.cleanTitle(s) : s.title) : e.seriesId)}<br><b style="color:#e50914">E${e.number}</b></span></div>`;
-      }
-      html += '</div>';
-    }
-    html += '</div></section>';
-    const app = document.getElementById('app');
-    if (app) app.innerHTML = html;
-  }
-
-  /* ---------- versus ---------- */
-  let vsSel = [];
-  function versusPage() {
-    const series = (window.DB && window.DB.series) || [];
-    let html = '<section class="section page-top"><div class="section-head"><h2>⚔️ Versus</h2><span class="muted">elige 2 donghuas</span></div>';
-    html += '<div class="dfxGrid2" id="vsPick" style="margin-bottom:16px">' + series.slice(0, 24).map(s => {
-      const img = window.getSeriesImage ? window.getSeriesImage(s) : (s.image || '');
-      return `<div class="dfxVsCard" data-id="${esc(s.id)}">${img ? `<img src="${esc(img)}" alt="">` : ''}<div class="dfxVsTitle">${esc(window.cleanTitle ? window.cleanTitle(s) : s.title)}</div></div>`;
-    }).join('') + '</div>';
-    html += '<div id="vsResult"></div></section>';
-    const app = document.getElementById('app');
-    if (!app) return;
-    app.innerHTML = html;
-    $$('#vsPick .dfxVsCard').forEach(c => c.onclick = () => {
-      const id = c.dataset.id;
-      if (vsSel.includes(id)) { vsSel = vsSel.filter(x => x !== id); c.classList.remove('sel'); }
-      else if (vsSel.length < 2) { vsSel.push(id); c.classList.add('sel'); }
-      else { vsSel = [vsSel[1], id]; $$('#vsPick .dfxVsCard').forEach(x => x.classList.toggle('sel', vsSel.includes(x.dataset.id))); }
-      renderVs();
-    });
-    function renderVs() {
-      const box = $('#vsResult');
-      if (vsSel.length !== 2) { box.innerHTML = '<p class="muted" style="text-align:center">Selecciona 2 títulos para compararlos</p>'; return; }
-      const a = series.find(s => s.id === vsSel[0]);
-      const b = series.find(s => s.id === vsSel[1]);
-      if (!a || !b) return;
-      const row = (l, va, vb) => `<tr><th>${l}</th><td>${va}</td><td>${vb}</td></tr>`;
-      const imgA = window.getSeriesImage ? window.getSeriesImage(a) : (a.image || '');
-      const imgB = window.getSeriesImage ? window.getSeriesImage(b) : (b.image || '');
-      const epsA = (window.DB.episodes || []).filter(e => e.seriesId === a.id).length;
-      const epsB = (window.DB.episodes || []).filter(e => e.seriesId === b.id).length;
-      box.innerHTML = `<div class="dfxGrid2" style="align-items:end">
-        <div style="text-align:center"><img src="${esc(imgA)}" style="width:100%;max-width:180px;border-radius:12px;aspect-ratio:2/3;object-fit:cover"><h3 style="margin:8px 0 0">${esc(window.cleanTitle ? window.cleanTitle(a) : a.title)}</h3></div>
-        <div style="text-align:center"><img src="${esc(imgB)}" style="width:100%;max-width:180px;border-radius:12px;aspect-ratio:2/3;object-fit:cover"><h3 style="margin:8px 0 0">${esc(window.cleanTitle ? window.cleanTitle(b) : b.title)}</h3></div>
-      </div>
-      <table class="dfxVsTable">
-        ${row('Estado', esc(a.status || '—'), esc(b.status || '—'))}
-        ${row('Año', esc(a.year || '—'), esc(b.year || '—'))}
-        ${row('Episodios', epsA, epsB)}
-        ${row('Géneros', esc((window.seriesGenres ? window.seriesGenres(a) : a.genres || []).slice(0, 3).join(', ') || '—'), esc((window.seriesGenres ? window.seriesGenres(b) : b.genres || []).slice(0, 3).join(', ') || '—'))}
-        ${row('Origen', esc((window.SRC_LABEL && window.SRC_LABEL[a._cat || a.src]) || a.src || '—'), esc((window.SRC_LABEL && window.SRC_LABEL[b._cat || b.src]) || b.src || '—'))}
-      </table>
-      <div style="text-align:center;margin-top:14px"><button class="dfxGo" style="padding:10px 22px;font-size:13px" onclick="location.hash='#/series/${encodeURIComponent(a.slug || a.id)}'">Ver ${esc(window.cleanTitle ? window.cleanTitle(a) : a.title)}</button> <button class="dfxGo" style="padding:10px 22px;font-size:13px;background:#333" onclick="location.hash='#/series/${encodeURIComponent(b.slug || b.id)}'">Ver ${esc(window.cleanTitle ? window.cleanTitle(b) : b.title)}</button></div>`;
-    }
-    renderVs();
-  }
 
   /* ---------- perfiles públicos ---------- */
   function publicPage(arg) {
@@ -609,7 +419,6 @@
           settings: load(prefix() + 'set', {}),
           seen: DFX.seen,
           badge: DFX.badge,
-          marathon: DFX.marathon,
           account: DFX.account
         }
       });
@@ -640,10 +449,9 @@
       if (data.settings) save(prefix() + 'set', data.settings);
       if (data.seen) { DFX.seen = { ...DFX.seen, ...data.seen }; save('dfx_seen_eps', DFX.seen); }
       if (data.badge) { DFX.badge = { ...DFX.badge, ...data.badge }; save('dfx_badge', DFX.badge); }
-      if (data.marathon) { DFX.marathon = data.marathon; save('dfx_marathon', DFX.marathon); }
       if (data.account) { DFX.account = data.account; save('dfx_account', DFX.account); }
       try { window.route && window.route(); } catch { location.reload(); }
-      injectRadar();
+      /* radar: integrado como widget en Mi Donghua */
       toast('☁️ Sincronizado');
     });
   }
@@ -651,9 +459,9 @@
   /* ---------- pestañas ---------- */
   window.addEventListener('storage', (e) => {
     if (!e.key) return;
-    if (['donghuaflix_favs', 'donghuaflix_watched', 'donghuaflix_history', 'dfx_seen_eps'].includes(e.key)) {
+    if (['donghuaflix_favs', 'donghuaflix_watched', 'donghuaflix_history'].includes(e.key)) {
       try { window.route && window.route(); } catch {}
-      injectRadar();
+      /* radar: integrado como widget en Mi Donghua */
     }
   });
 
@@ -836,44 +644,6 @@
     nav.appendChild(b);
   }
 
-  /* ---------- menú "Más" limpio ---------- */
-  function cleanMoreMenu() {
-    const mm = document.getElementById('moreMenu');
-    if (!mm) return;
-    /* quita los enlaces antiguos, deja solo cuenta + ajustes */
-    $$('a', mm).forEach(a => a.remove());
-    if (!$('#dfxAuthMobile')) {
-      const a = document.createElement('a');
-      a.id = 'dfxAuthMobile';
-      a.href = '#/';
-      a.textContent = '👤 Mi cuenta';
-      a.onclick = e => { e.preventDefault(); window.toggleMoreMenu && window.toggleMoreMenu(); if (window.dfxOpenAuth) window.dfxOpenAuth(); };
-      mm.appendChild(a);
-    }
-    if (!$('#dfxSettingsMobile')) {
-      const s = document.createElement('a');
-      s.id = 'dfxSettingsMobile';
-      s.href = '#/';
-      s.textContent = '⚙️ Ajustes';
-      s.onclick = e => { e.preventDefault(); window.toggleMoreMenu && window.toggleMoreMenu(); openSettings(); };
-      mm.appendChild(s);
-    }
-  }
-
-  /* ---------- barra de estado global (contador) ---------- */
-  function injectGlobalStats() {
-    let el = $('#dfxGlobalStats');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'dfxGlobalStats';
-      el.style.cssText = 'position:fixed;bottom:14px;left:14px;z-index:9998;background:rgba(20,20,25,.92);border:1px solid #2a2a33;border-radius:99px;padding:7px 14px;color:#fff;font-size:11px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)';
-      document.body.appendChild(el);
-      el.onclick = () => { location.hash = '#/u/' + (DFX.account?.uid || ''); };
-    }
-    const s = checkBadges();
-    el.innerHTML = `👁️ <b>${s.total}</b> caps · 🏅 <b>${Object.keys(DFX.badge).filter(k => k.startsWith(DFX.current + ':')).length}</b>`;
-  }
-
   /* ---------- sala compartida ---------- */
   const BC = ('BroadcastChannel' in window) ? new BroadcastChannel('dfx_room') : null;
   let lastRoomMsg = 0;
@@ -908,51 +678,696 @@
     return 0;
   };
 
+
+  /* ══════════════════════════════════════════════════════════
+     INTEGRACIÓN — pulido (ex-Fase 8) + efectos (ex-dfx-polish)
+     + hub "Mi Donghua" (ex-Fase 4)
+     ══════════════════════════════════════════════════════════ */
+
+  /* ---------- pulido de imágenes: lazy, rotas con reintento ---------- */
+  const f8 = { broken: new Set(), errors: 0 };
+  function f8fixImg(im) {
+    if (!im || im.__f8) return;
+    im.__f8 = true;
+    if (!im.getAttribute('loading')) im.setAttribute('loading', 'lazy');
+    im.setAttribute('decoding', 'async');
+    if (!im.getAttribute('alt')) im.setAttribute('alt', '');
+    if (im.complete && im.naturalWidth === 0) f8mark(im);
+  }
+  function f8mark(im) {
+    if (im.classList.contains('f8-img-broken')) return;
+    im.classList.add('f8-img-broken');
+    f8.broken.add(im.currentSrc || im.src || '(sin src)');
+    im.addEventListener('click', () => {
+      const s = im.src;
+      im.classList.remove('f8-img-broken');
+      im.src = '';
+      im.src = s;
+    }, { once: true });
+  }
+  document.addEventListener('error', e => { if (e.target && e.target.tagName === 'IMG') f8mark(e.target); }, true);
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => {
+    if (n.tagName === 'IMG') f8fixImg(n);
+    if (n.querySelectorAll) $$('img', n).forEach(f8fixImg);
+  }))).observe(document.documentElement, { childList: true, subtree: true });
+  $$('img').forEach(f8fixImg);
+
+  /* ---------- reduced-motion + ahorro de datos ---------- */
+  try {
+    const rm = matchMedia('(prefers-reduced-motion: reduce)');
+    const applyRM = () => document.documentElement.classList.toggle('f8-rm', rm.matches);
+    (rm.addEventListener || rm.addListener || function () {}).call(rm, 'change', applyRM);
+    applyRM();
+    const cn = navigator.connection || {};
+    document.documentElement.classList.toggle('f8-lite', !!cn.saveData || cn.effectiveType === 'slow-2g' || cn.effectiveType === '2g');
+  } catch {}
+
+  /* ---------- errores de red visibles (throttled) ---------- */
+  let f8lastToast = 0;
+  addEventListener('unhandledrejection', () => {
+    f8.errors++;
+    if (Date.now() - f8lastToast > 5000) {
+      f8lastToast = Date.now();
+      toast('⚠️ Falló una carga. Revisa tu conexión.');
+    }
+  });
+
+  /* ---------- reintento del selector de catálogos ---------- */
+  function fixCatalogWrap() {
+    try {
+      const wrap = document.getElementById('catalogWrap');
+      if (!wrap) return;
+      const a = CATALOG_AVAILABLE;
+      const n = Object.keys(a).filter(k => a[k]).length;
+      if (n > 1) wrap.style.display = '';
+    } catch {}
+  }
+  setTimeout(fixCatalogWrap, 2500);
+  setInterval(fixCatalogWrap, 6000);
+
+  /* ---------- glow ambiental (color dominante del póster) ---------- */
+  function hexToRgba(hex, a) {
+    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
+    if (!m) return `rgba(229,9,20,${a})`;
+    return `rgba(${parseInt(m[1], 16)},${parseInt(m[2], 16)},${parseInt(m[3], 16)},${a})`;
+  }
+  function pickDominantColor(img) {
+    try {
+      const c = document.createElement('canvas');
+      const s = 24;
+      c.width = s; c.height = s;
+      const x = c.getContext('2d', { willReadFrequently: true });
+      x.drawImage(img, 0, 0, s, s);
+      const d = x.getImageData(0, 0, s, s).data;
+      let r = 0, g = 0, b = 0, n = 0;
+      for (let i = 0; i < d.length; i += 16) {
+        const rr = d[i], gg = d[i + 1], bb = d[i + 2];
+        const lum = 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+        if (lum > 24 && lum < 216) { r += rr; g += gg; b += bb; n++; }
+      }
+      if (!n) return '#e50914';
+      const h = v => Math.round(v / n).toString(16).padStart(2, '0');
+      return `#${h(r)}${h(g)}${h(b)}`;
+    } catch { return '#e50914'; }
+  }
+  function applyGlowFromImage(img) {
+    const col = pickDominantColor(img);
+    const glow = $('#dfxGlow');
+    const player = $('.player');
+    if (glow) glow.style.background = `radial-gradient(circle at 50% 20%, ${hexToRgba(col, .5)}, transparent 70%)`;
+    if (player) player.style.setProperty('--dfx-glow', hexToRgba(col, .5));
+    document.documentElement.style.setProperty('--dfx-glow', hexToRgba(col, .35));
+  }
+  function watchGlow() {
+    const src = (window.currentEpisode && window.findSeries) ? window.getSeriesImage(window.findSeries(window.currentEpisode.seriesId) || {}) : null;
+    if (!src) return;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => applyGlowFromImage(img);
+    img.src = src;
+  }
+
+  /* ---------- modo cine (solo tecla C) ---------- */
+  function toggleCine() {
+    document.body.classList.toggle('dfx-cine');
+    const on = document.body.classList.contains('dfx-cine');
+    try { localStorage.setItem('dfx_cine', on ? '1' : '0'); } catch {}
+    toast(on ? '🎬 Modo cine ON — pulsa C para salir' : '🎬 Modo cine OFF');
+    if (on) window.scrollTo({ top: 0 });
+  }
+  if (localStorage.getItem('dfx_cine') === '1') document.body.classList.add('dfx-cine');
+
+  /* ---------- parallax sutil del hero ---------- */
+  let f8tick = false;
+  addEventListener('scroll', () => {
+    if (f8tick) return;
+    f8tick = true;
+    requestAnimationFrame(() => {
+      const hero = $('.hero');
+      if (hero && !document.documentElement.classList.contains('f8-rm')) {
+        const y = window.scrollY;
+        if (y < 600) hero.style.transform = `translateY(${y * 0.18}px)`;
+        else hero.style.transform = '';
+      }
+      f8tick = false;
+    });
+  }, { passive: true });
+
+  /* ---------- atajos de teclado ---------- */
+  function kbdOverlay() {
+    let o = $('#dfxKbd');
+    if (!o) {
+      o = document.createElement('div');
+      o.id = 'dfxKbd';
+      o.className = 'dfxKbdOverlay';
+      o.innerHTML = `<div class="dfxKbdCard">
+        <h3>⌨️ Atajos de teclado</h3>
+        <div class="dfxKbdRow"><span>Buscar</span><kbd>/</kbd></div>
+        <div class="dfxKbdRow"><span>Modo cine</span><kbd>C</kbd></div>
+        <div class="dfxKbdRow"><span>🎲 Sorpréndeme</span><kbd>X</kbd></div>
+        <div class="dfxKbdRow"><span>Pantalla completa del reproductor</span><kbd>F</kbd></div>
+        <div class="dfxKbdRow"><span>Ver/ocultar este panel</span><kbd>?</kbd></div>
+        <div class="dfxKbdRow"><span>Cerrar diálogos</span><kbd>Esc</kbd></div>
+      </div>`;
+      document.body.appendChild(o);
+      o.onclick = e => { if (e.target === o) o.classList.remove('open'); };
+    }
+    o.classList.toggle('open');
+  }
+  document.addEventListener('keydown', e => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    switch (e.key) {
+      case '/': e.preventDefault(); location.hash = '#/search'; break;
+      case 'c': case 'C': toggleCine(); break;
+      case 'x': case 'X': randomEp(); break;
+      case 'f': case 'F': window.togglePlayerFS && window.togglePlayerFS(); break;
+      case '?': kbdOverlay(); break;
+      case 'Escape':
+        $('#dfxKbd')?.classList.remove('open');
+        if (document.body.classList.contains('dfx-cine')) toggleCine();
+        break;
+    }
+  });
+
+  /* ---------- gestos en el reproductor (móvil) ---------- */
+  function showSeekToast(sec) {
+    let t = $('#dfxSeekToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'dfxSeekToast';
+      t.style.cssText = 'position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;padding:12px 26px;border-radius:12px;font-size:20px;font-weight:800;z-index:99999;pointer-events:none;border:1px solid #333';
+      document.body.appendChild(t);
+    }
+    t.textContent = (sec > 0 ? '» +' : '« -') + Math.abs(sec) + 's';
+    clearTimeout(showSeekToast._t);
+    showSeekToast._t = setTimeout(() => t.remove(), 900);
+  }
+  function bindPlayerGestures() {
+    const player = $('.player');
+    if (!player || player.dataset.dfxGest) return;
+    player.dataset.dfxGest = '1';
+    let startX = 0, seeking = false;
+    player.addEventListener('touchstart', e => { startX = e.touches[0].clientX; seeking = false; }, { passive: true });
+    player.addEventListener('touchmove', e => {
+      if (seeking) return;
+      const dx = e.touches[0].clientX - startX;
+      if (Math.abs(dx) > 60) {
+        seeking = true;
+        showSeekToast(dx > 0 ? 10 : -10);
+        const ifr = player.querySelector('iframe');
+        if (ifr) {
+          try {
+            const cur = window.dfxResumeEp ? window.dfxResumeEp(window.currentEpisode?.id) : 0;
+            const to = Math.max(0, cur + (dx > 0 ? 10 : -10));
+            ifr.src = ifr.src.split('?')[0] + '?autoplay=1&start=' + Math.floor(to);
+          } catch {}
+        }
+      }
+    }, { passive: true });
+    player.addEventListener('touchend', () => { seeking = false; }, { passive: true });
+  }
+
+
+  /* ---------- Descubrir (ex-Fase 7) ---------- */
+/* ============================================================
+   DONGHUAFLIX RENACER — FASE 7: Descubrir + personalización
+   ------------------------------------------------------------
+   - Página Descubrir (#/descubrir)
+   - "Porque viste…", "Podría gustarte", "Nuevos para ti",
+     "En emisión que sigues" (cruzando catálogos)
+   - Filtros: género / estado / tipo / catálogo / año
+   - Sorpréndeme (aleatorio que no has visto)
+   - Respeta historial + favoritos; no recomienda lo ya visto
+   Requiere: fases 1-6 ya cargadas (usa su caché fetch).
+   ============================================================ */
+(function () {
+  "use strict";
+
+  /* ---------- CONFIG ---------- */
+  var CFG = {
+    route: "#/descubrir",
+    home: "public/data/catalog-index.json",
+    indexes: {
+      donghualife:  "public/data/catalog-donghualife-index.json",
+      donghuasub:   "public/data/catalog-donghuasub-index.json",
+      donghuacli:   "public/data/catalog-donghuacli-index.json",
+      dramasyt:     "public/data/catalog-dramasyt-index.json",
+      peliculas:    "public/data/catalog-peliculas-index.json",
+      doramas:      "public/data/catalog-doramas-index.json"
+    },
+    labels: {
+      donghualife: "DonghuaLife", donghuasub: "DonghuaSub",
+ donghuacli: "DonghuaCLI",
+      peliculas: "Películas", doramas: "Doramas"
+    },
+    maxPerSection: 12,
+    maxGrid: 60
+  };
+
+  /* ---------- ESTADO ---------- */
+  var rows = [];          // todos los títulos con _cat
+  var imageBase = "";
+  var loaded = false, loading = null;
+  var filters = { genre: "", status: "", type: "", cat: "", year: "" };
+
+  /* ---------- HELPERS ---------- */
+  function read(k, d) {
+    try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }
+    catch (e) { return d; }
+  }
+  function asRows(list) {
+    if (!list) return [];
+    if (Array.isArray(list)) return list;
+    return Object.values(list);
+  }
+  function historyRows() { return asRows(read("donghuaflix_history", {})); }
+  function favIds() {
+    var f = read("donghuaflix_favs", []);
+    if (Array.isArray(f)) return f.map(String);
+    return Object.keys(f || {});
+  }
+  function histIdSet() {
+    var s = {};
+    historyRows().forEach(function (x) { s[String(x.id || x.i)] = 1; });
+    return s;
+  }
+  function genresOf(x) { return (x.g || x.genres || []); }
+  function normType(x) {
+    var t = String(x.ty || x.type || "serie").toLowerCase();
+    if (t.indexOf("pel") === 0) return "pelicula";
+    if (t.indexOf("dorama") === 0) return "dorama";
+    return "serie";
+  }
+  function typeLabel(t) { return t === "pelicula" ? "Película" : (t === "dorama" ? "Dorama" : "Serie"); }
+  function statusNorm(x) {
+    var s = String(x.st || x.status || "").toLowerCase();
+    if (s.indexOf("emisi") >= 0 || s === "airing") return "emision";
+    if (s.indexOf("final") >= 0 || s === "completed") return "finalizado";
+    return "otro";
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+  /* ---------- DATOS ---------- */
+  function fetchJSON(url) {
+    return fetch(url, { credentials: "same-origin" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function ensureData() {
+    if (loaded) return Promise.resolve(rows);
+    if (loading) return loading;
+    loading = fetchJSON(CFG.home).then(function (idx) {
+      imageBase = idx.imageBase || imageBase;
+      var jobs = Object.keys(CFG.indexes).map(function (cat) {
+        return fetchJSON(CFG.indexes[cat]).then(function (ci) {
+          var base = ci.imageBase || imageBase || "";
+          (ci.series || []).forEach(function (x) { x._cat = cat; x._base = base; rows.push(x); });
+        }).catch(function () { /* catálogo caído: se ignora */ });
+      });
+      return Promise.all(jobs).then(function () {
+        loaded = true;
+        return rows;
+      });
+    });
+    return loading;
+  }
+
+  /* ---------- AFINIDAD DE GÉNEROS ---------- */
+  function affinity() {
+    var score = {};
+    function add(x, w) { genresOf(x).forEach(function (g) { g = String(g); score[g] = (score[g] || 0) + w; }); }
+    historyRows().forEach(function (x) { add(x, 2); });
+    var favs = favIds();
+    rows.forEach(function (x) { if (favs.indexOf(String(x.i || x.id)) >= 0) add(x, 3); });
+    return score;
+  }
+  function scoreTitle(x, aff) {
+    var s = 0;
+    genresOf(x).forEach(function (g) { s += (aff[String(g)] || 0); });
+    if (statusNorm(x) === "emision") s += 1; // ligero boost a novedad en emisión
+    return s;
+  }
+
+  /* ---------- TARJETAS ---------- */
+  function card(x, opts) {
+    opts = opts || {};
+    var id = x.i || x.id;
+    var src = (x._base || imageBase || "") + (x.p || "");
+    var cat = CFG.labels[x._cat] || x._cat;
+    var badge = opts.badge || "";
+    return '' +
+      '<a class="dfx7-card" href="#/title/' + esc(id) + '">' +
+        '<div class="dfx7-card-poster">' +
+          (src ? '<img loading="lazy" src="' + esc(src) + '" alt="">' : '') +
+          '<span class="dfx7-card-cat">' + esc(cat) + '</span>' +
+          (badge ? '<span class="dfx7-card-badge">' + esc(badge) + '</span>' : '') +
+          '<span class="dfx7-card-play">▶</span>' +
+        '</div>' +
+        '<div class="dfx7-card-title">' + esc(x.t || x.title || "—") + '</div>' +
+        (opts.meta ? '<div class="dfx7-card-meta">' + esc(opts.meta) + '</div>' : '') +
+      '</a>';
+  }
+  function rail(title, subtitle, items, badgeFn, metaFn) {
+    if (!items.length) return "";
+    var cards = items.map(function (x) { return card(x, { badge: badgeFn ? badgeFn(x) : "", meta: metaFn ? metaFn(x) : "" }); }).join("");
+    return '' +
+      '<section class="dfx7-section">' +
+        '<div class="dfx7-sec-head"><h2>' + esc(title) + '</h2>' +
+        (subtitle ? '<span class="dfx7-sec-sub">' + esc(subtitle) + '</span>' : '') + '</div>' +
+        '<div class="dfx7-rail">' + cards + '</div>' +
+      '</section>';
+  }
+
+  /* ---------- SECCIONES INTELIGENTES ---------- */
+  function buildSections() {
+    var hist = historyRows();
+    var seen = histIdSet();
+    var favs = favIds();
+    var aff = affinity();
+    var out = "";
+
+    // 1) Porque viste… (el más reciente con géneros)
+    var last = hist.slice().reverse().find(function (x) { return genresOf(x).length; });
+    if (last) {
+      var lg = genresOf(last).map(String);
+      var sim = rows.filter(function (x) {
+        if (seen[String(x.i || x.id)]) return false;
+        var g = genresOf(x).map(String);
+        return lg.some(function (v) { return g.indexOf(v) >= 0; });
+      }).sort(function (a, b) { return scoreTitle(b, aff) - scoreTitle(a, aff); })
+        .slice(0, CFG.maxPerSection);
+      out += rail("Porque viste “" + (last.t || last.title || "este título") + "”", "similares por género", sim,
+        function () { return "similar"; },
+        function (x) { return genresOf(x).slice(0, 2).join(" · "); });
+    }
+
+    // 2) En emisión que sigues
+    var following = rows.filter(function (x) {
+      return seen[String(x.i || x.id)] && statusNorm(x) === "emision";
+    }).slice(0, CFG.maxPerSection);
+    out += rail("En emisión que sigues", "continúa donde lo dejaste", following,
+      function () { return "en emisión"; },
+      function (x) { return (x.y || "") + (x.st ? " · " + x.st : ""); });
+
+    // 3) Podría gustarte (afinidad, sin vistos ni favoritos)
+    var pool = rows.filter(function (x) {
+      var id = String(x.i || x.id);
+      return !seen[id] && favs.indexOf(id) < 0;
+    });
+    var liked = pool.slice().sort(function (a, b) { return scoreTitle(b, aff) - scoreTitle(a, aff); })
+      .slice(0, CFG.maxPerSection);
+    out += rail("Podría gustarte", "según tu historial y favoritos", liked,
+      null,
+      function (x) { return genresOf(x).slice(0, 2).join(" · "); });
+
+    // 4) Nuevos para ti (recientes no vistos)
+    var thisYear = new Date().getFullYear();
+    var fresh = pool.filter(function (x) { return Number(x.y) >= thisYear - 1; })
+      .sort(function (a, b) { return Number(b.y) - Number(a.y); })
+      .slice(0, CFG.maxPerSection);
+    out += rail("Nuevos para ti", "recién llegados a tus catálogos", fresh,
+      function (x) { return String(x.y || ""); },
+      function (x) { return typeLabel(normType(x)); });
+
+    // 5) Favoritos (acceso rápido si hay)
+    if (favs.length) {
+      var favRows = rows.filter(function (x) { return favs.indexOf(String(x.i || x.id)) >= 0; })
+        .slice(0, CFG.maxPerSection);
+      out += rail("Tus favoritos", null, favRows, null,
+        function (x) { return genresOf(x).slice(0, 2).join(" · "); });
+    }
+
+    return out || emptyState("Aún no hay datos para personalizar. Mira algún episodio y vuelve: Descubrir aprenderá de ti.");
+  }
+
+  function emptyState(msg) {
+    return '<div class="dfx7-empty"><div class="dfx7-empty-icon">✦</div><p>' + esc(msg) + '</p></div>';
+  }
+
+  /* ---------- FILTROS + GRID ---------- */
+  function chipRow(name, options, current) {
+    var h = '<div class="dfx7-fgroup"><span class="dfx7-flabel">' + esc(name) + '</span><div class="dfx7-chips">';
+    h += '<button class="dfx7-chip' + (current === "" ? " on" : "") + '" data-f="' + esc(name) + '" data-v="">Todos</button>';
+    options.forEach(function (o) {
+      h += '<button class="dfx7-chip' + (current === o.v ? " on" : "") + '" data-f="' + esc(name) + '" data-v="' + esc(o.v) + '">' + esc(o.l) + '</button>';
+    });
+    return h + '</div></div>';
+  }
+  function filterBar() {
+    var genres = {}, types = {}, statuses = {}, years = {};
+    rows.forEach(function (x) {
+      genresOf(x).forEach(function (g) { genres[g] = 1; });
+      types[normType(x)] = 1;
+      statuses[statusNorm(x)] = 1;
+      if (x.y) years[x.y] = 1;
+    });
+    var gOpts = Object.keys(genres).sort().slice(0, 24).map(function (g) { return { v: g, l: g }; });
+    var tOpts = Object.keys(types).sort().map(function (t) { return { v: t, l: typeLabel(t) }; });
+    var sOpts = Object.keys(statuses).sort().map(function (s) { return { v: s, l: s === "emision" ? "En emisión" : (s === "finalizado" ? "Finalizado" : "Otro") }; });
+    var cOpts = Object.keys(CFG.labels).map(function (c) { return { v: c, l: CFG.labels[c] }; });
+    var yOpts = Object.keys(years).sort().reverse().slice(0, 10).map(function (y) { return { v: y, l: y }; });
+
+    return '' +
+      '<section class="dfx7-filters">' +
+        chipRow("genero", gOpts, filters.genre) +
+        chipRow("tipo", tOpts, filters.type) +
+        chipRow("estado", sOpts, filters.status) +
+        chipRow("catalogo", cOpts, filters.cat) +
+        chipRow("anio", yOpts, filters.year) +
+        '<button class="dfx7-clear" id="dfx7Clear">Limpiar filtros</button>' +
+      '</section>';
+  }
+  function applyFilters() {
+    var list = rows.filter(function (x) {
+      if (filters.genre && genresOf(x).map(String).indexOf(filters.genre) < 0) return false;
+      if (filters.type && normType(x) !== filters.type) return false;
+      if (filters.status && statusNorm(x) !== filters.status) return false;
+      if (filters.cat && x._cat !== filters.cat) return false;
+      if (filters.year && String(x.y) !== filters.year) return false;
+      return true;
+    });
+    var grid = document.getElementById("dfx7Grid");
+    var count = document.getElementById("dfx7Count");
+    if (count) count.textContent = list.length + (list.length === 1 ? " título" : " títulos");
+    if (!grid) return;
+    if (!list.length) { grid.innerHTML = emptyState("Nada coincide con esos filtros."); return; }
+    grid.innerHTML = list.slice(0, CFG.maxGrid).map(function (x) {
+      return card(x, { meta: (x.y || "") + " · " + typeLabel(normType(x)) });
+    }).join("");
+    var more = list.length - CFG.maxGrid;
+    if (more > 0) grid.innerHTML += '<div class="dfx7-more">+' + more + ' más… ajusta los filtros para acotar</div>';
+  }
+
+  /* ---------- SORPRÉNDEME ---------- */
+  function surprise() {
+    var seen = histIdSet();
+    var pool = rows.filter(function (x) { return !seen[String(x.i || x.id)]; });
+    if (!pool.length) pool = rows;
+    if (!pool.length) return;
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    location.hash = "#/title/" + (pick.i || pick.id);
+  }
+
+  /* ---------- RENDER ---------- */
+  function skeletons() {
+    var s = "";
+    for (var i = 0; i < 8; i++) s += '<div class="dfx7-sk-card"><div class="dfx7-sk"></div><div class="dfx7-sk dfx7-sk-line"></div></div>';
+    return '<div class="dfx7-rail">' + s + '</div>';
+  }
+  function discoverPage() {
+    var app = document.getElementById("app");
+    if (!app) return;
+    document.title = "Descubrir — DonghuaFlix";
+    app.innerHTML = '' +
+      '<div class="dfx7-page">' +
+        '<header class="dfx7-head">' +
+          '<div>' +
+            '<h1>Descubrir</h1>' +
+            '<p class="dfx7-tagline">Recomendaciones cruzadas entre tus catálogos, basadas en lo que ves y te gusta.</p>' +
+          '</div>' +
+          '<button class="dfx7-surprise" id="dfx7Surprise">✦ Sorpréndeme</button>' +
+        '</header>' +
+        '<div id="dfx7Sections" class="dfx7-sections">' + skeletons() + skeletons() + '</div>' +
+        '<section class="dfx7-section">' +
+          '<div class="dfx7-sec-head"><h2>Explorar catálogos</h2><span class="dfx7-sec-sub" id="dfx7Count"></span></div>' +
+          '<div id="dfx7Filters"></div>' +
+          '<div class="dfx7-grid" id="dfx7Grid"></div>' +
+        '</section>' +
+      '</div>';
+
+    document.getElementById("dfx7Surprise").addEventListener("click", function () {
+      ensureData().then(surprise);
+    });
+    document.getElementById("dfx7Filters").addEventListener("click", function (e) {
+      var b = e.target.closest(".dfx7-chip");
+      if (b) {
+        filters[b.getAttribute("data-f")] = b.getAttribute("data-v");
+        renderFilterChips();
+        applyFilters();
+      }
+      if (e.target.id === "dfx7Clear") {
+        filters = { genre: "", status: "", type: "", cat: "", year: "" };
+        renderFilterChips();
+        applyFilters();
+      }
+    });
+
+    ensureData().then(function () {
+      var sec = document.getElementById("dfx7Sections");
+      if (sec) sec.innerHTML = buildSections();
+      renderFilterChips();
+      applyFilters();
+    });
+  }
+  function renderFilterChips() {
+    var box = document.getElementById("dfx7Filters");
+    if (box) box.innerHTML = filterBar();
+  }
+
+  window.discoverPage = discoverPage;
+})();
+  /* ---------- Mi Donghua — hub del usuario ---------- */
+  function miDonghuaPage() {
+    const appEl = document.getElementById('app');
+    if (!appEl) return;
+    document.title = 'Mi Donghua — DonghuaFlix';
+    const s = checkBadges();
+    const hist = window.getHistory ? window.getHistory() : {};
+    const favs = window.getFavs ? window.getFavs() : [];
+    const series = (window.DB && window.DB.series) || [];
+
+    const histItems = series
+      .filter(x => hist[x.id])
+      .sort((a, b) => hist[b.id].timestamp - hist[a.id].timestamp)
+      .slice(0, 10);
+    const favItems = series.filter(x => favs.includes(x.id)).slice(0, 24);
+    const owned = BADGES.filter(b => DFX.badge[DFX.current + ':' + b.id]);
+
+    /* Widget: episodios nuevos de lo que sigues (ex-Radar) */
+    let newCount = 0;
+    try {
+      const follow = new Set([...favs, ...Object.keys(hist)]);
+      const eps = ((window.DB && window.DB.episodes) || []);
+      for (const e of eps) {
+        if (!follow.has(e.seriesId)) continue;
+        if (!DFX.seen[e.seriesId + ':' + e.number]) newCount++;
+      }
+    } catch {}
+
+    const stat = (n, l) => `<div style="flex:1;min-width:70px"><b style="font-size:22px">${n}</b><div style="color:#9a9aa5;font-size:11px;margin-top:2px">${l}</div></div>`;
+
+    appEl.innerHTML = `<section class="section page-top">
+      <div class="section-head"><h2>🐉 Mi Donghua</h2><span class="muted">${esc(prof().name)}</span></div>
+
+      <div class="dfxProfileCard">
+        <div class="dfxAv">${esc(prof().avatar)}</div>
+        <div style="flex:1;min-width:0">
+          <b>${esc(prof().name)}</b>
+          <div class="dfxMeta">${s.total} capítulos vistos · ${s.list} en Mi lista · ${s.seriesDone} series terminadas</div>
+        </div>
+        <button class="dfxChip" onclick="dfxOpenSettings()">⚙️ Ajustes</button>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;background:#141419;border:1px solid #2a2a33;border-radius:14px;padding:16px;margin-bottom:16px">
+        ${stat(s.total, 'Episodios vistos')}${stat(s.list, 'Mi lista')}${stat(s.seriesDone, 'Terminadas')}${stat(owned.length, 'Insignias')}
+      </div>
+
+      ${newCount ? `<div style="background:linear-gradient(90deg,#2a0a0c,#150607);border:1px solid #e50914;border-radius:12px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">📡</span>
+        <div style="flex:1"><b>${newCount} episodio${newCount === 1 ? '' : 's'} nuevo${newCount === 1 ? '' : 's'}</b> <span style="color:#9a9aa5;font-size:12px">de series que sigues</span></div>
+        <a class="dfxGo" style="text-decoration:none" href="#/mylist">Ver</a>
+      </div>` : ''}
+
+      ${histItems.length ? `<div class="section-head"><h2>Continuar viendo</h2><span class="muted">${histItems.length}</span></div>
+      <div class="cw-rail">${histItems.map(x => {
+        const h = hist[x.id];
+        const img = window.getSeriesImage ? window.getSeriesImage(x) : (x.image || '');
+        return `<div class="cw-card" onclick="location.hash='#/episode/${encodeURIComponent(h.episodeId)}'">
+          ${img ? `<img loading="lazy" src="${esc(img)}" alt="" onerror="this.remove()">` : ''}
+          <div class="cw-shade"></div><div class="cw-play">${I.play}</div>
+          <div class="cw-info">${esc(window.cleanTitle ? window.cleanTitle(x) : x.title)} · E${h.episodeNumber}</div>
+        </div>`;
+      }).join('')}</div>` : ''}
+
+      <div class="section-head" style="margin-top:20px"><h2>Mi lista</h2><span class="muted">${favItems.length}</span></div>
+      ${favItems.length ? `<div class="grid">${favItems.map(window.card).join('')}</div>`
+        : `<div class="dfxEmpty"><span class="dfxBig">❤️</span>Añade títulos con el corazón de cualquier tarjeta.</div>`}
+
+      <div class="section-head" style="margin-top:22px"><h2>🏅 Insignias</h2><span class="muted">${owned.length}/${BADGES.length}</span></div>
+      <div class="dfxBadgeRow">${BADGES.map(b => `<div class="dfxBadge ${DFX.badge[DFX.current + ':' + b.id] ? 'owned' : ''}" title="${esc(b.name)}"><div class="dfxBIcon">${b.icon}</div><span>${esc(b.name)}</span></div>`).join('')}</div>
+    </section>`;
+  }
+
+  /* ---------- #/diag — diagnóstico (herramienta interna) ---------- */
+  function diagPage() {
+    const appEl = document.getElementById('app');
+    if (!appEl) return;
+    document.title = 'Diagnóstico — DonghuaFlix';
+    const mem = performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null;
+    const imgs = $$('img');
+    const li = (k, v) => `<li style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:#9a9aa5">${k}</span><b>${v}</b></li>`;
+    const flag = on => on ? '<b style="color:#7CFC9A">✔ activa</b>' : '<b style="color:#ff6b6b">✖ no</b>';
+    let catalogosOk = '?';
+    try { const a = CATALOG_AVAILABLE; const ks = Object.keys(a); catalogosOk = ks.filter(k => a[k]).length + '/' + ks.length; } catch {}
+    appEl.innerHTML = `<div style="max-width:640px;margin:0 auto;padding:20px 16px 90px;font:14px/1.5 system-ui;color:#fff;background:#0b0b0f;min-height:100vh">
+      <h1 style="font-size:20px;margin:0 0 4px">Diagnóstico DonghuaFlix</h1>
+      <p style="color:#9a9aa5;margin:0 0 16px">versión integrada</p>
+      <ul style="list-style:none;margin:0 0 16px;padding:0">
+        ${li('Conexión', navigator.onLine ? '🟢 en línea' : '🔴 sin conexión')}
+        ${li('Service Worker', ('serviceWorker' in navigator && navigator.serviceWorker.controller) ? 'activo' : 'no controla aún')}
+        ${li('Catálogo activo', (typeof currentCatalog !== 'undefined' ? currentCatalog : '?') + ' · ' + ((window.DB && window.DB.series) ? window.DB.series.length : 0) + ' series')}
+        ${li('Catálogos disponibles', catalogosOk)}
+        ${li('Núcleo Pro', flag(true))}
+        ${li('Imágenes rotas', `${f8.broken.size} / ${imgs.length}`)}
+        ${li('Errores de red', f8.errors)}
+        ${li('Memoria JS', (mem ?? '?') + ' MB')}
+      </ul></div>`;
+  }
+
+  /* ---------- rutas nuevas ---------- */
+  const origRoute2 = window.route;
+  if (origRoute2 && !origRoute2.__dfxRoutes2) {
+    const r2 = function () {
+      const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+      if (p[0] === 'descubrir') return discoverPage();
+      if (p[0] === 'mi-donghua') return miDonghuaPage();
+      if (p[0] === 'diag') return diagPage();
+      return origRoute2.apply(this, arguments);
+    };
+    r2.__dfxRoutes2 = true;
+    window.route = r2;
+  }
+
+  /* ---------- arranque de las integraciones ---------- */
+  function fxInit() {
+    if ($('#dfxGlow')) return;
+    const g = document.createElement('div');
+    g.id = 'dfxGlow';
+    document.body.prepend(g);
+    wrap('episode', () => setTimeout(() => { watchGlow(); bindPlayerGestures(); }, 300));
+    wrap('home', () => setTimeout(watchGlow, 400));
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fxInit);
+  else fxInit();
+
   /* ---------- arranque ---------- */
   function init() {
     splash();
     applySettings();
     addRoutes();
-    cleanMoreMenu();
     wrap('toggleFav', afterChange);
     wrap('toggleWatched', afterChange);
     wrap('markWatchedSingle', afterChange);
     wrap('markWatchedUpTo', afterChange);
     wrap('saveHistory', afterChange);
-    wrap('home', () => { setTimeout(() => { injectRadar(); injectGlobalStats(); cleanMoreMenu(); }, 300); });
-    wrap('episode', () => setTimeout(() => { injectCopyLink(); injectGlobalStats(); }, 200));
-
-    /* barra inferior extra: radar, calendario, versus, random */
-    const bn = document.querySelector('.bottom-nav');
-    if (bn && !$('#dfxBNWrap')) {
-      const w = document.createElement('div');
-      w.id = 'dfxBNWrap';
-      w.style.cssText = 'display:flex;gap:6px;justify-content:center;padding:8px 10px;flex-wrap:wrap';
-      w.innerHTML = `
-        <button class="dfxChip" onclick="location.hash='#/radar'">📡 Radar</button>
-        <button class="dfxChip" onclick="location.hash='#/calendar'">📅 Estrenos</button>
-        <button class="dfxChip" onclick="location.hash='#/versus'">⚔️ Versus</button>
-        <button class="dfxChip" id="dfxRandBtn">${I.dice} Aleatorio</button>
-        <button class="dfxChip" id="dfxMarathonBtn">🏃 Maratón</button>`;
-      bn.parentNode.insertBefore(w, bn.nextSibling);
-      $('#dfxRandBtn').onclick = randomEp;
-      $('#dfxMarathonBtn').onclick = () => {
-        if (DFX.marathon.key) { stopMarathon(); $('#dfxMarathonBtn').classList.remove('on'); }
-        else {
-          if (!(window.detailState && window.detailState.seriesId)) {
-            toast('🏃 Abre una serie y pulsa aquí: contará tus capítulos seguidos');
-            return;
-          }
-          startMarathon(); $('#dfxMarathonBtn').classList.add('on');
-        }
-      };
-    }
+    wrap('home', () => { setTimeout(() => { injectCopyLink(); }, 300); });
+    wrap('episode', () => setTimeout(() => { injectCopyLink(); }, 200));
 
     /* Sin MutationObserver: los controles se inyectan una vez al cargar
        y se re-inyectan solo en los wraps de route()/home()/episode() */
-    setTimeout(() => { cleanMoreMenu(); injectGlobalStats(); }, 500);
-
-    setTimeout(() => { injectRadar(); injectGlobalStats(); markSeenCurrent(); }, 800);
 
     /* hook de auth: cuando firebase-sync confirma sesión, cargamos la nube */
     window.addEventListener('dfx:login', () => { cloudLoad(); });
@@ -968,8 +1383,6 @@
   DFX.toast = toast;
   DFX.openSettings = openSettings;
   DFX.randomEp = randomEp;
-  DFX.startMarathon = startMarathon;
-  DFX.stopMarathon = stopMarathon;
   DFX.toggleWaitlist = toggleWaitlist;
   DFX.roomSend = roomSend;
   DFX.cloudSave = cloudSave;
