@@ -751,6 +751,18 @@ def main() -> int:
 
     save_state(st)
     write_outputs(list(by_slug.values()), t0)
+
+    # Con --fresh: borrar fichas huérfanas (series que ya no están en el índice,
+    # p.ej. entradas basura de runs anteriores tipo "X | Episodios 19 Completos").
+    if args.fresh:
+        keep = {e["s"] for e in by_slug.values()}
+        removed = 0
+        for fp in DETAILS_DIR.glob("*.json"):
+            if fp.stem not in keep:
+                fp.unlink()
+                removed += 1
+        if removed:
+            print(f"[clean] {removed} fichas huérfanas eliminadas")
     return 0
 
 
