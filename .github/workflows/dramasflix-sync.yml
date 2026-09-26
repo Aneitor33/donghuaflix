@@ -1,95 +1,67 @@
-# .github/workflows/dramasflix-sync.yml
-# Catálogo "DramasFlix": dramas chinos (live-action) desde doramasflix.io/paises/china.
-# Scraper completo: series + películas, paginación, síntesis de episodios (la ficha
-# es JS), servidores multi-método (iframes + data-* + hosts + AJAX DooPlay),
-# incremental con checkpoints git, portadas TMDB y selftest.
 name: dramasflix sync
 
 on:
   schedule:
-    - cron: "15 7 * * *"       # diario 07:15 UTC
-  workflow_dispatch:            # botón manual
+    # Se ejecuta automáticamente todos los días a las 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
     inputs:
       fresh:
-        description: "Reiniciar catálogo desde cero (FRESH=1)"
+        description: 'Forzar resincronización completa (FRESH=1)'
+        required: false
         type: boolean
         default: false
       probe_api:
-        description: "SOLO investigar: abrir un episodio con navegador real y capturar los endpoints /api/ (no hace sync bulk)"
+        description: 'Usar Playwright para interceptar reproductores dinámicos'
+        required: false
         type: boolean
         default: false
-
-permissions:
-  contents: write
-
-concurrency:
-  group: dramasflix-sync
-  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 330
-    steps:
-      - uses: actions/checkout@v4
+    timeout-minutes: 360
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
         with:
-          node-version: "20"
-          cache: npm
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci || npm install
 
-      - name: Selftest (patrones de títulos/URLs)
-        run: FLIX_SELFTEST=1 node sync-dramasflix.js
+      - name: Instalar navegadores de Playwright (solo si probe_api está activo)
+        if: ${{ inputs.probe_api == true }}
+        run: npx playwright install --with-deps chromium
 
-      - name: 🔬 Probe API (navegador real Playwright — solo si probe_api)
-        if: ${{ github.event.inputs.probe_api == 'true' }}
-        run: |
-          npm install playwright
-          npx playwright install --with-deps chromium
-          FLIX_PROBE=1 node sync-dramasflix.js
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/catalog-dramasflix-api.json || true
-          git diff --staged --quiet || git commit -m "chore(dramasflix): hallazgos API [skip ci]"
-          git pull --rebase origin main && git push
-
-      - name: Sync bulk (salta si probe_api)
-        if: ${{ github.event.inputs.probe_api != 'true' }}
-        run: node sync-dramasflix.js
-
-      - name: Sync catálogo DramasFlix (doramasflix.io/paises/china)
-        if: ${{ github.event.inputs.probe_api != 'true' }}
+      - name: Ejecutar scraper de DoramasFlix
         env:
-          WORKERS: "5"
-          POLITENESS_MS: "200"
-          HOST_LIMIT: "2"
-          MAX_RUNTIME_MINUTES: "300"
-          MAX_EPISODE_CRAWLS: "20000"
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-          FRESH: ${{ github.event.inputs.fresh == 'true' && '1' || '0' }}
-          # Opcional: si doramasflix.io bloquea las IPs de GitHub (403),
-          # configura estos secrets con tu proxy (mismo esquema que
-          # DORAMAS_PROXY_URL en el workflow de doramas):
-          # FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
-          # FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
+          FRESH: ${{ inputs.fresh && '1' || '0' }}
+          PROBE_API: ${{ inputs.probe_api && '1' || '0' }}
+          WORKERS: '10'
+          FETCH_TIMEOUT_MS: '60000'
+          POLITENESS_MS: '200'
+          MAX_RUNTIME_MINUTES: '330'
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
         run: node sync-dramasflix.js
 
-      - name: Commit y push
-        if: ${{ always() }}
+      - name: Guardar y enviar cambios al repositorio
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/catalog-dramasflix.json \
-                  public/data/catalog-dramasflix-raws.json \
-                  public/data/catalog-dramasflix-failures.json \
-                  public/data/catalog-dramasflix-pattern.json
-          if git diff --cached --quiet; then
-            echo "Sin cambios, nada que commitear."
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/data/catalog-dramasflix*.json || true
+          if git diff --staged --quiet; then
+            echo "No hay cambios en el catálogo."
           else
-            git commit -m "chore(dramasflix): sync catálogo"
-            git pull --rebase origin main
+            git commit -m "chore(data): actualizar catálogo de DoramasFlix [skip ci]"
+            git pull --rebase origin main || true
             git push
           fi
