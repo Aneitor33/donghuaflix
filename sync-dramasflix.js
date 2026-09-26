@@ -85,7 +85,7 @@ const SOURCE = {
   seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
                     !/\/temporada\//.test(p),
   movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
-  episodeTest: p => /^\/(episodios|episodes|ver)\/[a-z0-9-]+/i.test(p),
+  episodeTest: p => /^\/(episodio|episodios|episodes|capitulos?|ver)\/[a-z0-9-]+/i.test(p),
   isPageLink: p => /\/page\/\d+\/?$/.test(p) || /[?&]page=\d+/.test(p),
   pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}?page=${n}`,
   epBelongs: (epSlug, seriesSlug) =>
@@ -373,6 +373,27 @@ function parseServers(html, url) {
     addServer(host, m, true);
   }
 
+  /* Next.js (RSC flight data): el HTML trae el JSON serializado y escapado
+     (self.__next_f.push). Se desescapa y se extraen las URLs de player. */
+  const un = html
+    .replace(/\\\//g, '/')
+    .replace(/\\u0026/g, '&')
+    .replace(/\\"/g, '"');
+  const serPair = /"(?:src|url|embed|file|source|link|href|iframeSrc|iframe|player)":"(https?:\/\/[^"]{10,600})"/g;
+  for (const m of un.matchAll(serPair)) {
+    addServer(hostOf(m[1]), m[1], true);
+  }
+  for (const m of un.match(directRe) || []) {
+    let host = 'Video directo';
+    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, m, false);
+  }
+  for (const m of un.match(hostRe) || []) {
+    let host = 'Servidor';
+    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
+    addServer(host, m, true);
+  }
+
   /* Pestañas del reproductor DooPlay: data-post + data-nume → AJAX */
   const playerOpts = [];
   $('[data-post]').each((_, el) => {
@@ -626,24 +647,61 @@ async function discover() {
       await sleep(POLITENESS_MS);
     }
 
-    /* Sondeo numérico por si la paginación era "invisible" */
+    /* Sondeo numérico: se prueban varios formatos de paginación (?page=,
+       ?pagina=, ?paged=) — el scroll infinito puede usar otro parámetro. */
+    const PAGE_FORMATS = ['?page=', '?pagina=', '?paged='];
     let probeFails = 0;
+    let workingFormat = null;
     for (let n = 2; n <= SOURCE.maxPages; n++) {
       if (timeUp()) break;
-      const url = absolute(SOURCE.pageProbe(first, n), SOURCE.base);
-      if (!url || visited.has(url)) continue;
-      let html;
-      try { html = await fetchHtml(url); probeFails = 0; }
-      catch {
-        probeFails++;
-        if (probeFails >= 3) { console.log(`   🛑 página ${n}: errores seguidos — se pospone`); break; }
-        await sleep(2000);
-        continue;
+      let url = null, html = null;
+
+      if (workingFormat) {
+        url = absolute(`${first}${workingFormat}${n}`, SOURCE.base);
+        try { html = await fetchHtml(url); probeFails = 0; }
+        catch {
+          probeFails++;
+          if (probeFails >= 3) { console.log(`   🛑 página ${n}: errores seguidos — se pospone`); break; }
+          await sleep(2000);
+          continue;
+        }
+      } else {
+        for (const fmt of PAGE_FORMATS) {
+          url = absolute(`${first}${fmt}${n}`, SOURCE.base);
+          try { html = await fetchHtml(url, FETCH_RETRIES + 1); probeFails = 0; }
+          catch { continue; }
+          const s0 = parseLinks(html, url, SOURCE.seriesTest).filter(l => !series.has(l)).length;
+          if (s0 > 0) { workingFormat = fmt; console.log(`   🧭 Paginación detectada: ${fmt}N`); break; }
+          html = null;
+        }
+        if (!html) {
+          console.log(`   🛑 página ${n}: ningún formato de paginación devolvió novedades`);
+          /* DIAG: ¿qué contiene la página? ¿dónde está el "cargar más"? */
+          try {
+            const diagHtml = await fetchHtml(first, FETCH_RETRIES + 1);
+            const $d = cheerio.load(diagHtml);
+            const hrefs = [];
+            $d('a[href]').each((_, el) => {
+              const h = $d(el).attr('href') || '';
+              if (/page|pagina|paged|siguiente|next|more|mas/i.test(h)) hrefs.push(h);
+            });
+            const jsHints = (diagHtml.match(/[\w./-]*(?:loadMore|load_more|infinite|fetch\s*\(|axios|\/api\/|page\s*\+\+|page\+\+)[^\n]{0,120}/gi) || []).slice(0, 6);
+            console.log(`   🔎 DIAG paginación: ${hrefs.length} enlaces con pista (${[...new Set(hrefs)].slice(0, 5).join(' | ')})`);
+            if (jsHints.length) console.log(`   🔎 DIAG JS: ${jsHints.join(' || ')}`);
+            const kws = ['load-more', 'btn-loader', 'data-page', 'data-paged', 'ajax'];
+            for (const kw of kws) {
+              const i = diagHtml.indexOf(kw);
+              if (i !== -1) { console.log(`   🔎 DIAG [${kw}]: …${diagHtml.slice(Math.max(0, i - 100), i + 200).replace(/\s+/g, ' ')}…`); break; }
+            }
+          } catch {}
+          break;
+        }
       }
+
       const s = parseLinks(html, url, SOURCE.seriesTest);
       const mv = parseLinks(html, url, SOURCE.movieTest);
       const fresh = s.filter(l => !series.has(l)).length + mv.filter(l => !movies.has(l)).length;
-      if (!fresh) {
+      if (!fresh && workingFormat) {
         console.log(`   🛑 página ${n}: sin novedades — fin del listado`);
         break;
       }
@@ -734,10 +792,10 @@ async function scrapeSeriesPage(url) {
     if (tpl) {
       const total = declaredEpCount(html) ?? SYNTH_DEFAULT_EPS;
       for (let n = 1; n <= total; n++) {
-        candidates.set(`1|${n}`, {
-          season: 1, number: n,
-          urls: [epUrlFromTemplate(tpl, seriesSlug, n)]
-        });
+        const urls = [epUrlFromTemplate(tpl, seriesSlug, n)];
+        const player = epUrlFromTemplate('/episodio/{slug}-1x{n}', seriesSlug, n);
+        if (!urls.includes(player)) urls.push(player);
+        candidates.set(`1|${n}`, { season: 1, number: n, urls });
       }
     }
   } else if (isMovie && !candidates.size) {
@@ -1123,7 +1181,7 @@ async function main() {
         diagCount++;
         let snippet;
         if (lastHtml) {
-          const kws = ['admin-ajax', 'dooplay', 'playeroptions', 'data-post', 'data-nume', 'ajaxurl', 'action=', 'nonce', 'iframe'];
+          const kws = ['__next_f', '/api/', 'player', 'embedUrl', 'embed_url', 'servers', 'options', 'iframe', 'src:', 'fetch('];
           const hits = [];
           for (const kw of kws) {
             const i = lastHtml.indexOf(kw);
