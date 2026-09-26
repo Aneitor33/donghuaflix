@@ -1,8 +1,7 @@
 // ══════════════════════════════════════════════════════════
-//  dfx-core.js — DonghuaFlix Pro (núcleo)
-//  Perfiles, ajustes, insignias, radar, sala, calendario,
-//  versus, cronómetro, sleep timer, perfiles públicos,
-//  sincronización multi-perfil y push FCM.
+//  dfx-core.js — DonghuaFlix Pro (núcleo integrado)
+//  Perfiles, ajustes, insignias, sala, sleep timer, perfiles
+//  públicos, nube, Descubrir, Mi Donghua, pulido y efectos.
 //  Se carga tras app.js. No modifica app.js.
 // ══════════════════════════════════════════════════════════
 (function () {
@@ -278,7 +277,7 @@
         (window.seriesGenres ? window.seriesGenres(s) : (s.genres || [])).forEach(g => genres.add(fold(g)));
       });
     } catch {}
-    return { total, seriesDone, list: favs.length, genres: genres.size, best: DFX.marathon.best || 0 };
+    return { total, seriesDone, list: favs.length, genres: genres.size, best: 0 };
   }
 
   function checkBadges() {
@@ -319,16 +318,6 @@
   wrap('episode', () => {
     afterChange();
     checkBadges();
-    const m = DFX.marathon;
-    if (m.key) {
-      m.count++;
-      if (m.count > (m.best || 0)) { m.best = m.count; save('dfx_marathon_best', m.best); }
-      save('dfx_marathon', m);
-      if ([5, 10, 25].includes(m.count)) {
-        toast('🏃 ¡Llevas ' + m.count + ' capítulos seguidos!');
-        notify('DonghuaFlix — Maratón ×' + m.count, '¡Sigue así!');
-      }
-    }
     const ep = window.currentEpisode;
     if (ep) {
       try {
@@ -487,9 +476,6 @@
     if (!origRoute || origRoute.__dfxRoutes) return;
     const r = function () {
       const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-      if (p[0] === 'radar') return radarPage();
-      if (p[0] === 'calendar') return calendarPage();
-      if (p[0] === 'versus') return versusPage();
       if (p[0] === 'u') return publicPage(p[1]);
       return origRoute.apply(this, arguments);
     };
