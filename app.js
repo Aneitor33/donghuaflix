@@ -914,6 +914,31 @@ function lastWatchedEpisode(s) {
 
 let currentEpisode = null;
 
+/* Zoom del reproductor: escala el iframe dentro de un contenedor que recorta
+   el sobrante (mata bandas negras de videos verticales o con formato raro,
+   típico de DramasYT). Persistente entre episodios/sesiones.
+   Nota: el pellizco no se puede interceptar sobre un iframe cross-origin;
+   la vía real es transform: scale() desde botones propios. */
+let playerZoom = Number(localStorage.getItem('donghuaflix_zoom') || 1);
+
+function applyPlayerZoom() {
+  const box = document.getElementById('player');
+  const frame = box ? box.querySelector('iframe') : null;
+  const label = document.getElementById('zoomLabel');
+  if (label) {
+    label.textContent = Math.round(playerZoom * 100) + '%';
+  }
+  if (!frame) return;
+  if (playerZoom !== 1) {
+    box.style.overflow = 'hidden';
+    frame.style.transformOrigin = 'center center';
+    frame.style.transform = 'scale(' + playerZoom + ')';
+  } else {
+    box.style.overflow = '';
+    frame.style.transform = '';
+  }
+}
+
 let autoNextEnabled =
   localStorage.getItem(
     'donghuaflix_autonext'
@@ -4242,6 +4267,10 @@ function episode(slug) {
               ${ICONS.full}
             </button>`
           : '<div class="empty">Servidor no disponible.</div>';
+
+      /* El iframe se repinta al cambiar de servidor:
+         se reaplica el zoom sobre el iframe nuevo. */
+      applyPlayerZoom();
     }
   };
 
@@ -4314,6 +4343,42 @@ function episode(slug) {
     <div
       id="serverGroups"
     ></div>
+
+    <div
+      class="ep-nav"
+      style="margin-top:10px"
+    >
+      <button
+        class="btn-x glass"
+        id="zoomOutBtn"
+        title="Alejar"
+      >
+        <span>－</span>
+      </button>
+
+      <span
+        class="muted"
+        id="zoomLabel"
+        style="min-width:48px;text-align:center"
+      >100%</span>
+
+      <button
+        class="btn-x glass"
+        id="zoomInBtn"
+        title="Acercar (recorta bandas negras)"
+      >
+        <span>＋</span>
+      </button>
+
+      <button
+        class="btn-x glass"
+        id="zoomResetBtn"
+        title="Restablecer zoom"
+      >
+        ${ICONS.reload}
+        <span>Ajustar</span>
+      </button>
+    </div>
 
     <div class="ep-nav">
 
@@ -4427,8 +4492,23 @@ function episode(slug) {
 
   </section>`;
 
+  function setPlayerZoom(z) {
+    playerZoom = Math.min(3, Math.max(1, Math.round(z * 100) / 100));
+    localStorage.setItem('donghuaflix_zoom', String(playerZoom));
+    applyPlayerZoom();
+  }
+
+  const bindZoom = (id, fn) => {
+    const b = document.getElementById(id);
+    if (b) b.onclick = fn;
+  };
+  bindZoom('zoomOutBtn', () => setPlayerZoom(playerZoom - 0.10));
+  bindZoom('zoomInBtn', () => setPlayerZoom(playerZoom + 0.10));
+  bindZoom('zoomResetBtn', () => setPlayerZoom(1));
+
   render();
   renderServers();
+  applyPlayerZoom();
 }
 
 function notfound() {
