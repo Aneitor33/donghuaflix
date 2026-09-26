@@ -3766,6 +3766,32 @@ function detailSync(
   }
 }
 
+/* ---------- TEMPORADAS: pestañas + progreso ---------- */
+let epFilter = 'all';
+const EP_TILE_RANGE = 24;
+
+function seasonStats(season) {
+  const eps =
+    dedupeEps(
+      DB.episodes.filter(
+        e =>
+          e.seasonId ===
+          season.id
+      )
+    );
+  const w =
+    getWatched()[
+      season.id
+    ] || {};
+  return {
+    eps,
+    total: eps.length,
+    seen: eps.filter(
+      e => w[e.number]
+    ).length
+  };
+}
+
 function renderSeasonArea(
   seasons
 ) {
@@ -3779,63 +3805,386 @@ function renderSeasonArea(
   if (!seasons.length) {
     area.innerHTML =
       '<div class="empty">No hay episodios disponibles.</div>';
-
     return;
   }
 
+  const stats =
+    seasons.map(
+      seasonStats
+    );
+  const cur =
+    stats[
+      detailState.seasonIdx
+    ];
+  const pct =
+    cur.total
+      ? Math.round(
+          (cur.seen /
+            cur.total) *
+            100
+        )
+      : 0;
+
   area.innerHTML = `
-    <div class="season-picker">
-
-      <select
-        id="seasonSelect"
-        onchange="selectSeason(this.value)"
+    <div class="season-pills">
+      ${seasons
+        .map(
+          (
+            s,
+            i
+          ) =>
+            `<button class="spill ${
+              i ===
+              detailState.seasonIdx
+                ? 'on'
+                : ''
+            }" onclick="selectSeason(${i})">${esc(
+            seasonTitle(
+              s,
+              i
+            )
+          )} <small>· ${
+            stats[i]
+              .total
+          }</small></button>`
+        )
+        .join('')}
+      <span class="sbar"><i style="width:${pct}%"></i></span>
+      <span class="smeta">${cur.seen}/${cur.total} vistos</span>
+      <button
+        class="sbtn"
+        id="markSeasonBtn"
+        title="Marcar toda la temporada como vista"
       >
-
-        ${seasons
-          .map(
-            (season, i) => {
-              const count =
-                dedupeEps(
-                  DB.episodes.filter(
-                    e =>
-                      e.seasonId ===
-                      season.id
-                  )
-                ).length;
-
-              return `<option
-                value="${i}"
-                ${
-                  i ===
-                  detailState.seasonIdx
-                    ? 'selected'
-                    : ''
-                }
-              >
-                ${esc(
-                  seasonTitle(
-                    season,
-                    i
-                  )
-                )} · ${count} episodios
-              </option>`;
-            }
-          )
-          .join('')}
-
-      </select>
-
+        ✓ Marcar temporada
+      </button>
     </div>
 
-    <div
-      id="episodeArea"
-    ></div>`;
+    <div class="ep-filters">
+      <button
+        class="fbtn ${
+          epFilter ===
+          'all'
+            ? 'on'
+            : ''
+        }"
+        data-epf2="all"
+      >
+        Todos
+      </button>
+      <button
+        class="fbtn ${
+          epFilter ===
+          '0'
+            ? 'on'
+            : ''
+        }"
+        data-epf2="0"
+      >
+        Sin ver
+      </button>
+      <button
+        class="fbtn ${
+          epFilter ===
+          '1'
+            ? 'on'
+            : ''
+        }"
+        data-epf2="1"
+      >
+        Vistos
+      </button>
+    </div>
+
+    <div id="epRanges"></div>
+    <div id="episodeArea"></div>`;
+
+  const markBtn =
+    document.getElementById(
+      'markSeasonBtn'
+    );
+  if (markBtn) {
+    markBtn.onclick = () => {
+      const st =
+        stats[
+          detailState
+            .seasonIdx
+        ];
+      const max =
+        st.eps.reduce(
+          (
+            m,
+            e
+          ) =>
+            Math.max(
+              m,
+              e.number
+            ),
+          0
+        );
+      if (max) {
+        markWatchedUpTo(
+          seasons[
+            detailState
+              .seasonIdx
+          ].id,
+          max
+        );
+      }
+      showToast(
+        'Temporada marcada como vista'
+      );
+      renderSeasonArea(
+        seasons
+      );
+    };
+  }
+
+  area
+    .querySelectorAll(
+      '[data-epf2]'
+    )
+    .forEach(btn => {
+      btn.onclick = () => {
+        epFilter =
+          btn.getAttribute(
+            'data-epf2'
+          );
+        renderSeasonArea(
+          seasons
+        );
+      };
+    });
 
   renderEpisodePage(
     seasons[
-      detailState.seasonIdx
+      detailState
+        .seasonIdx
     ]
   );
+}
+
+/* ---------- EPISODIOS: mosaico numérico ---------- */
+function renderEpisodePage(
+  season
+) {
+  const area =
+    document.getElementById(
+      'episodeArea'
+    );
+
+  if (!area) return;
+
+  const eps =
+    dedupeEps(
+      DB.episodes.filter(
+        e =>
+          e.seasonId ===
+          season.id
+      )
+    );
+
+  if (!eps.length) {
+    area.innerHTML =
+      '<div class="empty">No hay episodios disponibles todavía para esta temporada.</div>';
+    return;
+  }
+
+  const w =
+    getWatched()[
+      season.id
+    ] || {};
+  const totalPages =
+    Math.ceil(
+      eps.length /
+        EP_TILE_RANGE
+    );
+
+  if (
+    detailState.page ==
+      null ||
+    detailState.page >=
+      totalPages
+  ) {
+    detailState.page = 0;
+  }
+
+  const page =
+    detailState.page;
+  const slice =
+    eps.slice(
+      page *
+        EP_TILE_RANGE,
+      (page + 1) *
+        EP_TILE_RANGE
+    );
+
+  const now =
+    Date.now();
+  const WEEK =
+    7 *
+    24 *
+    3600 *
+    1000;
+
+  /* rangos para temporadas largas */
+  const rangesEl =
+    document.getElementById(
+      'epRanges'
+    );
+  if (
+    rangesEl &&
+    totalPages > 1
+  ) {
+    rangesEl.innerHTML = `<div class="ep-ranges">${Array.from(
+      {
+        length: totalPages
+      },
+      (
+        _,
+        i
+      ) =>
+        `<button class="fbtn ${
+          i ===
+          page
+            ? 'on'
+            : ''
+        }" data-range="${i}">${i *
+        EP_TILE_RANGE +
+        1}–${Math.min(
+        eps.length,
+        (i + 1) *
+          EP_TILE_RANGE
+      )}</button>`
+    ).join(
+      ''
+    )}</div>`;
+    rangesEl
+      .querySelectorAll(
+        '[data-range]'
+      )
+      .forEach(btn => {
+        btn.onclick = () => {
+          detailState.page =
+            Number(
+              btn.dataset
+                .range
+            );
+          renderEpisodePage(
+            season
+          );
+        };
+      });
+  } else if (
+    rangesEl
+  ) {
+    rangesEl.innerHTML =
+      '';
+  }
+
+  area.innerHTML = `<div class="ep-tiles">${slice
+    .map(ep => {
+      const seen =
+        Boolean(
+          w[
+            ep.number
+          ]
+        );
+      if (
+        epFilter !==
+          'all' &&
+        String(
+          seen
+            ? 1
+            : 0
+        ) !==
+          epFilter
+      ) {
+        return '';
+      }
+      const isNew =
+        !seen &&
+        (Date.parse(
+          ep.updatedAt ||
+            0
+        ) || 0) >
+          now -
+            WEEK;
+      const serv =
+        (
+          ep.servers ||
+          []
+        )
+          .map(
+            s =>
+              s.name
+          )
+          .filter(
+            Boolean
+          )
+          .join(
+            ' · '
+          );
+      return `<div class="eptile ${
+        seen
+          ? 'seen'
+          : ''
+      }" title="Episodio ${
+        ep.number
+      }${
+        serv
+          ? ' · ' +
+            esc(
+              serv
+            )
+          : ''
+      }">
+      <a
+        class="eptile-link"
+        href="#/episode/${qs(
+          ep.slug ||
+            ep.id
+        )}"
+      >
+        ${
+          seen
+            ? '✓ '
+            : ''
+        }${ep.number}
+      </a>
+      <button
+        class="eptile-check ${
+          seen
+            ? 'on'
+            : ''
+        }"
+        title="${
+          seen
+            ? 'Quitar visto'
+            : 'Marcar visto'
+        }"
+        onclick="event.preventDefault();event.stopPropagation();toggleWatched('${esc(
+        season.id
+      )}', ${
+        ep.number
+      })"
+      >
+        ${
+          seen
+            ? '✓'
+            : ''
+        }
+      </button>
+      ${
+        isNew
+          ? '<span class="eptile-new">NUEVO</span>'
+          : ''
+      }
+    </div>`;
+    })
+    .join(
+      ''
+    )}</div>`;
 }
 
 function selectSeason(i) {
