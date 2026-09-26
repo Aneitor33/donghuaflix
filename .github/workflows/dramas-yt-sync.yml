@@ -64,7 +64,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios, nada que commitear."
           else
-            git commit -m "chore(dramasyt): sync dramas YouTube oficial [skip ci]"
+            git commit -m "chore(dramasyt): sync dramas YouTube oficial"
             git pull --rebase origin main
             git push
           fi
