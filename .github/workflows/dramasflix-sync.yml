@@ -56,14 +56,16 @@ jobs:
         run: node sync-dramasflix.js
 
       - name: Guardar y enviar cambios al repositorio
+        # Corre aunque el scraper falle, para no perder el progreso en disco
+        if: ${{ always() }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add public/data/catalog-dramasflix*.json || true
           if git diff --staged --quiet; then
             echo "No hay cambios en el catálogo."
-          else
-            git commit -m "chore(data): actualizar catálogo de DoramasFlix [skip ci]"
-            git pull --rebase origin main || true
-            git push
+            exit 0
           fi
+          git commit -m "chore(data): actualizar catálogo de DoramasFlix [skip ci]"
+          git pull --rebase origin main || true
+          git push || echo "⚠️ Push falló; la próxima corrida lo reintentará con los datos guardados en disco"
