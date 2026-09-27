@@ -6,7 +6,6 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import * as cheerio from 'cheerio';
 
@@ -769,29 +768,19 @@ function upsert(array, item, key = 'id') {
   else array[i] = { ...array[i], ...item };
 }
 
-let lastPush = 0;
-let checkpointBusy = false;
-function gitCheckpoint(db) {
+let lastSave = 0;
+let savingCatalog = false;
+/* Guarda el catálogo en disco periódicamente. El envío al repo lo hace
+   únicamente el paso final del workflow (único escritor = sin conflictos) */
+function diskCheckpoint(db) {
   const now = Date.now();
-  if (now - lastPush < 600000 || checkpointBusy) return;
-  checkpointBusy = true;
-  lastPush = now;
+  if (now - lastSave < 600000 || savingCatalog) return;
+  savingCatalog = true;
+  lastSave = now;
   saveCatalog(db)
-    .then(() => {
-      try {
-        execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
-        execSync('git config --local user.name "github-actions[bot]"');
-        execSync('git add public/data/catalog-dramasflix.json public/data/catalog-dramasflix-raws.json public/data/catalog-dramasflix-failures.json');
-        execSync('git diff --staged --quiet || git commit -m "sync(dramasflix): progreso"');
-        execSync('git pull --rebase origin main || true');
-        execSync('git push');
-        console.log('   💾 Checkpoint: progreso guardado y enviado al repo');
-      } catch (e) {
-        console.log(`   ⚠️ Checkpoint falló: ${e.message}`);
-      }
-    })
+    .then(() => console.log('   💾 Checkpoint: catálogo guardado en disco (se enviará al repo al final de la corrida)'))
     .catch(e => console.log(`   ⚠️ No se pudo guardar el catálogo: ${e.message}`))
-    .finally(() => { checkpointBusy = false; });
+    .finally(() => { savingCatalog = false; });
 }
 
 async function runPool(items, workers, fn, shouldStop = () => false) {
@@ -854,7 +843,7 @@ async function main() {
     doneSeries++;
     if (doneSeries % 10 === 0) {
       console.log(`   📄 Series rastreadas: ${doneSeries}/${pending.length}`);
-      gitCheckpoint(db);
+      diskCheckpoint(db);
     }
   }, timeUp);
   await saveJson(RAWS_FILE, raws);
@@ -964,7 +953,7 @@ async function main() {
   }
 
   /* Persistir series/seasons antes de la fase larga de episodios */
-  gitCheckpoint(db);
+  diskCheckpoint(db);
 
   if (epQueue.length) {
     console.log(`🎞️  Fase de episodios: ${epQueue.length} capítulos pendientes de rastrear`);
@@ -1053,7 +1042,7 @@ async function main() {
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
       console.log(`   🎞️  Episodios: ${crawled}/${epQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
-      gitCheckpoint(db);
+      diskCheckpoint(db);
     }
   }, () => timeUp() || epAbortEarly);
 
@@ -1078,7 +1067,7 @@ async function main() {
 
   await saveCatalog(db);
   await saveJson(FAILURES_FILE, failures);
-  gitCheckpoint(db);
+  diskCheckpoint(db);
   if (failReasons.size) {
     const top = [...failReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     console.log(`📉 Motivos de fallo: ${top.map(([r, c]) => `${r} (×${c})`).join(' | ')}`);
