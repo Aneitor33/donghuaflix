@@ -184,14 +184,48 @@ async function fetchHtml(url, attempt = 1) {
   }
 }
 
+/* Extrae el router state tree que Next.js incrusta en el HTML inicial
+   (self.__next_f.push([1,"0:{...\"f\":[[[arbol]],...}"])) */
+function extractRouterState(html) {
+  const marker = 'self.__next_f.push([1,"0:{';
+  const start = html.indexOf(marker);
+  if (start === -1) return null;
+  let i = start + marker.length;
+  let out = '0:{';
+  while (i < html.length && out.length < 200000) {
+    const ch = html[i];
+    if (ch === '\\') {
+      const n = html[i + 1];
+      if (n === '"' || n === '\\' || n === '/') { out += n; i += 2; continue; }
+      if (n === 'u') { out += html.slice(i, i + 6); i += 6; continue; }
+    }
+    if (ch === '"') break;
+    out += ch;
+    i++;
+  }
+  try {
+    const row = JSON.parse(out);
+    if (row && Array.isArray(row.f) && Array.isArray(row.f[0])) return row.f[0];
+  } catch {}
+  return null;
+}
+
 /* El stream RSC (React Server Components) es donde doramasflix.io (Next.js)
-   sirve los servidores tras la hidratación. Se puede pedir por HTTP puro. */
-async function fetchRsc(url) {
-  const variants = [
-    { 'RSC': '1' },
-    { 'RSC': '1', 'Next-Router-Prefetch': '1' },
-    { 'RSC': '1', 'Next-Url': new URL(url).pathname }
-  ];
+   sirve los servidores tras la hidratación. Se puede pedir por HTTP puro,
+   pero hay que enviar el router state tree; sin él el servidor devuelve
+   solo el "shell" de renderizado progresivo (sin servidores). */
+async function fetchRsc(url, html) {
+  const tree = html ? extractRouterState(html) : null;
+  const variants = [];
+  if (tree) {
+    variants.push({
+      'RSC': '1',
+      'Next-Router-State-Tree': encodeURIComponent(JSON.stringify(tree)),
+      'Next-Url': new URL(url).pathname
+    });
+  }
+  variants.push({ 'RSC': '1', 'Next-Url': new URL(url).pathname });
+  variants.push({ 'RSC': '1' });
   for (const extra of variants) {
     try {
       const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
@@ -205,7 +239,9 @@ async function fetchRsc(url) {
       }));
       if (!res.ok) continue;
       const text = await res.text();
-      if (/"link"|"server"|__next_f/.test(text)) return text;
+      /* El payload real trae la fila de servidores ("link":"https://...");
+         el shell PPR no, así que lo rechazamos y probamos la siguiente variante */
+      if (/\\?"link\\?":\\?"?https?/.test(text) || /embedshortener/.test(text)) return text;
     } catch {}
   }
   return null;
@@ -1067,11 +1103,13 @@ async function main() {
     const seenSrv = new Set();
     let pageTitle = null;
     const errs = [];
+    let lastHtml = null;
 
     for (const u of job.urls) {
       if (timeUp()) break;
       try {
         const html = await fetchHtml(u);
+        lastHtml = html;
         let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
         for (const s of parsed.servers) {
@@ -1101,7 +1139,7 @@ async function main() {
     /* Fallback RSC: el HTML inicial no trae servidores; el stream de Next.js sí */
     if (!servers.length && job.urls.length && !timeUp()) {
       try {
-        const rsc = await fetchRsc(job.urls[0]);
+        const rsc = await fetchRsc(job.urls[0], lastHtml);
         if (rsc) {
           if (!loggedRscSample) {
             loggedRscSample = true;
