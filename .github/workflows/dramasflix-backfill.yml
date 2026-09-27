@@ -4,11 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       shards:
-        description: 'En cuántas partes dividir el trabajo'
+        description: 'En cuántas partes dividir el trabajo (mismo valor que el run original al fusionar)'
         required: true
         default: '6'
         type: choice
         options: ['4', '6', '8']
+      merge_run_id:
+        description: 'RESCATE: ID del run cancelado cuyos artefactos fusionar (vacío = comportamiento normal)'
+        required: false
+        default: ''
+        type: string
+      merge_artifact_ids:
+        description: 'RESCATE (recomendado): IDs de artefactos exactos, separados por comas. Evita mezclar intentos.'
+        required: false
+        default: ''
+        type: string
 
 concurrency:
   group: dramasflix-backfill
@@ -18,6 +28,8 @@ jobs:
   # Cada runner procesa ~1/N de los episodios. NO tocan git:
   # suben su resultado como artefacto y el job merge se encarga del repo.
   episodes:
+    # En modo rescate (merge_run_id != '') solo corre el merge, no se re-rastrea nada
+    if: ${{ inputs.merge_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 330
     permissions:
@@ -64,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # El número de intento evita colisiones si se relanza el workflow
-          name: shard-${{ matrix.shard }}-a${{ github.run_attempt }}
+          name: shard-${{ matrix.shard }}
           path: |
             public/data/catalog-dramasflix-shard${{ matrix.shard }}.json
             public/data/catalog-dramasflix-failures-shard${{ matrix.shard }}.json
@@ -93,12 +105,31 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
-      - name: Descargar shards
+      - name: Descargar shards (de este run)
+        if: ${{ inputs.merge_run_id == '' }}
         uses: actions/download-artifact@v4
         with:
-          pattern: shard-*-a${{ github.run_attempt }}
+          pattern: shard-*
           path: public/data
           merge-multiple: true
+
+      - name: Descargar shards (rescate por IDs exactos)
+        if: ${{ inputs.merge_artifact_ids != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ inputs.merge_artifact_ids }}
+          path: public/data
+          merge-multiple: true
+
+      - name: Descargar shards (rescate por run-id)
+        if: ${{ inputs.merge_run_id != '' && inputs.merge_artifact_ids == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shard-*
+          path: public/data
+          merge-multiple: true
+          run-id: ${{ inputs.merge_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fusionar shards en el catálogo
         env:
