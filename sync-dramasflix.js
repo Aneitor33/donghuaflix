@@ -10,8 +10,8 @@ import { execSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import * as cheerio from 'cheerio';
 
-const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 120000);
-const FETCH_RETRIES = 3;
+const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
+const FETCH_RETRIES = Math.max(1, Math.min(4, Number(process.env.FETCH_RETRIES || 2)));
 
 /* fetch que devuelve {status, contentType, text} descomprimiendo gzip a mano */
 async function fetchRaw(url) {
@@ -46,6 +46,8 @@ const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS |
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEFAULT_EPS || 24)));
 const FRESH = process.env.FRESH === '1';
+/* Aborta la fase de episodios tras esta racha de fallos consecutivos (posible bloqueo) */
+const EP_FAIL_STREAK_ABORT = Math.max(10, Number(process.env.EP_FAIL_STREAK_ABORT || 40));
 
 /* Proxy opcional */
 const PROXY_URL = (process.env.FLIX_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
@@ -558,6 +560,7 @@ function parseLinksAll(html, pageUrl, test) {
 async function discoverSitemap() {
   let xml;
   try {
+    console.log('🗺️  Intentando descubrimiento vía sitemap...');
     const r = await fetchRaw(`${SOURCE.base}/sitemap.xml`);
     if (r.status !== 200 || !r.text.includes('<loc')) return null;
     xml = r.text;
@@ -587,6 +590,7 @@ async function discoverSitemap() {
     else if (SOURCE.movieTest(path)) movies.add(u);
   }
   if (series.size + movies.size < 10) return null;
+  console.log(`🗺️  Sitemap OK: ${series.size} series, ${movies.size} películas`);
   return { seriesUrls: [...series], movieUrls: [...movies] };
 }
 
@@ -613,6 +617,9 @@ async function discover() {
 
       for (const next of parseLinks(html, pageUrl, SOURCE.isPageLink)) {
         if (!visited.has(next) && !queue.includes(next)) queue.push(next);
+      }
+      if (visited.size % 5 === 0) {
+        console.log(`   🗺️  Páginas rastreadas: ${visited.size} | series: ${series.size} | películas: ${movies.size}`);
       }
       await sleep(POLITENESS_MS);
     }
@@ -748,20 +755,28 @@ function upsert(array, item, key = 'id') {
 }
 
 let lastPush = 0;
+let checkpointBusy = false;
 function gitCheckpoint(db) {
   const now = Date.now();
-  if (now - lastPush < 600000) return;
+  if (now - lastPush < 600000 || checkpointBusy) return;
+  checkpointBusy = true;
   lastPush = now;
-  saveCatalog(db).then(() => {
-    try {
-      execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
-      execSync('git config --local user.name "github-actions[bot]"');
-      execSync('git add public/data/catalog-dramasflix.json public/data/catalog-dramasflix-raws.json public/data/catalog-dramasflix-failures.json');
-      execSync('git diff --staged --quiet || git commit -m "sync(dramasflix): progreso"');
-      execSync('git pull --rebase origin main || true');
-      execSync('git push');
-    } catch {}
-  });
+  saveCatalog(db)
+    .then(() => {
+      try {
+        execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
+        execSync('git config --local user.name "github-actions[bot]"');
+        execSync('git add public/data/catalog-dramasflix.json public/data/catalog-dramasflix-raws.json public/data/catalog-dramasflix-failures.json');
+        execSync('git diff --staged --quiet || git commit -m "sync(dramasflix): progreso"');
+        execSync('git pull --rebase origin main || true');
+        execSync('git push');
+        console.log('   💾 Checkpoint: progreso guardado y enviado al repo');
+      } catch (e) {
+        console.log(`   ⚠️ Checkpoint falló: ${e.message}`);
+      }
+    })
+    .catch(e => console.log(`   ⚠️ No se pudo guardar el catálogo: ${e.message}`))
+    .finally(() => { checkpointBusy = false; });
 }
 
 async function runPool(items, workers, fn, shouldStop = () => false) {
@@ -777,6 +792,7 @@ async function runPool(items, workers, fn, shouldStop = () => false) {
 
 async function main() {
   console.log('🚀 DRAMASFLIX SYNC INICIADO');
+  console.log(`⚙️  Config: workers=${WORKERS} timeout=${FETCH_TIMEOUT_MS}ms reintentos=${FETCH_RETRIES} hostLimit=${HOST_LIMIT} proxy=${PROXY_URL ? 'sí' : 'NO (directo)'}`);
 
   let db = await loadCatalog();
   let failures = await loadJson(FAILURES_FILE, {});
@@ -790,22 +806,44 @@ async function main() {
     await fs.rm(RAWS_FILE, { force: true });
   }
 
-  let discovered = await discoverSitemap().catch(() => null) || await discover();
+  let discovered = await discoverSitemap().catch(() => null);
+  if (discovered) {
+    console.log(`📚 Descubrimiento vía sitemap: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
+  } else {
+    console.log('🗺️  Sitemap no disponible, rastreando desde semillas...');
+    discovered = await discover();
+    console.log(`📚 Descubrimiento vía rastreo: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
+  }
+
   const tasks = [
     ...discovered.seriesUrls.map(u => ({ url: u, isMovie: false })),
     ...discovered.movieUrls.map(u => ({ url: u, isMovie: true }))
   ];
+
+  /* Fail-fast: si no se descubrió nada, el sitio o el proxy no responden */
+  if (!tasks.length) {
+    throw new Error('Descubrimiento vacío: doramasflix.io no respondió o el proxy no está configurado. Revisa FLIX_PROXY_URL / FLIX_PROXY_KEY.');
+  }
 
   const prevRaws = (await loadJson(RAWS_FILE, [])).filter(r => tasks.some(t => t.url === r.url));
   const doneUrls = new Set(prevRaws.map(r => r.url));
   const pending = tasks.filter(t => !doneUrls.has(t.url));
   let raws = [...prevRaws];
 
+  console.log(`⏭️  Ya procesadas previamente: ${doneUrls.size} | pendientes esta corrida: ${pending.length}`);
+
+  let doneSeries = 0;
   await runPool(pending, WORKERS, async (t) => {
     const r = await scrapeSeriesPage(t.url);
     raws.push(r);
+    doneSeries++;
+    if (doneSeries % 10 === 0) {
+      console.log(`   📄 Series rastreadas: ${doneSeries}/${pending.length}`);
+      gitCheckpoint(db);
+    }
   }, timeUp);
   await saveJson(RAWS_FILE, raws);
+  console.log(`✅ Fase de series terminada: ${raws.length} páginas en bruto`);
 
   const existingById = new Map(db.series.map(s => [s.id, s]));
   const existingByBase = new Map();
@@ -910,7 +948,20 @@ async function main() {
     }
   }
 
+  /* Persistir series/seasons antes de la fase larga de episodios */
+  gitCheckpoint(db);
+
+  if (epQueue.length) {
+    console.log(`🎞️  Fase de episodios: ${epQueue.length} capítulos pendientes de rastrear`);
+  } else {
+    console.log('🎞️  Fase de episodios: nada pendiente (todo ya tiene servidores o está en lista de fallos)');
+  }
+
   let failedEps = 0, crawled = 0;
+  let epFailStreak = 0;
+  let epAbortEarly = false;
+  const t0Eps = Date.now();
+
   await runPool(epQueue, WORKERS, async (job) => {
     if (timeUp()) return;
     const servers = [];
@@ -949,6 +1000,7 @@ async function main() {
 
     crawled++;
     if (servers.length) {
+      epFailStreak = 0;
       delete failures[`${job.seasonId}|${job.number}`];
       upsert(db.episodes, {
         id: `${job.seasonId}-e${job.number}`,
@@ -966,8 +1018,19 @@ async function main() {
       failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
+      epFailStreak++;
+      if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
+        epAbortEarly = true;
+        console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos — el sitio o el proxy están bloqueando. Abortando la fase de episodios.`);
+      }
     }
-  }, timeUp);
+
+    if (crawled % 20 === 0) {
+      const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
+      console.log(`   🎞️  Episodios: ${crawled}/${epQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
+      gitCheckpoint(db);
+    }
+  }, () => timeUp() || epAbortEarly);
 
   db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
   db.meta = {
@@ -979,7 +1042,7 @@ async function main() {
   await saveCatalog(db);
   await saveJson(FAILURES_FILE, failures);
   gitCheckpoint(db);
-  console.log('🎉 SYNC TERMINADO');
+  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | rastreados: ${crawled}`);
 }
 
 if (process.env.FLIX_SELFTEST === '1') {
