@@ -64,7 +64,7 @@ for (const t of tabs.slice(0, 6)) {
 console.log('\n=== SCRIPTS CON JSON DEL EPISODIO/REPRODUCTOR ===');
 const scripts = await page.$$eval('script', ss =>
   ss.map(s => s.textContent || '')
-    .filter(t => /servidor|server|embed|player|source|https?:\\/\\//i.test(t) && t.length > 80 && t.length < 30000)
+    .filter(t => /servidor|server|embed|player|source|https?:\/\//i.test(t) && t.length > 80 && t.length < 30000)
     .slice(0, 5)
     .map(t => t.slice(0, 500))
 );
