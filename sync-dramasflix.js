@@ -45,8 +45,6 @@ const HOST_LIMIT = Math.max(1, Math.min(8, Number(process.env.HOST_LIMIT || 2)))
 const MAX_EPISODE_CRAWLS = Math.max(100, Number(process.env.MAX_EPISODE_CRAWLS || 20000));
 const MAX_RUNTIME_MS = Math.max(10, Number(process.env.MAX_RUNTIME_MINUTES || 300)) * 60000;
 const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEFAULT_EPS || 24)));
-const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
-const TMDB_IMG = 'https://image.tmdb.org/t/p/w300';
 const FRESH = process.env.FRESH === '1';
 
 /* Proxy opcional */
@@ -69,7 +67,6 @@ async function withHostLimit(host, fn) {
 
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
-const elapsedMin = () => ((Date.now() - T0) / 60000).toFixed(1);
 
 const SOURCE = {
   id: 'dramasflix',
@@ -81,10 +78,7 @@ const SOURCE = {
   movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
   episodeTest: p => /^\/(episodio|episodios|episodes|capitulo|capitulos|ver)\/[a-z0-9-]+/i.test(p),
   isPageLink: p => /\/page\/\d+\/?$/.test(p) || /[?&]page=\d+/.test(p),
-  pageProbe: (seed, n) => `${seed.replace(/\/+$/, '')}?page=${n}`,
-  epBelongs: (epSlug, seriesSlug) =>
-    epSlug.toLowerCase().startsWith(seriesSlug.toLowerCase()),
-  synthUrl: (slug, n) => `/episodios/${slug}-1x${n}/`
+  epBelongs: (epSlug, seriesSlug) => epSlug.toLowerCase().startsWith(seriesSlug.toLowerCase())
 };
 
 const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
@@ -137,9 +131,7 @@ async function fetchHtml(url, attempt = 1) {
       reqPromise,
       new Promise((_, rej) => setTimeout(() => rej(new Error('timeout duro')), FETCH_TIMEOUT_MS + 10000))
     ]));
-    if (proxied && attempt === 1 && !res.ok) {
-      console.log(`   🔀 Proxy respondió ${res.status} para ${url}`);
-    }
+    
     if (!res.ok) {
       if (res.status === 403) {
         const host = new URL(url).hostname;
@@ -163,19 +155,6 @@ async function fetchHtml(url, attempt = 1) {
       new Promise((_, rej) => setTimeout(() => rej(new Error('timeout de lectura')), FETCH_TIMEOUT_MS))
     ]);
   } catch (err) {
-    try {
-      const msg = String((err && err.message) || '');
-      if (!msg.includes('HTTP 404')) {
-        const h = new URL(url).hostname;
-        const f = (hostFails.get(h) || 0) + 1;
-        hostFails.set(h, f);
-        if (f >= 4) {
-          console.log(`   🥵 ${h} nos está limitando: pausa de 45s para enfriar…`);
-          await sleep(45000);
-          hostFails.set(h, 0);
-        }
-      }
-    } catch {}
     if (attempt < FETCH_RETRIES) {
       await sleep(1000 * attempt);
       return fetchHtml(url, attempt + 1);
@@ -249,7 +228,6 @@ const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidu
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
 
-// Lista de hosts conocidos detectados en DoramasFlix
 const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn\.ru|byse|voe\.sx|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|1fichier|johnfullwonder|seeks|fastream|luluvdo|netu\.tv|tamamo|tioplayer|fcdn|streamlare|slmaxed|sltube|playhydrax|hydrax|mp4upload|krakenfiles|filelions|lulustream|streamtape)\b/i;
 const DIRECT_MEDIA_RE = /\.(?:mp4|webm|m3u8)(\?|#|$)/i;
 
@@ -356,16 +334,6 @@ function parseServers(html, url) {
   const serPair = /"(?:src|url|embed|file|source|link|href|iframeSrc|iframe|player)":"(https?:\/\/[^"]{10,600})"/g;
   for (const m of un.matchAll(serPair)) {
     addServer(hostOf(m[1]), m[1], true);
-  }
-  for (const m of un.match(directRe) || []) {
-    let host = 'Video directo';
-    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
-    addServer(host, m, false);
-  }
-  for (const m of un.match(hostRe) || []) {
-    let host = 'Servidor';
-    try { host = new URL(m).hostname.replace(/^www\./, ''); } catch {}
-    addServer(host, m, true);
   }
 
   const playerOpts = [];
@@ -961,7 +929,6 @@ async function main() {
           servers.push(s);
         }
         
-        // Intento AJAX adicional para pestañas DooPlay si no devolvió iframe directo
         if (!servers.length && parsed.playerOpts && parsed.playerOpts.length) {
           for (const opt of parsed.playerOpts) {
             try {
