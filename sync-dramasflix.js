@@ -1155,6 +1155,7 @@ async function main() {
   let failedEps = 0, crawled = 0;
   let epFailStreak = 0;
   const failReasons = new Map();
+  const okTimes = [];
   let epAbortEarly = false;
   const t0Eps = Date.now();
 
@@ -1225,6 +1226,7 @@ async function main() {
     crawled++;
     if (servers.length) {
       epFailStreak = 0;
+      okTimes.push(Date.now());
       delete failures[`${job.seasonId}|${job.number}`];
       upsert(db.episodes, {
         id: `${job.seasonId}-e${job.number}`,
@@ -1260,6 +1262,11 @@ async function main() {
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
       console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
+      const recentOk = okTimes.filter(t => Date.now() - t < 10 * 60000).length;
+      if (crawled > 120 && recentOk === 0 && !epAbortEarly) {
+        epAbortEarly = true;
+        console.log('   🛑 Ningún episodio con servidores en los últimos 10 minutos (el sitio está limitando las peticiones). Abortando para conservar lo conseguido.');
+      }
       diskCheckpoint(db);
     }
   }, () => timeUp() || epAbortEarly);
