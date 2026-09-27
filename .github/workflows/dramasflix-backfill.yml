@@ -137,12 +137,15 @@ jobs:
           SHARD_TOTAL: ${{ inputs.shards }}
         run: node sync-dramasflix.js
 
+      - name: Dividir catálogo en índice + fichas
+        run: node split-catalog.js public/data/catalog-dramasflix.json
+
       - name: Guardar y enviar cambios al repositorio
         if: ${{ always() }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/data/catalog-dramasflix*.json || true
+          git add -A public/data || true
           if git diff --staged --quiet; then
             echo "No hay cambios."
             exit 0

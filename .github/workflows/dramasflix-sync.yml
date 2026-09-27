@@ -1,0 +1,74 @@
+name: dramasflix sync
+
+on:
+  schedule:
+    # Se ejecuta automáticamente todos los días a las 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      fresh:
+        description: 'Forzar resincronización completa (FRESH=1)'
+        required: false
+        type: boolean
+        default: false
+
+# Evita que dos ejecuciones se pisen entre sí
+concurrency:
+  group: dramasflix-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    # Necesario para que git push funcione (sin esto el token es de solo lectura)
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Ejecutar scraper de DoramasFlix
+        env:
+          FRESH: ${{ inputs.fresh && '1' || '0' }}
+          WORKERS: '10'
+          FETCH_TIMEOUT_MS: '20000'
+          FETCH_RETRIES: '2'
+          POLITENESS_MS: '200'
+          HOST_LIMIT: '4'
+          MAX_RUNTIME_MINUTES: '300'
+          # Opcional: si algún día configuras estos secrets, el scraper los usará
+          # automáticamente; si no existen, las peticiones salen en directo.
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
+        run: node sync-dramasflix.js
+
+      - name: Dividir catálogo en índice + fichas
+        run: node split-catalog.js public/data/catalog-dramasflix.json
+
+      - name: Guardar y enviar cambios al repositorio
+        # Corre aunque el scraper falle, para no perder el progreso en disco
+        if: ${{ always() }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A public/data || true
+          if git diff --staged --quiet; then
+            echo "No hay cambios en el catálogo."
+            exit 0
+          fi
+          git commit -m "chore(data): actualizar catálogo de DoramasFlix [skip ci]"
+          git pull --rebase origin main || true
+          git push || echo "⚠️ Push falló; la próxima corrida lo reintentará con los datos guardados en disco"
