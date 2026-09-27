@@ -73,6 +73,8 @@ jobs:
   # Fusiona los shards y es el ÚNICO que commitea y pushea (sin conflictos)
   merge:
     needs: episodes
+    # Corre aunque algún shard falle o agote su tiempo: fusiona lo que exista
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
