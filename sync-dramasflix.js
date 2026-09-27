@@ -265,7 +265,7 @@ async function extractServersPlaywright(url) {
     }
   } catch {}
   finally {
-    if (ctx) await ctx.close().catch(() => {});
+    if (ctx) { try { await Promise.race([ctx.close(), sleep(4000)]); } catch {} }
     pwRelease();
   }
   return servers;
@@ -1291,7 +1291,7 @@ async function main() {
     lastSync: { status: 'success', finishedAt: new Date().toISOString(), series: db.series.length, episodes: db.episodes.length, newEpisodes: newEps }
   };
 
-  if (pwBrowser) { try { await pwBrowser.close(); } catch {} }
+  if (pwBrowser) { try { await Promise.race([pwBrowser.close(), sleep(5000)]); } catch {} }
   await saveCatalog(db);
   await saveJson(FAILURES_FILE, failures);
   diskCheckpoint(db);
@@ -1305,8 +1305,14 @@ async function main() {
 if (process.env.FLIX_SELFTEST === '1') {
   console.log('Selftest completado');
 } else {
-  main().catch(async e => {
-    console.error('💥 ERROR FATAL:', e);
-    process.exitCode = 1;
-  });
+  main()
+    .then(() => {
+      /* Salida explícita: sockets keep-alive o procesos chromium huérfanos
+         pueden mantener vivo el proceso y bloquear el paso de subida del artefacto */
+      process.exit(0);
+    })
+    .catch(e => {
+      console.error('💥 ERROR FATAL:', e);
+      process.exit(1);
+    });
 }
