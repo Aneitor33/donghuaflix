@@ -254,8 +254,8 @@ async function extractServersPlaywright(url) {
         }
       }).catch(() => {});
     });
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
-    await page.waitForTimeout(3000);
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(4000);
     const iframes = await page.$$eval('iframe[src]', els => els.map(e => e.src).filter(Boolean)).catch(() => []);
     for (const s of iframes) {
       if (isPlayableAbs(s) && !seen.has(s)) {
@@ -1263,9 +1263,9 @@ async function main() {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
       console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
       const recentOk = okTimes.filter(t => Date.now() - t < 10 * 60000).length;
-      if (crawled > 120 && recentOk === 0 && !epAbortEarly) {
+      if (crawled > 120 && recentOk < 5 && !epAbortEarly) {
         epAbortEarly = true;
-        console.log('   🛑 Ningún episodio con servidores en los últimos 10 minutos (el sitio está limitando las peticiones). Abortando para conservar lo conseguido.');
+        console.log(`   🛑 Solo ${recentOk} episodios con servidores en los últimos 10 minutos (el sitio está limitando las peticiones). Abortando para conservar lo conseguido.`);
       }
       diskCheckpoint(db);
     }
