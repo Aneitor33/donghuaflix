@@ -39,12 +39,18 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
+      - name: Instalar Playwright + Chromium
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
       - name: Rastrear servidores (shard ${{ matrix.shard }}/${{ inputs.shards }})
         env:
           MODE: episodes
           SHARD_INDEX: ${{ matrix.shard }}
           SHARD_TOTAL: ${{ inputs.shards }}
-          WORKERS: '12'
+          USE_PLAYWRIGHT: '1'
+          WORKERS: '10'
           HOST_LIMIT: '8'
           FETCH_TIMEOUT_MS: '20000'
           FETCH_RETRIES: '2'
