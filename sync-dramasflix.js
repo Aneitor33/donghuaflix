@@ -959,6 +959,7 @@ async function main() {
 
   let failedEps = 0, crawled = 0;
   let epFailStreak = 0;
+  const failReasons = new Map();
   let epAbortEarly = false;
   const t0Eps = Date.now();
 
@@ -967,6 +968,7 @@ async function main() {
     const servers = [];
     const seenSrv = new Set();
     let pageTitle = null;
+    let lastErr = null;
 
     for (const u of job.urls) {
       if (timeUp()) break;
@@ -994,7 +996,7 @@ async function main() {
             } catch {}
           }
         }
-      } catch {}
+      } catch (e) { lastErr = (e && e.message) ? e.message : String(e); }
       await sleep(POLITENESS_MS);
     }
 
@@ -1019,9 +1021,16 @@ async function main() {
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
       epFailStreak++;
+      const reason = lastErr || 'página cargada pero sin servidores detectados';
+      failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
+      if (failedEps <= 5) {
+        console.log(`   ❌ Fallo #${failedEps}: ${reason}`);
+        console.log(`      URL: ${job.urls[0]}`);
+      }
       if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
         epAbortEarly = true;
-        console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos — el sitio o el proxy están bloqueando. Abortando la fase de episodios.`);
+        const topAbort = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
+        console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos. Motivo más frecuente: ${topAbort ? `${topAbort[0]} (×${topAbort[1]})` : 'desconocido'}. Abortando la fase de episodios.`);
       }
     }
 
@@ -1042,6 +1051,10 @@ async function main() {
   await saveCatalog(db);
   await saveJson(FAILURES_FILE, failures);
   gitCheckpoint(db);
+  if (failReasons.size) {
+    const top = [...failReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+    console.log(`📉 Motivos de fallo: ${top.map(([r, c]) => `${r} (×${c})`).join(' | ')}`);
+  }
   console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | rastreados: ${crawled}`);
 }
 
