@@ -1,0 +1,48 @@
+name: fix dramasflix index
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Añadir index LITE a la entrada de DramasFlix en app.js
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const file = 'app.js';
+          let s = fs.readFileSync(file, 'utf8');
+          if (s.includes("index: './public/data/catalog-dramasflix-index.json'")) {
+            console.log('OK: app.js ya tenía el índice LITE (nada que hacer)');
+            process.exit(0);
+          }
+          const oldLine = "{ id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  label: 'DramasFlix' }";
+          if (!s.includes(oldLine)) {
+            console.log('ERROR: no se encontró la línea esperada en app.js');
+            process.exit(1);
+          }
+          s = s.replace(oldLine, "{ id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  index: './public/data/catalog-dramasflix-index.json',  label: 'DramasFlix' }");
+          fs.writeFileSync(file, s);
+          console.log('OK: app.js actualizado');
+          EOF
+
+      - name: Guardar y enviar
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add app.js
+          if git diff --staged --quiet; then
+            echo "Sin cambios"
+            exit 0
+          fi
+          git commit -m "fix(web): DramasFlix usa el índice LITE + fichas (catálogo dividido)"
+          git pull --rebase origin main || true
+          git push
