@@ -34,9 +34,25 @@ async function fetchRaw(url) {
   return { status: res.status, contentType: res.headers.get('content-type') || '', text };
 }
 
-const OUT_FILE = path.resolve('public/data/catalog-dramasflix.json');
-const FAILURES_FILE = path.resolve('public/data/catalog-dramasflix-failures.json');
+/* Modo: full (series+episodios) | episodes (solo episodios) | merge (fusiona shards) */
+const MODE = process.env.MODE || 'full';
+const SHARD_INDEX = Math.max(0, Number(process.env.SHARD_INDEX || 0));
+const SHARD_TOTAL = Math.max(1, Number(process.env.SHARD_TOTAL || 1));
+const SHARDED = MODE === 'episodes' && SHARD_TOTAL > 1;
+
+const MAIN_FILE = path.resolve('public/data/catalog-dramasflix.json');
+const OUT_FILE = SHARDED ? path.resolve(`public/data/catalog-dramasflix-shard${SHARD_INDEX}.json`) : MAIN_FILE;
+const FAILURES_FILE = SHARDED
+  ? path.resolve(`public/data/catalog-dramasflix-failures-shard${SHARD_INDEX}.json`)
+  : path.resolve('public/data/catalog-dramasflix-failures.json');
 const RAWS_FILE = path.resolve('public/data/catalog-dramasflix-raws.json');
+
+/* Reparto estable: el mismo episodio siempre cae en el mismo shard */
+function shardOf(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return Math.abs(h) % SHARD_TOTAL;
+}
 
 const WORKERS = Math.max(1, Math.min(12, Number(process.env.WORKERS || 5)));
 const POLITENESS_MS = Number(process.env.POLITENESS_MS || 200);
@@ -168,6 +184,33 @@ async function fetchHtml(url, attempt = 1) {
   }
 }
 
+/* El stream RSC (React Server Components) es donde doramasflix.io (Next.js)
+   sirve los servidores tras la hidratación. Se puede pedir por HTTP puro. */
+async function fetchRsc(url) {
+  const variants = [
+    { 'RSC': '1' },
+    { 'RSC': '1', 'Next-Router-Prefetch': '1' },
+    { 'RSC': '1', 'Next-Url': new URL(url).pathname }
+  ];
+  for (const extra of variants) {
+    try {
+      const res = await withHostLimit(new URL(url).hostname, () => fetch(url, {
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+          'Accept': 'text/x-component, */*',
+          ...extra
+        }
+      }));
+      if (!res.ok) continue;
+      const text = await res.text();
+      if (/"link"|"server"|__next_f/.test(text)) return text;
+    } catch {}
+  }
+  return null;
+}
+
 function cleanTitle(raw) {
   let t = clean(String(raw || '')).split('|')[0].split('»')[0];
   t = t.replace(/^ver\s+/i, ' ');
@@ -231,7 +274,7 @@ const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidu
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
 const UPLOADS_RE = /\/wp-content\/uploads\/|\/uploads\//i;
 
-const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn\.ru|byse|voe\.sx|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|1fichier|johnfullwonder|seeks|fastream|luluvdo|netu\.tv|tamamo|tioplayer|fcdn|streamlare|slmaxed|sltube|playhydrax|hydrax|mp4upload|krakenfiles|filelions|lulustream|streamtape)\b/i;
+const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn\.ru|byse|voe\.sx|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|streamsb|vudeo|vidoza|fembed|clipwatching|wolfstream|hexupload|netu|hqq|waaw|primeload|upstream|dropload|streamruby|videzz|smoothie|doodstream|playerwish|streamhg|earnvids|ibra\.lat|vidhide|1fichier|johnfullwonder|seeks|fastream|luluvdo|netu\.tv|tamamo|tioplayer|fcdn|streamlare|slmaxed|sltube|playhydrax|hydrax|mp4upload|krakenfiles|filelions|lulustream|streamtape|embedshortener)\b/i;
 const DIRECT_MEDIA_RE = /\.(?:mp4|webm|m3u8)(\?|#|$)/i;
 
 function isPlayableAbs(u) {
@@ -642,6 +685,7 @@ async function discover() {
 }
 
 let EP_TEMPLATE = null;
+let loggedRscSample = false;
 
 async function scrapeSeriesPage(url) {
   const html = await fetchHtml(url);
@@ -733,7 +777,7 @@ async function scrapeSeriesPage(url) {
 
 async function loadCatalog() {
   try {
-    const db = JSON.parse(await fs.readFile(OUT_FILE, 'utf8'));
+    const db = JSON.parse(await fs.readFile(MAIN_FILE, 'utf8'));
     return {
       meta: db.meta || {},
       series: Array.isArray(db.series) ? db.series : [],
@@ -794,12 +838,46 @@ async function runPool(items, workers, fn, shouldStop = () => false) {
   await Promise.all(Array.from({ length: workers }, worker));
 }
 
+async function mergeShards() {
+  const total = Math.max(1, Number(process.env.SHARD_TOTAL || 8));
+  const db = await loadCatalog();
+  const genreSet = new Set(db.genres || []);
+  let files = 0, mergedEps = 0;
+  for (let i = 0; i < total; i++) {
+    const f = path.resolve(`public/data/catalog-dramasflix-shard${i}.json`);
+    let shard;
+    try { shard = JSON.parse(await fs.readFile(f, 'utf8')); } catch { continue; }
+    files++;
+    for (const s of shard.series || []) upsert(db.series, s);
+    for (const s of shard.seasons || []) upsert(db.seasons, s);
+    for (const e of shard.episodes || []) { upsert(db.episodes, e); mergedEps++; }
+    for (const g of shard.genres || []) genreSet.add(g);
+  }
+  db.genres = [...genreSet].sort((a, b) => a.localeCompare(b, 'es'));
+  db.meta = {
+    source: SOURCE.base + SOURCE.seeds.join(''),
+    syncedAt: new Date().toISOString(),
+    lastSync: { status: 'success', finishedAt: new Date().toISOString(), series: db.series.length, episodes: db.episodes.length, newEpisodes: mergedEps, mergedShards: files }
+  };
+  await saveCatalog(db);
+  for (let i = 0; i < total; i++) {
+    await fs.rm(path.resolve(`public/data/catalog-dramasflix-shard${i}.json`), { force: true });
+  }
+  console.log(`🔀 MERGE TERMINADO: ${files} shards fusionados, ${mergedEps} episodios incorporados. Total: ${db.series.length} series, ${db.episodes.length} episodios.`);
+}
+
 async function main() {
   console.log('🚀 DRAMASFLIX SYNC INICIADO');
-  console.log(`⚙️  Config: workers=${WORKERS} timeout=${FETCH_TIMEOUT_MS}ms reintentos=${FETCH_RETRIES} hostLimit=${HOST_LIMIT} proxy=${PROXY_URL ? 'sí' : 'NO (directo)'}`);
+  console.log(`⚙️  Config: workers=${WORKERS} timeout=${FETCH_TIMEOUT_MS}ms reintentos=${FETCH_RETRIES} hostLimit=${HOST_LIMIT} proxy=${PROXY_URL ? 'sí' : 'NO (directo)'} modo=${MODE}${SHARDED ? ` shard=${SHARD_INDEX + 1}/${SHARD_TOTAL}` : ''}`);
+
+  if (MODE === 'merge') return mergeShards();
 
   let db = await loadCatalog();
   let failures = await loadJson(FAILURES_FILE, {});
+  /* Los strikes guardados quedan obsoletos cuando cambia el método de extracción */
+  const FAILURES_VERSION = 2;
+  if (failures.__v !== FAILURES_VERSION) failures = {};
+  failures.__v = FAILURES_VERSION;
 
   const pat = await loadJson(PATTERN_FILE, null);
   if (pat && pat.template) EP_TEMPLATE = pat.template;
@@ -810,7 +888,9 @@ async function main() {
     await fs.rm(RAWS_FILE, { force: true });
   }
 
-  let discovered = await discoverSitemap().catch(() => null);
+  let raws;
+  if (MODE === 'full') {
+    let discovered = await discoverSitemap().catch(() => null);
   if (discovered) {
     console.log(`📚 Descubrimiento vía sitemap: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
   } else {
@@ -819,20 +899,19 @@ async function main() {
     console.log(`📚 Descubrimiento vía rastreo: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
   }
 
-  const tasks = [
-    ...discovered.seriesUrls.map(u => ({ url: u, isMovie: false })),
-    ...discovered.movieUrls.map(u => ({ url: u, isMovie: true }))
-  ];
+    const tasks = [
+      ...discovered.seriesUrls.map(u => ({ url: u, isMovie: false })),
+      ...discovered.movieUrls.map(u => ({ url: u, isMovie: true }))
+    ];
 
-  /* Fail-fast: si no se descubrió nada, el sitio o el proxy no responden */
-  if (!tasks.length) {
+    if (!tasks.length) {
     throw new Error('Descubrimiento vacío: doramasflix.io no respondió o el proxy no está configurado. Revisa FLIX_PROXY_URL / FLIX_PROXY_KEY.');
   }
 
-  const prevRaws = (await loadJson(RAWS_FILE, [])).filter(r => tasks.some(t => t.url === r.url));
-  const doneUrls = new Set(prevRaws.map(r => r.url));
-  const pending = tasks.filter(t => !doneUrls.has(t.url));
-  let raws = [...prevRaws];
+    const prevRaws = (await loadJson(RAWS_FILE, [])).filter(r => tasks.some(t => t.url === r.url));
+    const doneUrls = new Set(prevRaws.map(r => r.url));
+    const pending = tasks.filter(t => !doneUrls.has(t.url));
+    raws = [...prevRaws];
 
   console.log(`⏭️  Ya procesadas previamente: ${doneUrls.size} | pendientes esta corrida: ${pending.length}`);
 
@@ -846,8 +925,15 @@ async function main() {
       diskCheckpoint(db);
     }
   }, timeUp);
-  await saveJson(RAWS_FILE, raws);
-  console.log(`✅ Fase de series terminada: ${raws.length} páginas en bruto`);
+    await saveJson(RAWS_FILE, raws);
+    console.log(`✅ Fase de series terminada: ${raws.length} páginas en bruto`);
+  } else {
+    raws = await loadJson(RAWS_FILE, []);
+    if (!raws.length) {
+      throw new Error('Modo "episodes" sin raws: ejecuta primero MODE=full para generar catalog-dramasflix-raws.json');
+    }
+    console.log(`⚡ Modo episodios${SHARDED ? ` (shard ${SHARD_INDEX + 1}/${SHARD_TOTAL})` : ''}: ${raws.length} raws de series cargados`);
+  }
 
   const existingById = new Map(db.series.map(s => [s.id, s]));
   const existingByBase = new Map();
@@ -952,11 +1038,19 @@ async function main() {
     }
   }
 
+  /* Reparto en shards: cada runner procesa solo su porción (hash estable) */
+  const myQueue = SHARDED
+    ? epQueue.filter(j => shardOf(`${j.seasonId}|${j.number}`) === SHARD_INDEX)
+    : epQueue;
+  if (SHARDED) {
+    console.log(`🧩 Shard ${SHARD_INDEX + 1}/${SHARD_TOTAL}: ${myQueue.length}/${epQueue.length} episodios asignados`);
+  }
+
   /* Persistir series/seasons antes de la fase larga de episodios */
   diskCheckpoint(db);
 
-  if (epQueue.length) {
-    console.log(`🎞️  Fase de episodios: ${epQueue.length} capítulos pendientes de rastrear`);
+  if (myQueue.length) {
+    console.log(`🎞️  Fase de episodios: ${myQueue.length} capítulos pendientes de rastrear`);
   } else {
     console.log('🎞️  Fase de episodios: nada pendiente (todo ya tiene servidores o está en lista de fallos)');
   }
@@ -967,7 +1061,7 @@ async function main() {
   let epAbortEarly = false;
   const t0Eps = Date.now();
 
-  await runPool(epQueue, WORKERS, async (job) => {
+  await runPool(myQueue, WORKERS, async (job) => {
     if (timeUp()) return;
     const servers = [];
     const seenSrv = new Set();
@@ -1002,6 +1096,23 @@ async function main() {
         }
       } catch (e) { errs.push(`${u} → ${(e && e.message) ? e.message : e}`); }
       await sleep(POLITENESS_MS);
+    }
+
+    /* Fallback RSC: el HTML inicial no trae servidores; el stream de Next.js sí */
+    if (!servers.length && job.urls.length && !timeUp()) {
+      try {
+        const rsc = await fetchRsc(job.urls[0]);
+        if (rsc) {
+          if (!loggedRscSample) {
+            loggedRscSample = true;
+            console.log('   🔬 Muestra RSC (primer episodio):', rsc.replace(/\s+/g, ' ').slice(0, 320));
+          }
+          const rscParsed = parseServers(rsc, job.urls[0]);
+          for (const s of rscParsed.servers) {
+            if (!seenSrv.has(s.url)) { seenSrv.add(s.url); servers.push(s); }
+          }
+        }
+      } catch {}
     }
 
     crawled++;
@@ -1041,7 +1152,7 @@ async function main() {
 
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
-      console.log(`   🎞️  Episodios: ${crawled}/${epQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
+      console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
       diskCheckpoint(db);
     }
   }, () => timeUp() || epAbortEarly);
