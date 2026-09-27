@@ -69,6 +69,6 @@ jobs:
             echo "No hay cambios en el catálogo."
             exit 0
           fi
-          git commit -m "chore(data): actualizar catálogo de DoramasFlix [skip ci]"
+          git commit -m "chore(data): actualizar catálogo de DoramasFlix"
           git pull --rebase origin main || true
           git push || echo "⚠️ Push falló; la próxima corrida lo reintentará con los datos guardados en disco"
