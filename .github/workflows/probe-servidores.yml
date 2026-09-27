@@ -27,7 +27,9 @@ jobs:
         run: npm ci || npm install
 
       - name: Instalar Playwright + Chromium
-        run: npx playwright install --with-deps chromium
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
 
       - name: Sondear reproductores del episodio
         run: node probe-servidores.js "${{ inputs.episode_url }}"
