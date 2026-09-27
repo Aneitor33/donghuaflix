@@ -150,6 +150,6 @@ jobs:
             echo "No hay cambios."
             exit 0
           fi
-          git commit -m "chore(data): backfill de episodios de DoramasFlix [skip ci]"
+          git commit -m "chore(data): backfill de episodios de DoramasFlix"
           git pull --rebase origin main || true
           git push || echo "⚠️ Push falló; reintenta el paso"
