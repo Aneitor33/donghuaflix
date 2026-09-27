@@ -21,6 +21,9 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 360
+    # Necesario para que git push funcione (sin esto el token es de solo lectura)
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout del repositorio
