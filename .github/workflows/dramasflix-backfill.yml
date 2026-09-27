@@ -1,0 +1,112 @@
+name: dramasflix backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      shards:
+        description: 'En cuántas partes dividir el trabajo'
+        required: true
+        default: '6'
+        type: choice
+        options: ['4', '6', '8']
+
+concurrency:
+  group: dramasflix-backfill
+  cancel-in-progress: false
+
+jobs:
+  # Cada runner procesa ~1/N de los episodios. NO tocan git:
+  # suben su resultado como artefacto y el job merge se encarga del repo.
+  episodes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Rastrear servidores (shard ${{ matrix.shard }}/${{ inputs.shards }})
+        env:
+          MODE: episodes
+          SHARD_INDEX: ${{ matrix.shard }}
+          SHARD_TOTAL: ${{ inputs.shards }}
+          WORKERS: '12'
+          HOST_LIMIT: '8'
+          FETCH_TIMEOUT_MS: '20000'
+          FETCH_RETRIES: '2'
+          POLITENESS_MS: '150'
+          MAX_RUNTIME_MINUTES: '320'
+          MAX_EPISODE_CRAWLS: '50000'
+        run: node sync-dramasflix.js
+
+      - name: Subir resultado del shard
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.shard }}
+          path: |
+            public/data/catalog-dramasflix-shard${{ matrix.shard }}.json
+            public/data/catalog-dramasflix-failures-shard${{ matrix.shard }}.json
+          if-no-files-found: ignore
+          retention-days: 1
+
+  # Fusiona los shards y es el ÚNICO que commitea y pushea (sin conflictos)
+  merge:
+    needs: episodes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Descargar shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shard-*
+          path: public/data
+          merge-multiple: true
+
+      - name: Fusionar shards en el catálogo
+        env:
+          MODE: merge
+          SHARD_TOTAL: ${{ inputs.shards }}
+        run: node sync-dramasflix.js
+
+      - name: Guardar y enviar cambios al repositorio
+        if: ${{ always() }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/data/catalog-dramasflix*.json || true
+          if git diff --staged --quiet; then
+            echo "No hay cambios."
+            exit 0
+          fi
+          git commit -m "chore(data): backfill de episodios de DoramasFlix [skip ci]"
+          git pull --rebase origin main || true
+          git push || echo "⚠️ Push falló; reintenta el paso"
