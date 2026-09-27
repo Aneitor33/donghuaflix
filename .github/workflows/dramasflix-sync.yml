@@ -11,11 +11,11 @@ on:
         required: false
         type: boolean
         default: false
-      probe_api:
-        description: 'Usar Playwright para interceptar reproductores dinámicos'
-        required: false
-        type: boolean
-        default: false
+
+# Evita que dos ejecuciones se pisen entre sí
+concurrency:
+  group: dramasflix-sync
+  cancel-in-progress: false
 
 jobs:
   sync:
@@ -37,18 +37,27 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
-      - name: Instalar navegadores de Playwright (solo si probe_api está activo)
-        if: ${{ inputs.probe_api == true }}
-        run: npx playwright install --with-deps chromium
+      - name: Verificar configuración del proxy
+        env:
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
+        run: |
+          if [ -z "$FLIX_PROXY_URL" ] || [ -z "$FLIX_PROXY_KEY" ]; then
+            echo "::error::FLIX_PROXY_URL o FLIX_PROXY_KEY no están configurados."
+            echo "::error::Añádelos en Settings > Secrets and variables > Actions antes de ejecutar."
+            exit 1
+          fi
+          echo "✅ Proxy configurado correctamente."
 
       - name: Ejecutar scraper de DoramasFlix
         env:
           FRESH: ${{ inputs.fresh && '1' || '0' }}
-          PROBE_API: ${{ inputs.probe_api && '1' || '0' }}
           WORKERS: '10'
-          FETCH_TIMEOUT_MS: '60000'
+          FETCH_TIMEOUT_MS: '20000'
+          FETCH_RETRIES: '2'
           POLITENESS_MS: '200'
-          MAX_RUNTIME_MINUTES: '330'
+          HOST_LIMIT: '4'
+          MAX_RUNTIME_MINUTES: '300'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
         run: node sync-dramasflix.js
