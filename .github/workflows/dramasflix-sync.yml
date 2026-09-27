@@ -37,18 +37,6 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
-      - name: Verificar configuración del proxy
-        env:
-          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
-          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
-        run: |
-          if [ -z "$FLIX_PROXY_URL" ] || [ -z "$FLIX_PROXY_KEY" ]; then
-            echo "::error::FLIX_PROXY_URL o FLIX_PROXY_KEY no están configurados."
-            echo "::error::Añádelos en Settings > Secrets and variables > Actions antes de ejecutar."
-            exit 1
-          fi
-          echo "✅ Proxy configurado correctamente."
-
       - name: Ejecutar scraper de DoramasFlix
         env:
           FRESH: ${{ inputs.fresh && '1' || '0' }}
@@ -58,6 +46,8 @@ jobs:
           POLITENESS_MS: '200'
           HOST_LIMIT: '4'
           MAX_RUNTIME_MINUTES: '300'
+          # Opcional: si algún día configuras estos secrets, el scraper los usará
+          # automáticamente; si no existen, las peticiones salen en directo.
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
         run: node sync-dramasflix.js
