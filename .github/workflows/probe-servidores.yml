@@ -1,0 +1,33 @@
+name: probe servidores
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode_url:
+        description: 'URL de episodio de doramasflix.io a sondear'
+        required: true
+        default: 'https://doramasflix.io/capitulos/another-miss-oh-1x1'
+        type: string
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Instalar Playwright + Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Sondear reproductores del episodio
+        run: node probe-servidores.js "${{ inputs.episode_url }}"
