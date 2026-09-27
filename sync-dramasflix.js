@@ -131,7 +131,7 @@ async function fetchHtml(url, attempt = 1) {
       reqPromise,
       new Promise((_, rej) => setTimeout(() => rej(new Error('timeout duro')), FETCH_TIMEOUT_MS + 10000))
     ]));
-    
+
     if (!res.ok) {
       if (res.status === 403) {
         const host = new URL(url).hostname;
@@ -417,7 +417,7 @@ async function probeEpisodeTemplate(seriesSlug) {
 function parseEpisode(html, url) {
   const $ = cheerio.load(html);
   const title = clean(
-    $('h1').first().text() \vert{}\vert{}$('meta[property="og:title"]').attr('content') ||
+    $('h1').first().text() || $('meta[property="og:title"]').attr('content') ||
     slugFromUrl(url)
   ).replace(/\s*(?:sub espa.?ol).*$/i, '').trim();
   return { title, ...parseServers(html, url) };
@@ -450,7 +450,7 @@ function parseSeries(html, url, isMovie) {
   const slug = slugFromUrl(url);
 
   let title = cleanTitle(
-    $('h1').first().text() \vert{}\vert{}$('meta[property="og:title"]').attr('content') || ''
+    $('h1').first().text() || $('meta[property="og:title"]').attr('content') || ''
   );
   if (!title) {
     title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -461,7 +461,7 @@ function parseSeries(html, url, isMovie) {
     image = null;
     $('img').each((_, el) => {
       if (image) return;
-      const src = $(el).attr('data-src') || $(el).attr('data-original') \vert{}\vert{}$(el).attr('src');
+      const src = $(el).attr('data-src') || $(el).attr('data-original') || $(el).attr('src');
       const full = absolute(src, url);
       if (!full) return;
       const low = full.toLowerCase();
@@ -541,7 +541,7 @@ function parseLinks(html, pageUrl, test) {
 function parseLinksRaw(html, pageUrl, test) {
   const un = html.replace(/\\\//g, '/').replace(/\\"/g, '"');
   const out = [];
-  for (const re of [/\"href\":\"([^\"]+)\"/g, /href=\"([^\"]+)\"/g]) {
+  for (const re of [/"href":"([^"]+)"/g, /href="([^"]+)"/g]) {
     for (const m of un.matchAll(re)) {
       const full = absolute(m[1], pageUrl);
       if (!full || !sameOrigin(full, SOURCE.base)) continue;
@@ -885,7 +885,7 @@ async function main() {
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
       if (oldEp && (oldEp.servers || []).length > 0) continue;
-      
+
       if (slot.servers && slot.servers.length) {
         upsert(db.episodes, {
           id: `${seasonId}-e${slot.number}`,
@@ -928,7 +928,7 @@ async function main() {
           seenSrv.add(s.url);
           servers.push(s);
         }
-        
+
         if (!servers.length && parsed.playerOpts && parsed.playerOpts.length) {
           for (const opt of parsed.playerOpts) {
             try {
