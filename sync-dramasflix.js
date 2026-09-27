@@ -204,10 +204,71 @@ function extractRouterState(html) {
     i++;
   }
   try {
-    const row = JSON.parse(out);
+    const row = JSON.parse(out.slice(2));
     if (row && Array.isArray(row.f) && Array.isArray(row.f[0])) return row.f[0];
   } catch {}
   return null;
+}
+
+/* ═══ Extracción con navegador real (Playwright) ═══
+   probado: la página solo expone los servidores tras ejecutar JS. */
+const USE_PLAYWRIGHT = process.env.USE_PLAYWRIGHT === '1';
+let pwBrowser = null;
+let pwActive = 0;
+const PW_MAX_PAGES = 6;
+const pwQueue = [];
+
+async function pwAcquire() {
+  if (pwActive >= PW_MAX_PAGES) await new Promise(r => pwQueue.push(r));
+  pwActive++;
+}
+function pwRelease() {
+  pwActive--;
+  const n = pwQueue.shift();
+  if (n) n();
+}
+
+async function extractServersPlaywright(url) {
+  if (!pwBrowser) {
+    const { chromium } = await import('playwright');
+    pwBrowser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+  }
+  await pwAcquire();
+  const servers = [];
+  const seen = new Set();
+  let ctx = null;
+  try {
+    ctx = await pwBrowser.newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      locale: 'es-ES'
+    });
+    const page = await ctx.newPage();
+    page.on('response', res => {
+      res.text().then(t => {
+        const un = t.replace(/\\\//g, '/').replace(/\\"/g, '"');
+        for (const m of un.matchAll(/"(?:link|url|src|embed)":"(https?:\/\/[^"]{10,600})"/g)) {
+          if (isPlayableAbs(m[1]) && !seen.has(m[1])) {
+            seen.add(m[1]);
+            servers.push({ name: hostOf(m[1]), url: m[1], embed: true });
+          }
+        }
+      }).catch(() => {});
+    });
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+    await page.waitForTimeout(3000);
+    const iframes = await page.$$eval('iframe[src]', els => els.map(e => e.src).filter(Boolean)).catch(() => []);
+    for (const s of iframes) {
+      if (isPlayableAbs(s) && !seen.has(s)) {
+        seen.add(s);
+        servers.push({ name: hostOf(s), url: s, embed: true });
+      }
+    }
+  } catch {}
+  finally {
+    if (ctx) await ctx.close().catch(() => {});
+    pwRelease();
+  }
+  return servers;
 }
 
 /* El stream RSC (React Server Components) es donde doramasflix.io (Next.js)
@@ -1136,7 +1197,15 @@ async function main() {
       await sleep(POLITENESS_MS);
     }
 
-    /* Fallback RSC: el HTML inicial no trae servidores; el stream de Next.js sí */
+    /* Fallbacks: el HTML inicial no trae servidores. 1) navegador real 2) RSC */
+    if (!servers.length && USE_PLAYWRIGHT && job.urls.length && !timeUp()) {
+      try {
+        const pwServers = await extractServersPlaywright(job.urls[0]);
+        for (const s of pwServers) {
+          if (!seenSrv.has(s.url)) { seenSrv.add(s.url); servers.push(s); }
+        }
+      } catch (e) { errs.push(`playwright → ${e.message}`); }
+    }
     if (!servers.length && job.urls.length && !timeUp()) {
       try {
         const rsc = await fetchRsc(job.urls[0], lastHtml);
@@ -1214,6 +1283,7 @@ async function main() {
     lastSync: { status: 'success', finishedAt: new Date().toISOString(), series: db.series.length, episodes: db.episodes.length, newEpisodes: newEps }
   };
 
+  if (pwBrowser) { try { await pwBrowser.close(); } catch {} }
   await saveCatalog(db);
   await saveJson(FAILURES_FILE, failures);
   diskCheckpoint(db);
