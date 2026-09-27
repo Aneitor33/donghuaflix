@@ -12,20 +12,22 @@ const DIST = path.join(ROOT, 'dist');
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });
 
-const SKIP_TOP = new Set(['dist', 'node_modules', '.git', '.github', 'pages-build.js']);
+// Nombres que NUNCA se copian (a cualquier nivel): el propio directorio de
+// salida, dependencias, control de versiones, workflows y este script.
+const SKIP_NAMES = new Set(['dist', 'node_modules', '.git', '.github', 'pages-build.js']);
+
 const isMonolith = rel =>
-  /public[/\\]data[/\\]catalog-.+\.json$/.test(rel) &&
+  /public[/\\]data[/\\]catalog-[^/\\]+\.json$/.test(rel) &&
   !rel.endsWith('-index.json');
 
 function copyRecursive(src, dst, rel = '') {
   const base = path.basename(src);
-  if (!rel && SKIP_TOP.has(base)) return;
+  if (SKIP_NAMES.has(base)) return;
 
   const st = fs.statSync(src);
   const relPath = rel ? `${rel}/${base}` : base;
 
   if (st.isDirectory()) {
-    if (base === 'node_modules' || base === '.git') return;
     fs.mkdirSync(dst, { recursive: true });
     for (const item of fs.readdirSync(src)) {
       copyRecursive(path.join(src, item), path.join(dst, item), relPath);
