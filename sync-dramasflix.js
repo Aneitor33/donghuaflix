@@ -137,11 +137,13 @@ async function fetchHtml(url, attempt = 1) {
     if (!res.ok) {
       if (res.status === 403) {
         const host = new URL(url).hostname;
+        const body = await res.text().catch(() => '');
         if (!logged403.has(host)) {
           logged403.add(host);
-          const body = await res.text().catch(() => '');
           console.log(`   🛡️ 403 en ${host}: ${body.replace(/\s+/g, ' ').slice(0, 160)}`);
         }
+        const cf = /just a moment|cf-chl|cloudflare|attention required/i.test(body) ? ' [parece Cloudflare]' : '';
+        throw new Error(`HTTP 403${cf} en ${url}`);
       }
       if (attempt < FETCH_RETRIES && [408, 425, 429, 500, 502, 503, 504].includes(res.status)) {
         await sleep(1000 * attempt);
@@ -353,10 +355,10 @@ function parseServers(html, url) {
 }
 
 const EP_TEMPLATES = [
-  '/capitulo/{slug}-1x{n}',
-  '/capitulo/{slug}-1x{n}/',
   '/capitulos/{slug}-1x{n}',
   '/capitulos/{slug}-1x{n}/',
+  '/capitulo/{slug}-1x{n}',
+  '/capitulo/{slug}-1x{n}/',
   '/episodio/{slug}-1x{n}',
   '/episodio/{slug}-1x{n}/',
   '/episodios/{slug}-1x{n}/',
@@ -401,12 +403,25 @@ function detectTemplateFromLinks(html, seriesSlug, pageUrl) {
   return best;
 }
 
+function looksLikeEpisodePage(html, seriesSlug) {
+  const $ = cheerio.load(html);
+  const headTxt = clean(($('title').text() || '') + ' ' + ($('h1').first().text() || ''));
+  if (/404|no encontrado|not found/i.test(headTxt)) return false;
+  const norm = s => fold(s).replace(/[-_]+/g, ' ');
+  const toks = norm(seriesSlug).split(' ').filter(Boolean);
+  const titleNorm = norm(headTxt);
+  const mentionsSeries = toks.length > 0 && toks.slice(0, 2).every(t => titleNorm.includes(t));
+  const hasPlayer = $('iframe[src]').length > 0 || html.includes('doo_player_ajax') ||
+                    $('[data-post]').length > 0;
+  return hasPlayer || mentionsSeries;
+}
+
 async function probeEpisodeTemplate(seriesSlug) {
   for (const tpl of EP_TEMPLATES) {
     const url = epUrlFromTemplate(tpl, seriesSlug, 1);
     try {
       const html = await fetchHtml(url, FETCH_RETRIES + 1);
-      if (html && html.length > 500) {
+      if (html && html.length > 500 && looksLikeEpisodePage(html, seriesSlug)) {
         console.log(`   🧭 Patrón de episodio detectado: ${tpl}`);
         return tpl;
       }
@@ -680,7 +695,7 @@ async function scrapeSeriesPage(url) {
       }
       if (!candidates.has(key)) candidates.set(key, { season: code.season, number: code.number, urls: [] });
       const cand = candidates.get(key);
-      const epUrl = `${SOURCE.base}/capitulo/${epSlug}`;
+      const epUrl = `${SOURCE.base}/capitulos/${epSlug}`;
       if (!cand.urls.includes(epUrl)) cand.urls.push(epUrl);
     }
   }
@@ -968,7 +983,7 @@ async function main() {
     const servers = [];
     const seenSrv = new Set();
     let pageTitle = null;
-    let lastErr = null;
+    const errs = [];
 
     for (const u of job.urls) {
       if (timeUp()) break;
@@ -996,7 +1011,7 @@ async function main() {
             } catch {}
           }
         }
-      } catch (e) { lastErr = (e && e.message) ? e.message : String(e); }
+      } catch (e) { errs.push(`${u} → ${(e && e.message) ? e.message : e}`); }
       await sleep(POLITENESS_MS);
     }
 
@@ -1021,11 +1036,12 @@ async function main() {
       const fk = `${job.seasonId}|${job.number}`;
       failures[fk] = (failures[fk] || 0) + 1;
       epFailStreak++;
-      const reason = lastErr || 'página cargada pero sin servidores detectados';
+      const reason = errs.length ? errs[errs.length - 1].split(' → ')[1] : 'página cargada pero sin servidores detectados';
       failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
       if (failedEps <= 5) {
-        console.log(`   ❌ Fallo #${failedEps}: ${reason}`);
-        console.log(`      URL: ${job.urls[0]}`);
+        console.log(`   ❌ Fallo #${failedEps} (${job.seasonId} · cap ${job.number}):`);
+        for (const e of errs.slice(0, 3)) console.log(`      ${e}`);
+        if (!errs.length) console.log(`      ${job.urls[0]} → cargó pero 0 servidores detectados`);
       }
       if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
         epAbortEarly = true;
@@ -1040,6 +1056,18 @@ async function main() {
       gitCheckpoint(db);
     }
   }, () => timeUp() || epAbortEarly);
+
+  /* Auto-sanación: si el aborto fue por 404 masivos, la plantilla guardada es incorrecta */
+  if (epAbortEarly) {
+    const topAbortReason = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
+    if (topAbortReason && /404/.test(topAbortReason[0])) {
+      console.log('   🔄 404 masivos: la plantilla de episodios guardada es incorrecta. Invalidando plantilla, raws y contadores de fallo para la próxima corrida.');
+      EP_TEMPLATE = null;
+      await fs.rm(PATTERN_FILE, { force: true });
+      await fs.rm(RAWS_FILE, { force: true });
+      for (const k of Object.keys(failures)) delete failures[k];
+    }
+  }
 
   db.genres = [...allGenres].sort((a, b) => a.localeCompare(b, 'es'));
   db.meta = {
