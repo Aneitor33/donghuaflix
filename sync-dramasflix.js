@@ -959,6 +959,7 @@ async function mergeShards() {
   await saveCatalog(db);
   for (let i = 0; i < total; i++) {
     await fs.rm(path.resolve(`public/data/catalog-dramasflix-shard${i}.json`), { force: true });
+    await fs.rm(path.resolve(`public/data/catalog-dramasflix-failures-shard${i}.json`), { force: true });
   }
   console.log(`🔀 MERGE TERMINADO: ${files} shards fusionados, ${mergedEps} episodios incorporados. Total: ${db.series.length} series, ${db.episodes.length} episodios.`);
 }
