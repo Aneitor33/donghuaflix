@@ -1,4 +1,4 @@
-name: dramasflix sync
+name: doramasia sync
 
 on:
   schedule:
@@ -40,23 +40,31 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
+      - name: Instalar Playwright + Chromium
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
       - name: Ejecutar scraper de DoramasFlix
         env:
           FRESH: ${{ inputs.fresh && '1' || '0' }}
-          WORKERS: '10'
+          WORKERS: '8'
           FETCH_TIMEOUT_MS: '20000'
           FETCH_RETRIES: '2'
-          POLITENESS_MS: '200'
-          HOST_LIMIT: '4'
+          POLITENESS_MS: '300'
+          HOST_LIMIT: '2'
           MAX_RUNTIME_MINUTES: '300'
-          # Opcional: si algún día configuras estos secrets, el scraper los usará
-          # automáticamente; si no existen, las peticiones salen en directo.
+          MAX_EPISODE_CRAWLS: '50000'
+          USE_PLAYWRIGHT: '1'
+          # Renueva los tokens de los enlaces con más de 1 día (caducan ~48h)
+          REFRESH_DAYS: '1'
+          FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
-        run: node sync-dramasflix.js
+        run: node sync-doramasia.js
 
       - name: Dividir catálogo en índice + fichas
-        run: node split-catalog.js public/data/catalog-dramasflix.json
+        run: node split-catalog.js public/data/catalog-doramasia.json
 
       - name: Guardar y enviar cambios al repositorio
         # Corre aunque el scraper falle, para no perder el progreso en disco
@@ -69,6 +77,6 @@ jobs:
             echo "No hay cambios en el catálogo."
             exit 0
           fi
-          git commit -m "chore(data): actualizar catálogo de DoramasFlix"
+          git commit -m "chore(data): actualizar catálogo de DoramasIA"
           git pull --rebase origin main || true
           git push || echo "⚠️ Push falló; la próxima corrida lo reintentará con los datos guardados en disco"
