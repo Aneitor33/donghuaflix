@@ -1,0 +1,42 @@
+name: restore catalog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restaurar catálogo (2.703 series) + raws del commit 2f03f0c
+        run: |
+          git checkout 2f03f0c18ba60e6437db90b2eac7dd7b050dad6f -- \
+            public/data/catalog-dramasflix.json \
+            public/data/catalog-dramasflix-raws.json || true
+          node split-catalog.js public/data/catalog-dramasflix.json
+
+      - name: Guardar y enviar
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A public/data
+          if git diff --staged --quiet; then
+            echo "Sin cambios"
+            exit 0
+          fi
+          git commit -m "chore(data): restaurar catálogo de 2.703 series"
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push; then break; fi
+            git rebase --abort 2>/dev/null || true
+            sleep 10
+          done
