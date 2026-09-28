@@ -19,6 +19,7 @@ const SRC_LABEL = {
   donghuacli: 'DonghuaCLI',
   dramasyt: 'DramasYT',
   dramasflix: 'DramasFlix',
+  doramasia: 'DoramasIA',
   peliculas: 'Películas',
   doramas: 'Doramas'
 };
@@ -819,14 +820,49 @@ const getCountry = s =>
   s.country || null;
 
 const contentTypeOf = s => {
-  if (s.contentType) {
-    return s.contentType;
+  const raw = String(s.contentType || s.type || '')
+    .toLowerCase()
+    .trim();
+
+  if (
+    [
+      'movie',
+      'pelicula',
+      'película',
+      'film'
+    ].includes(raw)
+  ) {
+    return 'movie';
+  }
+
+  if (
+    [
+      'series',
+      'serie',
+      'tv',
+      'show',
+      'dorama',
+      'cdrama',
+      'drama'
+    ].includes(raw)
+  ) {
+    return 'series';
   }
 
   if (
     (s.sourceUrl || '').includes(
       '/peliculas/'
     )
+  ) {
+    return 'movie';
+  }
+
+  const totalEpisodes =
+    Number(s.totalEpisodes);
+
+  if (
+    Number.isFinite(totalEpisodes) &&
+    totalEpisodes === 1
   ) {
     return 'movie';
   }
@@ -2289,7 +2325,7 @@ function home() {
           id="heroBtn"
         >
           ${ICONS.play}
-          <span>Ver serie</span>
+          <span>${contentTypeOf(hero) === 'movie' ? 'Ver película' : 'Ver serie'}</span>
         </button>
 
         <button
@@ -2385,7 +2421,7 @@ function listAllSeries() {
     );
 
   const state = {
-    type: '',
+    type: 'series',
     genre: '',
     year: '',
     country: '',
@@ -2510,7 +2546,7 @@ function listAllSeries() {
         <span
           class="muted"
           id="catalogCount"
-        >${DB.series.length}</span>
+        >${DB.series.filter(s => contentTypeOf(s) === 'series').length}</span>
       </div>
 
       <div class="filters">
@@ -2715,18 +2751,15 @@ function listMovies() {
   const movies =
     DB.series.filter(
       s =>
-        (
-          s.type || ''
-        )
-          .toLowerCase() ===
-          'movie' ||
-        (
-          s.title || ''
-        )
-          .toLowerCase()
-          .includes(
-            'película'
-          )
+        contentTypeOf(s) ===
+        'movie'
+    );
+
+  const cat =
+    CATALOGS.find(
+      c =>
+        c.id ===
+        currentCatalog
     );
 
   app.innerHTML = `
@@ -2735,7 +2768,14 @@ function listMovies() {
       <div class="section-head">
         <h2>Películas</h2>
         <span class="muted">
-          ${movies.length}
+          ${movies.length}${
+            cat
+              ? ' · ' +
+                esc(
+                  cat.label
+                )
+              : ''
+          }
         </span>
       </div>
 
@@ -2753,10 +2793,14 @@ function listMovies() {
       ),
     items: movies,
     emptyText:
-      'No hay películas disponibles por el momento.'
+      'No hay películas en ' +
+      (
+        cat?.label ||
+        'este catálogo'
+      ) +
+      '.'
   });
 }
-
 function listGenres() {
   const genres =
     (DB.genres || [])
@@ -2885,6 +2929,7 @@ function listMyList() {
 /* ---------- BUSCADOR ---------- */
 
 let searchState = {
+  type: '',
   genre: '',
   year: '',
   country: '',
@@ -2963,6 +3008,20 @@ function search(q = '') {
         </div>
 
         <div class="filters">
+
+          <select id="sfType">
+            <option value="">
+              Tipo
+            </option>
+
+            <option value="movie">
+              Películas
+            </option>
+
+            <option value="series">
+              Series / Doramas
+            </option>
+          </select>
 
           ${
             genres.length
@@ -3050,6 +3109,11 @@ function search(q = '') {
         };
       }
     };
+
+    bindF(
+      'sfType',
+      'type'
+    );
 
     bindF(
       'sfGenre',
@@ -3143,6 +3207,15 @@ async function updateSearchResults(
         );
       }
     );
+
+  if (searchState.type) {
+    list =
+      list.filter(
+        s =>
+          contentTypeOf(s) ===
+          searchState.type
+      );
+  }
 
   if (searchState.genre) {
     list =
