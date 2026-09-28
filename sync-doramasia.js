@@ -647,8 +647,67 @@ async function postAjax(opt, referer) {
   return await res.text();
 }
 
+function detectMoviePage(
+  $,
+  html,
+  url
+) {
+  try {
+    if (
+      SOURCE.movieTest(
+        new URL(url).pathname
+      )
+    ) {
+      return true;
+    }
+  } catch {}
+
+  const ogType = clean(
+    $(
+      'meta[property="og:type"]'
+    ).attr('content')
+  );
+
+  if (
+    /movie|video\.movie/i.test(
+      ogType
+    )
+  ) {
+    return true;
+  }
+
+  let schema = '';
+
+  $(
+    'script[type="application/ld+json"]'
+  ).each((_, el) => {
+    schema +=
+      ' ' +
+      $(el).text();
+  });
+
+  if (
+    /"@type"\s*:\s*(?:"\s*Movie\s*"|\[\s*"\s*Movie\s*")/i.test(
+      schema
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+
 function parseSeries(html, url, isMovie) {
   const $ = cheerio.load(html);
+
+  isMovie =
+    isMovie ||
+    detectMoviePage(
+      $,
+      html,
+      url
+    );
   const slug = slugFromUrl(url);
 
   let title = cleanTitle(
@@ -718,7 +777,8 @@ function parseSeries(html, url, isMovie) {
     synopsis: synopsis || null,
     status, year, genres,
     country: country || 'China',
-    type: isMovie ? 'movie' : 'dorama'
+    type: isMovie ? 'movie' : 'dorama',
+    contentType: isMovie ? 'movie' : 'series'
   };
 }
 
@@ -868,8 +928,9 @@ let loggedRscSample = false;
 
 async function scrapeSeriesPage(url) {
   const html = await fetchHtml(url);
-  const isMovie = SOURCE.movieTest(new URL(url).pathname);
+  let isMovie = SOURCE.movieTest(new URL(url).pathname);
   const parsed = parseSeries(html, url, isMovie);
+  isMovie = parsed?.type === 'movie';
   if (!parsed) {
     /* Serie filtrada por país (no china): se ignora limpiamente */
     return { src: SOURCE.id, url, slug: slugFromUrl(url), filtered: true, parsed: null, candidates: [] };
@@ -1161,7 +1222,17 @@ async function main() {
         series: {
           id: exId || r.slug, slug: exId || r.slug, title: baseTitle,
           image: null, synopsis: null, status: null, year: null,
-          genres: [], type: r.parsed.type, sourceUrls: [],
+          genres: [],
+          type: r.parsed.type,
+          contentType:
+            r.parsed.contentType ||
+            (
+              r.parsed.type ===
+              'movie'
+                ? 'movie'
+                : 'series'
+            ),
+          sourceUrls: [],
           updatedAt: new Date().toISOString()
         },
         epMap: new Map()
@@ -1193,6 +1264,15 @@ async function main() {
   for (const canon of canons.values()) {
     const S = canon.series;
     S.genres.forEach(g => allGenres.add(g));
+    S.totalEpisodes =
+      canon.epMap.size ||
+      (
+        S.contentType ===
+        'movie'
+          ? 1
+          : null
+      );
+
     const merged = existingById.get(S.id);
     upsert(db.series, { ...(merged || {}), ...S, updatedAt: new Date().toISOString() });
 
