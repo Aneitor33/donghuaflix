@@ -91,7 +91,7 @@ const SOURCE = {
   seeds: ['/paises/china'],
   // Solo China continental + Hong Kong + Taiwán (doramas chinos)
   allowedCountries: ['china', 'hong kong', 'taiwan', 'hongkong', 'taiwán'],
-  maxPages: 80,
+  maxPages: 250,
   seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
                     !/\/temporada\//.test(p),
   movieTest:  p => /^\/(pelicula|peliculas|movies|films)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p),
@@ -795,6 +795,10 @@ async function scrapeSeriesPage(url) {
   const html = await fetchHtml(url);
   const isMovie = SOURCE.movieTest(new URL(url).pathname);
   const parsed = parseSeries(html, url, isMovie);
+  if (!parsed) {
+    /* Serie filtrada por país (no china): se ignora limpiamente */
+    return { src: SOURCE.id, url, slug: slugFromUrl(url), filtered: true, parsed: null, candidates: [] };
+  }
   const $ = cheerio.load(html);
   const seriesSlug = slugFromUrl(url);
 
@@ -1000,14 +1004,11 @@ async function main() {
 
   let raws;
   if (MODE === 'full') {
-    let discovered = await discoverSitemap().catch(() => null);
-  if (discovered) {
-    console.log(`📚 Descubrimiento vía sitemap: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
-  } else {
-    console.log('🗺️  Sitemap no disponible, rastreando desde semillas...');
-    discovered = await discover();
-    console.log(`📚 Descubrimiento vía rastreo: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
-  }
+    /* SOLO descubrimiento por seed: /paises/china lista únicamente títulos
+     chinos. El sitemap incluye todo el sitio (Corea, Japón, etc.) y no
+     sirve para este catálogo. */
+  const discovered = await discover();
+  console.log(`📚 Descubrimiento desde ${SOURCE.seeds.join(', ')}: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas (solo China/HK/Taiwán)`);
 
     const tasks = [
       ...discovered.seriesUrls.map(u => ({ url: u, isMovie: false })),
@@ -1025,16 +1026,18 @@ async function main() {
 
   console.log(`⏭️  Ya procesadas previamente: ${doneUrls.size} | pendientes esta corrida: ${pending.length}`);
 
-  let doneSeries = 0;
+  let doneSeries = 0, filteredSeries = 0;
   await runPool(pending, WORKERS, async (t) => {
     const r = await scrapeSeriesPage(t.url);
     raws.push(r);
+    if (r.filtered) { filteredSeries++; return; }
     doneSeries++;
     if (doneSeries % 10 === 0) {
-      console.log(`   📄 Series rastreadas: ${doneSeries}/${pending.length}`);
+      console.log(`   📄 Series chinas guardadas: ${doneSeries} (descartadas no-chinas: ${filteredSeries}) | ${doneSeries + filteredSeries}/${pending.length}`);
       diskCheckpoint(db);
     }
   }, timeUp);
+  if (filteredSeries) console.log(`   ⏭️  Total descartadas por país (no China/HK/Taiwán): ${filteredSeries}`);
     await saveJson(RAWS_FILE, raws);
     console.log(`✅ Fase de series terminada: ${raws.length} páginas en bruto`);
   } else {
@@ -1064,6 +1067,7 @@ async function main() {
   const allGenres = new Set(db.genres);
 
   for (const r of raws) {
+    if (r.filtered || !r.parsed) continue;
     const { base, baseTitle, offset } = r.key;
     if (!base) continue;
     let canon = canons.get(base);
