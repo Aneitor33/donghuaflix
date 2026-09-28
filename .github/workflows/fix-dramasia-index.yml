@@ -1,4 +1,4 @@
-name: fix dramasflix index
+name: fix doramasia index
 
 on:
   workflow_dispatch:
@@ -14,22 +14,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Añadir index LITE a la entrada de DramasFlix en app.js
+      - name: Apuntar el frontend al catálogo de DoramasIA
         run: |
           node - <<'EOF'
           const fs = require('fs');
           const file = 'app.js';
           let s = fs.readFileSync(file, 'utf8');
-          if (s.includes("index: './public/data/catalog-dramasflix-index.json'")) {
-            console.log('OK: app.js ya tenía el índice LITE (nada que hacer)');
+          if (s.includes("id: 'doramasia'")) {
+            console.log('OK: app.js ya apunta a doramasia');
             process.exit(0);
           }
-          const oldLine = "{ id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  label: 'DramasFlix' }";
-          if (!s.includes(oldLine)) {
-            console.log('ERROR: no se encontró la línea esperada en app.js');
+          const re = /\{ id: 'dramasflix',[^}]*\},?/;
+          const m = s.match(re);
+          if (!m) {
+            console.log('ERROR: no se encontró la entrada de dramasflix en app.js');
             process.exit(1);
           }
-          s = s.replace(oldLine, "{ id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  index: './public/data/catalog-dramasflix-index.json',  label: 'DramasFlix' }");
+          s = s.replace(m[0], "{ id: 'doramasia',  file: './public/data/catalog-doramasia.json',  index: './public/data/catalog-doramasia-index.json',  label: 'DoramasIA' },");
           fs.writeFileSync(file, s);
           console.log('OK: app.js actualizado');
           EOF
@@ -43,6 +44,9 @@ jobs:
             echo "Sin cambios"
             exit 0
           fi
-          git commit -m "fix(web): DramasFlix usa el índice LITE + fichas (catálogo dividido)"
-          git pull --rebase origin main || true
-          git push
+          git commit -m "fix(web): catálogo DramasFlix → DoramasIA"
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push; then break; fi
+            git rebase --abort 2>/dev/null || true
+            sleep 10
+          done
