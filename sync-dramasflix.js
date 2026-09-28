@@ -1004,11 +1004,19 @@ async function main() {
 
   let raws;
   if (MODE === 'full') {
-    /* SOLO descubrimiento por seed: /paises/china lista únicamente títulos
-     chinos. El sitemap incluye todo el sitio (Corea, Japón, etc.) y no
-     sirve para este catálogo. */
-  const discovered = await discover();
-  console.log(`📚 Descubrimiento desde ${SOURCE.seeds.join(', ')}: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas (solo China/HK/Taiwán)`);
+    /* Descubrimiento híbrido: el sitemap lista TODO el sitio (es la única
+     fuente completa legible por HTTP: la página /paises/china renderiza su
+     listado con JS y el HTML crudo apenas trae ~24 enlaces). El FILTRO DE
+     PAÍS en scrapeSeriesPage descarta las no-chinas una a una. */
+  let discovered = await discoverSitemap().catch(() => null);
+  if (discovered) {
+    console.log(`📚 Descubrimiento vía sitemap: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas candidatas`);
+  } else {
+    console.log('🗺️  Sitemap no disponible, rastreando desde semillas...');
+    discovered = await discover();
+    console.log(`📚 Descubrimiento vía rastreo: ${discovered.seriesUrls.length} series, ${discovered.movieUrls.length} películas`);
+  }
+  console.log('🧭 El filtro de país guardará solo China / Hong Kong / Taiwán');
 
     const tasks = [
       ...discovered.seriesUrls.map(u => ({ url: u, isMovie: false })),
