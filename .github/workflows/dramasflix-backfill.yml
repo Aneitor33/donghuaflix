@@ -6,7 +6,7 @@ on:
       shards:
         description: 'En cuántas partes dividir el trabajo (mismo valor que el run original al fusionar)'
         required: true
-        default: '6'
+        default: '8'
         type: choice
         options: ['4', '6', '8']
       merge_run_id:
@@ -28,8 +28,8 @@ jobs:
   # Cada runner procesa ~1/N de los episodios. NO tocan git:
   # suben su resultado como artefacto y el job merge se encarga del repo.
   episodes:
-    # En modo rescate (merge_run_id != '') solo corre el merge, no se re-rastrea nada
-    if: ${{ inputs.merge_run_id == '' }}
+    # En modo rescate (merge_run_id o merge_artifact_ids != '') solo corre el merge
+    if: ${{ inputs.merge_run_id == '' && inputs.merge_artifact_ids == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 330
     permissions:
@@ -63,19 +63,20 @@ jobs:
           SHARD_TOTAL: ${{ inputs.shards }}
           USE_PLAYWRIGHT: '1'
           WORKERS: '8'
-          HOST_LIMIT: '4'
+          HOST_LIMIT: '2'
           FETCH_TIMEOUT_MS: '20000'
           FETCH_RETRIES: '2'
           POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '320'
           MAX_EPISODE_CRAWLS: '50000'
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
         run: node sync-dramasflix.js
 
       - name: Subir resultado del shard
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          # El número de intento evita colisiones si se relanza el workflow
           name: shard-${{ matrix.shard }}
           path: |
             public/data/catalog-dramasflix-shard${{ matrix.shard }}.json
@@ -86,7 +87,6 @@ jobs:
   # Fusiona los shards y es el ÚNICO que commitea y pushea (sin conflictos)
   merge:
     needs: episodes
-    # Corre aunque algún shard falle o agote su tiempo: fusiona lo que exista
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -106,7 +106,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Descargar shards (de este run)
-        if: ${{ inputs.merge_run_id == '' }}
+        if: ${{ inputs.merge_run_id == '' && inputs.merge_artifact_ids == '' }}
         uses: actions/download-artifact@v4
         with:
           pattern: shard-*
@@ -151,5 +151,25 @@ jobs:
             exit 0
           fi
           git commit -m "chore(data): backfill de episodios de DoramasFlix"
-          git pull --rebase origin main || true
-          git push || echo "⚠️ Push falló; reintenta el paso"
+          # Reintenta el rebase/push en bucle: otros workflows commitean cada
+          # minuto y pueden pisar el archivo entre nuestro add y el push
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              break
+            fi
+            echo "Reintento $i tras conflicto de rebase"
+            git rebase --abort 2>/dev/null || true
+            git add -A public/data || true
+            git commit --amend --no-edit || true
+            sleep 10
+          done
+
+      - name: Verificar que el catálogo subido tiene episodios
+        run: |
+          EPISODES=$(node -e "const db=require('./public/data/catalog-dramasflix.json'); console.log((db.episodes||[]).length)")
+          SIZE=$(stat -c%s public/data/catalog-dramasflix.json)
+          echo "Episodios en el repo: $EPISODES | Tamaño: $SIZE bytes"
+          if [ "$EPISODES" -lt 5000 ]; then
+            echo "::error::El merge no quedó reflejado en el repo (solo $EPISODES episodios). Reintenta el merge."
+            exit 1
+          fi
