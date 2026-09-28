@@ -1,7 +1,10 @@
 // ══════════════════════════════════════════════════════════
-//  sync-dramasflix.js — DonghuaFlix
-//  Scraper del catálogo de dramas desde:
-//    · https://doramasflix.io/paises/china  (tema WordPress DooPlay)
+//  sync-doramasia.js — DonghuaFlix
+//  Scraper del catálogo de dramas chinos desde:
+//    · https://doramasia.com/doramas?countries=china
+//  Misma plataforma que doramasflix.io (seriesapi.co): el pipeline
+//  (sitemap, filtro de país, sitemap de episodios, Playwright vía
+//  proxy, refresh de tokens) funciona idéntico.
 // ══════════════════════════════════════════════════════════
 
 import fs from 'node:fs/promises';
@@ -50,12 +53,12 @@ const SHARD_INDEX = Math.max(0, Number(process.env.SHARD_INDEX || 0));
 const SHARD_TOTAL = Math.max(1, Number(process.env.SHARD_TOTAL || 1));
 const SHARDED = MODE === 'episodes' && SHARD_TOTAL > 1;
 
-const MAIN_FILE = path.resolve('public/data/catalog-dramasflix.json');
-const OUT_FILE = SHARDED ? path.resolve(`public/data/catalog-dramasflix-shard${SHARD_INDEX}.json`) : MAIN_FILE;
+const MAIN_FILE = path.resolve('public/data/catalog-doramasia.json');
+const OUT_FILE = SHARDED ? path.resolve(`public/data/catalog-doramasia-shard${SHARD_INDEX}.json`) : MAIN_FILE;
 const FAILURES_FILE = SHARDED
-  ? path.resolve(`public/data/catalog-dramasflix-failures-shard${SHARD_INDEX}.json`)
-  : path.resolve('public/data/catalog-dramasflix-failures.json');
-const RAWS_FILE = path.resolve('public/data/catalog-dramasflix-raws.json');
+  ? path.resolve(`public/data/catalog-doramasia-failures-shard${SHARD_INDEX}.json`)
+  : path.resolve('public/data/catalog-doramasia-failures.json');
+const RAWS_FILE = path.resolve('public/data/catalog-doramasia-raws.json');
 
 /* Reparto estable: el mismo episodio siempre cae en el mismo shard */
 function shardOf(str) {
@@ -73,11 +76,15 @@ const SYNTH_DEFAULT_EPS = Math.max(1, Math.min(100, Number(process.env.SYNTH_DEF
 const FRESH = process.env.FRESH === '1';
 /* Aborta la fase de episodios tras esta racha de fallos consecutivos (posible bloqueo) */
 const EP_FAIL_STREAK_ABORT = Math.max(10, Number(process.env.EP_FAIL_STREAK_ABORT || 40));
+/* Si > 0, los episodios que ya tienen servidores pero con más de N días se
+   vuelven a rastrear para renovar tokens caducados (embedshortener ~48h).
+   Así los enlaces de la web siempre están frescos. */
+const REFRESH_DAYS = Math.max(0, Number(process.env.REFRESH_DAYS || 0));
 
 /* Proxy opcional */
 const PROXY_URL = (process.env.FLIX_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
 const PROXY_KEY = process.env.FLIX_PROXY_KEY || process.env.DORAMAS_PROXY_KEY || '';
-const PROXY_HOSTS = (process.env.FLIX_PROXY_HOSTS || process.env.PROXY_HOSTS || 'doramasflix.io,www.doramasflix.io')
+const PROXY_HOSTS = (process.env.FLIX_PROXY_HOSTS || process.env.PROXY_HOSTS || 'doramasia.com,www.doramasia.com')
   .split(',').map(s => s.trim()).filter(Boolean);
 
 const hostSem = new Map();
@@ -96,9 +103,9 @@ const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
 
 const SOURCE = {
-  id: 'dramasflix',
-  base: 'https://doramasflix.io',
-  seeds: ['/paises/china'],
+  id: 'doramasia',
+  base: 'https://doramasia.com',
+  seeds: ['/doramas?countries=china'],
   // Solo China continental + Hong Kong + Taiwán (doramas chinos)
   allowedCountries: ['china', 'hong kong', 'taiwan', 'hongkong', 'taiwán'],
   maxPages: 250,
@@ -553,7 +560,7 @@ const EP_TEMPLATES = [
   '/{slug}-1x{n}/',
   '/{slug}-{n}/'
 ];
-const PATTERN_FILE = path.resolve('public/data/catalog-dramasflix-pattern.json');
+const PATTERN_FILE = path.resolve('public/data/catalog-doramasia-pattern.json');
 
 function epUrlFromTemplate(tpl, slug, n) {
   return SOURCE.base + tpl.split('{slug}').join(slug).split('{n}').join(String(n));
@@ -1020,7 +1027,7 @@ async function mergeShards() {
   const genreSet = new Set(db.genres || []);
   let files = 0, mergedEps = 0;
   for (let i = 0; i < total; i++) {
-    const f = path.resolve(`public/data/catalog-dramasflix-shard${i}.json`);
+    const f = path.resolve(`public/data/catalog-doramasia-shard${i}.json`);
     let shard;
     try { shard = JSON.parse(await fs.readFile(f, 'utf8')); } catch { continue; }
     files++;
@@ -1042,8 +1049,8 @@ async function mergeShards() {
   };
   await saveCatalog(db);
   for (let i = 0; i < total; i++) {
-    await fs.rm(path.resolve(`public/data/catalog-dramasflix-shard${i}.json`), { force: true });
-    await fs.rm(path.resolve(`public/data/catalog-dramasflix-failures-shard${i}.json`), { force: true });
+    await fs.rm(path.resolve(`public/data/catalog-doramasia-shard${i}.json`), { force: true });
+    await fs.rm(path.resolve(`public/data/catalog-doramasia-failures-shard${i}.json`), { force: true });
   }
   console.log(`🔀 MERGE TERMINADO: ${files} shards fusionados, ${mergedEps} episodios incorporados. Total: ${db.series.length} series, ${db.episodes.length} episodios.`);
 }
@@ -1119,7 +1126,7 @@ async function main() {
   } else {
     raws = await loadJson(RAWS_FILE, []);
     if (!raws.length) {
-      throw new Error('Modo "episodes" sin raws: ejecuta primero MODE=full para generar catalog-dramasflix-raws.json');
+      throw new Error('Modo "episodes" sin raws: ejecuta primero MODE=full para generar catalog-doramasia-raws.json');
     }
     console.log(`⚡ Modo episodios${SHARDED ? ` (shard ${SHARD_INDEX + 1}/${SHARD_TOTAL})` : ''}: ${raws.length} raws de series cargados`);
   }
@@ -1137,7 +1144,7 @@ async function main() {
     }
   }
   const existingEp = new Map();
-  for (const e of db.episodes) existingEp.set(`${e.seasonId}|${Number(e.number)}`, e);
+  for (const e of db.episodes) existingEp.set(`${e.seasonId}|${Number(e.number)}`, { servers: e.servers, updatedAt: e.updatedAt });
 
   const canons = new Map();
   const allGenres = new Set(db.genres);
@@ -1202,7 +1209,20 @@ async function main() {
       }
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
-      if (oldEp && (oldEp.servers || []).length > 0) continue;
+      if (oldEp && (oldEp.servers || []).length > 0) {
+        if (REFRESH_DAYS > 0 && oldEp.updatedAt) {
+          const ageDays = (Date.now() - new Date(oldEp.updatedAt).getTime()) / 86400000;
+          if (ageDays > REFRESH_DAYS) {
+            /* Tokens caducados: se re-rastrea para renovarlos */
+            epQueue.push({
+              seriesId: S.id, seasonId, season: seasonNum, number: slot.number,
+              urls: (slot.urls && slot.urls.length ? slot.urls : []),
+              refresh: true
+            });
+          }
+        }
+        continue;
+      }
 
       if (slot.servers && slot.servers.length) {
         upsert(db.episodes, {
@@ -1260,6 +1280,14 @@ async function main() {
       console.log(`   ⚠️ No se pudo consultar el sitemap de episodios: ${e.message}`);
     }
   }
+
+  epQueue.sort((a, b) => {
+    const ageA = existingEp.get(`${a.seasonId}|${a.number}`)?.updatedAt ? new Date(existingEp.get(`${a.seasonId}|${a.number}`).updatedAt).getTime() : 0;
+    const ageB = existingEp.get(`${b.seasonId}|${b.number}`)?.updatedAt ? new Date(existingEp.get(`${b.seasonId}|${b.number}`).updatedAt).getTime() : 0;
+    return ageA - ageB;
+  });
+  const refreshCount = epQueue.filter(j => j.refresh).length;
+  if (refreshCount) console.log(`♻️  Refresco de tokens: ${refreshCount} episodios con servidores de más de ${REFRESH_DAYS} días se re-rastrearán`);
 
   const myQueue = SHARDED
     ? epQueue.filter(j => shardOf(`${j.seasonId}|${j.number}`) === SHARD_INDEX)
