@@ -12,12 +12,22 @@ import * as cheerio from 'cheerio';
 const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
 const FETCH_RETRIES = Math.max(1, Math.min(4, Number(process.env.FETCH_RETRIES || 2)));
 
-/* fetch que devuelve {status, contentType, text} descomprimiendo gzip a mano */
+/* fetch que devuelve {status, contentType, text} descomprimiendo gzip a mano.
+   CRÍTICO: también usa el proxy — los sitemaps se descargan con esta función
+   y sin proxy caería en el bloqueo de IPs de GitHub. */
 async function fetchRaw(url) {
-  const res = await fetch(url, {
+  let target = url;
+  let proxied = false;
+  try {
+    if (PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname)) {
+      target = `${PROXY_URL}/?u=${encodeURIComponent(url)}`;
+      proxied = true;
+    }
+  } catch {}
+  const res = await fetch(target, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     redirect: 'follow',
-    headers: {
+    headers: proxied ? { 'x-proxy-key': PROXY_KEY } : {
       'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
       'Accept': '*/*',
       'Accept-Encoding': 'gzip'
