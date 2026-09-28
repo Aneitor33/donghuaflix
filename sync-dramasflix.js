@@ -255,6 +255,33 @@ async function extractServersPlaywright(url) {
       locale: 'es-ES'
     });
     const page = await ctx.newPage();
+    /* Las IPs de GitHub pueden estar vetadas: las requests al dominio del
+       sitio se reenvían vía Worker proxy. El resto (fuentes, TMDB) directo. */
+    if (PROXY_URL && PROXY_KEY) {
+      await page.route('**/*', async route => {
+        const req = route.request();
+        let host = '';
+        try { host = new URL(req.url()).hostname; } catch { await route.continue(); return; }
+        if (!PROXY_HOSTS.includes(host)) { await route.continue(); return; }
+        try {
+          const fwd = { 'x-proxy-key': PROXY_KEY, 'User-Agent': ctx._options?.userAgent || 'Mozilla/5.0' };
+          const cookie = req.headers()['cookie'];
+          if (cookie) fwd['cookie'] = cookie;
+          const r = await fetch(`${PROXY_URL}/?u=${encodeURIComponent(req.url())}`, {
+            headers: fwd,
+            signal: AbortSignal.timeout(45000)
+          });
+          const body = Buffer.from(await r.arrayBuffer());
+          const headers = {};
+          r.headers.forEach((v, k) => {
+            if (!/content-encoding|content-length|transfer-encoding|connection/i.test(k)) headers[k] = v;
+          });
+          await route.fulfill({ status: r.status, headers, body });
+        } catch {
+          try { await route.abort('connectionrefused'); } catch {}
+        }
+      });
+    }
     page.on('response', res => {
       res.text().then(t => {
         const un = t.replace(/\\\//g, '/').replace(/\\"/g, '"');
@@ -1205,7 +1232,7 @@ async function main() {
   /* Cobertura completa: añadir los episodios listados en los sub-sitemaps
      del sitio cuya serie esté en el catálogo. Así ningún episodio existente
      queda fuera por plantilla rota o enlace no detectado. */
-  if (!epAbortEarly) {
+  {
     try {
       const seriesIds = new Set(db.series.map(s => s.id));
       const epUrls = await discoverEpisodeUrls();
