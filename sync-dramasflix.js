@@ -718,6 +718,37 @@ function parseLinksAll(html, pageUrl, test) {
   return uniqueUrls([...parseLinks(html, pageUrl, test), ...parseLinksRaw(html, pageUrl, test)]);
 }
 
+/* Sub-sitemaps de episodios del índice del sitemap: listan TODAS las
+   URLs de episodios del sitio. Sirven para que el backfill no dependa de
+   plantillas ni de los enlaces de la página de serie (cobertura completa). */
+async function discoverEpisodeUrls() {
+  let xml;
+  try {
+    const r = await fetchRaw(`${SOURCE.base}/sitemap.xml`);
+    if (r.status !== 200) return [];
+    xml = r.text;
+  } catch { return []; }
+  const episodeMaps = [...new Set([...xml.matchAll(/https?:\/\/[^\s<"'\\)]+/g)]
+    .map(m => m[0].trim())
+    .filter(u => /episode/i.test(u) && /\.xml(\?|#|$)/.test(u)))];
+  const urls = new Set();
+  for (const sm of episodeMaps.slice(0, 10)) {
+    if (timeUp()) break;
+    try {
+      const r = await fetchRaw(sm);
+      if (r.status !== 200) continue;
+      for (const m of r.text.matchAll(/https?:\/\/[^\s<"'\\)]+/g)) {
+        const u = m[0].trim();
+        try {
+          if (SOURCE.episodeTest(new URL(u).pathname)) urls.add(u);
+        } catch {}
+      }
+    } catch {}
+    await sleep(150);
+  }
+  return [...urls];
+}
+
 async function discoverSitemap() {
   let xml;
   try {
@@ -1161,6 +1192,38 @@ async function main() {
   }
 
   /* Reparto en shards: cada runner procesa solo su porción (hash estable) */
+  /* Cobertura completa: añadir los episodios listados en los sub-sitemaps
+     del sitio cuya serie esté en el catálogo. Así ningún episodio existente
+     queda fuera por plantilla rota o enlace no detectado. */
+  if (!epAbortEarly) {
+    try {
+      const seriesIds = new Set(db.series.map(s => s.id));
+      const epUrls = await discoverEpisodeUrls();
+      let addedFromSitemap = 0;
+      for (const u of epUrls) {
+        const slug = slugFromUrl(u);
+        const m = slug.match(/^(.+?)-(\d{1,3})x(\d{1,4})$/i);
+        if (!m) continue;
+        const seriesSlug = m[1];
+        if (!seriesIds.has(seriesSlug)) continue;
+        const seasonNum = Number(m[2]);
+        const epNum = Number(m[3]);
+        const seasonId = `${seriesSlug}-t${seasonNum}`;
+        const epKey = `${seasonId}|${epNum}`;
+        if (existingEp.get(epKey) && (existingEp.get(epKey).servers || []).length > 0) continue;
+        if (epQueue.some(j => j.seasonId === seasonId && j.number === epNum)) continue;
+        epQueue.push({ seriesId: seriesSlug, seasonId, season: seasonNum, number: epNum, urls: [u] });
+        addedFromSitemap++;
+        if (epQueue.length >= MAX_EPISODE_CRAWLS) break;
+      }
+      if (addedFromSitemap) {
+        console.log(`🗺️  Sitemap de episodios: ${addedFromSitemap} episodios añadidos a la cola (URLs exactas del sitio)`);
+      }
+    } catch (e) {
+      console.log(`   ⚠️ No se pudo consultar el sitemap de episodios: ${e.message}`);
+    }
+  }
+
   const myQueue = SHARDED
     ? epQueue.filter(j => shardOf(`${j.seasonId}|${j.number}`) === SHARD_INDEX)
     : epQueue;
