@@ -63,10 +63,10 @@ jobs:
           SHARD_TOTAL: ${{ inputs.shards }}
           USE_PLAYWRIGHT: '1'
           WORKERS: '8'
-          HOST_LIMIT: '8'
+          HOST_LIMIT: '4'
           FETCH_TIMEOUT_MS: '20000'
           FETCH_RETRIES: '2'
-          POLITENESS_MS: '150'
+          POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '320'
           MAX_EPISODE_CRAWLS: '50000'
         run: node sync-dramasflix.js
