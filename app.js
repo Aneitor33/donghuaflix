@@ -9,7 +9,7 @@ const CATALOGS = [
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
   { id: 'donghuacli',    file: './public/data/catalog-donghuacli.json',    index: './public/data/catalog-donghuacli-index.json',    label: 'DonghuaCLI' },
   { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
-  { id: 'dramasflix',  file: './public/data/catalog-dramasflix.json',  index: './public/data/catalog-dramasflix-index.json',  label: 'DramasFlix' },   // catálogo completo (sin índice lite)
+  { id: 'doramasia',  file: './public/data/catalog-doramasia.json',  index: './public/data/catalog-doramasia-index.json',  label: 'DoramasIA' },   // catálogo completo (sin índice lite)
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
 ];
