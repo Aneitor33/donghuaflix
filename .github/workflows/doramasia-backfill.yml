@@ -62,8 +62,8 @@ jobs:
           SHARD_INDEX: ${{ matrix.shard }}
           SHARD_TOTAL: ${{ inputs.shards }}
           USE_PLAYWRIGHT: '1'
-          WORKERS: '8'
-          HOST_LIMIT: '2'
+          WORKERS: '10'
+          HOST_LIMIT: '8'
           FETCH_TIMEOUT_MS: '20000'
           FETCH_RETRIES: '2'
           POLITENESS_MS: '300'
