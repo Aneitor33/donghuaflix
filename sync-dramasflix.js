@@ -89,6 +89,8 @@ const SOURCE = {
   id: 'dramasflix',
   base: 'https://doramasflix.io',
   seeds: ['/paises/china'],
+  // Solo China continental + Hong Kong + Taiwán (doramas chinos)
+  allowedCountries: ['china', 'hong kong', 'taiwan', 'hongkong', 'taiwán'],
   maxPages: 80,
   seriesTest: p => /^\/(dorama|doramas|series|tv-shows?|programas)\/(?!page\/)[a-z0-9-]+\/?$/i.test(p) &&
                     !/\/temporada\//.test(p),
@@ -647,6 +649,11 @@ function parseSeries(html, url, isMovie) {
   let country = null;
   const cM = bodyTxt.match(/\b(China|Corea(?: del Sur)?|Jap[oó]n|Tailandia|Filipinas|Taiw[aá]n|Vietnam|Hong\s?Kong)\b/i);
   if (cM) country = cM[1];
+  // Filtro estricto: si no es China/HK/Taiwán, no se guarda
+  const isAllowed = country && SOURCE.allowedCountries.some(c => 
+    country.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(c)
+  );
+  if (!isAllowed) return null; // Descarta series no chinas
 
   let year = null;
   const yM = title.match(/\b((?:19|20)\d{2})\b/) ||
@@ -949,6 +956,11 @@ async function mergeShards() {
     for (const s of shard.seasons || []) upsert(db.seasons, s);
     for (const e of shard.episodes || []) { upsert(db.episodes, e); mergedEps++; }
     for (const g of shard.genres || []) genreSet.add(g);
+  }
+  /* Salvaguarda: un merge que no fusiona NADA es un fallo, no un éxito */
+  if (files === 0) {
+    console.error('💥 MERGE VACÍO: no se encontró ningún archivo de shard. Revisa merge_artifact_ids / merge_run_id. NO se sube nada.');
+    process.exit(1);
   }
   db.genres = [...genreSet].sort((a, b) => a.localeCompare(b, 'es'));
   db.meta = {
