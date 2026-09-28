@@ -1,4 +1,4 @@
-name: dramasflix backfill
+name: doramasia backfill
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ on:
         type: string
 
 concurrency:
-  group: dramasflix-backfill
+  group: doramasia-backfill
   cancel-in-progress: false
 
 jobs:
@@ -56,7 +56,7 @@ jobs:
           npm i -D playwright
           npx playwright install --with-deps chromium
 
-      - name: Rastrear servidores (shard ${{ matrix.shard }}/${{ inputs.shards }})
+      - name: Rastrear servidores doramasia (shard ${{ matrix.shard }}/${{ inputs.shards }})
         env:
           MODE: episodes
           SHARD_INDEX: ${{ matrix.shard }}
@@ -69,9 +69,10 @@ jobs:
           POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '320'
           MAX_EPISODE_CRAWLS: '50000'
+          FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
-        run: node sync-dramasflix.js
+        run: node sync-doramasia.js
 
       - name: Subir resultado del shard
         if: ${{ always() }}
@@ -79,8 +80,8 @@ jobs:
         with:
           name: shard-${{ matrix.shard }}
           path: |
-            public/data/catalog-dramasflix-shard${{ matrix.shard }}.json
-            public/data/catalog-dramasflix-failures-shard${{ matrix.shard }}.json
+            public/data/catalog-doramasia-shard${{ matrix.shard }}.json
+            public/data/catalog-doramasia-failures-shard${{ matrix.shard }}.json
           if-no-files-found: ignore
           retention-days: 1
 
@@ -135,10 +136,10 @@ jobs:
         env:
           MODE: merge
           SHARD_TOTAL: ${{ inputs.shards }}
-        run: node sync-dramasflix.js
+        run: node sync-doramasia.js
 
       - name: Dividir catálogo en índice + fichas
-        run: node split-catalog.js public/data/catalog-dramasflix.json
+        run: node split-catalog.js public/data/catalog-doramasia.json
 
       - name: Guardar y enviar cambios al repositorio
         if: ${{ always() }}
@@ -150,7 +151,7 @@ jobs:
             echo "No hay cambios."
             exit 0
           fi
-          git commit -m "chore(data): backfill de episodios de DoramasFlix"
+          git commit -m "chore(data): backfill de episodios de DoramasIA"
           # Reintenta el rebase/push en bucle: otros workflows commitean cada
           # minuto y pueden pisar el archivo entre nuestro add y el push
           for i in 1 2 3 4 5; do
@@ -166,8 +167,8 @@ jobs:
 
       - name: Verificar que el catálogo subido tiene episodios
         run: |
-          EPISODES=$(node -e "const db=require('./public/data/catalog-dramasflix.json'); console.log((db.episodes||[]).length)")
-          SIZE=$(stat -c%s public/data/catalog-dramasflix.json)
+          EPISODES=$(node -e "const db=require('./public/data/catalog-doramasia.json'); console.log((db.episodes||[]).length)")
+          SIZE=$(stat -c%s public/data/catalog-doramasia.json)
           echo "Episodios en el repo: $EPISODES | Tamaño: $SIZE bytes"
           if [ "$EPISODES" -lt 5000 ]; then
             echo "::error::El merge no quedó reflejado en el repo (solo $EPISODES episodios). Reintenta el merge."
