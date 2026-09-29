@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=980, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="DonghuaFlix — Donghuas, películas y series en alta calidad.">
   <title>DonghuaFlix</title>
@@ -22,6 +22,14 @@
     .pg-jump input{width:64px;background:#1d1d24;border:1px solid #333;color:#fff;border-radius:8px;padding:6px 8px;font-size:12px}
     /* Overlay del reproductor: título centrado arriba */
     .pl-top{display:flex;justify-content:center;align-items:center;gap:10px}
+    /* La capa del overlay no bloquea el reproductor embebido:
+       overlay y sus barras son transparentes para los toques (anula el
+       .pl-overlay>*{pointer-events:auto} de dfx-final.css); solo capturan
+       clics el título y los botones propios (lupa, pantalla completa) */
+    .pl-overlay{pointer-events:none}
+    .pl-overlay>*{pointer-events:none}
+    .pl-overlay .pl-chip,
+    .pl-overlay .pl-btn{pointer-events:auto}
     /* Móvil: exactamente 5 pósters completos por fila, sin cortes */
     @media (max-width: 900px){
       .rail{gap:10px}
@@ -94,7 +102,7 @@
     <a href="#/completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="vertical-align:-3px;margin-right:8px"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>Finalizadas</a>
     <a href="#/genres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="vertical-align:-3px;margin-right:8px"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Géneros</a>
     <a href="#/mi-donghua"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="vertical-align:-3px;margin-right:8px"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.8 3.9-5.7 7.5-5.7s6.7 1.9 7.5 5.7"/></svg>Mi Donghua</a>
-    <a href="#" onclick="event.preventDefault();toggleMoreMenu();window.dfxOpenSettings&&dfxOpenSettings();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="vertical-align:-3px;margin-right:8px"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2-1.55-2-3.46-2.35.94A7 7 0 0 0 14.1 5.1L13.75 2.6h-3.5L9.9 5.1a7 7 0 0 0-2.41 1.43l-2.35-.94-2 3.46 2 1.55a7 7 0 0 0 0 2.8l-2 1.55 2 3.46 2.35-.94a7 7 0 0 0 2.41 1.43l.35 2.5h3.5l.35-2.5a7 7 0 0 0 2.41-1.43l2.35.94 2-3.46-2-1.55A7 7 0 0 0 19 12z"/></svg>Ajustes</a>
+    <a href="#" onclick="event.preventDefault();toggleMoreMenu();window.dfxOpenSettings&&dfxOpenSettings();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="vertical-align:-3px;margin-right:8px"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2-1.55-2-3.46-2.35.94A7 7 0 0 0 14.1 5.1L13.75 2.6h-3.5L9.9 5.1a7 7 0 0 0-2.41 1.43l-2.35-.94-2 3.46 2 1.55a7 7 0 0 0 0 2.8l-2 1.55 2.35.94a7 7 0 0 0 2.41 1.43l.35 2.5h3.5l.35-2.5a7 7 0 0 0 2.41-1.43l2.35.94 2-3.46-2-1.55A7 7 0 0 0 19 12z"/></svg>Ajustes</a>
   </div>
 
   <button id="toTop" class="to-top" title="Volver arriba" aria-label="Volver arriba">
