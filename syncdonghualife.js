@@ -25,6 +25,24 @@ const OUT_FILE = path.resolve(process.env.OUT_FILE || 'public/data/catalog-dongh
 
 const SEEDS = ['/series', '/'];
 
+/*
+   ♻️ REBUILD DESDE CERO (opcional):
+     node syncdonghualife.js --fresh
+     node syncdonghualife.js --rebuild
+     FRESH=1 node syncdonghualife.js
+
+   Hace un backup automático del catálogo anterior (.bak-<fecha>)
+   y reconstruye TODO desde cero, descartando las temporadas y
+   episodios basura acumulados (p. ej. "Temporada 151" vacías
+   creadas por el scraper anterior).
+*/
+const REBUILD =
+  process.argv.includes('--fresh') ||
+  process.argv.includes('--rebuild') ||
+  ['1', 'true', 'yes'].includes(
+    String(process.env.FRESH || process.env.REBUILD || '').toLowerCase()
+  );
+
 const MAX_DISCOVERY_PAGES = 200;
 const FETCH_TIMEOUT_MS = 30000;
 const FETCH_RETRIES = 3;
@@ -1011,7 +1029,23 @@ async function processSeries(db, seriesUrl, index, total, allGenres) {
 async function runFullSync() {
   console.log('\n🚀 INICIANDO CONSTRUCCIÓN DEL CATÁLOGO HISTÓRICO COMPLETO\n');
 
-  const previous = await loadCatalog();
+  if (REBUILD) {
+    console.log('♻️  MODO REBUILD ACTIVADO: se descarta el catálogo anterior.');
+    try {
+      await fs.access(OUT_FILE);
+      const backup = `${OUT_FILE}.bak-${new Date().toISOString().replace(/[:.]/g, '-')}`;
+      await fs.copyFile(OUT_FILE, backup);
+      console.log(`💾 Backup del catálogo anterior guardado en: ${backup}`);
+    } catch {
+      console.log('ℹ️  No existía un catálogo anterior que respaldar.');
+    }
+    console.log('🧹 Temporadas/episodios basura descartados. Reconstruyendo desde cero...\n');
+  }
+
+  const previous = REBUILD
+    ? { meta: {}, series: [], seasons: [], episodes: [], movies: [], genres: [] }
+    : await loadCatalog();
+
   const discovered = await discoverSeries();
 
   console.log(`\n📚 Series descubiertas: ${discovered.length}`);
@@ -1078,7 +1112,7 @@ async function runFullSync() {
   await saveCatalog(db);
 
   console.log('\n====================================================');
-  console.log('🎉 SINCRONIZACIÓN HISTÓRICA TERMINADA');
+  console.log(`🎉 SINCRONIZACIÓN HISTÓRICA TERMINADA${REBUILD ? ' (REBUILD ♻️)' : ''}`);
   console.log('====================================================');
   console.log(`📚 Series: ${db.series.length}`);
   console.log(`📖 Temporadas: ${db.seasons.length}`);
@@ -1183,7 +1217,7 @@ async function main() {
 
   try {
     console.log('\n==============================================');
-    console.log('🚀 DONGHUAFLIX SYNC — DonghuaLife /watch/');
+    console.log(`🚀 DONGHUAFLIX SYNC — DonghuaLife /watch/${REBUILD ? '  [REBUILD ♻️]' : ''}`);
     console.log('==============================================\n');
 
     const existing = await loadCatalog();
