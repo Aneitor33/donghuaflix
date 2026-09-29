@@ -1,7 +1,5 @@
 /* DonghuaFlix Service Worker — PWA v8
- * Mantiene la lógica actual: catálogo con red primero, código con red primero
- * y recursos estáticos con caché primero. Esta versión añade actualización
- * limpia y evita cachear respuestas inválidas.
+ * Mantiene la lógica actual.
  */
 const CACHE = 'donghuaflix-v8';
 const ASSETS = [
@@ -62,13 +60,11 @@ self.addEventListener('fetch', event => {
 
   if (!sameOrigin) return;
 
-  // Catálogos: siempre intentan red primero para conservar el botón Recargar.
   if (path.includes('catalog') && path.endsWith('.json')) {
     event.respondWith(networkFirst(event.request));
     return;
   }
 
-  // HTML/JS/CSS: red primero para que las actualizaciones lleguen rápido.
   if (
     event.request.mode === 'navigate' ||
     path.endsWith('.html') || path.endsWith('.js') || path.endsWith('.css') ||
@@ -78,8 +74,6 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Imágenes y recursos propios: respuesta rápida desde caché y actualización
-  // en segundo plano. No cachea respuestas de error.
   if (/\.(png|jpg|jpeg|webp|avif|gif|svg|ico|woff2?)$/i.test(path)) {
     event.respondWith(staleWhileRevalidate(event.request));
     return;
@@ -88,7 +82,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(staleWhileRevalidate(event.request));
 });
 
-// Permite que la página solicite activar inmediatamente una actualización.
 self.addEventListener('message', event => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
