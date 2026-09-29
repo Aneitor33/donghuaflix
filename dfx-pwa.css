@@ -6,14 +6,11 @@
 .dfx-pwa-update button{border:0;border-radius:9px;padding:8px 12px;background:#fff;color:#08090c;font-weight:700;cursor:pointer}
 .dfx-pwa-update button:active{transform:scale(.97)}
 
-/* En móvil instalado, evita pequeños saltos bajo barras del sistema. */
 @media (max-width:720px){
   body{padding-bottom:env(safe-area-inset-bottom)}
   .nav{padding-top:env(safe-area-inset-top);height:calc(64px + env(safe-area-inset-top))}
   .dfx-pwa-update{font-size:12px}
 }
 
-@media (display-mode: standalone){
-  html{overscroll-behavior-y:none}
-  .dfx-install-only{display:none!important}
-}
+/* No se aplica un layout especial por display-mode: el acceso directo
+   debe comportarse como la navegación normal de Firefox. */
