@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1280, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="DonghuaFlix — Donghuas, películas y series en alta calidad.">
   <title>DonghuaFlix</title>
@@ -22,6 +22,11 @@
     .pg-jump input{width:64px;background:#1d1d24;border:1px solid #333;color:#fff;border-radius:8px;padding:6px 8px;font-size:12px}
     /* Overlay del reproductor: título centrado arriba */
     .pl-top{display:flex;justify-content:center;align-items:center;gap:10px}
+    /* Móvil: exactamente 5 pósters completos por fila, sin cortes */
+    @media (max-width: 900px){
+      .rail{gap:10px}
+      .rail-item{width:calc((100% - 40px)/ 5);flex:0 0 auto}
+    }
   </style>
 </head>
 <body>
