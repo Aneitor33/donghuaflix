@@ -1,16 +1,44 @@
 {
   "name": "DonghuaFlix",
   "short_name": "DonghuaFlix",
-  "description": "Catálogo de donghuas y animación china en alta calidad.",
+  "description": "Catálogo de donghuas, películas y series en alta calidad.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "any",
   "background_color": "#07080b",
   "theme_color": "#07080b",
+  "categories": ["entertainment", "video", "anime"],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-256.png", "sizes": "256x256", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Inicio",
+      "short_name": "Inicio",
+      "description": "Abrir la página principal",
+      "url": "./#/"
+    },
+    {
+      "name": "Mi lista",
+      "short_name": "Mi lista",
+      "description": "Abrir tu lista personal",
+      "url": "./#/mylist"
+    },
+    {
+      "name": "Buscar",
+      "short_name": "Buscar",
+      "description": "Buscar donghuas, películas y series",
+      "url": "./#/search"
+    },
+    {
+      "name": "Mi Donghua",
+      "short_name": "Mi Donghua",
+      "description": "Abrir tu espacio personal",
+      "url": "./#/mi-donghua"
+    }
   ]
 }
