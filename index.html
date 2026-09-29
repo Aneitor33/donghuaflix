@@ -22,9 +22,13 @@
     .pg-jump input{width:64px;background:#1d1d24;border:1px solid #333;color:#fff;border-radius:8px;padding:6px 8px;font-size:12px}
     /* Overlay del reproductor: título centrado arriba */
     .pl-top{display:flex;justify-content:center;align-items:center;gap:10px}
-    /* La capa del overlay no bloquea los controles del reproductor embebido:
-       los toques pasan al iframe (Dailymotion); solo los botones propios capturan clics */
+    /* La capa del overlay no bloquea el reproductor embebido:
+       overlay y sus barras son transparentes para los toques (anula el
+       .pl-overlay>*{pointer-events:auto} de dfx-final.css); solo capturan
+       clics el título y los botones propios (lupa, pantalla completa) */
     .pl-overlay{pointer-events:none}
+    .pl-overlay>*{pointer-events:none}
+    .pl-overlay .pl-chip,
     .pl-overlay .pl-btn{pointer-events:auto}
     /* Móvil: exactamente 5 pósters completos por fila, sin cortes */
     @media (max-width: 900px){
