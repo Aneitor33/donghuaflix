@@ -1299,10 +1299,7 @@
   if (origRoute2 && !origRoute2.__dfxRoutes2) {
     const r2 = function () {
       const p = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-      if (p[0] === 'descubrir') {
-        location.hash = '#/movies';
-        return;
-      }
+      if (p[0] === 'descubrir') return discoverPage();
       if (p[0] === 'mi-donghua') return miDonghuaPage();
       if (p[0] === 'diag') return diagPage();
       return origRoute2.apply(this, arguments);
