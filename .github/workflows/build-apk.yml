@@ -18,8 +18,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
-
       - name: Instalar SDK 34
         run: |
           yes | sdkmanager --licenses > /dev/null || true
