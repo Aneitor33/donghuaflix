@@ -4763,32 +4763,12 @@ function episode(slug) {
 
             <div class="pl-overlay">
               <div class="pl-top">
-                <span class="pl-chip">${
-                  season
-                    ? esc(
-                        seasonTitle(
-                          season,
-                          0
-                        )
-                      )
-                    : ''
-                } · EPISODIO ${
-                  e.number
-                }${
-                  isWatched(
-                    e.seasonId,
-                    e.number
-                  )
-                    ? ' · VISTO'
-                    : ''
-                }</span>
                 <span class="pl-chip">${esc(
                   cleanEpisodeTitle(e)
                 )}</span>
               </div>
 
               <div class="pl-bottom">
-                <div class="pl-prog"><i id="plProg"></i></div>
                 <div class="pl-ctrl">
                   <span class="pl-time" id="plTime">E${
                     e.number
@@ -4799,19 +4779,6 @@ function episode(slug) {
                     )
                   )}</span>
                   <span style="flex:1"></span>
-                  <button
-                    class="pl-btn"
-                    id="autoNextBtn"
-                    data-act="autonext"
-                    title="Auto-siguiente"
-                  >
-                    ${ICONS.repeat}
-                    <span>Auto: ${
-                      autoNextEnabled
-                        ? 'ON'
-                        : 'OFF'
-                    }</span>
-                  </button>
                   <button
                     class="pl-btn"
                     id="zoomFab"
