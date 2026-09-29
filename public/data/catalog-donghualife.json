@@ -2,14 +2,13 @@
   "meta": {
     "version": 4,
     "source": "https://donghualife.com/",
-    "syncedAt": "2026-09-28T23:32:12.408Z",
+    "syncedAt": "2026-09-29T03:05:28.404Z",
     "lastSync": {
-      "status": "success",
+      "status": "running",
       "type": "full",
-      "startedAt": "2026-09-28T23:32:12.398Z",
-      "finishedAt": "2026-09-28T23:32:12.408Z",
-      "error": null,
-      "catalogComplete": false
+      "startedAt": "2026-09-29T03:05:28.404Z",
+      "finishedAt": null,
+      "error": null
     }
   },
   "series": [
@@ -579,7 +578,7 @@
         "https://donghualife.com/watch/against-sky-supreme-1-551"
       ],
       "sourceUrl": "https://donghualife.com/series/against-sky-supreme",
-      "updatedAt": "2026-09-28T14:24:42.734Z",
+      "updatedAt": "2026-09-29T03:05:30.608Z",
       "posterLocal": "./public/img/posters/against-sky-supreme.jpg"
     },
     {
@@ -876,7 +875,7 @@
         "https://donghualife.com/watch/ancient-myth-1-279"
       ],
       "sourceUrl": "https://donghualife.com/series/ancient-myth",
-      "updatedAt": "2026-09-28T14:24:42.187Z",
+      "updatedAt": "2026-09-29T03:05:31.246Z",
       "posterLocal": "./public/img/posters/ancient-myth.jpg"
     },
     {
@@ -1273,7 +1272,7 @@
         "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-379"
       ],
       "sourceUrl": "https://donghualife.com/series/cien-mil-anos-en-refinacion-de-qi",
-      "updatedAt": "2026-09-28T14:24:42.535Z",
+      "updatedAt": "2026-09-29T03:05:30.803Z",
       "posterLocal": "./public/img/posters/cien-mil-anos-en-refinacion-de-qi.jpg"
     },
     {
@@ -1304,7 +1303,7 @@
         "https://donghualife.com/watch/doupo-cangqiong-1-13"
       ],
       "sourceUrl": "https://donghualife.com/series/doupo-cangqiong",
-      "updatedAt": "2026-09-28T14:24:42.385Z",
+      "updatedAt": "2026-09-29T03:05:31.057Z",
       "posterLocal": "./public/img/posters/doupo-cangqiong.jpg"
     },
     {
@@ -1566,7 +1565,7 @@
         "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-244"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-lord-celestial",
-      "updatedAt": "2026-09-28T14:28:13.799Z",
+      "updatedAt": "2026-09-29T03:11:14.876Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:25:30.548Z"
     },
@@ -2126,7 +2125,7 @@
         "https://donghualife.com/watch/martial-master-1-694"
       ],
       "sourceUrl": "https://donghualife.com/series/martial-master",
-      "updatedAt": "2026-09-28T14:24:43.308Z",
+      "updatedAt": "2026-09-29T03:05:30.455Z",
       "posterLocal": "./public/img/posters/martial-master.jpg"
     },
     {
@@ -2194,7 +2193,7 @@
         "https://donghualife.com/watch/myriad-realms-supreme-1-50"
       ],
       "sourceUrl": "https://donghualife.com/series/myriad-realms-supreme",
-      "updatedAt": "2026-09-28T15:20:07.809Z",
+      "updatedAt": "2026-09-29T04:14:46.167Z",
       "posterLocal": "./public/img/posters/myriad-realms-supreme.jpg"
     },
     {
@@ -2499,7 +2498,7 @@
         "https://donghualife.com/watch/perfect-world-1-287"
       ],
       "sourceUrl": "https://donghualife.com/series/perfect-world",
-      "updatedAt": "2026-09-28T14:24:42.022Z",
+      "updatedAt": "2026-09-29T03:05:30.686Z",
       "posterLocal": "./public/img/posters/perfect-world.jpg"
     },
     {
@@ -2972,7 +2971,7 @@
         "https://donghualife.com/watch/spirit-sword-sovereing-4-559"
       ],
       "sourceUrl": "https://donghualife.com/series/spirit-sword-sovereing",
-      "updatedAt": "2026-09-28T14:24:43.121Z",
+      "updatedAt": "2026-09-29T03:05:30.923Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:21.945Z"
     },
@@ -2988,7 +2987,7 @@
       "status": null,
       "genres": [],
       "seasonUrls": [
-        "https://donghualife.com/watch/supreme-god-emperor-2-579",
+        "https://donghualife.com/watch/supreme-god-emperor-2-580",
         "https://donghualife.com/watch/supreme-god-emperor-2-10",
         "https://donghualife.com/watch/supreme-god-emperor-2-106",
         "https://donghualife.com/watch/supreme-god-emperor-2-107",
@@ -3462,10 +3461,11 @@
         "https://donghualife.com/watch/supreme-god-emperor-2-575",
         "https://donghualife.com/watch/supreme-god-emperor-2-576",
         "https://donghualife.com/watch/supreme-god-emperor-2-577",
-        "https://donghualife.com/watch/supreme-god-emperor-2-578"
+        "https://donghualife.com/watch/supreme-god-emperor-2-578",
+        "https://donghualife.com/watch/supreme-god-emperor-2-579"
       ],
       "sourceUrl": "https://donghualife.com/series/supreme-god-emperor",
-      "updatedAt": "2026-09-28T14:24:42.911Z",
+      "updatedAt": "2026-09-29T03:05:31.043Z",
       "posterLocal": "./public/img/posters/supreme-god-emperor.jpg"
     },
     {
@@ -3480,7 +3480,7 @@
       "status": null,
       "genres": [],
       "seasonUrls": [
-        "https://donghualife.com/watch/swallowed-star-3-157",
+        "https://donghualife.com/watch/swallowed-star-3-158",
         "https://donghualife.com/watch/swallowed-star-1-1",
         "https://donghualife.com/watch/swallowed-star-1-2",
         "https://donghualife.com/watch/swallowed-star-1-3",
@@ -3509,7 +3509,7 @@
         "https://donghualife.com/watch/swallowed-star-1-26"
       ],
       "sourceUrl": "https://donghualife.com/series/swallowed-star",
-      "updatedAt": "2026-09-28T15:04:28.397Z",
+      "updatedAt": "2026-09-29T03:56:42.079Z",
       "posterLocal": "./public/img/posters/swallowed-star.jpg"
     },
     {
@@ -14113,7 +14113,7 @@
         "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-247"
       ],
       "sourceUrl": "https://donghualife.com/series/success-empyrean-xuan-emperor",
-      "updatedAt": "2026-09-28T14:24:42.280Z",
+      "updatedAt": "2026-09-29T03:05:31.125Z",
       "posterLocal": "./public/img/posters/success-empyrean-xuan-emperor.jpg"
     },
     {
@@ -14184,7 +14184,7 @@
         "https://donghualife.com/watch/wan-jie-du-zun-1-209"
       ],
       "sourceUrl": "https://donghualife.com/series/wan-jie-du-zun",
-      "updatedAt": "2026-09-28T14:24:42.047Z",
+      "updatedAt": "2026-09-29T03:05:30.703Z",
       "posterLocal": "./public/img/posters/wan-jie-du-zun.jpg"
     }
   ],
@@ -14299,7 +14299,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:38:18.850Z"
+      "updatedAt": "2026-09-29T03:06:50.916Z"
     },
     {
       "id": "against-sky-supreme-1-2",
@@ -14315,7 +14315,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:52:32.296Z"
+      "updatedAt": "2026-09-29T03:08:33.376Z"
     },
     {
       "id": "against-sky-supreme-1-3",
@@ -14331,7 +14331,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:07:27.484Z"
+      "updatedAt": "2026-09-29T03:09:42.180Z"
     },
     {
       "id": "against-sky-supreme-1-4",
@@ -14347,7 +14347,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:26:00.314Z"
+      "updatedAt": "2026-09-29T03:10:16.497Z"
     },
     {
       "id": "against-sky-supreme-1-5",
@@ -14363,13 +14363,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.150Z"
+      "updatedAt": "2026-09-29T03:11:59.344Z"
     },
     {
       "id": "against-sky-supreme-1-6",
       "slug": "against-sky-supreme-1-6",
       "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-6",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
       "number": 6,
       "seriesId": "against-sky-supreme",
       "firstEpisodeUrl": null,
@@ -14377,9 +14377,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:17.030Z"
+      "updatedAt": "2026-09-29T03:12:49.574Z"
     },
     {
       "id": "against-sky-supreme-1-7",
@@ -14395,7 +14395,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:23.090Z"
+      "updatedAt": "2026-09-29T03:13:48.231Z"
     },
     {
       "id": "against-sky-supreme-1-8",
@@ -14411,7 +14411,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:07.452Z"
+      "updatedAt": "2026-09-29T03:15:30.851Z"
     },
     {
       "id": "against-sky-supreme-1-9",
@@ -14427,7 +14427,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:21.990Z"
+      "updatedAt": "2026-09-29T03:16:00.242Z"
     },
     {
       "id": "against-sky-supreme-1-10",
@@ -14443,7 +14443,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:48.856Z"
+      "updatedAt": "2026-09-29T03:17:13.403Z"
     },
     {
       "id": "against-sky-supreme-1-11",
@@ -14459,7 +14459,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:54.844Z"
+      "updatedAt": "2026-09-29T03:18:24.549Z"
     },
     {
       "id": "against-sky-supreme-1-12",
@@ -14475,7 +14475,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:35.084Z"
+      "updatedAt": "2026-09-29T03:18:55.368Z"
     },
     {
       "id": "against-sky-supreme-1-13",
@@ -14491,7 +14491,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:58.203Z"
+      "updatedAt": "2026-09-29T03:20:08.737Z"
     },
     {
       "id": "against-sky-supreme-1-14",
@@ -14507,7 +14507,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:45:42.744Z"
+      "updatedAt": "2026-09-29T03:20:30.268Z"
     },
     {
       "id": "against-sky-supreme-1-15",
@@ -14523,7 +14523,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:48.446Z"
+      "updatedAt": "2026-09-29T03:21:03.505Z"
     },
     {
       "id": "against-sky-supreme-1-16",
@@ -14537,9 +14537,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:16.392Z"
+      "updatedAt": "2026-09-29T03:21:22.255Z"
     },
     {
       "id": "against-sky-supreme-1-17",
@@ -14555,7 +14555,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:35.732Z"
+      "updatedAt": "2026-09-29T03:25:09.446Z"
     },
     {
       "id": "against-sky-supreme-1-18",
@@ -14571,7 +14571,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.428Z"
+      "updatedAt": "2026-09-29T03:29:07.728Z"
     },
     {
       "id": "against-sky-supreme-1-19",
@@ -14587,7 +14587,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:51.964Z"
+      "updatedAt": "2026-09-29T03:30:38.077Z"
     },
     {
       "id": "against-sky-supreme-1-20",
@@ -14603,7 +14603,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.999Z"
+      "updatedAt": "2026-09-29T03:31:36.422Z"
     },
     {
       "id": "against-sky-supreme-1-21",
@@ -14619,7 +14619,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.845Z"
+      "updatedAt": "2026-09-29T03:38:51.562Z"
     },
     {
       "id": "against-sky-supreme-1-22",
@@ -14635,7 +14635,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:39.758Z"
+      "updatedAt": "2026-09-29T03:39:42.194Z"
     },
     {
       "id": "against-sky-supreme-1-23",
@@ -14651,7 +14651,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:34.366Z"
+      "updatedAt": "2026-09-29T03:40:33.035Z"
     },
     {
       "id": "against-sky-supreme-1-24",
@@ -14667,7 +14667,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:00.619Z"
+      "updatedAt": "2026-09-29T03:42:16.195Z"
     },
     {
       "id": "against-sky-supreme-1-25",
@@ -14683,7 +14683,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:57.769Z"
+      "updatedAt": "2026-09-29T03:52:48.043Z"
     },
     {
       "id": "against-sky-supreme-1-26",
@@ -14699,7 +14699,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:16.595Z"
+      "updatedAt": "2026-09-29T04:05:37.629Z"
     },
     {
       "id": "against-sky-supreme-1-27",
@@ -14715,7 +14715,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:30.294Z"
+      "updatedAt": "2026-09-29T04:10:35.285Z"
     },
     {
       "id": "against-sky-supreme-1-28",
@@ -14731,7 +14731,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:49.231Z"
+      "updatedAt": "2026-09-29T04:12:18.675Z"
     },
     {
       "id": "against-sky-supreme-1-29",
@@ -14747,7 +14747,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:08.869Z"
+      "updatedAt": "2026-09-29T04:29:27.271Z"
     },
     {
       "id": "against-sky-supreme-1-552",
@@ -14763,7 +14763,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:47.418Z"
+      "updatedAt": "2026-09-29T03:05:38.793Z"
     },
     {
       "id": "alas-del-mundo-1",
@@ -14991,7 +14991,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:31:47.263Z"
+      "updatedAt": "2026-09-29T03:06:51.362Z"
     },
     {
       "id": "ancient-myth-1-2",
@@ -15007,7 +15007,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:38:27.626Z"
+      "updatedAt": "2026-09-29T03:08:04.706Z"
     },
     {
       "id": "ancient-myth-1-3",
@@ -15023,7 +15023,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:45:16.064Z"
+      "updatedAt": "2026-09-29T03:08:32.561Z"
     },
     {
       "id": "ancient-myth-1-4",
@@ -15039,7 +15039,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:52:45.154Z"
+      "updatedAt": "2026-09-29T03:10:15.661Z"
     },
     {
       "id": "ancient-myth-1-5",
@@ -15055,7 +15055,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:59:39.939Z"
+      "updatedAt": "2026-09-29T03:11:58.743Z"
     },
     {
       "id": "ancient-myth-1-6",
@@ -15071,7 +15071,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:08:13.930Z"
+      "updatedAt": "2026-09-29T03:12:49.925Z"
     },
     {
       "id": "ancient-myth-1-7",
@@ -15087,7 +15087,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:18:05.408Z"
+      "updatedAt": "2026-09-29T03:13:48.176Z"
     },
     {
       "id": "ancient-myth-1-8",
@@ -15103,7 +15103,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:27:30.141Z"
+      "updatedAt": "2026-09-29T03:15:30.965Z"
     },
     {
       "id": "ancient-myth-1-9",
@@ -15119,7 +15119,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.226Z"
+      "updatedAt": "2026-09-29T03:15:59.659Z"
     },
     {
       "id": "ancient-myth-1-10",
@@ -15135,7 +15135,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:21.951Z"
+      "updatedAt": "2026-09-29T03:17:13.110Z"
     },
     {
       "id": "ancient-myth-1-11",
@@ -15151,7 +15151,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:07.005Z"
+      "updatedAt": "2026-09-29T03:18:54.303Z"
     },
     {
       "id": "ancient-myth-1-12",
@@ -15167,7 +15167,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.239Z"
+      "updatedAt": "2026-09-29T03:20:29.724Z"
     },
     {
       "id": "ancient-myth-1-13",
@@ -15183,7 +15183,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:54.089Z"
+      "updatedAt": "2026-09-29T03:21:03.512Z"
     },
     {
       "id": "ancient-myth-1-14",
@@ -15199,7 +15199,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:34.711Z"
+      "updatedAt": "2026-09-29T03:25:06.670Z"
     },
     {
       "id": "ancient-myth-1-15",
@@ -15215,7 +15215,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:57.781Z"
+      "updatedAt": "2026-09-29T03:29:08.910Z"
     },
     {
       "id": "ancient-myth-1-16",
@@ -15231,7 +15231,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:07.629Z"
+      "updatedAt": "2026-09-29T03:30:52.661Z"
     },
     {
       "id": "ancient-myth-1-17",
@@ -15247,7 +15247,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:52.815Z"
+      "updatedAt": "2026-09-29T03:31:38.519Z"
     },
     {
       "id": "ancient-myth-1-18",
@@ -15263,7 +15263,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:18.123Z"
+      "updatedAt": "2026-09-29T03:38:51.641Z"
     },
     {
       "id": "ancient-myth-1-19",
@@ -15279,7 +15279,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:39.071Z"
+      "updatedAt": "2026-09-29T03:39:42.479Z"
     },
     {
       "id": "ancient-myth-1-20",
@@ -15295,7 +15295,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.714Z"
+      "updatedAt": "2026-09-29T03:42:15.421Z"
     },
     {
       "id": "ancient-myth-1-21",
@@ -15311,7 +15311,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:49.164Z"
+      "updatedAt": "2026-09-29T03:53:19.009Z"
     },
     {
       "id": "ancient-myth-1-22",
@@ -15327,7 +15327,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.888Z"
+      "updatedAt": "2026-09-29T04:03:16.708Z"
     },
     {
       "id": "ancient-myth-1-23",
@@ -15343,7 +15343,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:00.034Z"
+      "updatedAt": "2026-09-29T04:05:37.518Z"
     },
     {
       "id": "ancient-myth-1-24",
@@ -15359,7 +15359,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:40.354Z"
+      "updatedAt": "2026-09-29T04:10:35.183Z"
     },
     {
       "id": "ancient-myth-1-25",
@@ -15375,7 +15375,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:33.341Z"
+      "updatedAt": "2026-09-29T04:19:44.363Z"
     },
     {
       "id": "ancient-myth-1-26",
@@ -15391,7 +15391,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:48.701Z"
+      "updatedAt": "2026-09-29T04:29:00.361Z"
     },
     {
       "id": "ancient-myth-1-27",
@@ -15407,7 +15407,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:00.578Z"
+      "updatedAt": "2026-09-29T04:29:27.129Z"
     },
     {
       "id": "ancient-myth-1-28",
@@ -15423,7 +15423,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:02.466Z"
+      "updatedAt": "2026-09-29T04:32:15.262Z"
     },
     {
       "id": "ancient-myth-1-29",
@@ -15439,7 +15439,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:19.075Z"
+      "updatedAt": "2026-09-29T04:33:36.700Z"
     },
     {
       "id": "ancient-myth-1-30",
@@ -15455,7 +15455,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:42.260Z"
+      "updatedAt": "2026-09-29T04:35:06.139Z"
     },
     {
       "id": "ancient-myth-1-31",
@@ -15471,7 +15471,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:02.591Z"
+      "updatedAt": "2026-09-29T04:36:11.133Z"
     },
     {
       "id": "ancient-myth-1-280",
@@ -15487,7 +15487,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:49.321Z"
+      "updatedAt": "2026-09-29T03:05:44.331Z"
     },
     {
       "id": "ancient-soul-war-1",
@@ -16021,7 +16021,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:33:12.861Z"
+      "updatedAt": "2026-09-29T03:06:51.866Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-2",
@@ -16037,7 +16037,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:41:39.280Z"
+      "updatedAt": "2026-09-29T03:08:32.745Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-3",
@@ -16053,7 +16053,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:50:52.859Z"
+      "updatedAt": "2026-09-29T03:10:15.737Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-4",
@@ -16069,7 +16069,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:59:14.049Z"
+      "updatedAt": "2026-09-29T03:11:58.221Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-5",
@@ -16085,7 +16085,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:09:52.593Z"
+      "updatedAt": "2026-09-29T03:12:51.393Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-6",
@@ -16101,7 +16101,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:22:34.337Z"
+      "updatedAt": "2026-09-29T03:13:47.610Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-7",
@@ -16117,13 +16117,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.448Z"
+      "updatedAt": "2026-09-29T03:14:20.033Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-8",
       "slug": "cien-mil-anos-en-refinacion-de-qi-1-8",
       "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-8",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
       "number": 8,
       "seriesId": "cien-mil-anos-en-refinacion-de-qi",
       "firstEpisodeUrl": null,
@@ -16131,9 +16131,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:12.829Z"
+      "updatedAt": "2026-09-29T03:15:30.788Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-9",
@@ -16149,7 +16149,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:22.382Z"
+      "updatedAt": "2026-09-29T03:16:00.001Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-10",
@@ -16165,7 +16165,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:04.577Z"
+      "updatedAt": "2026-09-29T03:17:14.170Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-11",
@@ -16181,7 +16181,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:25.760Z"
+      "updatedAt": "2026-09-29T03:18:54.565Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-12",
@@ -16197,7 +16197,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.956Z"
+      "updatedAt": "2026-09-29T03:20:03.809Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-13",
@@ -16213,7 +16213,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:54.296Z"
+      "updatedAt": "2026-09-29T03:20:30.842Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-14",
@@ -16229,7 +16229,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:34.893Z"
+      "updatedAt": "2026-09-29T03:21:03.739Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-15",
@@ -16243,9 +16243,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:58.577Z"
+      "updatedAt": "2026-09-29T03:21:22.356Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-16",
@@ -16261,7 +16261,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:46.430Z"
+      "updatedAt": "2026-09-29T03:25:16.846Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-17",
@@ -16277,7 +16277,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:15.671Z"
+      "updatedAt": "2026-09-29T03:29:09.267Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-18",
@@ -16293,7 +16293,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:36.472Z"
+      "updatedAt": "2026-09-29T03:30:39.851Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-19",
@@ -16309,7 +16309,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:59.473Z"
+      "updatedAt": "2026-09-29T03:31:40.036Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-20",
@@ -16325,7 +16325,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:47.787Z"
+      "updatedAt": "2026-09-29T03:38:49.614Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-21",
@@ -16341,7 +16341,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:19.523Z"
+      "updatedAt": "2026-09-29T03:39:41.654Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-22",
@@ -16357,7 +16357,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.253Z"
+      "updatedAt": "2026-09-29T03:40:35.996Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-23",
@@ -16373,7 +16373,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:39.340Z"
+      "updatedAt": "2026-09-29T03:42:15.562Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-24",
@@ -16389,7 +16389,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:33.676Z"
+      "updatedAt": "2026-09-29T03:55:25.063Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-25",
@@ -16405,7 +16405,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:50.030Z"
+      "updatedAt": "2026-09-29T04:05:42.957Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-26",
@@ -16421,7 +16421,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:04.181Z"
+      "updatedAt": "2026-09-29T04:10:38.579Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-27",
@@ -16437,7 +16437,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:15.084Z"
+      "updatedAt": "2026-09-29T04:12:15.597Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-28",
@@ -16453,7 +16453,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:42.331Z"
+      "updatedAt": "2026-09-29T04:23:20.838Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-29",
@@ -16469,7 +16469,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:02.717Z"
+      "updatedAt": "2026-09-29T04:29:27.894Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi-1-380",
@@ -16485,7 +16485,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:47.422Z"
+      "updatedAt": "2026-09-29T03:05:39.080Z"
     },
     {
       "id": "cien-mil-anos-en-refinacion-de-qi",
@@ -17045,7 +17045,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:25:08.427Z"
+      "updatedAt": "2026-09-29T03:06:22.071Z"
     },
     {
       "id": "doupo-cangqiong-2",
@@ -17077,7 +17077,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:25:31.518Z"
+      "updatedAt": "2026-09-29T03:06:51.977Z"
     },
     {
       "id": "doupo-cangqiong-3",
@@ -17109,7 +17109,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:25:48.480Z"
+      "updatedAt": "2026-09-29T03:07:26.618Z"
     },
     {
       "id": "doupo-cangqiong-4",
@@ -17141,7 +17141,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:26:07.291Z"
+      "updatedAt": "2026-09-29T03:07:59.845Z"
     },
     {
       "id": "doupo-cangqiong-5",
@@ -17173,7 +17173,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:26:22.129Z"
+      "updatedAt": "2026-09-29T03:08:22.730Z"
     },
     {
       "id": "doupo-cangqiong-6",
@@ -17205,7 +17205,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:26:36.246Z"
+      "updatedAt": "2026-09-29T03:08:50.016Z"
     },
     {
       "id": "doupo-cangqiong-7",
@@ -17237,7 +17237,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:26:52.569Z"
+      "updatedAt": "2026-09-29T03:09:23.149Z"
     },
     {
       "id": "doupo-cangqiong-8",
@@ -17269,7 +17269,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:27:06.836Z"
+      "updatedAt": "2026-09-29T03:09:39.140Z"
     },
     {
       "id": "doupo-cangqiong-1-9",
@@ -17285,7 +17285,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:27:17.389Z"
+      "updatedAt": "2026-09-29T03:09:53.407Z"
     },
     {
       "id": "doupo-cangqiong-1-10",
@@ -17301,7 +17301,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:27:30.618Z"
+      "updatedAt": "2026-09-29T03:10:15.154Z"
     },
     {
       "id": "doupo-cangqiong-1-11",
@@ -17317,7 +17317,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:27:45.613Z"
+      "updatedAt": "2026-09-29T03:10:37.491Z"
     },
     {
       "id": "doupo-cangqiong-1-12",
@@ -17333,7 +17333,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:28:00.425Z"
+      "updatedAt": "2026-09-29T03:10:55.111Z"
     },
     {
       "id": "doupo-cangqiong-1-13",
@@ -17349,7 +17349,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:28:12.329Z"
+      "updatedAt": "2026-09-29T03:11:12.360Z"
     },
     {
       "id": "doupo-cangqiong-8-55",
@@ -17365,7 +17365,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:47.413Z"
+      "updatedAt": "2026-09-29T03:05:43.620Z"
     },
     {
       "id": "especial",
@@ -19778,7 +19778,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:33:37.389Z"
+      "updatedAt": "2026-09-29T03:11:58.866Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-2",
@@ -19794,7 +19794,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:39:05.543Z"
+      "updatedAt": "2026-09-29T03:12:53.306Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-3",
@@ -19810,7 +19810,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:44:19.309Z"
+      "updatedAt": "2026-09-29T03:13:47.294Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-4",
@@ -19826,7 +19826,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:50:38.537Z"
+      "updatedAt": "2026-09-29T03:15:29.916Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-5",
@@ -19842,7 +19842,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:55:55.670Z"
+      "updatedAt": "2026-09-29T03:15:59.927Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-6",
@@ -19858,7 +19858,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:02:23.090Z"
+      "updatedAt": "2026-09-29T03:17:13.654Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-7",
@@ -19874,7 +19874,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:08:48.154Z"
+      "updatedAt": "2026-09-29T03:18:22.454Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-8",
@@ -19890,7 +19890,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:16:41.370Z"
+      "updatedAt": "2026-09-29T03:18:55.896Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-9",
@@ -19906,7 +19906,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:24:19.288Z"
+      "updatedAt": "2026-09-29T03:20:29.464Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-10",
@@ -19922,13 +19922,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:49.465Z"
+      "updatedAt": "2026-09-29T03:21:03.504Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-11",
       "slug": "la-leyenda-del-lord-celestial-1-11",
       "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-11",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
       "number": 11,
       "seriesId": "la-leyenda-del-lord-celestial",
       "firstEpisodeUrl": null,
@@ -19936,9 +19936,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:08.240Z"
+      "updatedAt": "2026-09-29T03:25:07.123Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-12",
@@ -19954,7 +19954,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:21.646Z"
+      "updatedAt": "2026-09-29T03:29:12.162Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-13",
@@ -19970,7 +19970,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:09.588Z"
+      "updatedAt": "2026-09-29T03:30:38.326Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-14",
@@ -19986,7 +19986,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:22.282Z"
+      "updatedAt": "2026-09-29T03:31:38.831Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-15",
@@ -20002,7 +20002,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.113Z"
+      "updatedAt": "2026-09-29T03:38:50.069Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-16",
@@ -20018,7 +20018,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:35.184Z"
+      "updatedAt": "2026-09-29T03:39:42.928Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-17",
@@ -20034,7 +20034,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:38.721Z"
+      "updatedAt": "2026-09-29T03:40:35.842Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-18",
@@ -20050,7 +20050,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:18.122Z"
+      "updatedAt": "2026-09-29T03:42:15.316Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-19",
@@ -20066,7 +20066,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:38.997Z"
+      "updatedAt": "2026-09-29T03:51:22.434Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-20",
@@ -20082,7 +20082,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.095Z"
+      "updatedAt": "2026-09-29T03:58:53.804Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-21",
@@ -20098,7 +20098,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:52.184Z"
+      "updatedAt": "2026-09-29T04:05:35.529Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-22",
@@ -20114,7 +20114,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.770Z"
+      "updatedAt": "2026-09-29T04:12:19.686Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-23",
@@ -20130,7 +20130,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.923Z"
+      "updatedAt": "2026-09-29T04:19:35.257Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-24",
@@ -20146,7 +20146,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:40.117Z"
+      "updatedAt": "2026-09-29T04:26:59.706Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-25",
@@ -20162,7 +20162,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:34.230Z"
+      "updatedAt": "2026-09-29T04:29:28.868Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-26",
@@ -20178,7 +20178,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:00.771Z"
+      "updatedAt": "2026-09-29T04:32:15.652Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-27",
@@ -20194,7 +20194,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:16.094Z"
+      "updatedAt": "2026-09-29T04:33:35.698Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-28",
@@ -20210,7 +20210,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:33.540Z"
+      "updatedAt": "2026-09-29T04:35:06.745Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-29",
@@ -20226,7 +20226,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:00.424Z"
+      "updatedAt": "2026-09-29T04:36:06.067Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-1-245",
@@ -20242,7 +20242,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:28:24.404Z"
+      "updatedAt": "2026-09-29T03:11:31.040Z"
     },
     {
       "id": "la-leyenda-del-lord-celestial-3d-1",
@@ -21393,7 +21393,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:37:49.507Z"
+      "updatedAt": "2026-09-29T03:06:52.036Z"
     },
     {
       "id": "martial-master-1-153",
@@ -21409,7 +21409,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:51:32.954Z"
+      "updatedAt": "2026-09-29T03:08:05.473Z"
     },
     {
       "id": "martial-master-1-154",
@@ -21425,7 +21425,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:05:40.025Z"
+      "updatedAt": "2026-09-29T03:08:33.438Z"
     },
     {
       "id": "martial-master-1-155",
@@ -21441,7 +21441,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:23:34.531Z"
+      "updatedAt": "2026-09-29T03:09:37.512Z"
     },
     {
       "id": "martial-master-1-156",
@@ -21457,13 +21457,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.635Z"
+      "updatedAt": "2026-09-29T03:10:16.563Z"
     },
     {
       "id": "martial-master-1-157",
       "slug": "martial-master-1-157",
       "sourceUrl": "https://donghualife.com/watch/martial-master-1-157",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
       "number": 157,
       "seriesId": "martial-master",
       "firstEpisodeUrl": null,
@@ -21471,9 +21471,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:14.582Z"
+      "updatedAt": "2026-09-29T03:11:58.500Z"
     },
     {
       "id": "martial-master-1-158",
@@ -21489,7 +21489,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:22.375Z"
+      "updatedAt": "2026-09-29T03:12:51.577Z"
     },
     {
       "id": "martial-master-1-159",
@@ -21505,7 +21505,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:05.949Z"
+      "updatedAt": "2026-09-29T03:13:48.172Z"
     },
     {
       "id": "martial-master-1-160",
@@ -21521,7 +21521,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:24.843Z"
+      "updatedAt": "2026-09-29T03:14:20.013Z"
     },
     {
       "id": "martial-master-1-161",
@@ -21537,7 +21537,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.537Z"
+      "updatedAt": "2026-09-29T03:15:30.660Z"
     },
     {
       "id": "martial-master-1-162",
@@ -21553,7 +21553,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:53.871Z"
+      "updatedAt": "2026-09-29T03:15:59.928Z"
     },
     {
       "id": "martial-master-1-163",
@@ -21569,7 +21569,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:35.365Z"
+      "updatedAt": "2026-09-29T03:17:14.311Z"
     },
     {
       "id": "martial-master-1-164",
@@ -21585,7 +21585,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:58.123Z"
+      "updatedAt": "2026-09-29T03:18:21.853Z"
     },
     {
       "id": "martial-master-1-165",
@@ -21601,7 +21601,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:17.424Z"
+      "updatedAt": "2026-09-29T03:18:54.849Z"
     },
     {
       "id": "martial-master-1-166",
@@ -21617,7 +21617,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:36.517Z"
+      "updatedAt": "2026-09-29T03:20:30.497Z"
     },
     {
       "id": "martial-master-1-167",
@@ -21633,7 +21633,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:59.107Z"
+      "updatedAt": "2026-09-29T03:21:03.604Z"
     },
     {
       "id": "martial-master-1-168",
@@ -21647,9 +21647,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:48.440Z"
+      "updatedAt": "2026-09-29T03:21:22.290Z"
     },
     {
       "id": "martial-master-1-169",
@@ -21665,7 +21665,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:21.011Z"
+      "updatedAt": "2026-09-29T03:25:16.457Z"
     },
     {
       "id": "martial-master-1-170",
@@ -21681,7 +21681,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.709Z"
+      "updatedAt": "2026-09-29T03:29:08.635Z"
     },
     {
       "id": "martial-master-1-171",
@@ -21697,7 +21697,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:39.224Z"
+      "updatedAt": "2026-09-29T03:30:38.342Z"
     },
     {
       "id": "martial-master-1-172",
@@ -21713,7 +21713,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:34.032Z"
+      "updatedAt": "2026-09-29T03:31:39.124Z"
     },
     {
       "id": "martial-master-1-173",
@@ -21729,7 +21729,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:49.997Z"
+      "updatedAt": "2026-09-29T03:38:52.100Z"
     },
     {
       "id": "martial-master-1-174",
@@ -21745,7 +21745,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:07.720Z"
+      "updatedAt": "2026-09-29T03:39:39.379Z"
     },
     {
       "id": "martial-master-1-175",
@@ -21761,7 +21761,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:00.426Z"
+      "updatedAt": "2026-09-29T03:40:33.503Z"
     },
     {
       "id": "martial-master-1-176",
@@ -21777,7 +21777,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:27.646Z"
+      "updatedAt": "2026-09-29T03:42:12.703Z"
     },
     {
       "id": "martial-master-1-177",
@@ -21793,7 +21793,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:41.986Z"
+      "updatedAt": "2026-09-29T03:52:45.736Z"
     },
     {
       "id": "martial-master-1-178",
@@ -21809,7 +21809,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:59.554Z"
+      "updatedAt": "2026-09-29T04:05:35.773Z"
     },
     {
       "id": "martial-master-1-695",
@@ -21825,7 +21825,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:48.515Z"
+      "updatedAt": "2026-09-29T03:05:38.736Z"
     },
     {
       "id": "martial-peak-1",
@@ -22209,7 +22209,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:22:20.505Z"
+      "updatedAt": "2026-09-29T04:17:02.989Z"
     },
     {
       "id": "myriad-realms-supreme-2",
@@ -22241,7 +22241,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:23:51.582Z"
+      "updatedAt": "2026-09-29T04:18:43.525Z"
     },
     {
       "id": "myriad-realms-supreme-1-3",
@@ -22257,7 +22257,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:25:16.523Z"
+      "updatedAt": "2026-09-29T04:20:33.633Z"
     },
     {
       "id": "myriad-realms-supreme-1-4",
@@ -22273,7 +22273,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:27:00.111Z"
+      "updatedAt": "2026-09-29T04:22:17.444Z"
     },
     {
       "id": "myriad-realms-supreme-1-5",
@@ -22289,7 +22289,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:28:41.174Z"
+      "updatedAt": "2026-09-29T04:23:55.962Z"
     },
     {
       "id": "myriad-realms-supreme-1-6",
@@ -22305,7 +22305,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:30:33.257Z"
+      "updatedAt": "2026-09-29T04:25:52.690Z"
     },
     {
       "id": "myriad-realms-supreme-1-7",
@@ -22321,7 +22321,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:55.878Z"
+      "updatedAt": "2026-09-29T04:27:43.257Z"
     },
     {
       "id": "myriad-realms-supreme-1-8",
@@ -22337,7 +22337,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:33:50.419Z"
+      "updatedAt": "2026-09-29T04:29:13.935Z"
     },
     {
       "id": "myriad-realms-supreme-1-9",
@@ -22353,7 +22353,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:22.800Z"
+      "updatedAt": "2026-09-29T04:31:23.579Z"
     },
     {
       "id": "myriad-realms-supreme-1-10",
@@ -22369,7 +22369,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:09.881Z"
+      "updatedAt": "2026-09-29T04:32:12.388Z"
     },
     {
       "id": "myriad-realms-supreme-1-11",
@@ -22385,7 +22385,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:36:26.381Z"
+      "updatedAt": "2026-09-29T04:33:33.762Z"
     },
     {
       "id": "myriad-realms-supreme-1-12",
@@ -22401,7 +22401,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:25.248Z"
+      "updatedAt": "2026-09-29T04:35:06.494Z"
     },
     {
       "id": "myriad-realms-supreme-1-13",
@@ -22417,7 +22417,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:47.828Z"
+      "updatedAt": "2026-09-29T04:36:05.914Z"
     },
     {
       "id": "myriad-realms-supreme-1-14",
@@ -22433,7 +22433,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:43.343Z"
+      "updatedAt": "2026-09-29T04:37:55.346Z"
     },
     {
       "id": "myriad-realms-supreme-1-15",
@@ -22449,7 +22449,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:58.520Z"
+      "updatedAt": "2026-09-29T04:39:19.446Z"
     },
     {
       "id": "myriad-realms-supreme-1-16",
@@ -22465,7 +22465,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:40:05.472Z"
+      "updatedAt": "2026-09-29T04:40:46.757Z"
     },
     {
       "id": "myriad-realms-supreme-1-17",
@@ -22481,7 +22481,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:41:16.341Z"
+      "updatedAt": "2026-09-29T04:42:11.571Z"
     },
     {
       "id": "myriad-realms-supreme-1-18",
@@ -22497,7 +22497,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:15.731Z"
+      "updatedAt": "2026-09-29T04:43:18.152Z"
     },
     {
       "id": "myriad-realms-supreme-1-19",
@@ -22513,7 +22513,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:35.083Z"
+      "updatedAt": "2026-09-29T04:43:39.771Z"
     },
     {
       "id": "myriad-realms-supreme-1-20",
@@ -22529,7 +22529,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:34.747Z"
+      "updatedAt": "2026-09-29T04:44:52.013Z"
     },
     {
       "id": "myriad-realms-supreme-1-21",
@@ -22545,7 +22545,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:57.797Z"
+      "updatedAt": "2026-09-29T04:46:06.951Z"
     },
     {
       "id": "myriad-realms-supreme-1-22",
@@ -22561,7 +22561,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:45:02.955Z"
+      "updatedAt": "2026-09-29T04:46:22.325Z"
     },
     {
       "id": "myriad-realms-supreme-1-23",
@@ -22577,7 +22577,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:45:45.940Z"
+      "updatedAt": "2026-09-29T04:47:20.837Z"
     },
     {
       "id": "myriad-realms-supreme-1-24",
@@ -22593,7 +22593,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:46:37.671Z"
+      "updatedAt": "2026-09-29T04:48:27.563Z"
     },
     {
       "id": "myriad-realms-supreme-1-25",
@@ -22609,7 +22609,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:05.239Z"
+      "updatedAt": "2026-09-29T04:49:31.771Z"
     },
     {
       "id": "myriad-realms-supreme-1-26",
@@ -22625,7 +22625,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:02.548Z"
+      "updatedAt": "2026-09-29T04:50:21.141Z"
     },
     {
       "id": "myriad-realms-supreme-1-27",
@@ -22641,7 +22641,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:00.154Z"
+      "updatedAt": "2026-09-29T04:51:41.663Z"
     },
     {
       "id": "myriad-realms-supreme-1-28",
@@ -22657,7 +22657,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:14.986Z"
+      "updatedAt": "2026-09-29T04:52:33.880Z"
     },
     {
       "id": "myriad-realms-supreme-1-29",
@@ -22673,7 +22673,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:36.242Z"
+      "updatedAt": "2026-09-29T04:53:32.294Z"
     },
     {
       "id": "myriad-realms-supreme-1-30",
@@ -22689,7 +22689,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:59.441Z"
+      "updatedAt": "2026-09-29T04:54:17.279Z"
     },
     {
       "id": "myriad-realms-supreme-1-31",
@@ -22705,7 +22705,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:45.165Z"
+      "updatedAt": "2026-09-29T04:55:05.476Z"
     },
     {
       "id": "myriad-realms-supreme-1-32",
@@ -22721,7 +22721,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.702Z"
+      "updatedAt": "2026-09-29T04:55:56.697Z"
     },
     {
       "id": "myriad-realms-supreme-1-33",
@@ -22737,7 +22737,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.711Z"
+      "updatedAt": "2026-09-29T04:56:50.901Z"
     },
     {
       "id": "myriad-realms-supreme-1-34",
@@ -22753,7 +22753,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:39.928Z"
+      "updatedAt": "2026-09-29T04:57:30.413Z"
     },
     {
       "id": "myriad-realms-supreme-1-35",
@@ -22769,7 +22769,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:22.397Z"
+      "updatedAt": "2026-09-29T04:58:10.211Z"
     },
     {
       "id": "myriad-realms-supreme-1-36",
@@ -22785,7 +22785,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:40.426Z"
+      "updatedAt": "2026-09-29T04:58:41.781Z"
     },
     {
       "id": "myriad-realms-supreme-1-37",
@@ -22801,7 +22801,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:00.688Z"
+      "updatedAt": "2026-09-29T04:59:20.373Z"
     },
     {
       "id": "myriad-realms-supreme-1-38",
@@ -22817,7 +22817,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:34.811Z"
+      "updatedAt": "2026-09-29T04:59:51.080Z"
     },
     {
       "id": "myriad-realms-supreme-1-39",
@@ -22833,7 +22833,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:00.370Z"
+      "updatedAt": "2026-09-29T05:00:38.530Z"
     },
     {
       "id": "myriad-realms-supreme-1-40",
@@ -22849,7 +22849,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:24.746Z"
+      "updatedAt": "2026-09-29T05:01:12.836Z"
     },
     {
       "id": "myriad-realms-supreme-1-41",
@@ -22865,7 +22865,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:41.984Z"
+      "updatedAt": "2026-09-29T05:01:43.575Z"
     },
     {
       "id": "myriad-realms-supreme-1-42",
@@ -22881,7 +22881,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:03.132Z"
+      "updatedAt": "2026-09-29T05:02:12.238Z"
     },
     {
       "id": "myriad-realms-supreme-1-43",
@@ -22897,7 +22897,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:26.406Z"
+      "updatedAt": "2026-09-29T05:02:37.059Z"
     },
     {
       "id": "myriad-realms-supreme-1-44",
@@ -22913,7 +22913,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:50.119Z"
+      "updatedAt": "2026-09-29T05:03:02.609Z"
     },
     {
       "id": "myriad-realms-supreme-1-45",
@@ -22929,7 +22929,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:57:16.106Z"
+      "updatedAt": "2026-09-29T05:03:25.750Z"
     },
     {
       "id": "myriad-realms-supreme-1-46",
@@ -22945,7 +22945,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:57:31.927Z"
+      "updatedAt": "2026-09-29T05:03:43.013Z"
     },
     {
       "id": "myriad-realms-supreme-1-47",
@@ -22961,7 +22961,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:57:46.410Z"
+      "updatedAt": "2026-09-29T05:03:58.827Z"
     },
     {
       "id": "myriad-realms-supreme-1-48",
@@ -22977,7 +22977,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:58:02.808Z"
+      "updatedAt": "2026-09-29T05:04:14.359Z"
     },
     {
       "id": "myriad-realms-supreme-1-49",
@@ -22993,7 +22993,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:58:22.938Z"
+      "updatedAt": "2026-09-29T05:04:29.961Z"
     },
     {
       "id": "myriad-realms-supreme-1-50",
@@ -23009,7 +23009,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:58:34.987Z"
+      "updatedAt": "2026-09-29T05:04:43.403Z"
     },
     {
       "id": "myriad-realms-supreme-2-180",
@@ -23025,7 +23025,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:20:22.737Z"
+      "updatedAt": "2026-09-29T04:14:57.909Z"
     },
     {
       "id": "mysterious-treasures-1",
@@ -23313,7 +23313,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:31:59.163Z"
+      "updatedAt": "2026-09-29T03:06:51.978Z"
     },
     {
       "id": "perfect-world-1-2",
@@ -23329,7 +23329,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:38:55.983Z"
+      "updatedAt": "2026-09-29T03:08:32.381Z"
     },
     {
       "id": "perfect-world-1-3",
@@ -23345,7 +23345,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:46:11.202Z"
+      "updatedAt": "2026-09-29T03:10:15.601Z"
     },
     {
       "id": "perfect-world-1-4",
@@ -23361,7 +23361,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:53:41.775Z"
+      "updatedAt": "2026-09-29T03:11:59.096Z"
     },
     {
       "id": "perfect-world-1-5",
@@ -23377,7 +23377,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:01:24.274Z"
+      "updatedAt": "2026-09-29T03:12:49.717Z"
     },
     {
       "id": "perfect-world-1-6",
@@ -23393,7 +23393,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:10:05.906Z"
+      "updatedAt": "2026-09-29T03:13:46.804Z"
     },
     {
       "id": "perfect-world-1-7",
@@ -23409,7 +23409,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:20:37.280Z"
+      "updatedAt": "2026-09-29T03:14:21.232Z"
     },
     {
       "id": "perfect-world-1-8",
@@ -23425,7 +23425,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:30:23.032Z"
+      "updatedAt": "2026-09-29T03:15:30.132Z"
     },
     {
       "id": "perfect-world-1-9",
@@ -23441,13 +23441,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.324Z"
+      "updatedAt": "2026-09-29T03:15:59.830Z"
     },
     {
       "id": "perfect-world-1-10",
       "slug": "perfect-world-1-10",
       "sourceUrl": "https://donghualife.com/watch/perfect-world-1-10",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
       "number": 10,
       "seriesId": "perfect-world",
       "firstEpisodeUrl": null,
@@ -23455,9 +23455,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:14.259Z"
+      "updatedAt": "2026-09-29T03:17:14.118Z"
     },
     {
       "id": "perfect-world-1-11",
@@ -23473,7 +23473,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:21.896Z"
+      "updatedAt": "2026-09-29T03:18:53.355Z"
     },
     {
       "id": "perfect-world-1-12",
@@ -23489,7 +23489,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:09.915Z"
+      "updatedAt": "2026-09-29T03:20:29.648Z"
     },
     {
       "id": "perfect-world-1-13",
@@ -23505,7 +23505,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:22.758Z"
+      "updatedAt": "2026-09-29T03:21:03.673Z"
     },
     {
       "id": "perfect-world-1-14",
@@ -23519,9 +23519,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.619Z"
+      "updatedAt": "2026-09-29T03:21:22.338Z"
     },
     {
       "id": "perfect-world-1-15",
@@ -23537,7 +23537,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:53.486Z"
+      "updatedAt": "2026-09-29T03:25:08.578Z"
     },
     {
       "id": "perfect-world-1-16",
@@ -23553,7 +23553,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:57.796Z"
+      "updatedAt": "2026-09-29T03:29:09.162Z"
     },
     {
       "id": "perfect-world-1-17",
@@ -23569,7 +23569,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:02.979Z"
+      "updatedAt": "2026-09-29T03:30:39.911Z"
     },
     {
       "id": "perfect-world-1-18",
@@ -23585,7 +23585,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:11.102Z"
+      "updatedAt": "2026-09-29T03:31:43.338Z"
     },
     {
       "id": "perfect-world-1-19",
@@ -23601,7 +23601,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:35.957Z"
+      "updatedAt": "2026-09-29T03:38:49.537Z"
     },
     {
       "id": "perfect-world-1-20",
@@ -23617,7 +23617,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.718Z"
+      "updatedAt": "2026-09-29T03:39:39.314Z"
     },
     {
       "id": "perfect-world-1-21",
@@ -23633,7 +23633,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:43.832Z"
+      "updatedAt": "2026-09-29T03:40:33.682Z"
     },
     {
       "id": "perfect-world-1-22",
@@ -23649,7 +23649,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.772Z"
+      "updatedAt": "2026-09-29T03:42:17.152Z"
     },
     {
       "id": "perfect-world-1-23",
@@ -23665,7 +23665,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.034Z"
+      "updatedAt": "2026-09-29T03:52:50.425Z"
     },
     {
       "id": "perfect-world-1-24",
@@ -23681,7 +23681,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:40.223Z"
+      "updatedAt": "2026-09-29T04:02:59.217Z"
     },
     {
       "id": "perfect-world-1-25",
@@ -23697,7 +23697,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:34.349Z"
+      "updatedAt": "2026-09-29T04:05:35.582Z"
     },
     {
       "id": "perfect-world-1-26",
@@ -23713,7 +23713,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:00.874Z"
+      "updatedAt": "2026-09-29T04:12:22.149Z"
     },
     {
       "id": "perfect-world-1-27",
@@ -23729,7 +23729,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:01.049Z"
+      "updatedAt": "2026-09-29T04:21:35.193Z"
     },
     {
       "id": "perfect-world-1-28",
@@ -23745,7 +23745,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:19.808Z"
+      "updatedAt": "2026-09-29T04:29:27.697Z"
     },
     {
       "id": "perfect-world-1-29",
@@ -23761,7 +23761,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:41.432Z"
+      "updatedAt": "2026-09-29T04:32:14.887Z"
     },
     {
       "id": "perfect-world-1-30",
@@ -23777,7 +23777,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:03.018Z"
+      "updatedAt": "2026-09-29T04:33:35.895Z"
     },
     {
       "id": "perfect-world-1-288",
@@ -23793,7 +23793,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:48.648Z"
+      "updatedAt": "2026-09-29T03:05:42.876Z"
     },
     {
       "id": "perfect-world-cenizas-de-fuego-1",
@@ -24762,7 +24762,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:36:20.012Z"
+      "updatedAt": "2026-09-29T03:06:50.980Z"
     },
     {
       "id": "spirit-sword-sovereing-4-105",
@@ -24778,7 +24778,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:48:24.645Z"
+      "updatedAt": "2026-09-29T03:08:33.193Z"
     },
     {
       "id": "spirit-sword-sovereing-4-106",
@@ -24794,7 +24794,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:00:00.054Z"
+      "updatedAt": "2026-09-29T03:10:15.797Z"
     },
     {
       "id": "spirit-sword-sovereing-4-107",
@@ -24810,7 +24810,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:15:37.638Z"
+      "updatedAt": "2026-09-29T03:11:58.685Z"
     },
     {
       "id": "spirit-sword-sovereing-4-108",
@@ -24826,7 +24826,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:36.915Z"
+      "updatedAt": "2026-09-29T03:12:49.986Z"
     },
     {
       "id": "spirit-sword-sovereing-4-109",
@@ -24842,13 +24842,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:55.876Z"
+      "updatedAt": "2026-09-29T03:13:47.273Z"
     },
     {
       "id": "spirit-sword-sovereing-4-110",
       "slug": "spirit-sword-sovereing-4-110",
       "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-110",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
       "number": 110,
       "seriesId": "spirit-sword-sovereing",
       "firstEpisodeUrl": null,
@@ -24856,9 +24856,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:14.737Z"
+      "updatedAt": "2026-09-29T03:14:21.716Z"
     },
     {
       "id": "spirit-sword-sovereing-4-111",
@@ -24874,7 +24874,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:22.908Z"
+      "updatedAt": "2026-09-29T03:15:29.357Z"
     },
     {
       "id": "spirit-sword-sovereing-4-112",
@@ -24890,7 +24890,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:07.655Z"
+      "updatedAt": "2026-09-29T03:15:59.528Z"
     },
     {
       "id": "spirit-sword-sovereing-4-113",
@@ -24906,7 +24906,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:21.911Z"
+      "updatedAt": "2026-09-29T03:17:13.340Z"
     },
     {
       "id": "spirit-sword-sovereing-4-114",
@@ -24922,7 +24922,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:50.751Z"
+      "updatedAt": "2026-09-29T03:18:23.616Z"
     },
     {
       "id": "spirit-sword-sovereing-4-115",
@@ -24938,7 +24938,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:53.488Z"
+      "updatedAt": "2026-09-29T03:18:55.862Z"
     },
     {
       "id": "spirit-sword-sovereing-4-116",
@@ -24954,7 +24954,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:34.895Z"
+      "updatedAt": "2026-09-29T03:20:06.109Z"
     },
     {
       "id": "spirit-sword-sovereing-4-117",
@@ -24970,7 +24970,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:58.331Z"
+      "updatedAt": "2026-09-29T03:20:30.322Z"
     },
     {
       "id": "spirit-sword-sovereing-4-118",
@@ -24986,7 +24986,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:15.882Z"
+      "updatedAt": "2026-09-29T03:21:03.792Z"
     },
     {
       "id": "spirit-sword-sovereing-4-119",
@@ -25000,9 +25000,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:03.497Z"
+      "updatedAt": "2026-09-29T03:21:22.379Z"
     },
     {
       "id": "spirit-sword-sovereing-4-120",
@@ -25018,7 +25018,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:44.379Z"
+      "updatedAt": "2026-09-29T03:25:07.148Z"
     },
     {
       "id": "spirit-sword-sovereing-4-121",
@@ -25034,7 +25034,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.439Z"
+      "updatedAt": "2026-09-29T03:29:10.677Z"
     },
     {
       "id": "spirit-sword-sovereing-4-122",
@@ -25050,7 +25050,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:00.047Z"
+      "updatedAt": "2026-09-29T03:30:52.789Z"
     },
     {
       "id": "spirit-sword-sovereing-4-123",
@@ -25066,7 +25066,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:39.790Z"
+      "updatedAt": "2026-09-29T03:31:38.419Z"
     },
     {
       "id": "spirit-sword-sovereing-4-124",
@@ -25082,7 +25082,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:33.995Z"
+      "updatedAt": "2026-09-29T03:38:52.221Z"
     },
     {
       "id": "spirit-sword-sovereing-4-125",
@@ -25098,7 +25098,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:58.274Z"
+      "updatedAt": "2026-09-29T03:39:40.736Z"
     },
     {
       "id": "spirit-sword-sovereing-4-126",
@@ -25114,7 +25114,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:01.950Z"
+      "updatedAt": "2026-09-29T03:40:33.170Z"
     },
     {
       "id": "spirit-sword-sovereing-4-127",
@@ -25130,7 +25130,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:22.282Z"
+      "updatedAt": "2026-09-29T03:42:15.140Z"
     },
     {
       "id": "spirit-sword-sovereing-4-128",
@@ -25146,7 +25146,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:42.520Z"
+      "updatedAt": "2026-09-29T03:52:43.540Z"
     },
     {
       "id": "spirit-sword-sovereing-4-129",
@@ -25162,7 +25162,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:03.011Z"
+      "updatedAt": "2026-09-29T04:09:48.602Z"
     },
     {
       "id": "spirit-sword-sovereing-4-560",
@@ -25178,7 +25178,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:49.259Z"
+      "updatedAt": "2026-09-29T03:05:43.596Z"
     },
     {
       "id": "spy-x-sect-1",
@@ -25482,7 +25482,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:30:55.412Z"
+      "updatedAt": "2026-09-29T03:06:51.801Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-2",
@@ -25498,7 +25498,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:36:46.065Z"
+      "updatedAt": "2026-09-29T03:08:32.315Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-3",
@@ -25514,7 +25514,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:42:39.468Z"
+      "updatedAt": "2026-09-29T03:10:15.216Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-4",
@@ -25530,7 +25530,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:49:16.767Z"
+      "updatedAt": "2026-09-29T03:11:58.283Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-5",
@@ -25546,7 +25546,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:55:14.577Z"
+      "updatedAt": "2026-09-29T03:12:49.855Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-6",
@@ -25562,7 +25562,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:02:09.209Z"
+      "updatedAt": "2026-09-29T03:13:47.556Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-7",
@@ -25578,7 +25578,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:09:18.825Z"
+      "updatedAt": "2026-09-29T03:14:19.978Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-8",
@@ -25594,7 +25594,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:18:07.409Z"
+      "updatedAt": "2026-09-29T03:15:30.661Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-9",
@@ -25610,7 +25610,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:26:20.314Z"
+      "updatedAt": "2026-09-29T03:15:59.346Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-10",
@@ -25626,13 +25626,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.152Z"
+      "updatedAt": "2026-09-29T03:17:14.249Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-11",
       "slug": "success-empyrean-xuan-emperor-1-11",
       "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-11",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
       "number": 11,
       "seriesId": "success-empyrean-xuan-emperor",
       "firstEpisodeUrl": null,
@@ -25640,9 +25640,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:12.652Z"
+      "updatedAt": "2026-09-29T03:18:29.332Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-12",
@@ -25658,7 +25658,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:23.079Z"
+      "updatedAt": "2026-09-29T03:18:55.608Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-13",
@@ -25674,7 +25674,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:10.686Z"
+      "updatedAt": "2026-09-29T03:20:03.730Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-14",
@@ -25690,7 +25690,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:25.658Z"
+      "updatedAt": "2026-09-29T03:20:30.513Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-15",
@@ -25706,7 +25706,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:51.036Z"
+      "updatedAt": "2026-09-29T03:21:03.617Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-16",
@@ -25720,9 +25720,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:53.927Z"
+      "updatedAt": "2026-09-29T03:21:22.306Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-17",
@@ -25738,7 +25738,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:34.714Z"
+      "updatedAt": "2026-09-29T03:25:08.797Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-18",
@@ -25754,7 +25754,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:57.538Z"
+      "updatedAt": "2026-09-29T03:29:11.133Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-19",
@@ -25770,7 +25770,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:04.081Z"
+      "updatedAt": "2026-09-29T03:30:38.640Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-20",
@@ -25786,7 +25786,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:50.149Z"
+      "updatedAt": "2026-09-29T03:31:38.766Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-21",
@@ -25802,7 +25802,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:15.084Z"
+      "updatedAt": "2026-09-29T03:38:50.842Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-22",
@@ -25818,7 +25818,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:36.837Z"
+      "updatedAt": "2026-09-29T03:39:39.297Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-23",
@@ -25834,7 +25834,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.716Z"
+      "updatedAt": "2026-09-29T03:40:34.936Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-24",
@@ -25850,7 +25850,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:50.876Z"
+      "updatedAt": "2026-09-29T03:42:16.939Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-25",
@@ -25866,7 +25866,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.704Z"
+      "updatedAt": "2026-09-29T03:52:05.720Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-26",
@@ -25882,7 +25882,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.920Z"
+      "updatedAt": "2026-09-29T03:52:43.660Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-27",
@@ -25898,7 +25898,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:40.116Z"
+      "updatedAt": "2026-09-29T04:00:46.173Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-28",
@@ -25914,7 +25914,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:33.421Z"
+      "updatedAt": "2026-09-29T04:09:58.148Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-29",
@@ -25930,7 +25930,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:49.481Z"
+      "updatedAt": "2026-09-29T04:10:39.648Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-30",
@@ -25946,7 +25946,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:03.471Z"
+      "updatedAt": "2026-09-29T04:18:28.403Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-31",
@@ -25962,7 +25962,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:00.839Z"
+      "updatedAt": "2026-09-29T04:26:24.388Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-32",
@@ -25978,7 +25978,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:21.864Z"
+      "updatedAt": "2026-09-29T04:29:26.872Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-33",
@@ -25994,7 +25994,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:00.235Z"
+      "updatedAt": "2026-09-29T04:32:14.816Z"
     },
     {
       "id": "success-empyrean-xuan-emperor-1-248",
@@ -26010,7 +26010,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:49.286Z"
+      "updatedAt": "2026-09-29T03:05:44.453Z"
     },
     {
       "id": "summer-punch-1",
@@ -26211,7 +26211,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:52.569Z"
+      "updatedAt": "2026-09-29T03:05:47.427Z"
     },
     {
       "id": "supreme-god-emperor-2-106",
@@ -26227,7 +26227,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:35:35.960Z"
+      "updatedAt": "2026-09-29T03:06:51.803Z"
     },
     {
       "id": "supreme-god-emperor-2-107",
@@ -26243,7 +26243,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:46:46.479Z"
+      "updatedAt": "2026-09-29T03:08:33.281Z"
     },
     {
       "id": "supreme-god-emperor-2-108",
@@ -26259,7 +26259,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:57:43.620Z"
+      "updatedAt": "2026-09-29T03:10:16.278Z"
     },
     {
       "id": "supreme-god-emperor-2-109",
@@ -26275,7 +26275,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:11:03.146Z"
+      "updatedAt": "2026-09-29T03:11:58.438Z"
     },
     {
       "id": "supreme-god-emperor-2-110",
@@ -26291,7 +26291,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:26:27.900Z"
+      "updatedAt": "2026-09-29T03:12:49.808Z"
     },
     {
       "id": "supreme-god-emperor-2-111",
@@ -26307,13 +26307,13 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:31:56.623Z"
+      "updatedAt": "2026-09-29T03:13:47.181Z"
     },
     {
       "id": "supreme-god-emperor-2-112",
       "slug": "supreme-god-emperor-2-112",
       "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-112",
-      "image": null,
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
       "number": 112,
       "seriesId": "supreme-god-emperor",
       "firstEpisodeUrl": null,
@@ -26321,9 +26321,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": false,
+      "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:32:12.879Z"
+      "updatedAt": "2026-09-29T03:14:24.195Z"
     },
     {
       "id": "supreme-god-emperor-2-113",
@@ -26339,7 +26339,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:34:22.964Z"
+      "updatedAt": "2026-09-29T03:15:29.901Z"
     },
     {
       "id": "supreme-god-emperor-2-114",
@@ -26355,7 +26355,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:35:08.075Z"
+      "updatedAt": "2026-09-29T03:16:00.184Z"
     },
     {
       "id": "supreme-god-emperor-2-115",
@@ -26371,7 +26371,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:24.714Z"
+      "updatedAt": "2026-09-29T03:17:13.275Z"
     },
     {
       "id": "supreme-god-emperor-2-116",
@@ -26387,7 +26387,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:37:48.809Z"
+      "updatedAt": "2026-09-29T03:18:22.642Z"
     },
     {
       "id": "supreme-god-emperor-2-117",
@@ -26403,7 +26403,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:38:51.426Z"
+      "updatedAt": "2026-09-29T03:18:55.572Z"
     },
     {
       "id": "supreme-god-emperor-2-118",
@@ -26419,7 +26419,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:42:37.759Z"
+      "updatedAt": "2026-09-29T03:20:13.892Z"
     },
     {
       "id": "supreme-god-emperor-2-119",
@@ -26435,7 +26435,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:43:57.921Z"
+      "updatedAt": "2026-09-29T03:20:34.893Z"
     },
     {
       "id": "supreme-god-emperor-2-120",
@@ -26451,7 +26451,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:47:04.056Z"
+      "updatedAt": "2026-09-29T03:21:03.509Z"
     },
     {
       "id": "supreme-god-emperor-2-121",
@@ -26465,9 +26465,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:48:47.513Z"
+      "updatedAt": "2026-09-29T03:21:22.226Z"
     },
     {
       "id": "supreme-god-emperor-2-122",
@@ -26483,7 +26483,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:17.426Z"
+      "updatedAt": "2026-09-29T03:29:08.771Z"
     },
     {
       "id": "supreme-god-emperor-2-123",
@@ -26499,7 +26499,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:36.839Z"
+      "updatedAt": "2026-09-29T03:30:37.782Z"
     },
     {
       "id": "supreme-god-emperor-2-124",
@@ -26515,7 +26515,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:49:58.928Z"
+      "updatedAt": "2026-09-29T03:31:40.252Z"
     },
     {
       "id": "supreme-god-emperor-2-125",
@@ -26531,7 +26531,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:50:43.164Z"
+      "updatedAt": "2026-09-29T03:38:47.980Z"
     },
     {
       "id": "supreme-god-emperor-2-126",
@@ -26547,7 +26547,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:20.535Z"
+      "updatedAt": "2026-09-29T03:39:40.179Z"
     },
     {
       "id": "supreme-god-emperor-2-127",
@@ -26563,7 +26563,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:51:59.239Z"
+      "updatedAt": "2026-09-29T03:40:32.421Z"
     },
     {
       "id": "supreme-god-emperor-2-128",
@@ -26579,7 +26579,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:52:40.237Z"
+      "updatedAt": "2026-09-29T03:42:15.238Z"
     },
     {
       "id": "supreme-god-emperor-2-129",
@@ -26595,7 +26595,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:53:33.408Z"
+      "updatedAt": "2026-09-29T03:52:43.511Z"
     },
     {
       "id": "supreme-god-emperor-2-130",
@@ -26611,7 +26611,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:54:01.155Z"
+      "updatedAt": "2026-09-29T04:05:39.621Z"
     },
     {
       "id": "supreme-god-emperor-2-131",
@@ -26627,7 +26627,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:02.081Z"
+      "updatedAt": "2026-09-29T04:22:38.777Z"
     },
     {
       "id": "supreme-god-emperor-2-132",
@@ -26643,7 +26643,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:21.285Z"
+      "updatedAt": "2026-09-29T04:29:26.694Z"
     },
     {
       "id": "supreme-god-emperor-2-133",
@@ -26659,7 +26659,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:55:41.795Z"
+      "updatedAt": "2026-09-29T04:32:15.064Z"
     },
     {
       "id": "supreme-god-emperor-2-134",
@@ -26675,7 +26675,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:56:03.205Z"
+      "updatedAt": "2026-09-29T04:33:33.321Z"
     },
     {
       "id": "supreme-god-emperor-2-579",
@@ -26773,7 +26773,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:05:28.670Z"
+      "updatedAt": "2026-09-29T03:57:51.282Z"
     },
     {
       "id": "swallowed-star-2",
@@ -26805,7 +26805,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:06:17.436Z"
+      "updatedAt": "2026-09-29T03:58:44.816Z"
     },
     {
       "id": "swallowed-star-3",
@@ -26837,7 +26837,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:07:00.744Z"
+      "updatedAt": "2026-09-29T03:59:37.615Z"
     },
     {
       "id": "swallowed-star-1-4",
@@ -26853,7 +26853,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:07:56.746Z"
+      "updatedAt": "2026-09-29T04:01:01.209Z"
     },
     {
       "id": "swallowed-star-1-5",
@@ -26869,7 +26869,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:08:45.093Z"
+      "updatedAt": "2026-09-29T04:02:10.610Z"
     },
     {
       "id": "swallowed-star-1-6",
@@ -26885,7 +26885,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:09:29.664Z"
+      "updatedAt": "2026-09-29T04:03:04.235Z"
     },
     {
       "id": "swallowed-star-1-7",
@@ -26901,7 +26901,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:10:14.402Z"
+      "updatedAt": "2026-09-29T04:03:59.806Z"
     },
     {
       "id": "swallowed-star-1-8",
@@ -26917,7 +26917,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:11:00.425Z"
+      "updatedAt": "2026-09-29T04:05:06.790Z"
     },
     {
       "id": "swallowed-star-1-9",
@@ -26933,7 +26933,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:11:50.183Z"
+      "updatedAt": "2026-09-29T04:06:02.861Z"
     },
     {
       "id": "swallowed-star-1-10",
@@ -26949,7 +26949,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:12:43.431Z"
+      "updatedAt": "2026-09-29T04:06:56.982Z"
     },
     {
       "id": "swallowed-star-1-11",
@@ -26965,7 +26965,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:13:35.668Z"
+      "updatedAt": "2026-09-29T04:07:54.939Z"
     },
     {
       "id": "swallowed-star-1-12",
@@ -26981,7 +26981,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:14:18.320Z"
+      "updatedAt": "2026-09-29T04:08:47.604Z"
     },
     {
       "id": "swallowed-star-1-13",
@@ -26997,7 +26997,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:14:53.217Z"
+      "updatedAt": "2026-09-29T04:09:27.398Z"
     },
     {
       "id": "swallowed-star-1-14",
@@ -27013,7 +27013,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:15:36.523Z"
+      "updatedAt": "2026-09-29T04:09:56.699Z"
     },
     {
       "id": "swallowed-star-1-15",
@@ -27029,7 +27029,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:16:08.935Z"
+      "updatedAt": "2026-09-29T04:10:35.124Z"
     },
     {
       "id": "swallowed-star-1-16",
@@ -27045,7 +27045,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:16:32.020Z"
+      "updatedAt": "2026-09-29T04:11:12.065Z"
     },
     {
       "id": "swallowed-star-1-17",
@@ -27061,7 +27061,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:16:50.269Z"
+      "updatedAt": "2026-09-29T04:11:43.807Z"
     },
     {
       "id": "swallowed-star-1-18",
@@ -27077,7 +27077,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:17:19.364Z"
+      "updatedAt": "2026-09-29T04:12:16.897Z"
     },
     {
       "id": "swallowed-star-1-19",
@@ -27093,7 +27093,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:17:51.845Z"
+      "updatedAt": "2026-09-29T04:12:44.965Z"
     },
     {
       "id": "swallowed-star-1-20",
@@ -27109,7 +27109,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:18:15.071Z"
+      "updatedAt": "2026-09-29T04:13:09.217Z"
     },
     {
       "id": "swallowed-star-1-21",
@@ -27125,7 +27125,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:18:35.426Z"
+      "updatedAt": "2026-09-29T04:13:26.743Z"
     },
     {
       "id": "swallowed-star-1-22",
@@ -27141,7 +27141,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:18:55.517Z"
+      "updatedAt": "2026-09-29T04:13:46.919Z"
     },
     {
       "id": "swallowed-star-1-23",
@@ -27157,7 +27157,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:19:17.804Z"
+      "updatedAt": "2026-09-29T04:14:03.645Z"
     },
     {
       "id": "swallowed-star-1-24",
@@ -27173,7 +27173,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:19:34.466Z"
+      "updatedAt": "2026-09-29T04:14:19.534Z"
     },
     {
       "id": "swallowed-star-1-25",
@@ -27189,7 +27189,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:19:48.372Z"
+      "updatedAt": "2026-09-29T04:14:31.795Z"
     },
     {
       "id": "swallowed-star-1-26",
@@ -27205,7 +27205,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:20:03.417Z"
+      "updatedAt": "2026-09-29T04:14:44.257Z"
     },
     {
       "id": "swallowed-star-3-157",
@@ -27831,7 +27831,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:25:56.023Z"
+      "updatedAt": "2026-09-29T03:06:51.556Z"
     },
     {
       "id": "wan-jie-du-zun-2",
@@ -27863,7 +27863,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:27:06.846Z"
+      "updatedAt": "2026-09-29T03:08:32.317Z"
     },
     {
       "id": "wan-jie-du-zun-3",
@@ -27895,7 +27895,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:28:35.606Z"
+      "updatedAt": "2026-09-29T03:10:14.957Z"
     },
     {
       "id": "wan-jie-du-zun-1-4",
@@ -27911,7 +27911,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:29:37.025Z"
+      "updatedAt": "2026-09-29T03:11:57.808Z"
     },
     {
       "id": "wan-jie-du-zun-1-5",
@@ -27927,7 +27927,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:31:00.655Z"
+      "updatedAt": "2026-09-29T03:12:49.412Z"
     },
     {
       "id": "wan-jie-du-zun-1-6",
@@ -27943,7 +27943,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:32:11.656Z"
+      "updatedAt": "2026-09-29T03:13:47.354Z"
     },
     {
       "id": "wan-jie-du-zun-1-7",
@@ -27959,7 +27959,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:33:11.084Z"
+      "updatedAt": "2026-09-29T03:15:29.845Z"
     },
     {
       "id": "wan-jie-du-zun-1-8",
@@ -27975,7 +27975,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:34:12.320Z"
+      "updatedAt": "2026-09-29T03:15:59.243Z"
     },
     {
       "id": "wan-jie-du-zun-1-9",
@@ -27991,7 +27991,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:35:17.713Z"
+      "updatedAt": "2026-09-29T03:17:13.341Z"
     },
     {
       "id": "wan-jie-du-zun-1-10",
@@ -28007,7 +28007,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:36:31.917Z"
+      "updatedAt": "2026-09-29T03:18:53.152Z"
     },
     {
       "id": "wan-jie-du-zun-1-11",
@@ -28023,7 +28023,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:37:37.561Z"
+      "updatedAt": "2026-09-29T03:20:29.450Z"
     },
     {
       "id": "wan-jie-du-zun-1-12",
@@ -28039,7 +28039,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:38:39.319Z"
+      "updatedAt": "2026-09-29T03:21:03.735Z"
     },
     {
       "id": "wan-jie-du-zun-1-13",
@@ -28053,9 +28053,9 @@
       "minEpisodeFound": null,
       "maxEpisodeFound": null,
       "missingEpisodes": [],
-      "paginationComplete": true,
+      "paginationComplete": false,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:39:34.326Z"
+      "updatedAt": "2026-09-29T03:21:22.316Z"
     },
     {
       "id": "wan-jie-du-zun-1-14",
@@ -28071,7 +28071,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:40:36.821Z"
+      "updatedAt": "2026-09-29T03:23:02.104Z"
     },
     {
       "id": "wan-jie-du-zun-1-15",
@@ -28087,7 +28087,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:41:35.367Z"
+      "updatedAt": "2026-09-29T03:24:40.651Z"
     },
     {
       "id": "wan-jie-du-zun-1-16",
@@ -28103,7 +28103,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:42:33.978Z"
+      "updatedAt": "2026-09-29T03:26:40.064Z"
     },
     {
       "id": "wan-jie-du-zun-1-17",
@@ -28119,7 +28119,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:43:24.400Z"
+      "updatedAt": "2026-09-29T03:28:23.090Z"
     },
     {
       "id": "wan-jie-du-zun-1-18",
@@ -28135,7 +28135,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:44:14.072Z"
+      "updatedAt": "2026-09-29T03:29:09.854Z"
     },
     {
       "id": "wan-jie-du-zun-1-19",
@@ -28151,7 +28151,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:45:28.119Z"
+      "updatedAt": "2026-09-29T03:30:38.088Z"
     },
     {
       "id": "wan-jie-du-zun-1-20",
@@ -28167,7 +28167,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:46:29.412Z"
+      "updatedAt": "2026-09-29T03:30:58.643Z"
     },
     {
       "id": "wan-jie-du-zun-1-21",
@@ -28183,7 +28183,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:47:32.364Z"
+      "updatedAt": "2026-09-29T03:31:35.666Z"
     },
     {
       "id": "wan-jie-du-zun-1-22",
@@ -28199,7 +28199,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:48:30.344Z"
+      "updatedAt": "2026-09-29T03:33:12.207Z"
     },
     {
       "id": "wan-jie-du-zun-1-23",
@@ -28215,7 +28215,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:49:25.290Z"
+      "updatedAt": "2026-09-29T03:34:44.818Z"
     },
     {
       "id": "wan-jie-du-zun-1-24",
@@ -28231,7 +28231,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:50:20.926Z"
+      "updatedAt": "2026-09-29T03:36:14.173Z"
     },
     {
       "id": "wan-jie-du-zun-1-25",
@@ -28247,7 +28247,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:51:02.136Z"
+      "updatedAt": "2026-09-29T03:37:23.998Z"
     },
     {
       "id": "wan-jie-du-zun-1-26",
@@ -28263,7 +28263,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:51:46.594Z"
+      "updatedAt": "2026-09-29T03:38:23.898Z"
     },
     {
       "id": "wan-jie-du-zun-1-27",
@@ -28279,7 +28279,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:52:30.761Z"
+      "updatedAt": "2026-09-29T03:38:55.558Z"
     },
     {
       "id": "wan-jie-du-zun-1-28",
@@ -28295,7 +28295,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:53:11.081Z"
+      "updatedAt": "2026-09-29T03:39:42.390Z"
     },
     {
       "id": "wan-jie-du-zun-1-29",
@@ -28311,7 +28311,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:53:48.762Z"
+      "updatedAt": "2026-09-29T03:40:36.245Z"
     },
     {
       "id": "wan-jie-du-zun-1-30",
@@ -28327,7 +28327,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:54:30.483Z"
+      "updatedAt": "2026-09-29T03:41:45.733Z"
     },
     {
       "id": "wan-jie-du-zun-1-31",
@@ -28343,7 +28343,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:55:03.969Z"
+      "updatedAt": "2026-09-29T03:42:16.781Z"
     },
     {
       "id": "wan-jie-du-zun-1-32",
@@ -28359,7 +28359,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:55:40.184Z"
+      "updatedAt": "2026-09-29T03:43:21.688Z"
     },
     {
       "id": "wan-jie-du-zun-1-33",
@@ -28375,7 +28375,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:56:15.799Z"
+      "updatedAt": "2026-09-29T03:44:09.805Z"
     },
     {
       "id": "wan-jie-du-zun-1-34",
@@ -28391,7 +28391,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:56:50.017Z"
+      "updatedAt": "2026-09-29T03:45:00.730Z"
     },
     {
       "id": "wan-jie-du-zun-1-35",
@@ -28407,7 +28407,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:57:24.702Z"
+      "updatedAt": "2026-09-29T03:45:49.923Z"
     },
     {
       "id": "wan-jie-du-zun-1-36",
@@ -28423,7 +28423,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:57:52.690Z"
+      "updatedAt": "2026-09-29T03:46:49.757Z"
     },
     {
       "id": "wan-jie-du-zun-1-37",
@@ -28439,7 +28439,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:58:23.699Z"
+      "updatedAt": "2026-09-29T03:47:43.386Z"
     },
     {
       "id": "wan-jie-du-zun-1-38",
@@ -28455,7 +28455,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:58:53.689Z"
+      "updatedAt": "2026-09-29T03:48:35.940Z"
     },
     {
       "id": "wan-jie-du-zun-1-39",
@@ -28471,7 +28471,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:59:24.081Z"
+      "updatedAt": "2026-09-29T03:49:31.566Z"
     },
     {
       "id": "wan-jie-du-zun-1-40",
@@ -28487,7 +28487,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:59:54.170Z"
+      "updatedAt": "2026-09-29T03:50:29.441Z"
     },
     {
       "id": "wan-jie-du-zun-1-41",
@@ -28503,7 +28503,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:00:39.400Z"
+      "updatedAt": "2026-09-29T03:51:43.862Z"
     },
     {
       "id": "wan-jie-du-zun-1-42",
@@ -28519,7 +28519,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:01:14.907Z"
+      "updatedAt": "2026-09-29T03:52:29.007Z"
     },
     {
       "id": "wan-jie-du-zun-1-43",
@@ -28535,7 +28535,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:01:43.125Z"
+      "updatedAt": "2026-09-29T03:52:50.365Z"
     },
     {
       "id": "wan-jie-du-zun-1-44",
@@ -28551,7 +28551,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:02:16.528Z"
+      "updatedAt": "2026-09-29T03:53:19.458Z"
     },
     {
       "id": "wan-jie-du-zun-1-45",
@@ -28567,7 +28567,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:02:41.242Z"
+      "updatedAt": "2026-09-29T03:53:51.595Z"
     },
     {
       "id": "wan-jie-du-zun-1-46",
@@ -28583,7 +28583,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:02:59.507Z"
+      "updatedAt": "2026-09-29T03:54:22.881Z"
     },
     {
       "id": "wan-jie-du-zun-1-47",
@@ -28599,7 +28599,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:03:19.091Z"
+      "updatedAt": "2026-09-29T03:54:43.602Z"
     },
     {
       "id": "wan-jie-du-zun-1-48",
@@ -28615,7 +28615,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:03:34.558Z"
+      "updatedAt": "2026-09-29T03:55:06.265Z"
     },
     {
       "id": "wan-jie-du-zun-1-49",
@@ -28631,7 +28631,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:03:45.400Z"
+      "updatedAt": "2026-09-29T03:55:27.527Z"
     },
     {
       "id": "wan-jie-du-zun-1-50",
@@ -28647,7 +28647,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:03:59.617Z"
+      "updatedAt": "2026-09-29T03:55:51.761Z"
     },
     {
       "id": "wan-jie-du-zun-1-183",
@@ -28663,7 +28663,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:04:11.133Z"
+      "updatedAt": "2026-09-29T03:56:12.473Z"
     },
     {
       "id": "wan-jie-du-zun-1-195",
@@ -28679,7 +28679,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:04:21.362Z"
+      "updatedAt": "2026-09-29T03:56:29.066Z"
     },
     {
       "id": "wan-jie-du-zun-1-209",
@@ -28695,7 +28695,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T15:04:27.521Z"
+      "updatedAt": "2026-09-29T03:56:40.258Z"
     },
     {
       "id": "wan-jie-du-zun-3-212",
@@ -28711,7 +28711,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-09-28T14:24:47.430Z"
+      "updatedAt": "2026-09-29T03:05:38.743Z"
     },
     {
       "id": "wan-jie-qi-yuan-1",
@@ -29597,6 +29597,1046 @@
       "paginationComplete": true,
       "initialSyncComplete": true,
       "updatedAt": "2026-09-20T21:37:40.363Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-580",
+      "slug": "supreme-god-emperor-2-580",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-580",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 580,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T03:05:39.094Z"
+    },
+    {
+      "id": "swallowed-star-3-158",
+      "slug": "swallowed-star-3-158",
+      "sourceUrl": "https://donghualife.com/watch/swallowed-star-3-158",
+      "image": "https://donghualife.com/images/webp/swallowed-star-3__coverImage.webp",
+      "number": 158,
+      "seriesId": "swallowed-star",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T03:56:50.183Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-130",
+      "slug": "spirit-sword-sovereing-4-130",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-130",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 130,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:10:37.537Z"
+    },
+    {
+      "id": "martial-master-1-179",
+      "slug": "martial-master-1-179",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-179",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 179,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:10:40.999Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-131",
+      "slug": "spirit-sword-sovereing-4-131",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-131",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 131,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:12:17.033Z"
+    },
+    {
+      "id": "martial-master-1-180",
+      "slug": "martial-master-1-180",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-180",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 180,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:12:17.490Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-132",
+      "slug": "spirit-sword-sovereing-4-132",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-132",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 132,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:27:54.737Z"
+    },
+    {
+      "id": "martial-master-1-181",
+      "slug": "martial-master-1-181",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-181",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 181,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:29:26.335Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-133",
+      "slug": "spirit-sword-sovereing-4-133",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-133",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 133,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:29:26.361Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-135",
+      "slug": "spirit-sword-sovereing-4-135",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-135",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 135,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:32:12.173Z"
+    },
+    {
+      "id": "against-sky-supreme-1-30",
+      "slug": "against-sky-supreme-1-30",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-30",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 30,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:32:12.940Z"
+    },
+    {
+      "id": "martial-master-1-182",
+      "slug": "martial-master-1-182",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-182",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 182,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:32:15.731Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-30",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-30",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-30",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 30,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:32:16.637Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-136",
+      "slug": "spirit-sword-sovereing-4-136",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-136",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 136,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:33:35.810Z"
+    },
+    {
+      "id": "martial-master-1-183",
+      "slug": "martial-master-1-183",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-183",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 183,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:33:35.976Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-34",
+      "slug": "success-empyrean-xuan-emperor-1-34",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-34",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:33:36.045Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-31",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-31",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-31",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 31,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:33:36.109Z"
+    },
+    {
+      "id": "against-sky-supreme-1-31",
+      "slug": "against-sky-supreme-1-31",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-31",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 31,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:33:36.236Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-35",
+      "slug": "success-empyrean-xuan-emperor-1-35",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-35",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 35,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:06.613Z"
+    },
+    {
+      "id": "perfect-world-1-31",
+      "slug": "perfect-world-1-31",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-31",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 31,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:06.650Z"
+    },
+    {
+      "id": "martial-master-1-184",
+      "slug": "martial-master-1-184",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-184",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 184,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:06.746Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-32",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-32",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-32",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 32,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:06.814Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-135",
+      "slug": "supreme-god-emperor-2-135",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-135",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 135,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:07.146Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-137",
+      "slug": "spirit-sword-sovereing-4-137",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-137",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 137,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:07.706Z"
+    },
+    {
+      "id": "against-sky-supreme-1-32",
+      "slug": "against-sky-supreme-1-32",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-32",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 32,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:35:09.684Z"
+    },
+    {
+      "id": "perfect-world-1-32",
+      "slug": "perfect-world-1-32",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-32",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 32,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:03.520Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-136",
+      "slug": "supreme-god-emperor-2-136",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-136",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 136,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:05.485Z"
+    },
+    {
+      "id": "martial-master-1-185",
+      "slug": "martial-master-1-185",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-185",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 185,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:05.671Z"
+    },
+    {
+      "id": "against-sky-supreme-1-33",
+      "slug": "against-sky-supreme-1-33",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-33",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 33,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:05.981Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-36",
+      "slug": "success-empyrean-xuan-emperor-1-36",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-36",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 36,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:06.173Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-33",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-33",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-33",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 33,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:06.282Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-138",
+      "slug": "spirit-sword-sovereing-4-138",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-138",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 138,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:36:06.345Z"
+    },
+    {
+      "id": "la-leyenda-del-lord-celestial-1-30",
+      "slug": "la-leyenda-del-lord-celestial-1-30",
+      "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-30",
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
+      "number": 30,
+      "seriesId": "la-leyenda-del-lord-celestial",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:34.653Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-34",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-34",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-34",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:39.838Z"
+    },
+    {
+      "id": "martial-master-1-186",
+      "slug": "martial-master-1-186",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-186",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 186,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:40.100Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-37",
+      "slug": "success-empyrean-xuan-emperor-1-37",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-37",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 37,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:42.681Z"
+    },
+    {
+      "id": "ancient-myth-1-32",
+      "slug": "ancient-myth-1-32",
+      "sourceUrl": "https://donghualife.com/watch/ancient-myth-1-32",
+      "image": "https://donghualife.com/images/webp/ancient-myth-1__coverImage.webp",
+      "number": 32,
+      "seriesId": "ancient-myth",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:42.743Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-137",
+      "slug": "supreme-god-emperor-2-137",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-137",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 137,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:42.874Z"
+    },
+    {
+      "id": "against-sky-supreme-1-34",
+      "slug": "against-sky-supreme-1-34",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-34",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:42.937Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-139",
+      "slug": "spirit-sword-sovereing-4-139",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-139",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 139,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:43.087Z"
+    },
+    {
+      "id": "perfect-world-1-33",
+      "slug": "perfect-world-1-33",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-33",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 33,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:43:48.109Z"
+    },
+    {
+      "id": "ancient-myth-1-33",
+      "slug": "ancient-myth-1-33",
+      "sourceUrl": "https://donghualife.com/watch/ancient-myth-1-33",
+      "image": "https://donghualife.com/images/webp/ancient-myth-1__coverImage.webp",
+      "number": 33,
+      "seriesId": "ancient-myth",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.267Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-38",
+      "slug": "success-empyrean-xuan-emperor-1-38",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-38",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 38,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.324Z"
+    },
+    {
+      "id": "perfect-world-1-34",
+      "slug": "perfect-world-1-34",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-34",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.386Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-35",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-35",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-35",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 35,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.387Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-140",
+      "slug": "spirit-sword-sovereing-4-140",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-140",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 140,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.450Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-138",
+      "slug": "supreme-god-emperor-2-138",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-138",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 138,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.605Z"
+    },
+    {
+      "id": "against-sky-supreme-1-35",
+      "slug": "against-sky-supreme-1-35",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-35",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 35,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.661Z"
+    },
+    {
+      "id": "martial-master-1-187",
+      "slug": "martial-master-1-187",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-187",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 187,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.662Z"
+    },
+    {
+      "id": "la-leyenda-del-lord-celestial-1-31",
+      "slug": "la-leyenda-del-lord-celestial-1-31",
+      "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-31",
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
+      "number": 31,
+      "seriesId": "la-leyenda-del-lord-celestial",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:46:18.987Z"
+    },
+    {
+      "id": "la-leyenda-del-lord-celestial-1-32",
+      "slug": "la-leyenda-del-lord-celestial-1-32",
+      "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-32",
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
+      "number": 32,
+      "seriesId": "la-leyenda-del-lord-celestial",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:19.757Z"
+    },
+    {
+      "id": "ancient-myth-1-34",
+      "slug": "ancient-myth-1-34",
+      "sourceUrl": "https://donghualife.com/watch/ancient-myth-1-34",
+      "image": "https://donghualife.com/images/webp/ancient-myth-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "ancient-myth",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:20.359Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-39",
+      "slug": "success-empyrean-xuan-emperor-1-39",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-39",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 39,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:20.702Z"
+    },
+    {
+      "id": "spirit-sword-sovereing-4-141",
+      "slug": "spirit-sword-sovereing-4-141",
+      "sourceUrl": "https://donghualife.com/watch/spirit-sword-sovereing-4-141",
+      "image": "https://donghualife.com/images/webp/spirit-sword-sovereing-4__coverImage.webp",
+      "number": 141,
+      "seriesId": "spirit-sword-sovereing",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:20.940Z"
+    },
+    {
+      "id": "supreme-god-emperor-2-139",
+      "slug": "supreme-god-emperor-2-139",
+      "sourceUrl": "https://donghualife.com/watch/supreme-god-emperor-2-139",
+      "image": "https://donghualife.com/images/webp/supreme-god-emperor-2__coverImage.webp",
+      "number": 139,
+      "seriesId": "supreme-god-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:21.060Z"
+    },
+    {
+      "id": "perfect-world-1-35",
+      "slug": "perfect-world-1-35",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-35",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 35,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:21.060Z"
+    },
+    {
+      "id": "martial-master-1-188",
+      "slug": "martial-master-1-188",
+      "sourceUrl": "https://donghualife.com/watch/martial-master-1-188",
+      "image": "https://donghualife.com/images/webp/martial-master-1__coverImage.webp",
+      "number": 188,
+      "seriesId": "martial-master",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:21.124Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-36",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-36",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-36",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 36,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:21.639Z"
+    },
+    {
+      "id": "against-sky-supreme-1-36",
+      "slug": "against-sky-supreme-1-36",
+      "sourceUrl": "https://donghualife.com/watch/against-sky-supreme-1-36",
+      "image": "https://donghualife.com/images/webp/against-sky-supreme-1__coverImage.webp",
+      "number": 36,
+      "seriesId": "against-sky-supreme",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:50:21.700Z"
+    },
+    {
+      "id": "la-leyenda-del-lord-celestial-1-33",
+      "slug": "la-leyenda-del-lord-celestial-1-33",
+      "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-33",
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
+      "number": 33,
+      "seriesId": "la-leyenda-del-lord-celestial",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:57:30.203Z"
+    },
+    {
+      "id": "success-empyrean-xuan-emperor-1-40",
+      "slug": "success-empyrean-xuan-emperor-1-40",
+      "sourceUrl": "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-40",
+      "image": "https://donghualife.com/images/webp/success-empyrean-xuan-emperor-1__coverImage.webp",
+      "number": 40,
+      "seriesId": "success-empyrean-xuan-emperor",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:58:01.574Z"
+    },
+    {
+      "id": "ancient-myth-1-35",
+      "slug": "ancient-myth-1-35",
+      "sourceUrl": "https://donghualife.com/watch/ancient-myth-1-35",
+      "image": "https://donghualife.com/images/webp/ancient-myth-1__coverImage.webp",
+      "number": 35,
+      "seriesId": "ancient-myth",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:59:06.686Z"
+    },
+    {
+      "id": "perfect-world-1-36",
+      "slug": "perfect-world-1-36",
+      "sourceUrl": "https://donghualife.com/watch/perfect-world-1-36",
+      "image": "https://donghualife.com/images/webp/perfect-world-1__coverImage.webp",
+      "number": 36,
+      "seriesId": "perfect-world",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T04:59:22.635Z"
+    },
+    {
+      "id": "cien-mil-anos-en-refinacion-de-qi-1-37",
+      "slug": "cien-mil-anos-en-refinacion-de-qi-1-37",
+      "sourceUrl": "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-37",
+      "image": "https://donghualife.com/images/webp/cien-mil-anos-en-refinacion-de-qi-1__coverImage.webp",
+      "number": 37,
+      "seriesId": "cien-mil-anos-en-refinacion-de-qi",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T05:01:28.591Z"
+    },
+    {
+      "id": "la-leyenda-del-lord-celestial-1-34",
+      "slug": "la-leyenda-del-lord-celestial-1-34",
+      "sourceUrl": "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-34",
+      "image": "https://donghualife.com/images/webp/la-leyenda-del-lord-celestial-1__coverImage.webp",
+      "number": 34,
+      "seriesId": "la-leyenda-del-lord-celestial",
+      "firstEpisodeUrl": null,
+      "episodeCount": 0,
+      "minEpisodeFound": null,
+      "maxEpisodeFound": null,
+      "missingEpisodes": [],
+      "paginationComplete": true,
+      "initialSyncComplete": false,
+      "updatedAt": "2026-09-29T05:04:16.633Z"
     }
   ],
   "episodes": [
