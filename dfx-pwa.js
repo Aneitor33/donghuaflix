@@ -1,15 +1,18 @@
-/* DonghuaFlix — PWA/mobile enhancements, intentionally isolated from app.js */
+/* DonghuaFlix — PWA/mobile enhancements
+ * Firefox shortcut fix:
+ * This file no longer treats "standalone" as a separate mobile mode.
+ * The manifest opens in normal browser context so Firefox can apply
+ * the same site/Desktop-site behavior as the regular browser view.
+ */
 (() => {
   'use strict';
 
-  const isStandalone =
-    window.matchMedia?.('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true;
+  // Keep the public flag for compatibility with existing code, but do not
+  // create a special standalone/mobile layout from it.
+  window.DFX_PWA_STANDALONE = false;
+  document.documentElement.classList.remove('dfx-pwa-standalone');
 
-  document.documentElement.classList.toggle('dfx-pwa-standalone', isStandalone);
-  window.DFX_PWA_STANDALONE = isStandalone;
-
-  // Native Android/iOS share when the browser/PWA supports it.
+  // Native Android/iOS share when the browser supports it.
   window.dfxShare = async (title, text, url) => {
     const data = { title: title || document.title, text: text || '', url: url || location.href };
     if (navigator.share) {
@@ -47,7 +50,7 @@
     window.dispatchEvent(new CustomEvent('dfx:pwa-installed'));
   });
 
-  // Actualización del Service Worker: se muestra solo cuando realmente hay una nueva versión.
+  // Actualización del Service Worker.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
