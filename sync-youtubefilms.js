@@ -212,25 +212,29 @@ function buildMovie(video, channel) {
 
 async function resolveChannelId(handle) {
   const data = await ytGet('channels', {
-    part: 'snippet',
+    part: 'snippet,contentDetails',
     forHandle: handle.replace(/^@/, ''),
     maxResults: 1,
   });
   const ch = data.items && data.items[0];
   if (!ch) throw new Error(`Canal no encontrado: ${handle}`);
-  return { id: ch.id, title: ch.snippet.title };
+  return {
+    id: ch.id,
+    title: ch.snippet.title,
+    uploadsId: ch.contentDetails.relatedPlaylists.uploads, // = pestaña "Videos"
+  };
 }
 
-// Pestaña "Videos" del canal: search por channelId + type=video, más recientes primero
-async function listUploadedVideoIds(channelId, maxItems) {
+// Pestaña "Videos" del canal: la playlist de uploads ES la pestaña Videos
+// (mismo contenido y orden que search.list channelId+order=date, pero cuesta
+// 1 unidad por página en vez de 100). Ver https://developers.google.com/youtube/v3/docs/channels
+async function listUploadedVideoIds(uploadsId, maxItems) {
   const ids = [];
   let pageToken = '';
   do {
-    const data = await ytGet('search', {
-      part: 'snippet',
-      channelId,
-      type: 'video',
-      order: 'date',
+    const data = await ytGet('playlistItems', {
+      part: 'contentDetails',
+      playlistId: uploadsId,
       maxResults: 50,
       pageToken,
     });
@@ -268,8 +272,8 @@ async function main() {
   for (const ch of CHANNELS) {
     try {
       console.log(`[yt-films] Procesando ${ch.handle} (pestaña Videos)...`);
-      const { id: channelId, title: channelTitle } = await resolveChannelId(ch.handle);
-      const ids = await listUploadedVideoIds(channelId, MAX_VIDEOS_PER_CHANNEL);
+      const { title: channelTitle, uploadsId } = await resolveChannelId(ch.handle);
+      const ids = await listUploadedVideoIds(uploadsId, MAX_VIDEOS_PER_CHANNEL);
       const videos = await fetchVideos(ids);
       stats.scanned += videos.length;
       console.log(`[yt-films]   ${channelTitle}: ${videos.length} videos revisados`);
