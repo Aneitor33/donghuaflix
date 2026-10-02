@@ -11,7 +11,8 @@ const CATALOGS = [
   { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
   { id: 'doramasia',  file: './public/data/catalog-doramasia.json',  index: './public/data/catalog-doramasia-index.json',  label: 'DoramasIA' },   // catálogo completo (sin índice lite)
   { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
-  { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' }
+  { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' },
+  { id: 'youtubefilms', file: './public/data/catalog-youtubefilms.json', index: './public/data/catalog-youtubefilms-index.json', label: 'YouTube Films' }
 ];
 const SRC_LABEL = {
   donghualife: 'DonghuaLife',
@@ -20,7 +21,8 @@ const SRC_LABEL = {
   dramasyt: 'DramasYT',
   dramasflix: 'DramasFlix',
   peliculas: 'Películas',
-  doramas: 'Doramas'
+  doramas: 'Doramas',
+  youtubefilms: 'YouTube Films'
 };
 
 /* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
