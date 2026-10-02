@@ -11,7 +11,8 @@ const CATALOGS = [
   { id: 'donghuacli',  label: 'DonghuaCLI',  index: 'catalog-donghuacli-index.json' },
   { id: 'dramasyt',    label: 'DramasYT',    index: 'catalog-dramasyt-index.json' },
   { id: 'peliculas',   label: 'Peliculas',   index: 'catalog-peliculas-index.json' },
-  { id: 'doramas',     label: 'Doramas',     index: 'catalog-doramas-index.json' }
+  { id: 'doramas',     label: 'Doramas',     index: 'catalog-doramas-index.json' },
+  { id: 'youtubefilms', label: 'YouTube Films', index: 'catalog-youtubefilms-index.json' }
 ];
 
 const dir = path.join(__dirname, 'public', 'data');
