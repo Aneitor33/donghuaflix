@@ -14,6 +14,9 @@ const CATALOGS = [
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' },
   { id: 'youtubefilms', file: './public/data/catalog-youtubefilms.json', index: './public/data/catalog-youtubefilms-index.json', label: 'YouTube Films' }
 ];
+
+/* Catálogos cuyas portadas se muestran en horizontal (16:9) */
+const FILM_CATS = ['youtubefilms', 'dramasyt'];
 const SRC_LABEL = {
   donghualife: 'DonghuaLife',
   donghuasub: 'DonghuaSub',
@@ -249,7 +252,7 @@ async function switchCatalog(id) {
   if (id === currentCatalog) return;
 
   app.innerHTML =
-    '<section class="section page-top"><div class="grid">' +
+    '<section class="section page-top"><div class="grid' + (FILM_CATS.includes(currentCatalog) ? ' grid--films' : '') + '">' +
     Array(8)
       .fill('<div class="skeleton"></div>')
       .join('') +
@@ -1489,7 +1492,7 @@ async function load() {
   stopProgressiveGrid();
 
   app.innerHTML =
-    '<section class="section page-top"><div class="grid">' +
+    '<section class="section page-top"><div class="grid' + (FILM_CATS.includes(currentCatalog) ? ' grid--films' : '') + '">' +
     Array(8)
       .fill(
         '<div class="skeleton"></div>'
@@ -2615,7 +2618,7 @@ function listAllSeries() {
       </div>
 
       <div
-        class="grid"
+        class="grid${FILM_CATS.includes(currentCatalog) ? ' grid--films' : ''}"
         id="catalogGrid"
       ></div>
 
