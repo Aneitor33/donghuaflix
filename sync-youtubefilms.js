@@ -211,18 +211,18 @@ function buildMovie(video, channel) {
 /* ===================== VIDEOS SUBIDOS DEL CANAL ===================== */
 
 async function resolveChannelId(handle) {
-  const data = await ytGet('channels', {
-    part: 'snippet,contentDetails',
-    forHandle: handle.replace(/^@/, ''),
-    maxResults: 1,
-  });
+  const h = handle.replace(/^@/, '');
+  // Paso 1: resolver el canal por handle
+  const data = await ytGet('channels', { part: 'snippet', forHandle: h, maxResults: 1 });
   const ch = data.items && data.items[0];
   if (!ch) throw new Error(`Canal no encontrado: ${handle}`);
-  return {
-    id: ch.id,
-    title: ch.snippet.title,
-    uploadsId: ch.contentDetails.relatedPlaylists.uploads, // = pestaña "Videos"
-  };
+  // Paso 2: pedir contentDetails por ID (garantizado; forHandle a veces lo omite)
+  const det = await ytGet('channels', { part: 'contentDetails', id: ch.id });
+  const uploadsId = det.items && det.items[0] && det.items[0].contentDetails
+    && det.items[0].contentDetails.relatedPlaylists
+    && det.items[0].contentDetails.relatedPlaylists.uploads;
+  if (!uploadsId) throw new Error(`Sin playlist de uploads para ${handle} (id ${ch.id})`);
+  return { id: ch.id, title: ch.snippet.title, uploadsId };
 }
 
 // Pestaña "Videos" del canal: la playlist de uploads ES la pestaña Videos
@@ -233,13 +233,17 @@ async function listUploadedVideoIds(uploadsId, maxItems) {
   let pageToken = '';
   do {
     const data = await ytGet('playlistItems', {
-      part: 'contentDetails',
+      part: 'snippet,contentDetails',  // snippet da resourceId.videoId, contentDetails da videoId
       playlistId: uploadsId,
       maxResults: 50,
       pageToken,
     });
-    for (const it of data.items || []) {
-      if (it.id?.videoId) ids.push(it.id.videoId);
+    const items = data.items || [];
+    console.log(`[yt-films]   playlist ${uploadsId}: ${items.length} items en página`);
+    for (const it of items) {
+      const vid = (it.contentDetails && it.contentDetails.videoId)
+        || (it.snippet && it.snippet.resourceId && it.snippet.resourceId.videoId);
+      if (vid) ids.push(vid);
     }
     pageToken = data.nextPageToken || '';
     if (ids.length >= maxItems) break;
@@ -302,6 +306,12 @@ async function main() {
       console.error(`[yt-films] ERROR en ${ch.handle}: ${err.message}`);
       stats.errors.push({ channel: ch.handle, error: err.message });
     }
+  }
+
+  // Diagnóstico: canales resueltos pero 0 videos leídos = algo va mal en la API
+  if (stats.scanned === 0) {
+    console.error('[yt-films] FATAL: 0 videos escaneados. Revisa los logs de páginas de playlist.');
+    process.exit(1);
   }
 
   // Más recientes primero (por fecha de publicación)
