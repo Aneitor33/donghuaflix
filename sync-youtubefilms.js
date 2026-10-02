@@ -422,6 +422,11 @@ async function main() {
 
   /* ------- índice ligero compacto: claves i/s/t/p/g/st/ty/y/c/e/u ----- */
   const liteIndex = {
+    // ⚠️ OJO: app.js lee compact/genres/imageBase/detailsBase A NIVEL RAÍZ
+    compact: true,
+    genres: GENRE_LIST,
+    imageBase: 'https://i.ytimg.com/vi/',
+    detailsBase: 'catalog-youtubefilms-details',
     meta: {
       source: 'youtubefilms-youtube',
       version: 2,
