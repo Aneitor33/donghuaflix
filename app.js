@@ -17,6 +17,15 @@ const CATALOGS = [
 
 /* Catálogos cuyas portadas se muestran en horizontal (16:9) */
 const FILM_CATS = ['youtubefilms', 'dramasyt'];
+
+/* Catálogos cuyas fichas van agrupadas en shards (límite de 20.000 archivos de Cloudflare Pages) */
+const SHARDED_CATS = ['youtubefilms'];
+const SHARD_COUNT = 64;
+function shardIndexOf(key) {
+  let h = 0;
+  for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return Math.abs(h) % SHARD_COUNT;
+}
 const SRC_LABEL = {
   donghualife: 'DonghuaLife',
   donghuasub: 'DonghuaSub',
@@ -3291,6 +3300,30 @@ async function ensureDetail(slug) {
 
   const cacheKey = currentCatalog + '/' + key;
   if (DETAIL_CACHE[cacheKey]) return;
+
+  // ── Catálogos con fichas agrupadas en shards ──
+  if (SHARDED_CATS.includes(currentCatalog)) {
+    try {
+      const h = shardIndexOf(String(slug));
+      const d = await fetchCatalogFile(`${dir}/shard-${h}.json`);
+      if (d && Array.isArray(d.series)) {
+        for (const ss of d.series) {
+          const sk = String(ss.slug || ss.id);
+          const i = DB.series.findIndex(s => (s.slug || s.id) === sk);
+          if (i !== -1) DB.series[i] = { ...DB.series[i], ...ss };
+          else DB.series.push(ss);
+          DETAIL_CACHE[currentCatalog + '/' + sk.replace(/[^a-zA-Z0-9._-]/g, '_')] = true;
+        }
+        const have = new Set(DB.seasons.map(x => x.id));
+        (d.seasons || []).forEach(x => { if (!have.has(x.id)) DB.seasons.push(x); });
+        const haveEp = new Set(DB.episodes.map(x => x.id));
+        (d.episodes || []).forEach(x => { if (!haveEp.has(x.id)) DB.episodes.push(x); });
+      }
+    } catch (e) {
+      console.warn('No se pudo cargar el shard', slug, e);
+    }
+    return;
+  }
 
   try {
     const d = await fetchCatalogFile(`${dir}/${key}.json`);
