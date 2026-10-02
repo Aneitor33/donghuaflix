@@ -30,7 +30,7 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           MIN_DURATION_SECONDS: '3600'
-          MAX_VIDEOS_PER_CHANNEL: '100'
+          MAX_VIDEOS_PER_CHANNEL: '2000'
         run: node sync-youtubefilms.js
 
       - name: Reconstruir índice maestro
@@ -40,6 +40,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Evita el rechazo "fetch first" si hubo commits desde la web mientras corría
+          git pull --rebase --autostash origin main || true
           git add public/data/catalog-youtubefilms.json \
                   public/data/catalog-youtubefilms-index.json \
                   public/data/catalog-youtubefilms-details \
