@@ -835,3 +835,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     text-align:center;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   PORTADAS HORIZONTALES 16/9 — YouTube Films + DramasYT
+   (solo se aplica con .grid--films / .dfx7-film; el resto de
+   catálogos sigue en vertical 2/3 como siempre)
+   ══════════════════════════════════════════════════════════ */
+.grid--films{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.grid--films .poster{aspect-ratio:16/9}
+.grid--films .poster img{object-position:center}
+.grid--films .skeleton{aspect-ratio:16/9}
+@media(max-width:640px){
+  .grid--films{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+}
+
+/* Descubrir (dfx7): tarjetas de YouTube Films y DramasYT */
+.dfx7-film .dfx7-card-poster{aspect-ratio:16/9}
+.dfx7-film .dfx7-card-poster img{object-position:center}
