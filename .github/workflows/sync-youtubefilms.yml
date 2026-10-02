@@ -43,5 +43,5 @@ jobs:
           # Evita el rechazo "fetch first" si hubo commits desde la web mientras corría
           git pull --rebase --autostash origin main || true
           git add -A public/data/
-          git commit -m "chore(data): sync catálogo YouTube Films [skip ci]" || echo "Sin cambios"
+          git commit -m "chore(data): sync catálogo YouTube Films" || echo "Sin cambios"
           git push
