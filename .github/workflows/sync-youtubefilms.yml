@@ -1,0 +1,44 @@
+name: Sync YouTube Films
+
+on:
+  schedule:
+    # Cada 6 horas (ajustable)
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-youtubefilms
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Scrape canales autorizados -> catalog-youtubefilms
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          MIN_DURATION_SECONDS: '3600'
+          MAX_VIDEOS_PER_CHANNEL: '100'
+        run: node tools/sync-youtubefilms.js
+
+      - name: Commit y push de los cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/catalog-youtubefilms.json \
+                  public/data/catalog-youtubefilms-index.json \
+                  public/data/catalog-youtubefilms-details
+          git commit -m "chore(data): sync catalog YouTube Films [skip ci]" || echo "Sin cambios"
+          git push
