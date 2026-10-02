@@ -988,7 +988,7 @@
     var cat = CFG.labels[x._cat] || x._cat;
     var badge = opts.badge || "";
     return '' +
-      '<a class="dfx7-card" href="#/series/' + esc(id) + '">' +
+      '<a class="dfx7-card' + (x._cat === 'youtubefilms' || x._cat === 'dramasyt' ? ' dfx7-film' : '') + '" href="#/series/' + esc(id) + '">' +
         '<div class="dfx7-card-poster">' +
           (src ? '<img loading="lazy" src="' + esc(src) + '" alt="">' : '') +
           '<span class="dfx7-card-cat">' + esc(cat) + '</span>' +
