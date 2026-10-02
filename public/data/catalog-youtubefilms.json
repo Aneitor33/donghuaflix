@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "source": "youtubefilms-youtube",
+    "version": 2,
+    "lite": false,
+    "syncedAt": "2026-10-02T22:49:15.050Z",
+    "minDurationSeconds": 3600,
+    "counts": {
+      "movies": 0,
+      "scanned": 0,
+      "ignoredByDuration": 0,
+      "errors": 0
+    },
+    "channels": [
+      "@animaciondesinchew",
+      "@anime_multiverso",
+      "@kb025-p4s",
+      "@moxispanish",
+      "@cine-esp",
+      "@freshesp"
+    ]
+  },
+  "genres": [
+    "Fantasía/Cultivación",
+    "Artes Marciales",
+    "Acción",
+    "Comedia",
+    "Histórico",
+    "Romance",
+    "Drama"
+  ],
+  "series": [],
+  "seasons": [],
+  "episodes": []
+}
