@@ -3,14 +3,16 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-02T23:11:41.663Z",
+    "syncedAt": "2026-10-02T23:15:33.935Z",
     "minDurationSeconds": 3600,
     "counts": {
       "movies": 1439,
-      "scanned": 1558,
-      "ignoredByDuration": 119,
+      "newInThisSync": 0,
+      "scanned": 47,
+      "ignoredByDuration": 47,
       "errors": 0
     },
+    "incremental": true,
     "channels": [
       "@animaciondesinchew",
       "@anime_multiverso",
