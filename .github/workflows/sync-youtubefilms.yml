@@ -30,7 +30,7 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           MIN_DURATION_SECONDS: '3600'
-          MAX_VIDEOS_PER_CHANNEL: '2000'
+          MAX_VIDEOS_PER_CHANNEL: '500'
         run: node sync-youtubefilms.js
 
       - name: Reconstruir índice maestro
