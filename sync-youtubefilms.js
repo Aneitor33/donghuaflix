@@ -20,10 +20,8 @@
  * Requiere env: YOUTUBE_API_KEY (YouTube Data API v3)
  * Uso: node tools/sync-youtubefilms.js
  */
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
 
 /* ============================== CONFIG ============================== */
 
