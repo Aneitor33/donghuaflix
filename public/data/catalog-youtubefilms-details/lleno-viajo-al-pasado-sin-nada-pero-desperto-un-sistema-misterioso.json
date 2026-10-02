@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso",
+    "slug": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso",
+    "title": "【LLENO】Viajó al Pasado sin Nada, ¡pero Despertó un Sistema Misterioso!",
+    "image": "https://i.ytimg.com/vi/OjSO8N03-jk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Viaja accidentalmente a la antigua China y despierta convertido en un pobre cazador que apenas puede sobrevivir junto a su esposa. Sin dinero, sin recursos y rodeado de dificultades, s...",
+    "year": 2026,
+    "updatedAt": "2026-08-18T03:00:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=OjSO8N03-jk",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Viajó al Pasado sin Nada, ¡pero Despertó un Sistema Misterioso!",
+    "duration": 8905,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso-s1",
+      "seriesId": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso-ep-1",
+      "slug": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso-ep-1",
+      "seriesId": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso",
+      "seasonId": "lleno-viajo-al-pasado-sin-nada-pero-desperto-un-sistema-misterioso-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OjSO8N03-jk"
+        }
+      ],
+      "updatedAt": "2026-08-18T03:00:04Z"
+    }
+  ]
+}

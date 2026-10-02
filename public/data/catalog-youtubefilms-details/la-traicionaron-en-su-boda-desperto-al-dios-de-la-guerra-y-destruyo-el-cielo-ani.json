@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani",
+    "slug": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani",
+    "title": "¡La Traicionaron en su Boda, Despertó al Dios de la Guerra y Destruyó el Cielo!💕#anime",
+    "image": "https://i.ytimg.com/vi/VDX26Tm51bA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-28T21:00:03Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=VDX26Tm51bA",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡La Traicionaron en su Boda, Despertó al Dios de la Guerra y Destruyó el Cielo!💕#anime",
+    "duration": 6135,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani-s1",
+      "seriesId": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani-ep-1",
+      "slug": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani-ep-1",
+      "seriesId": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani",
+      "seasonId": "la-traicionaron-en-su-boda-desperto-al-dios-de-la-guerra-y-destruyo-el-cielo-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VDX26Tm51bA"
+        }
+      ],
+      "updatedAt": "2026-09-28T21:00:03Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance",
+    "slug": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance",
+    "title": "Chang'E Vuela a la Luna Pelicula de Fantasía, Acción y Romance",
+    "image": "https://i.ytimg.com/vi/7ZTIoLbgno4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de fantasía, acción y romance \"Chang'E Vuela a la Luna\" cuenta la historia de Hou Yi, quien sigue a sus discípulos cazadores para cazar un dragón de piedra. Debido a su arroga...",
+    "year": 2026,
+    "updatedAt": "2026-02-04T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7ZTIoLbgno4",
+    "channel": "@moxispanish",
+    "originalTitle": "Chang'E Vuela a la Luna | Pelicula de Fantasía, Acción y Romance | Completa en Español HD",
+    "duration": 4941,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Drama",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance-s1",
+      "seriesId": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance-ep-1",
+      "slug": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance-ep-1",
+      "seriesId": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance",
+      "seasonId": "chang-e-vuela-a-la-luna-pelicula-de-fantasia-accion-y-romance-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7ZTIoLbgno4"
+        }
+      ],
+      "updatedAt": "2026-02-04T16:00:06Z"
+    }
+  ]
+}

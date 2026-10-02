@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom",
+    "slug": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom",
+    "title": "Audio Latino - Matón sigue a una Chica para Robarla, sin imaginar que ella es Excomando",
+    "image": "https://i.ytimg.com/vi/xfFtieRyZIo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-07-10T14:30:09Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=xfFtieRyZIo",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Matón sigue a una Chica para Robarla, sin imaginar que ella es Excomando.",
+    "duration": 4784,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom-s1",
+      "seriesId": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom-ep-1",
+      "slug": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom-ep-1",
+      "seriesId": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom",
+      "seasonId": "audio-latino-maton-sigue-a-una-chica-para-robarla-sin-imaginar-que-ella-es-excom-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/xfFtieRyZIo"
+        }
+      ],
+      "updatedAt": "2026-07-10T14:30:09Z"
+    }
+  ]
+}

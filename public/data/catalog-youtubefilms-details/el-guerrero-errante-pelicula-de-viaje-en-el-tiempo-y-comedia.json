@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia",
+    "slug": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia",
+    "title": "El Guerrero Errante Película de Viaje en el Tiempo y Comedia",
+    "image": "https://i.ytimg.com/vi/PxeFYRjUEX0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de viajes en el tiempo y comedia \"El Guerrero Errante\" narra una historia de amor y comedia sobre viajes en el tiempo. Linghu Jian es un tímido aficionado a los cómics en la e...",
+    "year": 2026,
+    "updatedAt": "2026-02-07T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=PxeFYRjUEX0",
+    "channel": "@moxispanish",
+    "originalTitle": "El Guerrero Errante | Película de Viaje en el Tiempo y Comedia | Completa en Español HD",
+    "duration": 3700,
+    "genres": [
+      "Comedia",
+      "Histórico",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia-s1",
+      "seriesId": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia-ep-1",
+      "slug": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia-ep-1",
+      "seriesId": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia",
+      "seasonId": "el-guerrero-errante-pelicula-de-viaje-en-el-tiempo-y-comedia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PxeFYRjUEX0"
+        }
+      ],
+      "updatedAt": "2026-02-07T16:00:06Z"
+    }
+  ]
+}

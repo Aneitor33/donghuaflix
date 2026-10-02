@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la",
+    "slug": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la",
+    "title": "Audio Latino - Chico mediante sangre pacta con el Poder Ancestral, sin saber que la catástrofe llega",
+    "image": "https://i.ytimg.com/vi/nmzFl5uMhR4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-04-24T15:01:32Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nmzFl5uMhR4",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Chico mediante sangre pacta con el Poder Ancestral, sin saber que la catástrofe llega",
+    "duration": 6182,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la-s1",
+      "seriesId": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la-ep-1",
+      "slug": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la-ep-1",
+      "seriesId": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la",
+      "seasonId": "audio-latino-chico-mediante-sangre-pacta-con-el-poder-ancestral-sin-saber-que-la-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nmzFl5uMhR4"
+        }
+      ],
+      "updatedAt": "2026-04-24T15:01:32Z"
+    }
+  ]
+}

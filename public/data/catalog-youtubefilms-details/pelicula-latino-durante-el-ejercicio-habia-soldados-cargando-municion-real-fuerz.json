@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz",
+    "slug": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz",
+    "title": "Película Latino- ¡Durante el Ejercicio había Soldados cargando Munición Real! Fuerza Especial",
+    "image": "https://i.ytimg.com/vi/zjhDmBRYLoQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-03-03T14:30:29Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=zjhDmBRYLoQ",
+    "channel": "@cine-esp",
+    "originalTitle": "Película Latino- ¡Durante el Ejercicio había Soldados cargando Munición Real! Fuerza Especial",
+    "duration": 4310,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz-s1",
+      "seriesId": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz-ep-1",
+      "slug": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz-ep-1",
+      "seriesId": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz",
+      "seasonId": "pelicula-latino-durante-el-ejercicio-habia-soldados-cargando-municion-real-fuerz-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/zjhDmBRYLoQ"
+        }
+      ],
+      "updatedAt": "2025-03-03T14:30:29Z"
+    }
+  ]
+}

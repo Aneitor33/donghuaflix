@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca",
+    "slug": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca",
+    "title": "Audio latino - Misión de Rescate de las Fuerzas Especiales para la Espía que Fracasó",
+    "image": "https://i.ytimg.com/vi/fbay2bOkhoM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-08-27T14:30:35Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=fbay2bOkhoM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - Misión de Rescate de las Fuerzas Especiales para la Espía que Fracasó.",
+    "duration": 6651,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca-s1",
+      "seriesId": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca-ep-1",
+      "slug": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca-ep-1",
+      "seriesId": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca",
+      "seasonId": "audio-latino-mision-de-rescate-de-las-fuerzas-especiales-para-la-espia-que-fraca-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/fbay2bOkhoM"
+        }
+      ],
+      "updatedAt": "2025-08-27T14:30:35Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani",
+    "slug": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani",
+    "title": "Un Vagabundo Roto Parecía Dormir... ¡Pero era el Dios Supremo que Salva el Mundo!💕#anime",
+    "image": "https://i.ytimg.com/vi/P8g2ijAB21E/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-21T21:00:30Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=P8g2ijAB21E",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Un Vagabundo Roto Parecía Dormir... ¡Pero era el Dios Supremo que Salva el Mundo!💕#anime",
+    "duration": 5813,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani-s1",
+      "seriesId": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani-ep-1",
+      "slug": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani-ep-1",
+      "seriesId": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani",
+      "seasonId": "un-vagabundo-roto-parecia-dormir-pero-era-el-dios-supremo-que-salva-el-mundo-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/P8g2ijAB21E"
+        }
+      ],
+      "updatedAt": "2026-09-21T21:00:30Z"
+    }
+  ]
+}

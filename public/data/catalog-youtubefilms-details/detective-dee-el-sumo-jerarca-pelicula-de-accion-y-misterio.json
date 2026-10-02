@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio",
+    "slug": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio",
+    "title": "Detective Dee, El Sumo Jerarca Pelicula de Accion y Misterio",
+    "image": "https://i.ytimg.com/vi/taiomTCQHdA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales y misterio \"Detective Dee, El Sumo Jerarca\" trata sobre el famoso detective Di Renjie de la dinastía Tang. Esta vez, la historia comienza con un r...",
+    "year": 2026,
+    "updatedAt": "2026-02-28T16:01:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=taiomTCQHdA",
+    "channel": "@moxispanish",
+    "originalTitle": "Detective Dee, El Sumo Jerarca | Pelicula de Accion y Misterio | Completa en Español HD",
+    "duration": 3991,
+    "genres": [
+      "Histórico",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio-s1",
+      "seriesId": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio-ep-1",
+      "slug": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio-ep-1",
+      "seriesId": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio",
+      "seasonId": "detective-dee-el-sumo-jerarca-pelicula-de-accion-y-misterio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/taiomTCQHdA"
+        }
+      ],
+      "updatedAt": "2026-02-28T16:01:13Z"
+    }
+  ]
+}

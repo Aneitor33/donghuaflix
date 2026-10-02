@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr",
+    "slug": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr",
+    "title": "Película en Español - La Batalla Final: ¡Los soldados supervivientes se mataron entre ellos!",
+    "image": "https://i.ytimg.com/vi/WglDCgvYLKM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-03-25T14:00:38Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WglDCgvYLKM",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - La Batalla Final: ¡Los soldados supervivientes se mataron entre ellos!",
+    "duration": 4983,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr-s1",
+      "seriesId": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr-ep-1",
+      "slug": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr-ep-1",
+      "seriesId": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr",
+      "seasonId": "pelicula-en-espanol-la-batalla-final-los-soldados-supervivientes-se-mataron-entr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WglDCgvYLKM"
+        }
+      ],
+      "updatedAt": "2025-03-25T14:00:38Z"
+    }
+  ]
+}

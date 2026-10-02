@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama-",
+    "slug": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama-",
+    "title": "💥FULL💥[Buenas advertencias calumniadas: culpables pagan, sale la trama oculta！] #drama #ai",
+    "image": "https://i.ytimg.com/vi/wabvwX779hk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Cuando se acercaban las heladas por la ola de frío, Lin Yuan, jefe de la estación de fruticultura, avisó casa por casa a los agricultores para que cosecharan las naranjas mandarinas a tiempo y cont...",
+    "year": 2026,
+    "updatedAt": "2026-09-11T13:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=wabvwX779hk",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[Buenas advertencias calumniadas: culpables pagan, sale la trama oculta！] #drama #ai",
+    "duration": 3814,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama--s1",
+      "seriesId": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama--ep-1",
+      "slug": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama--ep-1",
+      "seriesId": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama-",
+      "seasonId": "full-buenas-advertencias-calumniadas-culpables-pagan-sale-la-trama-oculta-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/wabvwX779hk"
+        }
+      ],
+      "updatedAt": "2026-09-11T13:00:06Z"
+    }
+  ]
+}

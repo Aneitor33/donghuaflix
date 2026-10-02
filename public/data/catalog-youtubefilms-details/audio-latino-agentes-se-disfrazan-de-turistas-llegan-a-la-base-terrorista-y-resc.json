@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc",
+    "slug": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc",
+    "title": "Audio Latino - Agentes se disfrazan de turistas, llegan a la base terrorista y rescatan rehenes",
+    "image": "https://i.ytimg.com/vi/JjYnGx0IEzw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-08-27T15:00:25Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=JjYnGx0IEzw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Agentes se disfrazan de turistas, llegan a la base terrorista y rescatan rehenes.",
+    "duration": 7061,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc-s1",
+      "seriesId": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc-ep-1",
+      "slug": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc-ep-1",
+      "seriesId": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc",
+      "seasonId": "audio-latino-agentes-se-disfrazan-de-turistas-llegan-a-la-base-terrorista-y-resc-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/JjYnGx0IEzw"
+        }
+      ],
+      "updatedAt": "2026-08-27T15:00:25Z"
+    }
+  ]
+}

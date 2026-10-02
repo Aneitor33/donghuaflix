@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia",
+    "slug": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia",
+    "title": "La Reina Sin Belleza 1 Película Romántica de Amor y Comedia",
+    "image": "https://i.ytimg.com/vi/Psfjk4ub9EM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor y comedia \"La Reina Sin Belleza\" cuenta una historia durante el Período de los Reinos Combatientes de China (475-221 a.C.), los estados luchaban entre sí y l...",
+    "year": 2024,
+    "updatedAt": "2024-03-09T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Psfjk4ub9EM",
+    "channel": "@moxispanish",
+    "originalTitle": "La Reina Sin Belleza 1 | Película Romántica de Amor y Comedia | Completa en Español HD",
+    "duration": 6648,
+    "genres": [
+      "Histórico",
+      "Fantasía/Cultivación",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia-s1",
+      "seriesId": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia-ep-1",
+      "slug": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia-ep-1",
+      "seriesId": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia",
+      "seasonId": "la-reina-sin-belleza-1-pelicula-romantica-de-amor-y-comedia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Psfjk4ub9EM"
+        }
+      ],
+      "updatedAt": "2024-03-09T16:00:06Z"
+    }
+  ]
+}

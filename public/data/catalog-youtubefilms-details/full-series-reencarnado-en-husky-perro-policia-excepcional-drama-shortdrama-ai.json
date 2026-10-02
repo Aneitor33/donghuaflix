@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai",
+    "slug": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai",
+    "title": "💥FULL SERIES💥 [Reencarnado en husky: perro policía excepcional] #drama #shortdrama #ai",
+    "image": "https://i.ytimg.com/vi/hijjebDAShg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Chu Sheng reencarna accidentalmente en un husky. Apenas abre los ojos, casi es llevado a ser esterilizado por la policía femenina Su Yueling. En el momento crítico, se activa oficialmente el sistem...",
+    "year": 2026,
+    "updatedAt": "2026-08-23T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=hijjebDAShg",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL SERIES💥 [Reencarnado en husky: perro policía excepcional] #drama #shortdrama #ai",
+    "duration": 8200,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai-s1",
+      "seriesId": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai-ep-1",
+      "slug": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai-ep-1",
+      "seriesId": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai",
+      "seasonId": "full-series-reencarnado-en-husky-perro-policia-excepcional-drama-shortdrama-ai-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/hijjebDAShg"
+        }
+      ],
+      "updatedAt": "2026-08-23T14:00:06Z"
+    }
+  ]
+}

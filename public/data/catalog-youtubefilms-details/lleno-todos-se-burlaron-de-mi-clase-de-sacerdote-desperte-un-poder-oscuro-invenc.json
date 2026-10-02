@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc",
+    "slug": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc",
+    "title": "【LLENO】Todos se burlaron de mi clase de Sacerdote… ¡Desperté un poder oscuro invencible!",
+    "image": "https://i.ytimg.com/vi/xzIfCFmNwKs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】: ¿Un Sacerdote destinado a ser solo un apoyo débil? ¡Se equivocaron conmigo! En un mundo donde todos luchan por convertirse en los mejores guerreros, la clase de Sacerdote siempre fue...",
+    "year": 2026,
+    "updatedAt": "2026-07-17T04:00:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=xzIfCFmNwKs",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Todos se burlaron de mi clase de Sacerdote… ¡Desperté un poder oscuro invencible!",
+    "duration": 8532,
+    "genres": [
+      "Histórico",
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc-s1",
+      "seriesId": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc-ep-1",
+      "slug": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc-ep-1",
+      "seriesId": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc",
+      "seasonId": "lleno-todos-se-burlaron-de-mi-clase-de-sacerdote-desperte-un-poder-oscuro-invenc-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/xzIfCFmNwKs"
+        }
+      ],
+      "updatedAt": "2026-07-17T04:00:24Z"
+    }
+  ]
+}

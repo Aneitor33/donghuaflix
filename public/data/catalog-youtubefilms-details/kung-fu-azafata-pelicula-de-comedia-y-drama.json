@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "kung-fu-azafata-pelicula-de-comedia-y-drama",
+    "slug": "kung-fu-azafata-pelicula-de-comedia-y-drama",
+    "title": "Kung Fu Azafata Pelicula de Comedia y Drama",
+    "image": "https://i.ytimg.com/vi/7ZWWCgiF0C8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de comedia y drama \"Kung Fu Azafata\" cuenta la historia de Zhao Xiaofan (interpretada por Zhao Yihuan), una chica normal con condiciones congénitas extremadamente pobres. Para...",
+    "year": 2025,
+    "updatedAt": "2025-02-22T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7ZWWCgiF0C8",
+    "channel": "@moxispanish",
+    "originalTitle": "Kung Fu Azafata | Pelicula de Comedia y Drama | Completa en Español HD",
+    "duration": 6448,
+    "genres": [
+      "Drama",
+      "Artes Marciales",
+      "Comedia"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "kung-fu-azafata-pelicula-de-comedia-y-drama-s1",
+      "seriesId": "kung-fu-azafata-pelicula-de-comedia-y-drama",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "kung-fu-azafata-pelicula-de-comedia-y-drama-ep-1",
+      "slug": "kung-fu-azafata-pelicula-de-comedia-y-drama-ep-1",
+      "seriesId": "kung-fu-azafata-pelicula-de-comedia-y-drama",
+      "seasonId": "kung-fu-azafata-pelicula-de-comedia-y-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7ZWWCgiF0C8"
+        }
+      ],
+      "updatedAt": "2025-02-22T16:00:06Z"
+    }
+  ]
+}

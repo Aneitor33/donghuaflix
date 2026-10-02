@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim",
+    "slug": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim",
+    "title": "Película Audio Latino - ¡El Francotirador reveló su Posición! sólo el que Actúe Primero Sobrevivirá",
+    "image": "https://i.ytimg.com/vi/caBVHU1j-0w/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-02-23T14:00:46Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=caBVHU1j-0w",
+    "channel": "@cine-esp",
+    "originalTitle": "Película Audio Latino - ¡El Francotirador reveló su Posición! sólo el que Actúe Primero Sobrevivirá.",
+    "duration": 5134,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim-s1",
+      "seriesId": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim-ep-1",
+      "slug": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim-ep-1",
+      "seriesId": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim",
+      "seasonId": "pelicula-audio-latino-el-francotirador-revelo-su-posicion-solo-el-que-actue-prim-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/caBVHU1j-0w"
+        }
+      ],
+      "updatedAt": "2025-02-23T14:00:46Z"
+    }
+  ]
+}

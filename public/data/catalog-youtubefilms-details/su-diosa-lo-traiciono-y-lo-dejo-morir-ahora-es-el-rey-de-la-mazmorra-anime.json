@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime",
+    "slug": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime",
+    "title": "Su Diosa lo Traicionó y lo Dejó Morir... ¡Ahora Es el Rey de la Mazmorra!💕#anime",
+    "image": "https://i.ytimg.com/vi/nFGKAjgD5SA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-09T20:00:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nFGKAjgD5SA",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Su Diosa lo Traicionó y lo Dejó Morir... ¡Ahora Es el Rey de la Mazmorra!💕#anime",
+    "duration": 6008,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime-s1",
+      "seriesId": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime-ep-1",
+      "slug": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime-ep-1",
+      "seriesId": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime",
+      "seasonId": "su-diosa-lo-traiciono-y-lo-dejo-morir-ahora-es-el-rey-de-la-mazmorra-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nFGKAjgD5SA"
+        }
+      ],
+      "updatedAt": "2026-07-09T20:00:13Z"
+    }
+  ]
+}

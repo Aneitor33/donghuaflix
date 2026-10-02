@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia",
+    "slug": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia",
+    "title": "💥COMPLETO💥 [¡Sistema de Fútbol Divino Activado! Expulsado y Campeón de la Copa Mundial] #dramacorto",
+    "image": "https://i.ytimg.com/vi/DtTTpUtO2u4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: Su Lin es un jugador apasionado por el fútbol en un club de la Liga Uno de China. Al negarse a participar en escándalos de amaño de partidos, denunció las infracciones de su entrenador, p...",
+    "year": 2026,
+    "updatedAt": "2026-08-26T13:00:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=DtTTpUtO2u4",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥COMPLETO💥 [¡Sistema de Fútbol Divino Activado! Expulsado y Campeón de la Copa Mundial]  #dramacorto",
+    "duration": 10562,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia-s1",
+      "seriesId": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia-ep-1",
+      "slug": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia-ep-1",
+      "seriesId": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia",
+      "seasonId": "completo-sistema-de-futbol-divino-activado-expulsado-y-campeon-de-la-copa-mundia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/DtTTpUtO2u4"
+        }
+      ],
+      "updatedAt": "2026-08-26T13:00:22Z"
+    }
+  ]
+}

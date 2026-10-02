@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas",
+    "slug": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas",
+    "title": "【LLENO】Puedo ver a través de las habilidades definitivas ocultas de las Doncellas de Batalla",
+    "image": "https://i.ytimg.com/vi/xt7wdh56lhU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 ¡Bestias exóticas descienden y la humanidad entra en la era de las Doncellas de Batalla! Un joven despierta la \"Perspectiva Omnisciente Divina\" y descubre que una Doncella de Batalla...",
+    "year": 2026,
+    "updatedAt": "2026-08-06T04:00:36Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=xt7wdh56lhU",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Puedo ver a través de las habilidades definitivas ocultas de las Doncellas de Batalla.",
+    "duration": 7822,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas-s1",
+      "seriesId": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas-ep-1",
+      "slug": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas-ep-1",
+      "seriesId": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas",
+      "seasonId": "lleno-puedo-ver-a-traves-de-las-habilidades-definitivas-ocultas-de-las-doncellas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/xt7wdh56lhU"
+        }
+      ],
+      "updatedAt": "2026-08-06T04:00:36Z"
+    }
+  ]
+}

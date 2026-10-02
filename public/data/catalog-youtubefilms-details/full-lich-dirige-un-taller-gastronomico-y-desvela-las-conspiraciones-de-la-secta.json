@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta",
+    "slug": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta",
+    "title": "💥FULL💥 [¡Lich dirige un taller gastronómico y desvela las conspiraciones de la secta oscura!] #drama",
+    "image": "https://i.ytimg.com/vi/8VNJaHc0Ek0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Jiang You transmite inesperadamente a un mundo mágico, pero lo que obtiene es solo el esqueleto de un lich y un taller deteriorado. Para reconstruir su cuerpo físico, se une a Andrei, capitán de la...",
+    "year": 2026,
+    "updatedAt": "2026-09-03T13:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=8VNJaHc0Ek0",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥 [¡Lich dirige un taller gastronómico y desvela las conspiraciones de la secta oscura!] #drama",
+    "duration": 9333,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta-s1",
+      "seriesId": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta-ep-1",
+      "slug": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta-ep-1",
+      "seriesId": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta",
+      "seasonId": "full-lich-dirige-un-taller-gastronomico-y-desvela-las-conspiraciones-de-la-secta-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/8VNJaHc0Ek0"
+        }
+      ],
+      "updatedAt": "2026-09-03T13:00:06Z"
+    }
+  ]
+}

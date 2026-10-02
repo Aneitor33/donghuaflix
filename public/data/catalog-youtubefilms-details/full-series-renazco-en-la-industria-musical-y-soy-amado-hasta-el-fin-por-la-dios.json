@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios",
+    "slug": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios",
+    "title": "💥Full Series💥 [¡Renazco en la Industria Musical y Soy Amado Hasta el Fin por la Diosa Nacional] #ai",
+    "image": "https://i.ytimg.com/vi/Gw-nn7jyoIw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "En su vida anterior, Su Yu, una superestrella de máximo nivel, sufrió el acoso en línea y el hostigamiento de fans obsesivos hasta colapsar por completo. Al renacer en el mundo paralelo de Estrella...",
+    "year": 2026,
+    "updatedAt": "2026-08-09T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Gw-nn7jyoIw",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Full Series💥 [¡Renazco en la Industria Musical y Soy Amado Hasta el Fin por la Diosa Nacional] #ai",
+    "duration": 11831,
+    "genres": [
+      "Romance",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios-s1",
+      "seriesId": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios-ep-1",
+      "slug": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios-ep-1",
+      "seriesId": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios",
+      "seasonId": "full-series-renazco-en-la-industria-musical-y-soy-amado-hasta-el-fin-por-la-dios-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Gw-nn7jyoIw"
+        }
+      ],
+      "updatedAt": "2026-08-09T14:00:06Z"
+    }
+  ]
+}

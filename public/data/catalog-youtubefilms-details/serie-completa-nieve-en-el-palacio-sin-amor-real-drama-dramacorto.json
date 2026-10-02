@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto",
+    "slug": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto",
+    "title": "💥Serie completa💥 [Nieve en el palacio, sin amor real] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/tmwJ7JiIH30/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "La nieve cubre el palacio profundo, sus muros separan amores perdidos. Ella es una dama de linaje noble que, al convertirse en concubina, confió en personas malintencionadas. Su familia sufrió desg...",
+    "year": 2026,
+    "updatedAt": "2026-07-09T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=tmwJ7JiIH30",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Nieve en el palacio, sin amor real] #drama #dramacorto",
+    "duration": 10637,
+    "genres": [
+      "Romance",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto-s1",
+      "seriesId": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto-ep-1",
+      "slug": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto",
+      "seasonId": "serie-completa-nieve-en-el-palacio-sin-amor-real-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tmwJ7JiIH30"
+        }
+      ],
+      "updatedAt": "2026-07-09T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de",
+    "slug": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de",
+    "title": "【LLENO】Viaje al mundo de cultivo: El perezoso que despierta la raíz de espíritu de espada suprema",
+    "image": "https://i.ytimg.com/vi/h1H0XKFufaY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Transportado por accidente a un mundo de cultivo inmortal, harto de la competencia feroz, solo anhelo una vida tranquila. Pero soy obligado a ingresar a la Secta Wen‑Dao para practicar...",
+    "year": 2026,
+    "updatedAt": "2026-09-08T04:00:21Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=h1H0XKFufaY",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Viaje al mundo de cultivo: El perezoso que despierta la raíz de espíritu de espada suprema",
+    "duration": 9146,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de-s1",
+      "seriesId": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de-ep-1",
+      "slug": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de-ep-1",
+      "seriesId": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de",
+      "seasonId": "lleno-viaje-al-mundo-de-cultivo-el-perezoso-que-despierta-la-raiz-de-espiritu-de-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/h1H0XKFufaY"
+        }
+      ],
+      "updatedAt": "2026-09-08T04:00:21Z"
+    }
+  ]
+}

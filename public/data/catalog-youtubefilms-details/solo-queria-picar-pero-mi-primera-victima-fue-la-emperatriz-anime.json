@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime",
+    "slug": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime",
+    "title": "Solo Quería Picar… ¡Pero Mi Primera Víctima Fue la Emperatriz!💕#anime",
+    "image": "https://i.ytimg.com/vi/FZGbhigxoFQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-24T20:00:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=FZGbhigxoFQ",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Solo Quería Picar… ¡Pero Mi Primera Víctima Fue la Emperatriz!💕#anime",
+    "duration": 7233,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime-s1",
+      "seriesId": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime-ep-1",
+      "slug": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime-ep-1",
+      "seriesId": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime",
+      "seasonId": "solo-queria-picar-pero-mi-primera-victima-fue-la-emperatriz-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/FZGbhigxoFQ"
+        }
+      ],
+      "updatedAt": "2026-06-24T20:00:24Z"
+    }
+  ]
+}

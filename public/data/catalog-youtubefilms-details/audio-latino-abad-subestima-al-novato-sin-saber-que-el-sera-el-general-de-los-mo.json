@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo",
+    "slug": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo",
+    "title": "Audio Latino - Abad subestima al Novato, sin saber que él será el General de los Monjes Guerreros",
+    "image": "https://i.ytimg.com/vi/X_ynxqzMQ4k/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-07-05T15:30:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=X_ynxqzMQ4k",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Abad subestima al Novato, sin saber que él será el General de los Monjes Guerreros.",
+    "duration": 4436,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo-s1",
+      "seriesId": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo-ep-1",
+      "slug": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo-ep-1",
+      "seriesId": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo",
+      "seasonId": "audio-latino-abad-subestima-al-novato-sin-saber-que-el-sera-el-general-de-los-mo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/X_ynxqzMQ4k"
+        }
+      ],
+      "updatedAt": "2026-07-05T15:30:11Z"
+    }
+  ]
+}

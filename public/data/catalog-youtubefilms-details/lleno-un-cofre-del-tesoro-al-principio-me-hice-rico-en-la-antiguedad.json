@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad",
+    "slug": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad",
+    "title": "【LLENO】Un cofre del tesoro al principio: ¡Me hice rico en la antigüedad!",
+    "image": "https://i.ytimg.com/vi/NoC00d5UQHo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Desperté y me encontré transportado a un mundo antiguo y caótico. Siendo un chico común y corriente, me había convertido en el bicho raro al que todos en el pueblo evitaban; incluso mi...",
+    "year": 2026,
+    "updatedAt": "2026-09-01T08:00:32Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=NoC00d5UQHo",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Un cofre del tesoro al principio: ¡Me hice rico en la antigüedad!",
+    "duration": 7704,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad-s1",
+      "seriesId": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad-ep-1",
+      "slug": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad-ep-1",
+      "seriesId": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad",
+      "seasonId": "lleno-un-cofre-del-tesoro-al-principio-me-hice-rico-en-la-antiguedad-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/NoC00d5UQHo"
+        }
+      ],
+      "updatedAt": "2026-09-01T08:00:32Z"
+    }
+  ]
+}

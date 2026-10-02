@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma",
+    "slug": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma",
+    "title": "Audio latino - Asesina aceptó el encargo y entró en una Torre de Fantasma",
+    "image": "https://i.ytimg.com/vi/c1_vQPAOMgw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-09-16T14:30:30Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=c1_vQPAOMgw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - Asesina aceptó el encargo y entró en una Torre de Fantasma.",
+    "duration": 6223,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma-s1",
+      "seriesId": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma-ep-1",
+      "slug": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma-ep-1",
+      "seriesId": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma",
+      "seasonId": "audio-latino-asesina-acepto-el-encargo-y-entro-en-una-torre-de-fantasma-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/c1_vQPAOMgw"
+        }
+      ],
+      "updatedAt": "2025-09-16T14:30:30Z"
+    }
+  ]
+}

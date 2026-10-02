@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani",
+    "slug": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani",
+    "title": "El poder de domar bestias desapareció, pero yo contrato cuatro bestias santas!💕#anime",
+    "image": "https://i.ytimg.com/vi/KbFomkdG7ow/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-05-18T20:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=KbFomkdG7ow",
+    "channel": "@anime_multiverso",
+    "originalTitle": "El poder de domar bestias desapareció, pero yo contrato cuatro bestias santas!💕#anime",
+    "duration": 7240,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani-s1",
+      "seriesId": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani-ep-1",
+      "slug": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani-ep-1",
+      "seriesId": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani",
+      "seasonId": "el-poder-de-domar-bestias-desaparecio-pero-yo-contrato-cuatro-bestias-santas-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KbFomkdG7ow"
+        }
+      ],
+      "updatedAt": "2026-05-18T20:00:08Z"
+    }
+  ]
+}

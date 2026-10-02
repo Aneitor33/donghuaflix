@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida",
+    "slug": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida",
+    "title": "Asesino del Grupo se infiltra en misión y afronta el mayor desafío de su vida",
+    "image": "https://i.ytimg.com/vi/KYFvj5gqi14/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-06-02T15:30:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=KYFvj5gqi14",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Asesino del Grupo se infiltra en misión y afronta el mayor desafío de su vida",
+    "duration": 6161,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida-s1",
+      "seriesId": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida-ep-1",
+      "slug": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida-ep-1",
+      "seriesId": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida",
+      "seasonId": "asesino-del-grupo-se-infiltra-en-mision-y-afronta-el-mayor-desafio-de-su-vida-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KYFvj5gqi14"
+        }
+      ],
+      "updatedAt": "2026-06-02T15:30:08Z"
+    }
+  ]
+}

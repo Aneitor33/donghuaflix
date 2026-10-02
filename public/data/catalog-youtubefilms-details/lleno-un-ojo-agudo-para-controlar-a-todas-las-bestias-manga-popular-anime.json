@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime",
+    "slug": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime",
+    "title": "【LLENO】Un ojo agudo para controlar a todas las bestias.#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/at6ht_uVCVc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Inesperadamente, transmigra a un mundo donde la doma de bestias es la actividad suprema, y ​​su talento ordinario lo expone al constante despreci...",
+    "year": 2026,
+    "updatedAt": "2026-06-15T10:00:02Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=at6ht_uVCVc",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Un ojo agudo para controlar a todas las bestias.#Manga popular #Anime",
+    "duration": 7343,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime-s1",
+      "seriesId": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime-ep-1",
+      "slug": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime-ep-1",
+      "seriesId": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime",
+      "seasonId": "lleno-un-ojo-agudo-para-controlar-a-todas-las-bestias-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/at6ht_uVCVc"
+        }
+      ],
+      "updatedAt": "2026-06-15T10:00:02Z"
+    }
+  ]
+}

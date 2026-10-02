@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse",
+    "slug": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse",
+    "title": "Audio Latino - 1 contra 2, Mercenarios por fin encontraron oportunidad de Rebelarse contra su Jefa",
+    "image": "https://i.ytimg.com/vi/69UWcR8dasw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-11-03T14:30:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=69UWcR8dasw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - 1 contra 2, Mercenarios por fin encontraron oportunidad de Rebelarse contra su Jefa",
+    "duration": 6336,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse-s1",
+      "seriesId": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse-ep-1",
+      "slug": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse-ep-1",
+      "seriesId": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse",
+      "seasonId": "audio-latino-1-contra-2-mercenarios-por-fin-encontraron-oportunidad-de-rebelarse-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/69UWcR8dasw"
+        }
+      ],
+      "updatedAt": "2025-11-03T14:30:04Z"
+    }
+  ]
+}

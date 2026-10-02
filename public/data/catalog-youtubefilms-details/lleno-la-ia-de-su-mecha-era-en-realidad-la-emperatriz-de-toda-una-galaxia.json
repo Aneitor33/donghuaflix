@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia",
+    "slug": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia",
+    "title": "【LLENO】¡La IA de su mecha era en realidad la Emperatriz de toda una galaxia!",
+    "image": "https://i.ytimg.com/vi/S6oeJ3BkIS0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Lo perdió todo por negarse a traicionar sus principios... pero el destino le entregó el mayor secreto del universo. Tras ser expulsado de la mayor corporación de mechas, un brillante...",
+    "year": 2026,
+    "updatedAt": "2026-08-01T04:00:36Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=S6oeJ3BkIS0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡La IA de su mecha era en realidad la Emperatriz de toda una galaxia!",
+    "duration": 8574,
+    "genres": [
+      "Drama",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia-s1",
+      "seriesId": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia-ep-1",
+      "slug": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia-ep-1",
+      "seriesId": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia",
+      "seasonId": "lleno-la-ia-de-su-mecha-era-en-realidad-la-emperatriz-de-toda-una-galaxia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/S6oeJ3BkIS0"
+        }
+      ],
+      "updatedAt": "2026-08-01T04:00:36Z"
+    }
+  ]
+}

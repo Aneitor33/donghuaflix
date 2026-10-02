@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim",
+    "slug": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim",
+    "title": "¡Protegió el Abismo 30 Años… Lo Traicionaron y Ascendió a Dios Frente a Todos!💕#anime",
+    "image": "https://i.ytimg.com/vi/Wnc8d0h7JBc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-15T20:00:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Wnc8d0h7JBc",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡Protegió el Abismo 30 Años… Lo Traicionaron y Ascendió a Dios Frente a Todos!💕#anime",
+    "duration": 4933,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim-s1",
+      "seriesId": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim-ep-1",
+      "slug": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim-ep-1",
+      "seriesId": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim",
+      "seasonId": "protegio-el-abismo-30-anos-lo-traicionaron-y-ascendio-a-dios-frente-a-todos-anim-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Wnc8d0h7JBc"
+        }
+      ],
+      "updatedAt": "2026-07-15T20:00:27Z"
+    }
+  ]
+}

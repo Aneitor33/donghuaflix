@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia",
+    "slug": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia",
+    "title": "Los Guerreros del Zodiaco, Yan Chixia Serie Pelicula de Accion Fantasia",
+    "image": "https://i.ytimg.com/vi/FEBKeuav6QM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"Los Guerreros del Zodíaco, Yan Chixia Serie\" cuenta la historia de la eterna criatura espiritual, el Lobo Rojo, que vino al mundo y trajo el caos. El líd...",
+    "year": 2024,
+    "updatedAt": "2024-11-30T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=FEBKeuav6QM",
+    "channel": "@moxispanish",
+    "originalTitle": "Los Guerreros del Zodiaco, Yan Chixia Serie | Pelicula de Accion Fantasia | Completa en Español HD",
+    "duration": 4381,
+    "genres": [
+      "Histórico",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia-s1",
+      "seriesId": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia-ep-1",
+      "slug": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia-ep-1",
+      "seriesId": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia",
+      "seasonId": "los-guerreros-del-zodiaco-yan-chixia-serie-pelicula-de-accion-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/FEBKeuav6QM"
+        }
+      ],
+      "updatedAt": "2024-11-30T16:00:06Z"
+    }
+  ]
+}

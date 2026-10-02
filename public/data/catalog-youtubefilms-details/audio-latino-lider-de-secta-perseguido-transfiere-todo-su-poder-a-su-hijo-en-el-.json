@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el-",
+    "slug": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el-",
+    "title": "Audio Latino - Líder de Secta Perseguido transfiere todo su poder a su Hijo en el último momento",
+    "image": "https://i.ytimg.com/vi/2dv-D4oNGMs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-30T14:45:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=2dv-D4oNGMs",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Líder de Secta Perseguido transfiere todo su poder a su Hijo  en el último momento",
+    "duration": 5127,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el--s1",
+      "seriesId": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el--ep-1",
+      "slug": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el--ep-1",
+      "seriesId": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el-",
+      "seasonId": "audio-latino-lider-de-secta-perseguido-transfiere-todo-su-poder-a-su-hijo-en-el--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2dv-D4oNGMs"
+        }
+      ],
+      "updatedAt": "2026-05-30T14:45:04Z"
+    }
+  ]
+}

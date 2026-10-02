@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia",
+    "slug": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia",
+    "title": "El Retorno del Santo de la Pintura Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/lfCOMxKyh5I/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"El Retorno del Santo de la Pintura\" narra la historia de Luoyang, la capital de los dioses, durante el período Kaiyuan, dinastía Tang. Allí, el antiguo a...",
+    "year": 2025,
+    "updatedAt": "2025-09-13T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=lfCOMxKyh5I",
+    "channel": "@moxispanish",
+    "originalTitle": "El Retorno del Santo de la Pintura | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 4581,
+    "genres": [
+      "Histórico",
+      "Drama",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia",
+      "seasonId": "el-retorno-del-santo-de-la-pintura-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/lfCOMxKyh5I"
+        }
+      ],
+      "updatedAt": "2025-09-13T16:00:06Z"
+    }
+  ]
+}

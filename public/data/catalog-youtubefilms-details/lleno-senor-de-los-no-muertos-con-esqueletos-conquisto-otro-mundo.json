@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo",
+    "slug": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo",
+    "title": "【LLENO】Señor de los No Muertos: Con Esqueletos Conquisto Otro Mundo",
+    "image": "https://i.ytimg.com/vi/WNmQL4Nu4kU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Tras el cambio repentino del mundo, Qin Feng se convierte accidentalmente en el Señor de los No Muertos. Empieza con esqueletos comunes para gestionar su territorio y reclutar aliados....",
+    "year": 2026,
+    "updatedAt": "2026-09-08T02:00:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WNmQL4Nu4kU",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Señor de los No Muertos: Con Esqueletos Conquisto Otro Mundo",
+    "duration": 15986,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo-s1",
+      "seriesId": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo-ep-1",
+      "slug": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo-ep-1",
+      "seriesId": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo",
+      "seasonId": "lleno-senor-de-los-no-muertos-con-esqueletos-conquisto-otro-mundo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WNmQL4Nu4kU"
+        }
+      ],
+      "updatedAt": "2026-09-08T02:00:17Z"
+    }
+  ]
+}

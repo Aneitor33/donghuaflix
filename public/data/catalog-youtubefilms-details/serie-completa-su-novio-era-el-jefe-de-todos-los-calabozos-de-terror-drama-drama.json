@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama",
+    "slug": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama",
+    "title": "💥Serie completa💥 [Su novio era el jefe de todos los calabozos de terror] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/t4E_HCxhDwQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Cuando terminaron su relación, su novio afirmó ser el jefe final de una instancia de juego. Shen Jiahe creyó que no era más que una excusa de un hombre despreciable, hasta que entró por error en un...",
+    "year": 2026,
+    "updatedAt": "2026-06-16T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=t4E_HCxhDwQ",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Su novio era el jefe de todos los calabozos de terror] #drama #dramacorto",
+    "duration": 9146,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama-s1",
+      "seriesId": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama-ep-1",
+      "slug": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama-ep-1",
+      "seriesId": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama",
+      "seasonId": "serie-completa-su-novio-era-el-jefe-de-todos-los-calabozos-de-terror-drama-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/t4E_HCxhDwQ"
+        }
+      ],
+      "updatedAt": "2026-06-16T14:00:06Z"
+    }
+  ]
+}

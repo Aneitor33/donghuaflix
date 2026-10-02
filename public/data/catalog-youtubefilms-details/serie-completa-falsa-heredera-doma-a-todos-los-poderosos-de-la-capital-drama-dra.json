@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra",
+    "slug": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra",
+    "title": "💥Serie completa💥 [Falsa heredera doma a todos los poderosos de la capital] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/p6DRnYuHRjY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Yun Qi, la princesa mayor que dominaba toda la corte y era experta en manipular los corazones ajenos, se transmigró accidentalmente a un relato que la retrataba de forma vil, convirtiéndose en la i...",
+    "year": 2026,
+    "updatedAt": "2026-06-17T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=p6DRnYuHRjY",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Falsa heredera doma a todos los poderosos de la capital] #drama #dramacorto",
+    "duration": 9369,
+    "genres": [
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra-s1",
+      "seriesId": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra-ep-1",
+      "slug": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra-ep-1",
+      "seriesId": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra",
+      "seasonId": "serie-completa-falsa-heredera-doma-a-todos-los-poderosos-de-la-capital-drama-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/p6DRnYuHRjY"
+        }
+      ],
+      "updatedAt": "2026-06-17T14:00:06Z"
+    }
+  ]
+}

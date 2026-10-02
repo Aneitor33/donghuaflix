@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime",
+    "slug": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime",
+    "title": "【LLENO】Soberano de la mazmorra contra la renacida#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/y4vfQrMCaWg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Cuando el videojuego virtual se fusiona completamente con la realidad, se celebra una ceremonia global para obtener cartas de personaje. Todo el...",
+    "year": 2026,
+    "updatedAt": "2026-06-29T04:00:36Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=y4vfQrMCaWg",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Soberano de la mazmorra contra la renacida#Manga popular #Anime",
+    "duration": 6362,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime-s1",
+      "seriesId": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime-ep-1",
+      "slug": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime-ep-1",
+      "seriesId": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime",
+      "seasonId": "lleno-soberano-de-la-mazmorra-contra-la-renacida-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/y4vfQrMCaWg"
+        }
+      ],
+      "updatedAt": "2026-06-29T04:00:36Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara",
+    "slug": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara",
+    "title": "Película en Español - Mujer Acosada, el General ordenó al su Ejército que no dejara a Nadie con Vida",
+    "image": "https://i.ytimg.com/vi/KhfE1e8O9dE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-07-01T14:30:26Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=KhfE1e8O9dE",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Mujer Acosada, el General ordenó al su Ejército que no dejara a Nadie con Vida",
+    "duration": 9506,
+    "genres": [
+      "Acción",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara-s1",
+      "seriesId": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara-ep-1",
+      "slug": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara-ep-1",
+      "seriesId": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara",
+      "seasonId": "pelicula-en-espanol-mujer-acosada-el-general-ordeno-al-su-ejercito-que-no-dejara-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KhfE1e8O9dE"
+        }
+      ],
+      "updatedAt": "2025-07-01T14:30:26Z"
+    }
+  ]
+}

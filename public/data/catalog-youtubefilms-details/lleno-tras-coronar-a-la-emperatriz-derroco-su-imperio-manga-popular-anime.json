@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime",
+    "slug": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime",
+    "title": "【LLENO】Tras coronar a la emperatriz, derroco su imperio#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/TQfgKd_Ov4I/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Luchó bañado en sangre durante mil años, exterminando demonios y monstruos de todo tipo. Dedicó toda su energía cultivativa para ayudar a una muj...",
+    "year": 2026,
+    "updatedAt": "2026-06-11T10:00:09Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=TQfgKd_Ov4I",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Tras coronar a la emperatriz, derroco su imperio#Manga popular #Anime",
+    "duration": 7506,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime-s1",
+      "seriesId": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime-ep-1",
+      "slug": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime-ep-1",
+      "seriesId": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime",
+      "seasonId": "lleno-tras-coronar-a-la-emperatriz-derroco-su-imperio-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/TQfgKd_Ov4I"
+        }
+      ],
+      "updatedAt": "2026-06-11T10:00:09Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor",
+    "slug": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor",
+    "title": "【LLENO】Todos eran simples sirvientes… ¡Pero ocultaban el poder de Emperadores Inmortales!",
+    "image": "https://i.ytimg.com/vi/sL0VlnS25Uo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 ¡Todos pensaban que era una secta en decadencia, pero sus simples discípulos escondían un poder inimaginable! Después de viajar a un mundo de fantasía y convertirse en el maestro de u...",
+    "year": 2026,
+    "updatedAt": "2026-08-05T04:00:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=sL0VlnS25Uo",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Todos eran simples sirvientes… ¡Pero ocultaban el poder de Emperadores Inmortales!",
+    "duration": 9033,
+    "genres": [
+      "Artes Marciales",
+      "Drama",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor-s1",
+      "seriesId": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor-ep-1",
+      "slug": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor-ep-1",
+      "seriesId": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor",
+      "seasonId": "lleno-todos-eran-simples-sirvientes-pero-ocultaban-el-poder-de-emperadores-inmor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/sL0VlnS25Uo"
+        }
+      ],
+      "updatedAt": "2026-08-05T04:00:12Z"
+    }
+  ]
+}

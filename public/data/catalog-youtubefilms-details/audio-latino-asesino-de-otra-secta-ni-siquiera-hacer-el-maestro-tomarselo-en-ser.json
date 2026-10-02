@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser",
+    "slug": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser",
+    "title": "Audio Latino - Asesino de otra secta ni siquiera hacer el Maestro tomárselo en serio con un Arma",
+    "image": "https://i.ytimg.com/vi/Cs_r-8XlQ2g/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-07-28T14:30:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Cs_r-8XlQ2g",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Asesino de otra secta ni siquiera hacer el Maestro tomárselo en serio con un Arma...",
+    "duration": 8151,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser-s1",
+      "seriesId": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser-ep-1",
+      "slug": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser-ep-1",
+      "seriesId": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser",
+      "seasonId": "audio-latino-asesino-de-otra-secta-ni-siquiera-hacer-el-maestro-tomarselo-en-ser-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Cs_r-8XlQ2g"
+        }
+      ],
+      "updatedAt": "2025-07-28T14:30:13Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v",
+    "slug": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v",
+    "title": "Audio Latino - Explorador es Insultado, el General moviliza todo el Ejército para Vengarlo!",
+    "image": "https://i.ytimg.com/vi/6V-M6kJtAis/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-06-01T14:30:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6V-M6kJtAis",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Explorador es Insultado, el General moviliza todo el Ejército para Vengarlo!",
+    "duration": 8418,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v-s1",
+      "seriesId": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v-ep-1",
+      "slug": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v-ep-1",
+      "seriesId": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v",
+      "seasonId": "audio-latino-explorador-es-insultado-el-general-moviliza-todo-el-ejercito-para-v-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6V-M6kJtAis"
+        }
+      ],
+      "updatedAt": "2026-06-01T14:30:13Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res",
+    "slug": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res",
+    "title": "Audio Latino - Verdugo ejecuta a la Testigo, pero llega el Ejército de Monjes a rescatarla",
+    "image": "https://i.ytimg.com/vi/kFPUCfk_1RM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-04-03T14:30:39Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=kFPUCfk_1RM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Verdugo ejecuta a la Testigo, pero llega el Ejército de Monjes a rescatarla.",
+    "duration": 5057,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res-s1",
+      "seriesId": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res-ep-1",
+      "slug": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res-ep-1",
+      "seriesId": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res",
+      "seasonId": "audio-latino-verdugo-ejecuta-a-la-testigo-pero-llega-el-ejercito-de-monjes-a-res-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kFPUCfk_1RM"
+        }
+      ],
+      "updatedAt": "2026-04-03T14:30:39Z"
+    }
+  ]
+}

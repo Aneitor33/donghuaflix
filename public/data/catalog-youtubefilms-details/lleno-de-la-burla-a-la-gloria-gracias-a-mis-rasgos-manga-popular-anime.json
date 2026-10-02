@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime",
+    "slug": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime",
+    "title": "【LLENO】De la burla a la gloria gracias a mis rasgos#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/75ZdeJORGxI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:En este mundo donde todos adquieren clases y las invocadoras mandan, es constantemente burlado por no tener dinero para entrenar a su compañero....",
+    "year": 2026,
+    "updatedAt": "2026-06-09T10:00:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=75ZdeJORGxI",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】De la burla a la gloria gracias a mis rasgos#Manga popular #Anime",
+    "duration": 8237,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime-s1",
+      "seriesId": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime-ep-1",
+      "slug": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime-ep-1",
+      "seriesId": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime",
+      "seasonId": "lleno-de-la-burla-a-la-gloria-gracias-a-mis-rasgos-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/75ZdeJORGxI"
+        }
+      ],
+      "updatedAt": "2026-06-09T10:00:07Z"
+    }
+  ]
+}

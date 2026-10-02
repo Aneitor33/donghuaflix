@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor-",
+    "slug": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor-",
+    "title": "Audio Latino - Asesino del Grupo se infiltra en una misión y se enfrenta al Mayor Desafío de su vida",
+    "image": "https://i.ytimg.com/vi/pkD4YSi-TM8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-21T14:30:21Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=pkD4YSi-TM8",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Asesino del Grupo se infiltra en una misión y se enfrenta al Mayor Desafío de su vida",
+    "duration": 6161,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor--s1",
+      "seriesId": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor--ep-1",
+      "slug": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor--ep-1",
+      "seriesId": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor-",
+      "seasonId": "audio-latino-asesino-del-grupo-se-infiltra-en-una-mision-y-se-enfrenta-al-mayor--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/pkD4YSi-TM8"
+        }
+      ],
+      "updatedAt": "2026-05-21T14:30:21Z"
+    }
+  ]
+}

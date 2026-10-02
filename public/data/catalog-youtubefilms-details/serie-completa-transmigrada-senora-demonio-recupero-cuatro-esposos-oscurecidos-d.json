@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d",
+    "slug": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d",
+    "title": "💥Serie completa💥 [Transmigrada Señora Demonio: Recupero cuatro esposos oscurecidos!] #drama #ai",
+    "image": "https://i.ytimg.com/vi/DxF49yxcNi8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Tras una inesperada transmigración, ella se convierte en Shen Yao, la soberana del reino demoníaco. El cuerpo original estaba perdidamente enamorada de alguien que no le correspondía. En un arranqu...",
+    "year": 2026,
+    "updatedAt": "2026-07-26T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=DxF49yxcNi8",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Transmigrada Señora Demonio: Recupero cuatro esposos oscurecidos!] #drama #ai",
+    "duration": 8518,
+    "genres": [
+      "Histórico",
+      "Fantasía/Cultivación",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d-s1",
+      "seriesId": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d-ep-1",
+      "slug": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d-ep-1",
+      "seriesId": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d",
+      "seasonId": "serie-completa-transmigrada-senora-demonio-recupero-cuatro-esposos-oscurecidos-d-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/DxF49yxcNi8"
+        }
+      ],
+      "updatedAt": "2026-07-26T14:00:06Z"
+    }
+  ]
+}

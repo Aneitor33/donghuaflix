@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime",
+    "slug": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime",
+    "title": "Le quitaron su talento, pero despertó un sistema supremo de domar bestias!💕#anime",
+    "image": "https://i.ytimg.com/vi/0YHOcmIdNSQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-05-20T20:00:39Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=0YHOcmIdNSQ",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Le quitaron su talento, pero despertó un sistema supremo de domar bestias!💕#anime",
+    "duration": 6172,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime-s1",
+      "seriesId": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime-ep-1",
+      "slug": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime-ep-1",
+      "seriesId": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime",
+      "seasonId": "le-quitaron-su-talento-pero-desperto-un-sistema-supremo-de-domar-bestias-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0YHOcmIdNSQ"
+        }
+      ],
+      "updatedAt": "2026-05-20T20:00:39Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime",
+    "slug": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime",
+    "title": "Regicida Dragón Negro traicionado, renace como lagartija inútil!💕#anime",
+    "image": "https://i.ytimg.com/vi/iCjYDrY9wzA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-05-21T20:00:30Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=iCjYDrY9wzA",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Regicida Dragón Negro traicionado, renace como lagartija inútil!💕#anime",
+    "duration": 7239,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime-s1",
+      "seriesId": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime-ep-1",
+      "slug": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime-ep-1",
+      "seriesId": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime",
+      "seasonId": "regicida-dragon-negro-traicionado-renace-como-lagartija-inutil-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/iCjYDrY9wzA"
+        }
+      ],
+      "updatedAt": "2026-05-21T20:00:30Z"
+    }
+  ]
+}

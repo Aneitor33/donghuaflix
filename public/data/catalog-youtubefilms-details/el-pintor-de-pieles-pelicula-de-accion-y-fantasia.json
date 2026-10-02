@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia",
+    "slug": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia",
+    "title": "El Pintor de Pieles Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/kDNpTO9D_Vk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"El Pintor de Pieles\" narra la historia del aura que se extiende entre el cielo y la tierra. Durante miles de años de vicisitudes, se han formado innumera...",
+    "year": 2025,
+    "updatedAt": "2025-08-16T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=kDNpTO9D_Vk",
+    "channel": "@moxispanish",
+    "originalTitle": "El Pintor de Pieles | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 4727,
+    "genres": [
+      "Acción",
+      "Drama",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia",
+      "seasonId": "el-pintor-de-pieles-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kDNpTO9D_Vk"
+        }
+      ],
+      "updatedAt": "2025-08-16T16:00:06Z"
+    }
+  ]
+}

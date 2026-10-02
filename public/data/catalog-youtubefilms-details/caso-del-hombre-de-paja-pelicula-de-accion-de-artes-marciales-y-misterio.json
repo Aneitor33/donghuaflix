@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio",
+    "slug": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio",
+    "title": "Caso del Hombre de Paja Pelicula de Accion de Artes Marciales y Misterio",
+    "image": "https://i.ytimg.com/vi/2B65rHlvZO0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales y misterio \"Detective Song Ci, Caso del Hombre de Paja\" narra la historia de la dinastía Song del Sur, cuando el hijo de Yu murió miserablemente e...",
+    "year": 2025,
+    "updatedAt": "2025-06-28T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=2B65rHlvZO0",
+    "channel": "@moxispanish",
+    "originalTitle": "Caso del Hombre de Paja | Pelicula de Accion de Artes Marciales y Misterio | Completa en Español HD",
+    "duration": 4131,
+    "genres": [
+      "Histórico",
+      "Drama",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio-s1",
+      "seriesId": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio-ep-1",
+      "slug": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio-ep-1",
+      "seriesId": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio",
+      "seasonId": "caso-del-hombre-de-paja-pelicula-de-accion-de-artes-marciales-y-misterio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2B65rHlvZO0"
+        }
+      ],
+      "updatedAt": "2025-06-28T16:00:06Z"
+    }
+  ]
+}

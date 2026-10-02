@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac",
+    "slug": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac",
+    "title": "💥Serie completa💥 [Señor Demonio Destructor solo quiere lavar biberones ] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/OBYonnwhvmI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "La niña huérfana de tres años Yuanbao tuvo un destino muy difícil y fue maltratada por su padre adoptivo, el Marqués de Lancheng. En realidad, ella pertenece al linaje de la familia Xie y es la hij...",
+    "year": 2026,
+    "updatedAt": "2026-06-27T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=OBYonnwhvmI",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Señor Demonio Destructor solo quiere lavar biberones ] #drama #dramacorto",
+    "duration": 10576,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac-s1",
+      "seriesId": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac-ep-1",
+      "slug": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac-ep-1",
+      "seriesId": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac",
+      "seasonId": "serie-completa-senor-demonio-destructor-solo-quiere-lavar-biberones-drama-dramac-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OBYonnwhvmI"
+        }
+      ],
+      "updatedAt": "2026-06-27T14:00:06Z"
+    }
+  ]
+}

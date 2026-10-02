@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia",
+    "slug": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia",
+    "title": "Maestro de las Toxinas Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/v2YJCjEmG4A/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"Maestro de las Toxinas\" trata sobre la magia venenosa Gu china: hace algunos años, Lan Zuo, un maestro zerg, se cayó de una cueva de una aldea durante un...",
+    "year": 2025,
+    "updatedAt": "2025-11-19T16:01:34Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=v2YJCjEmG4A",
+    "channel": "@moxispanish",
+    "originalTitle": "Maestro de las Toxinas | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 4270,
+    "genres": [
+      "Acción",
+      "Fantasía/Cultivación",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia",
+      "seasonId": "maestro-de-las-toxinas-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/v2YJCjEmG4A"
+        }
+      ],
+      "updatedAt": "2025-11-19T16:01:34Z"
+    }
+  ]
+}

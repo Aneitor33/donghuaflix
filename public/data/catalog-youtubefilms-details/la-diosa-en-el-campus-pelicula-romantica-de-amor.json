@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-diosa-en-el-campus-pelicula-romantica-de-amor",
+    "slug": "la-diosa-en-el-campus-pelicula-romantica-de-amor",
+    "title": "La Diosa en el Campus Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/gPdE44QmlOw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor \"La Diosa en el Campus\" cuenta la historia de amor entre Ma Da del Departamento de Medicina Veterinaria y Tao Aiai, la Diosa del Campus del Departamento de E...",
+    "year": 2025,
+    "updatedAt": "2025-05-21T16:01:10Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=gPdE44QmlOw",
+    "channel": "@moxispanish",
+    "originalTitle": "La Diosa en el Campus | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 7703,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-diosa-en-el-campus-pelicula-romantica-de-amor-s1",
+      "seriesId": "la-diosa-en-el-campus-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-diosa-en-el-campus-pelicula-romantica-de-amor-ep-1",
+      "slug": "la-diosa-en-el-campus-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "la-diosa-en-el-campus-pelicula-romantica-de-amor",
+      "seasonId": "la-diosa-en-el-campus-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/gPdE44QmlOw"
+        }
+      ],
+      "updatedAt": "2025-05-21T16:01:10Z"
+    }
+  ]
+}

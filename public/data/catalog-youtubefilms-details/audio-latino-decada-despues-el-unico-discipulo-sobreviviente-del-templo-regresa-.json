@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa-",
+    "slug": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa-",
+    "title": "Audio Latino - Década después, el Único Discípulo Sobreviviente del templo regresa para Vengarse",
+    "image": "https://i.ytimg.com/vi/PvWK0lEihBM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-24T15:00:43Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=PvWK0lEihBM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Década después, el Único Discípulo Sobreviviente del templo regresa para Vengarse.",
+    "duration": 6189,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa--s1",
+      "seriesId": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa--ep-1",
+      "slug": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa--ep-1",
+      "seriesId": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa-",
+      "seasonId": "audio-latino-decada-despues-el-unico-discipulo-sobreviviente-del-templo-regresa--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PvWK0lEihBM"
+        }
+      ],
+      "updatedAt": "2026-02-24T15:00:43Z"
+    }
+  ]
+}

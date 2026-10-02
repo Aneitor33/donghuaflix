@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste",
+    "slug": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste",
+    "title": "【LLENO】¡Se burlaron de mi clase, pero invoqué a un DIOS y los aplasté! 👹🔥",
+    "image": "https://i.ytimg.com/vi/ver_QggshlA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción 】 En el día del despertar, todos se burlaron de él por elegir la clase más débil. 🏫❌ Pero lo que nadie sabía es que desbloqueó un sistema de invocación de nivel DIOS. Mientras otros p...",
+    "year": 2026,
+    "updatedAt": "2026-07-19T04:00:15Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ver_QggshlA",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Se burlaron de mi clase, pero invoqué a un DIOS y los aplasté! 👹🔥",
+    "duration": 6364,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste-s1",
+      "seriesId": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste-ep-1",
+      "slug": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste-ep-1",
+      "seriesId": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste",
+      "seasonId": "lleno-se-burlaron-de-mi-clase-pero-invoque-a-un-dios-y-los-aplaste-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ver_QggshlA"
+        }
+      ],
+      "updatedAt": "2026-07-19T04:00:15Z"
+    }
+  ]
+}

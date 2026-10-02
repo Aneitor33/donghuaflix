@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que-",
+    "slug": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que-",
+    "title": "Película en Español - Niño apunta con el Arma a su Abuelo, sin darse cuenta de que era francotirador",
+    "image": "https://i.ytimg.com/vi/7ncv0p4T5HY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-05-22T14:00:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7ncv0p4T5HY",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Niño apunta con el Arma a su Abuelo, sin darse cuenta de que era francotirador",
+    "duration": 13135,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que--s1",
+      "seriesId": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que--ep-1",
+      "slug": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que--ep-1",
+      "seriesId": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que-",
+      "seasonId": "pelicula-en-espanol-nino-apunta-con-el-arma-a-su-abuelo-sin-darse-cuenta-de-que--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7ncv0p4T5HY"
+        }
+      ],
+      "updatedAt": "2025-05-22T14:00:11Z"
+    }
+  ]
+}

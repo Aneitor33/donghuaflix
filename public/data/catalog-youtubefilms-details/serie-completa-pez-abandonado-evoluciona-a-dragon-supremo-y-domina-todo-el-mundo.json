@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo",
+    "slug": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo",
+    "title": "💥Serie completa💥 [Pez abandonado evoluciona a dragón supremo y domina todo el mundo] #drama",
+    "image": "https://i.ytimg.com/vi/J4Zd4GtpFkk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El Dragón Dorado Supremo del Mundo Primordial cayó tras ser emboscado por sorpresa. Al renacer, se convirtió en un pez mediocre y carente de talento, y fue cruelmente abandonado por la joven genio...",
+    "year": 2026,
+    "updatedAt": "2026-07-01T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=J4Zd4GtpFkk",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Pez abandonado evoluciona a dragón supremo y domina todo el mundo] #drama",
+    "duration": 6346,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo-s1",
+      "seriesId": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo-ep-1",
+      "slug": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo-ep-1",
+      "seriesId": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo",
+      "seasonId": "serie-completa-pez-abandonado-evoluciona-a-dragon-supremo-y-domina-todo-el-mundo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/J4Zd4GtpFkk"
+        }
+      ],
+      "updatedAt": "2026-07-01T14:00:06Z"
+    }
+  ]
+}

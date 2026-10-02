@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u",
+    "slug": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u",
+    "title": "Audio latino - Tiroteo Ultrarrápido: El SWAT se enfrenta a una Pandilla Armada en una isla",
+    "image": "https://i.ytimg.com/vi/FpRw285TaR8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-09-15T14:30:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=FpRw285TaR8",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - Tiroteo Ultrarrápido: El SWAT se enfrenta a una Pandilla Armada en una isla",
+    "duration": 4300,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u-s1",
+      "seriesId": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u-ep-1",
+      "slug": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u-ep-1",
+      "seriesId": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u",
+      "seasonId": "audio-latino-tiroteo-ultrarrapido-el-swat-se-enfrenta-a-una-pandilla-armada-en-u-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/FpRw285TaR8"
+        }
+      ],
+      "updatedAt": "2025-09-15T14:30:12Z"
+    }
+  ]
+}

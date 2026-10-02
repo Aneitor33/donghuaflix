@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+    "slug": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+    "title": "Rey del Juego, Batalla en Alta Mar Pelicula de Accion y Drama",
+    "image": "https://i.ytimg.com/vi/nNjxn43cyZQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y drama \"Rey del Juego, Batalla en Alta Mar\" trata sobre un barco de apuestas llamado Bi'an en aguas internacionales donde es un paraíso para los jugadores. Hace 15...",
+    "year": 2025,
+    "updatedAt": "2025-07-09T16:01:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nNjxn43cyZQ",
+    "channel": "@moxispanish",
+    "originalTitle": "Rey del Juego, Batalla en Alta Mar | Pelicula de Accion y Drama | Completa en Español HD",
+    "duration": 5596,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama-s1",
+      "seriesId": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
+      "slug": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
+      "seriesId": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "seasonId": "rey-del-juego-batalla-en-alta-mar-pelicula-de-accion-y-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nNjxn43cyZQ"
+        }
+      ],
+      "updatedAt": "2025-07-09T16:01:31Z"
+    }
+  ]
+}

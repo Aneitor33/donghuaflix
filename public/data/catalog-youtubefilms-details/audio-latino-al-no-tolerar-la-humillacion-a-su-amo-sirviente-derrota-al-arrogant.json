@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant",
+    "slug": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant",
+    "title": "Audio Latino - Al no tolerar la Humillación a su Amo, Sirviente derrota al Arrogante con su técnica",
+    "image": "https://i.ytimg.com/vi/pC8yAQjN6Rc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-06-29T14:30:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=pC8yAQjN6Rc",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Al no tolerar la Humillación a su Amo, Sirviente derrota al Arrogante con su técnica",
+    "duration": 7248,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant-s1",
+      "seriesId": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant-ep-1",
+      "slug": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant-ep-1",
+      "seriesId": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant",
+      "seasonId": "audio-latino-al-no-tolerar-la-humillacion-a-su-amo-sirviente-derrota-al-arrogant-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/pC8yAQjN6Rc"
+        }
+      ],
+      "updatedAt": "2026-06-29T14:30:12Z"
+    }
+  ]
+}

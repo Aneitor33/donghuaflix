@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador",
+    "slug": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador",
+    "title": "General toma a Huérfano como aprendiz, años después se transforma en Vengador",
+    "image": "https://i.ytimg.com/vi/vyeah3qP400/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-05-27T15:30:33Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=vyeah3qP400",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] General toma a Huérfano como aprendiz, años después se transforma en Vengador",
+    "duration": 7011,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador-s1",
+      "seriesId": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador-ep-1",
+      "slug": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador-ep-1",
+      "seriesId": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador",
+      "seasonId": "general-toma-a-huerfano-como-aprendiz-anos-despues-se-transforma-en-vengador-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/vyeah3qP400"
+        }
+      ],
+      "updatedAt": "2026-05-27T15:30:33Z"
+    }
+  ]
+}

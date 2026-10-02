@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d",
+    "slug": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d",
+    "title": "💥Serie completa💥 [Mitad humana, mitad zombi: ¡Soy la consentida de ambas razas!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/G7x4KFeUIo8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El apocalipsis llega y los zombis campan a sus anchas. La humanidad construye con dificultad su última base de asentamiento y sobrevive gracias a los usuarios de superpoderes. Tu Sanqi nunca imagin...",
+    "year": 2026,
+    "updatedAt": "2026-08-03T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=G7x4KFeUIo8",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Mitad humana, mitad zombi: ¡Soy la consentida de ambas razas!] #drama #dramacorto",
+    "duration": 8477,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d-s1",
+      "seriesId": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d-ep-1",
+      "slug": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d-ep-1",
+      "seriesId": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d",
+      "seasonId": "serie-completa-mitad-humana-mitad-zombi-soy-la-consentida-de-ambas-razas-drama-d-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/G7x4KFeUIo8"
+        }
+      ],
+      "updatedAt": "2026-08-03T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto",
+    "slug": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto",
+    "title": "💥Serie completa💥 [Renacido condenado a muerte: ¡Revancha empresarial!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/RgrWJjW3kn8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "En su vida pasada, Qin Jiang vagó por el bajo mundo y cometió innumerables crímenes. Finalmente fue condenado a muerte, separado de sus hermanos y sumergido en un arrepentimiento infinito. Al renac...",
+    "year": 2026,
+    "updatedAt": "2026-07-20T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=RgrWJjW3kn8",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Renacido condenado a muerte: ¡Revancha empresarial!] #drama #dramacorto",
+    "duration": 8145,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto-s1",
+      "seriesId": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto-ep-1",
+      "slug": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto",
+      "seasonId": "serie-completa-renacido-condenado-a-muerte-revancha-empresarial-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/RgrWJjW3kn8"
+        }
+      ],
+      "updatedAt": "2026-07-20T14:00:06Z"
+    }
+  ]
+}

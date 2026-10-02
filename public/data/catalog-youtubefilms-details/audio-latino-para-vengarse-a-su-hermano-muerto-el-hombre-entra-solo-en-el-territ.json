@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ",
+    "slug": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ",
+    "title": "Audio Latino - Para vengarse a su hermano muerto, el Hombre entra solo en el territorio del General",
+    "image": "https://i.ytimg.com/vi/6sFsyDNm6kM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-14T14:30:05Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6sFsyDNm6kM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Para vengarse a su hermano muerto, el Hombre entra solo en el territorio del General",
+    "duration": 8305,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ-s1",
+      "seriesId": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ-ep-1",
+      "slug": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ-ep-1",
+      "seriesId": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ",
+      "seasonId": "audio-latino-para-vengarse-a-su-hermano-muerto-el-hombre-entra-solo-en-el-territ-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6sFsyDNm6kM"
+        }
+      ],
+      "updatedAt": "2026-02-14T14:30:05Z"
+    }
+  ]
+}

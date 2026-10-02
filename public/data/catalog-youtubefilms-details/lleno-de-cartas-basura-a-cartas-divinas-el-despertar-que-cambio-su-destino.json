@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino",
+    "slug": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino",
+    "title": "【LLENO】¡De Cartas Basura a Cartas Divinas! El Despertar que Cambió su Destino",
+    "image": "https://i.ytimg.com/vi/tsZ53uTf-gI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 En un mundo dominado por monstruos, los humanos dependen de las cartas mágicas para sobrevivir. Jiang Han comienza con un montón de cartas basura y se convierte en el blanco de todas...",
+    "year": 2026,
+    "updatedAt": "2026-08-16T07:00:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=tsZ53uTf-gI",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡De Cartas Basura a Cartas Divinas! El Despertar que Cambió su Destino",
+    "duration": 8122,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino-s1",
+      "seriesId": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino-ep-1",
+      "slug": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino-ep-1",
+      "seriesId": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino",
+      "seasonId": "lleno-de-cartas-basura-a-cartas-divinas-el-despertar-que-cambio-su-destino-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tsZ53uTf-gI"
+        }
+      ],
+      "updatedAt": "2026-08-16T07:00:13Z"
+    }
+  ]
+}

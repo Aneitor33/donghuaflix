@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re",
+    "slug": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re",
+    "title": "Audio latino - El Poli entró Solo en el escondite del traficante de drogas para rescatar a su hijo",
+    "image": "https://i.ytimg.com/vi/1h1uv6yhyNw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-09-06T14:30:02Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=1h1uv6yhyNw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - El Poli entró Solo en el escondite del traficante de drogas para rescatar a su hijo.",
+    "duration": 5423,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re-s1",
+      "seriesId": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re-ep-1",
+      "slug": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re-ep-1",
+      "seriesId": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re",
+      "seasonId": "audio-latino-el-poli-entro-solo-en-el-escondite-del-traficante-de-drogas-para-re-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/1h1uv6yhyNw"
+        }
+      ],
+      "updatedAt": "2025-09-06T14:30:02Z"
+    }
+  ]
+}

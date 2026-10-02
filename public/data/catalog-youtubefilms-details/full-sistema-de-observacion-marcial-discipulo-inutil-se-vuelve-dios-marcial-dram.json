@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram",
+    "slug": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram",
+    "title": "💥FULL💥[Sistema de Observación Marcial: Discípulo inútil se vuelve dios marcial!]#drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/CHDmThMFuks/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Li Yun transmigra inesperadamente a un vasto mundo de artes marciales y se convierte en un discípulo externo inútil de quinto grado de la Secta Tianwu. Sufre constantes miradas frías, rechazo y aco...",
+    "year": 2026,
+    "updatedAt": "2026-09-02T13:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CHDmThMFuks",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[Sistema de Observación Marcial: Discípulo inútil se vuelve dios marcial!]#drama #dramacorto",
+    "duration": 10018,
+    "genres": [
+      "Artes Marciales",
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram-s1",
+      "seriesId": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram-ep-1",
+      "slug": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram-ep-1",
+      "seriesId": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram",
+      "seasonId": "full-sistema-de-observacion-marcial-discipulo-inutil-se-vuelve-dios-marcial-dram-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/CHDmThMFuks"
+        }
+      ],
+      "updatedAt": "2026-09-02T13:00:06Z"
+    }
+  ]
+}

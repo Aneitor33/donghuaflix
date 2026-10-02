@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime",
+    "slug": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime",
+    "title": "Regresó tras Años Inmortales: ¡Protegió a su Familia y Vengó el Pasado!💕#anime",
+    "image": "https://i.ytimg.com/vi/MG9uwSmLuuo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-10-01T21:00:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=MG9uwSmLuuo",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Regresó tras 6000 Años Inmortales: ¡Protegió a su Familia y Vengó el Pasado!💕#anime",
+    "duration": 4857,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime-s1",
+      "seriesId": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime-ep-1",
+      "slug": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime-ep-1",
+      "seriesId": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime",
+      "seasonId": "regreso-tras-anos-inmortales-protegio-a-su-familia-y-vengo-el-pasado-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/MG9uwSmLuuo"
+        }
+      ],
+      "updatedAt": "2026-10-01T21:00:04Z"
+    }
+  ]
+}

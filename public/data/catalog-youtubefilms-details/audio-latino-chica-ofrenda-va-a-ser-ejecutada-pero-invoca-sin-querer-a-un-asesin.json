@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin",
+    "slug": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin",
+    "title": "Audio Latino - Chica Ofrenda va a ser Ejecutada, pero invoca sin querer a un Asesino Espiritual",
+    "image": "https://i.ytimg.com/vi/RMVkSVpKMxY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-04-20T14:30:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=RMVkSVpKMxY",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Chica Ofrenda va a ser Ejecutada, pero invoca sin querer a un Asesino Espiritual.",
+    "duration": 5763,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin-s1",
+      "seriesId": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin-ep-1",
+      "slug": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin-ep-1",
+      "seriesId": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin",
+      "seasonId": "audio-latino-chica-ofrenda-va-a-ser-ejecutada-pero-invoca-sin-querer-a-un-asesin-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/RMVkSVpKMxY"
+        }
+      ],
+      "updatedAt": "2026-04-20T14:30:31Z"
+    }
+  ]
+}

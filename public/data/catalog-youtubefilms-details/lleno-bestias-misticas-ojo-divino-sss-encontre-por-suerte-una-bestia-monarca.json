@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca",
+    "slug": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca",
+    "title": "【LLENO】Bestias Místicas: Ojo Divino SSS, Encontré por Suerte una Bestia Monarca",
+    "image": "https://i.ytimg.com/vi/UD056SA-tIg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Pensaba que despertar el Ojo Divino de grado SSS me haría famoso, pero una piedra de despertar defectuosa me marcó como alguien sin talento. Todo el instituto se burlaba de mí, y mi no...",
+    "year": 2026,
+    "updatedAt": "2026-09-25T02:00:20Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=UD056SA-tIg",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Bestias Místicas: Ojo Divino SSS, Encontré por Suerte una Bestia Monarca",
+    "duration": 16572,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca-s1",
+      "seriesId": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca-ep-1",
+      "slug": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca-ep-1",
+      "seriesId": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca",
+      "seasonId": "lleno-bestias-misticas-ojo-divino-sss-encontre-por-suerte-una-bestia-monarca-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UD056SA-tIg"
+        }
+      ],
+      "updatedAt": "2026-09-25T02:00:20Z"
+    }
+  ]
+}

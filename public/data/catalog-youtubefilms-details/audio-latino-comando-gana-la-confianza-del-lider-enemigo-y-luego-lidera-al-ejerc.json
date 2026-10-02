@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc",
+    "slug": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc",
+    "title": "Audio Latino - Comando gana la confianza del líder enemigo y luego lidera al Ejército para vengarse",
+    "image": "https://i.ytimg.com/vi/gcrD8cIs7KY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-06-28T14:33:43Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=gcrD8cIs7KY",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Comando gana la confianza del líder enemigo y luego lidera al Ejército para vengarse.",
+    "duration": 12770,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc-s1",
+      "seriesId": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc-ep-1",
+      "slug": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc-ep-1",
+      "seriesId": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc",
+      "seasonId": "audio-latino-comando-gana-la-confianza-del-lider-enemigo-y-luego-lidera-al-ejerc-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/gcrD8cIs7KY"
+        }
+      ],
+      "updatedAt": "2026-06-28T14:33:43Z"
+    }
+  ]
+}

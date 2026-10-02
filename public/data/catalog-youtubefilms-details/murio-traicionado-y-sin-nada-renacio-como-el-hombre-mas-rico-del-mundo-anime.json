@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime",
+    "slug": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime",
+    "title": "Murió traicionado y sin nada… renació como el hombre más rico del mundo💕#anime",
+    "image": "https://i.ytimg.com/vi/w925eYW7rg4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-19T20:00:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=w925eYW7rg4",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Murió traicionado y sin nada… renació como el hombre más rico del mundo💕#anime",
+    "duration": 7259,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime-s1",
+      "seriesId": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime-ep-1",
+      "slug": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime-ep-1",
+      "seriesId": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime",
+      "seasonId": "murio-traicionado-y-sin-nada-renacio-como-el-hombre-mas-rico-del-mundo-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/w925eYW7rg4"
+        }
+      ],
+      "updatedAt": "2026-07-19T20:00:00Z"
+    }
+  ]
+}

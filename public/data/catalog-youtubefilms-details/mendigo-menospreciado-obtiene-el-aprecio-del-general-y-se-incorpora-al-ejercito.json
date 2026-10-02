@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito",
+    "slug": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito",
+    "title": "Mendigo Menospreciado obtiene el aprecio del General y se incorpora al Ejército",
+    "image": "https://i.ytimg.com/vi/D5yFvLgpa8A/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-03-04T15:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=D5yFvLgpa8A",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Mendigo Menospreciado obtiene el aprecio del General y se incorpora al Ejército",
+    "duration": 3913,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito-s1",
+      "seriesId": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito-ep-1",
+      "slug": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito-ep-1",
+      "seriesId": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito",
+      "seasonId": "mendigo-menospreciado-obtiene-el-aprecio-del-general-y-se-incorpora-al-ejercito-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/D5yFvLgpa8A"
+        }
+      ],
+      "updatedAt": "2026-03-04T15:00:23Z"
+    }
+  ]
+}

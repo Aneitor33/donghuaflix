@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund",
+    "slug": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund",
+    "title": "Película en Español - La secta del Hombre tiene Espía Asesino, que activa la Segunda Forma de Arma",
+    "image": "https://i.ytimg.com/vi/B_0ts7xYZy0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-05-01T14:00:26Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=B_0ts7xYZy0",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - La secta del Hombre tiene Espía Asesino, que activa la Segunda Forma de Arma.",
+    "duration": 5090,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund-s1",
+      "seriesId": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund-ep-1",
+      "slug": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund-ep-1",
+      "seriesId": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund",
+      "seasonId": "pelicula-en-espanol-la-secta-del-hombre-tiene-espia-asesino-que-activa-la-segund-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/B_0ts7xYZy0"
+        }
+      ],
+      "updatedAt": "2025-05-01T14:00:26Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b",
+    "slug": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b",
+    "title": "【LLENO】¡Al principio invoqué a un general divino y aniquilé a antiguas y feroces bestias!",
+    "image": "https://i.ytimg.com/vi/GsgmTkkHVE0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Bestias míticas de las montañas y los mares aparecen repentinamente, sumiendo al mundo humano en una brutal era de lucha por el poder. Un joven, traicionado por su amada y por una figu...",
+    "year": 2026,
+    "updatedAt": "2026-09-02T04:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GsgmTkkHVE0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Al principio invoqué a un general divino y aniquilé a antiguas y feroces bestias!",
+    "duration": 7362,
+    "genres": [
+      "Histórico",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b-s1",
+      "seriesId": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b-ep-1",
+      "slug": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b-ep-1",
+      "seriesId": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b",
+      "seasonId": "lleno-al-principio-invoque-a-un-general-divino-y-aniquile-a-antiguas-y-feroces-b-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GsgmTkkHVE0"
+        }
+      ],
+      "updatedAt": "2026-09-02T04:00:23Z"
+    }
+  ]
+}

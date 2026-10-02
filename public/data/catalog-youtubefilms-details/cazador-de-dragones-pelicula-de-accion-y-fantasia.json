@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "cazador-de-dragones-pelicula-de-accion-y-fantasia",
+    "slug": "cazador-de-dragones-pelicula-de-accion-y-fantasia",
+    "title": "Cazador de Dragones Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/IPkF1cybMn8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"Cazador de Dragones: Clasificación de Cazadores de Demonios\" narra la historia del erudito en apuros Li Xiuyuan, quien conoce al torpe cazador de monstru...",
+    "year": 2026,
+    "updatedAt": "2026-07-11T16:00:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=IPkF1cybMn8",
+    "channel": "@moxispanish",
+    "originalTitle": "Cazador de Dragones | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 5030,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "cazador-de-dragones-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "cazador-de-dragones-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "cazador-de-dragones-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "cazador-de-dragones-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "cazador-de-dragones-pelicula-de-accion-y-fantasia",
+      "seasonId": "cazador-de-dragones-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/IPkF1cybMn8"
+        }
+      ],
+      "updatedAt": "2026-07-11T16:00:27Z"
+    }
+  ]
+}

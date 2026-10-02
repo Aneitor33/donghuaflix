@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime",
+    "slug": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime",
+    "title": "Entre Emperatriz y Hechicera: el chico con talento F se vuelve invencible💕#anime",
+    "image": "https://i.ytimg.com/vi/39GfsfCh-7Y/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-05-28T20:00:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=39GfsfCh-7Y",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Entre Emperatriz y Hechicera: el chico con talento F se vuelve invencible💕#anime",
+    "duration": 7352,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime-s1",
+      "seriesId": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime-ep-1",
+      "slug": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime-ep-1",
+      "seriesId": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime",
+      "seasonId": "entre-emperatriz-y-hechicera-el-chico-con-talento-f-se-vuelve-invencible-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/39GfsfCh-7Y"
+        }
+      ],
+      "updatedAt": "2026-05-28T20:00:31Z"
+    }
+  ]
+}

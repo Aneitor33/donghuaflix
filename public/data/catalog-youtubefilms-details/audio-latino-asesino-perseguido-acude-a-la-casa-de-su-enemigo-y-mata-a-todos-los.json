@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los",
+    "slug": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los",
+    "title": "Audio Latino - Asesino Perseguido acude a la casa de su Enemigo y Mata a Todos los Demás",
+    "image": "https://i.ytimg.com/vi/_jvIGLq2Xgc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-03-17T14:30:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=_jvIGLq2Xgc",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Asesino Perseguido acude a la casa de su Enemigo y Mata a Todos los Demás.",
+    "duration": 6168,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los-s1",
+      "seriesId": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los-ep-1",
+      "slug": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los-ep-1",
+      "seriesId": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los",
+      "seasonId": "audio-latino-asesino-perseguido-acude-a-la-casa-de-su-enemigo-y-mata-a-todos-los-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_jvIGLq2Xgc"
+        }
+      ],
+      "updatedAt": "2026-03-17T14:30:27Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra",
+    "slug": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra",
+    "title": "💥Serie completa💥 [Matrimonio relámpago: ¡Es el magnate de cien mil millones!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/aItUpIxLMEA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Zhou Huaicheng, presidente del Grupo Huanyu con una fortuna de cien mil millones, oculta su identidad y trabaja como repartidor de comida. Se casa por sorpresa con Su Yurou, una presidenta empresar...",
+    "year": 2026,
+    "updatedAt": "2026-07-26T14:00:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=aItUpIxLMEA",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Matrimonio relámpago: ¡Es el magnate de cien mil millones!] #drama #dramacorto",
+    "duration": 6977,
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra-s1",
+      "seriesId": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra-ep-1",
+      "slug": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra-ep-1",
+      "seriesId": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra",
+      "seasonId": "serie-completa-matrimonio-relampago-es-el-magnate-de-cien-mil-millones-drama-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/aItUpIxLMEA"
+        }
+      ],
+      "updatedAt": "2026-07-26T14:00:24Z"
+    }
+  ]
+}

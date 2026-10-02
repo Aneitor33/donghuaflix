@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot",
+    "slug": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot",
+    "title": "Audio Latino - Carniceros maltratan a civiles. Monje Guerrero que pasaba los derrotó a todos él Solo",
+    "image": "https://i.ytimg.com/vi/GAkLEvmuBiw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-01-07T14:30:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GAkLEvmuBiw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Carniceros maltratan a civiles. Monje Guerrero que pasaba los derrotó a todos él Solo",
+    "duration": 4829,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot-s1",
+      "seriesId": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot-ep-1",
+      "slug": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot-ep-1",
+      "seriesId": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot",
+      "seasonId": "audio-latino-carniceros-maltratan-a-civiles-monje-guerrero-que-pasaba-los-derrot-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GAkLEvmuBiw"
+        }
+      ],
+      "updatedAt": "2026-01-07T14:30:13Z"
+    }
+  ]
+}

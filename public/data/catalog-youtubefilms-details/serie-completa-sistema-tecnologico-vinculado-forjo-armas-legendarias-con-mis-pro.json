@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro",
+    "slug": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro",
+    "title": "💥Serie completa💥 [Sistema Tecnológico Vinculado:¡Forjo Armas Legendarias con Mis Propias Manos!] #ai",
+    "image": "https://i.ytimg.com/vi/NbdFKFbzIyw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Después de viajar a otro mundo, Lu Ming se vinculó al «Sistema Tecnológico». Pensaba que podría lograr grandes hazañas sin mucho esfuerzo, pero el sistema le informó que solo le quedaban tres meses...",
+    "year": 2026,
+    "updatedAt": "2026-08-10T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=NbdFKFbzIyw",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Sistema Tecnológico Vinculado:¡Forjo Armas Legendarias con Mis Propias Manos!] #ai",
+    "duration": 9727,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro-s1",
+      "seriesId": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro-ep-1",
+      "slug": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro-ep-1",
+      "seriesId": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro",
+      "seasonId": "serie-completa-sistema-tecnologico-vinculado-forjo-armas-legendarias-con-mis-pro-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/NbdFKFbzIyw"
+        }
+      ],
+      "updatedAt": "2026-08-10T14:00:06Z"
+    }
+  ]
+}

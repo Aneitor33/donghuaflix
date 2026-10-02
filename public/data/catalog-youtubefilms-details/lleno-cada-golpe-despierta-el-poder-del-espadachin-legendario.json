@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario",
+    "slug": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario",
+    "title": "【LLENO】¡Cada Golpe Despierta el Poder del Espadachín Legendario!",
+    "image": "https://i.ytimg.com/vi/kJmYYFGlR3o/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Ye Wuyá despierta en un mundo de espadas y magia con una profesión legendaria: ¡Santo de la Espada! ⚔️ Sin embargo, su progreso es tan lento que todos creen que su talento es inútil....",
+    "year": 2026,
+    "updatedAt": "2026-08-21T08:30:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=kJmYYFGlR3o",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Cada Golpe Despierta el Poder del Espadachín Legendario!",
+    "duration": 9008,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Artes Marciales",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario-s1",
+      "seriesId": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario-ep-1",
+      "slug": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario-ep-1",
+      "seriesId": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario",
+      "seasonId": "lleno-cada-golpe-despierta-el-poder-del-espadachin-legendario-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kJmYYFGlR3o"
+        }
+      ],
+      "updatedAt": "2026-08-21T08:30:11Z"
+    }
+  ]
+}

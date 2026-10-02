@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero",
+    "slug": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero",
+    "title": "Para vengar a su hermano infiltrado, entra a una banda y se vuelve \"cocinero\"",
+    "image": "https://i.ytimg.com/vi/bok-9K7wkhg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-01-30T15:01:16Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=bok-9K7wkhg",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Para vengar a su hermano infiltrado, entra a una banda y se vuelve \"cocinero\".",
+    "duration": 5744,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero-s1",
+      "seriesId": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero-ep-1",
+      "slug": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero-ep-1",
+      "seriesId": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero",
+      "seasonId": "para-vengar-a-su-hermano-infiltrado-entra-a-una-banda-y-se-vuelve-cocinero-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/bok-9K7wkhg"
+        }
+      ],
+      "updatedAt": "2026-01-30T15:01:16Z"
+    }
+  ]
+}

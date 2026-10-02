@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje",
+    "slug": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje",
+    "title": "Audio Latino - Mendigo Menospreciado recibe el aprecio del General y se une al Ejército Invencible",
+    "image": "https://i.ytimg.com/vi/9j0jbsHk4LM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-21T14:30:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=9j0jbsHk4LM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Mendigo Menospreciado recibe el aprecio del General y se une al Ejército Invencible.",
+    "duration": 3913,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje-s1",
+      "seriesId": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje-ep-1",
+      "slug": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje-ep-1",
+      "seriesId": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje",
+      "seasonId": "audio-latino-mendigo-menospreciado-recibe-el-aprecio-del-general-y-se-une-al-eje-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/9j0jbsHk4LM"
+        }
+      ],
+      "updatedAt": "2026-02-21T14:30:07Z"
+    }
+  ]
+}

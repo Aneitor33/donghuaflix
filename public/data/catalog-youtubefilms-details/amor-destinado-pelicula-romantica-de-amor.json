@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "amor-destinado-pelicula-romantica-de-amor",
+    "slug": "amor-destinado-pelicula-romantica-de-amor",
+    "title": "Amor Destinado Película Romántica de Amor",
+    "image": "https://i.ytimg.com/vi/00r2brjdsXU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de drama romántico \"Amor Destinado\" narra una historia de venganza y amor dulce, al estilo de \"Bossy President & Cenicienta\". Tras descubrir con odio la verdad sobre el suicid...",
+    "year": 2025,
+    "updatedAt": "2025-07-30T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=00r2brjdsXU",
+    "channel": "@moxispanish",
+    "originalTitle": "Amor Destinado | Película Romántica de Amor | Completa en Español HD",
+    "duration": 10275,
+    "genres": [
+      "Drama",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "amor-destinado-pelicula-romantica-de-amor-s1",
+      "seriesId": "amor-destinado-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "amor-destinado-pelicula-romantica-de-amor-ep-1",
+      "slug": "amor-destinado-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "amor-destinado-pelicula-romantica-de-amor",
+      "seasonId": "amor-destinado-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/00r2brjdsXU"
+        }
+      ],
+      "updatedAt": "2025-07-30T16:00:06Z"
+    }
+  ]
+}

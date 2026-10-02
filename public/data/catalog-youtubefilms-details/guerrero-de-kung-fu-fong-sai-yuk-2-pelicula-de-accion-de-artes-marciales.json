@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales",
+    "slug": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales",
+    "title": "Guerrero de Kung Fu: Fong Sai-Yuk 2 Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/30ibRR0PQNw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales \"Fong Sai-Yuk 2 Guerrero Intrépido\" cuenta la historia de Fang Shiyu y su padre Fang De, quienes acompañaron a Silk a Hangzhou para asistir a un m...",
+    "year": 2026,
+    "updatedAt": "2026-09-05T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=30ibRR0PQNw",
+    "channel": "@moxispanish",
+    "originalTitle": "Guerrero de Kung Fu: Fong Sai-Yuk 2 | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 5123,
+    "genres": [
+      "Drama",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "guerrero-de-kung-fu-fong-sai-yuk-2-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/30ibRR0PQNw"
+        }
+      ],
+      "updatedAt": "2026-09-05T16:00:06Z"
+    }
+  ]
+}

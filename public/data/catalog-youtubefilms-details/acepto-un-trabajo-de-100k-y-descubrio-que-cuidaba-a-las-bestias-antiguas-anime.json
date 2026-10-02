@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime",
+    "slug": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime",
+    "title": "Aceptó un Trabajo de 100K y Descubrió que Cuidaba a las Bestias Antiguas💕#anime",
+    "image": "https://i.ytimg.com/vi/K-_wtRprznk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-23T21:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=K-_wtRprznk",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Aceptó un Trabajo de 100K y Descubrió que Cuidaba a las Bestias Antiguas💕#anime",
+    "duration": 5681,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime-s1",
+      "seriesId": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime-ep-1",
+      "slug": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime-ep-1",
+      "seriesId": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime",
+      "seasonId": "acepto-un-trabajo-de-100k-y-descubrio-que-cuidaba-a-las-bestias-antiguas-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/K-_wtRprznk"
+        }
+      ],
+      "updatedAt": "2026-09-23T21:00:06Z"
+    }
+  ]
+}

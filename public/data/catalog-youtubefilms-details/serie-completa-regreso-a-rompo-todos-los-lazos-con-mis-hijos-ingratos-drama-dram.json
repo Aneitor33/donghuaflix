@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram",
+    "slug": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram",
+    "title": "💥Serie completa💥 [Regreso a: ¡Rompo todos los lazos con mis hijos ingratos!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/TMPQggZN8Sg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "La abuela Zhao trabajó arduamente toda su vida para criar a sus seis hijos y les entregó por completo la indemnización de su difunto esposo, pero terminó con una vejez miserable. A casi setenta año...",
+    "year": 2026,
+    "updatedAt": "2026-08-15T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=TMPQggZN8Sg",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Regreso a 1994: ¡Rompo todos los lazos con mis hijos ingratos!] #drama #dramacorto",
+    "duration": 13255,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram-s1",
+      "seriesId": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram-ep-1",
+      "slug": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram-ep-1",
+      "seriesId": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram",
+      "seasonId": "serie-completa-regreso-a-rompo-todos-los-lazos-con-mis-hijos-ingratos-drama-dram-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/TMPQggZN8Sg"
+        }
+      ],
+      "updatedAt": "2026-08-15T14:00:06Z"
+    }
+  ]
+}

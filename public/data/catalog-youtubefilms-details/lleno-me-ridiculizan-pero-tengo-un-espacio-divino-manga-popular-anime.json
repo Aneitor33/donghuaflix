@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime",
+    "slug": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime",
+    "title": "【LLENO】Me ridiculizan, pero tengo un espacio divino#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/YGCN8Kh0-9k/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Estamos en una era donde todo el mundo domestica bestias mágicas. En la ceremonia de despertar, invocó al antiguo Dragón de Vela, pero le asignar...",
+    "year": 2026,
+    "updatedAt": "2026-06-02T10:00:38Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=YGCN8Kh0-9k",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Me ridiculizan, pero tengo un espacio divino#Manga popular #Anime",
+    "duration": 8410,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime-s1",
+      "seriesId": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime-ep-1",
+      "slug": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime-ep-1",
+      "seriesId": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime",
+      "seasonId": "lleno-me-ridiculizan-pero-tengo-un-espacio-divino-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YGCN8Kh0-9k"
+        }
+      ],
+      "updatedAt": "2026-06-02T10:00:38Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani",
+    "slug": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani",
+    "title": "【LLENO】¿Mi clase tiene desventajas? Me hago el mejor en mazmorras#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/qROkQBbm3zc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Razas extranjeras invaden todo el continente y la civilización está al borde del colapso. Un extraño sistema de clases aparece de repente en el m...",
+    "year": 2026,
+    "updatedAt": "2026-06-14T10:00:14Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=qROkQBbm3zc",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¿Mi clase tiene desventajas? Me hago el mejor en mazmorras#Manga popular #Anime",
+    "duration": 8964,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani-s1",
+      "seriesId": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani-ep-1",
+      "slug": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani-ep-1",
+      "seriesId": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani",
+      "seasonId": "lleno-mi-clase-tiene-desventajas-me-hago-el-mejor-en-mazmorras-manga-popular-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/qROkQBbm3zc"
+        }
+      ],
+      "updatedAt": "2026-06-14T10:00:14Z"
+    }
+  ]
+}

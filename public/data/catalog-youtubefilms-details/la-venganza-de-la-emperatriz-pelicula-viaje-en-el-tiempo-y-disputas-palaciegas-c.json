@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c",
+    "slug": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c",
+    "title": "La Venganza de la Emperatriz Pelicula Viaje en el Tiempo y Disputas Palaciegas Completa Español",
+    "image": "https://i.ytimg.com/vi/jQOwX6Fp4rk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de época, de reencarnación, viaje en el tiempo y disputas palaciegas \"La Venganza de la Emperatriz\" plantea la pregunta: \"¿Hasta qué punto puede el esfuerzo humano alterar rea...",
+    "year": 2025,
+    "updatedAt": "2025-10-11T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=jQOwX6Fp4rk",
+    "channel": "@moxispanish",
+    "originalTitle": "La Venganza de la Emperatriz | Pelicula Viaje en el Tiempo  y Disputas Palaciegas | Completa Español",
+    "duration": 4561,
+    "genres": [
+      "Drama",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c-s1",
+      "seriesId": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c-ep-1",
+      "slug": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c-ep-1",
+      "seriesId": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c",
+      "seasonId": "la-venganza-de-la-emperatriz-pelicula-viaje-en-el-tiempo-y-disputas-palaciegas-c-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/jQOwX6Fp4rk"
+        }
+      ],
+      "updatedAt": "2025-10-11T16:00:06Z"
+    }
+  ]
+}

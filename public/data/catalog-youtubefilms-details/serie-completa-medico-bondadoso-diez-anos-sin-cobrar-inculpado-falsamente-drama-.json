@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama-",
+    "slug": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama-",
+    "title": "💥Serie completa💥 [Médico bondadoso: diez años sin cobrar, inculpado falsamente] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/zcPbh8m2Cpo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Chen Ping, el buen médico del barrio urbano marginal, atendió gratuitamente durante diez años y salvó a innumerables personas permitiéndoles pagar a plazos. Qian Donghai, un vendedor de medicinas,...",
+    "year": 2026,
+    "updatedAt": "2026-07-25T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=zcPbh8m2Cpo",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Médico bondadoso: diez años sin cobrar, inculpado falsamente] #drama #dramacorto",
+    "duration": 6017,
+    "genres": [
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama--s1",
+      "seriesId": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama--ep-1",
+      "slug": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama--ep-1",
+      "seriesId": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama-",
+      "seasonId": "serie-completa-medico-bondadoso-diez-anos-sin-cobrar-inculpado-falsamente-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/zcPbh8m2Cpo"
+        }
+      ],
+      "updatedAt": "2026-07-25T14:00:06Z"
+    }
+  ]
+}

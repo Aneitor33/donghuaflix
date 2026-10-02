@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales",
+    "slug": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales",
+    "title": "La Guardias Imperiales Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/ifF9LPHeXgI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales \"La Guardias Imperiales\" cuenta la historia de Li Yi, cuya esposa fue asesinada hace tres años. Enterró su nombre y buscó en secreto al asesino. D...",
+    "year": 2025,
+    "updatedAt": "2025-10-22T16:01:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ifF9LPHeXgI",
+    "channel": "@moxispanish",
+    "originalTitle": "La Guardias Imperiales | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 4305,
+    "genres": [
+      "Acción",
+      "Drama",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "la-guardias-imperiales-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ifF9LPHeXgI"
+        }
+      ],
+      "updatedAt": "2025-10-22T16:01:22Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se",
+    "slug": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se",
+    "title": "Audio Latino - Soldados llegan a la selva para un Asesinato, pero la información Se Filtra",
+    "image": "https://i.ytimg.com/vi/dM-0-ZxZ5l0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-03-11T15:30:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=dM-0-ZxZ5l0",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Soldados llegan a la selva para un Asesinato, pero la información Se Filtra",
+    "duration": 10106,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se-s1",
+      "seriesId": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se-ep-1",
+      "slug": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se-ep-1",
+      "seriesId": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se",
+      "seasonId": "audio-latino-soldados-llegan-a-la-selva-para-un-asesinato-pero-la-informacion-se-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/dM-0-ZxZ5l0"
+        }
+      ],
+      "updatedAt": "2026-03-11T15:30:22Z"
+    }
+  ]
+}

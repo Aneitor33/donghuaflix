@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales",
+    "slug": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales",
+    "title": "Universo Marcial 1 Piedra Inmortal Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/SiSajhvriNE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales \"Universo Marcial 1 La Piedra Inmortal del Nirvana\" trata sobre la historia de un joven héroe, Lin Dong, que luchó por la libertad de su clan y co...",
+    "year": 2024,
+    "updatedAt": "2024-12-21T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=SiSajhvriNE",
+    "channel": "@moxispanish",
+    "originalTitle": "Universo Marcial 1 Piedra Inmortal | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 6813,
+    "genres": [
+      "Artes Marciales",
+      "Drama",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "universo-marcial-1-piedra-inmortal-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SiSajhvriNE"
+        }
+      ],
+      "updatedAt": "2024-12-21T16:00:06Z"
+    }
+  ]
+}

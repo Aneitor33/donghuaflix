@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e",
+    "slug": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e",
+    "title": "Audio Latino - El Lord de los Polos se enfureció y se enfrentó él solo a todo un ejército",
+    "image": "https://i.ytimg.com/vi/_vy4ROUrUpU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-08-13T14:30:35Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=_vy4ROUrUpU",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - El Lord de los Polos se enfureció y se enfrentó él solo a todo un ejército.",
+    "duration": 5371,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e-s1",
+      "seriesId": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e-ep-1",
+      "slug": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e-ep-1",
+      "seriesId": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e",
+      "seasonId": "audio-latino-el-lord-de-los-polos-se-enfurecio-y-se-enfrento-el-solo-a-todo-un-e-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_vy4ROUrUpU"
+        }
+      ],
+      "updatedAt": "2025-08-13T14:30:35Z"
+    }
+  ]
+}

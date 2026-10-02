@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo",
+    "slug": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo",
+    "title": "Maestra da clases gratis a la hija de un padre soltero, sin saber que él es Millonario",
+    "image": "https://i.ytimg.com/vi/VsECZEQ6rLc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-05-27T15:00:26Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=VsECZEQ6rLc",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Maestra da clases gratis a la hija de un padre soltero, sin saber que él es Millonario",
+    "duration": 5398,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo-s1",
+      "seriesId": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo-ep-1",
+      "slug": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo-ep-1",
+      "seriesId": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo",
+      "seasonId": "maestra-da-clases-gratis-a-la-hija-de-un-padre-soltero-sin-saber-que-el-es-millo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VsECZEQ6rLc"
+        }
+      ],
+      "updatedAt": "2026-05-27T15:00:26Z"
+    }
+  ]
+}

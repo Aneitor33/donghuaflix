@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-guardian-dragon-oculto-drama-dramacorto",
+    "slug": "serie-completa-guardian-dragon-oculto-drama-dramacorto",
+    "title": "💥Serie completa💥 [Guardián Dragón Oculto] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/zBvbqDym4l8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Shen Zheng se oculta trabajando como guardaespaldas personal. Para todos los demás, es solo un humilde guardián, pero en realidad guarda conocimientos supremos de medicina y artes marciales. Sus pu...",
+    "year": 2026,
+    "updatedAt": "2026-07-10T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=zBvbqDym4l8",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Guardián Dragón Oculto] #drama #dramacorto",
+    "duration": 8665,
+    "genres": [
+      "Artes Marciales",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-guardian-dragon-oculto-drama-dramacorto-s1",
+      "seriesId": "serie-completa-guardian-dragon-oculto-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-guardian-dragon-oculto-drama-dramacorto-ep-1",
+      "slug": "serie-completa-guardian-dragon-oculto-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-guardian-dragon-oculto-drama-dramacorto",
+      "seasonId": "serie-completa-guardian-dragon-oculto-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/zBvbqDym4l8"
+        }
+      ],
+      "updatedAt": "2026-07-10T14:00:06Z"
+    }
+  ]
+}

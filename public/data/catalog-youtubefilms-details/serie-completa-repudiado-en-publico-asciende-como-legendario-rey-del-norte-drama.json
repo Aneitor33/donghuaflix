@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama",
+    "slug": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama",
+    "title": "💥Serie completa💥 [Repudiado en público, asciende como legendario Rey del Norte] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/rwQxfbUoxIs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Qin Chuan, hijo de una distinguida familia aristocrática, fue repudiado públicamente por su prometida de forma inesperada. Sin dudarlo, dejó atrás todos los lazos del pasado y asumió el título here...",
+    "year": 2026,
+    "updatedAt": "2026-07-04T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=rwQxfbUoxIs",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Repudiado en público, asciende como legendario Rey del Norte] #drama #dramacorto",
+    "duration": 10805,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama-s1",
+      "seriesId": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama-ep-1",
+      "slug": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama-ep-1",
+      "seriesId": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama",
+      "seasonId": "serie-completa-repudiado-en-publico-asciende-como-legendario-rey-del-norte-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/rwQxfbUoxIs"
+        }
+      ],
+      "updatedAt": "2026-07-04T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "hombre-wing-chun-pelicula-de-accion-de-kung-fu",
+    "slug": "hombre-wing-chun-pelicula-de-accion-de-kung-fu",
+    "title": "Hombre Wing Chun Pelicula de Accion de Kung Fu",
+    "image": "https://i.ytimg.com/vi/GGtJnfB46gc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de Kung Fu \"Hombre Wing Chun\" cuenta que Tian Xingjie está particularmente obsesionado con las artes marciales chinas y promete convertirse en un héroe de Kung Fu. N...",
+    "year": 2025,
+    "updatedAt": "2025-03-26T16:00:18Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GGtJnfB46gc",
+    "channel": "@moxispanish",
+    "originalTitle": "Hombre Wing Chun | Pelicula de Accion de Kung Fu | Completa en Español HD",
+    "duration": 4482,
+    "genres": [
+      "Artes Marciales",
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "hombre-wing-chun-pelicula-de-accion-de-kung-fu-s1",
+      "seriesId": "hombre-wing-chun-pelicula-de-accion-de-kung-fu",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "hombre-wing-chun-pelicula-de-accion-de-kung-fu-ep-1",
+      "slug": "hombre-wing-chun-pelicula-de-accion-de-kung-fu-ep-1",
+      "seriesId": "hombre-wing-chun-pelicula-de-accion-de-kung-fu",
+      "seasonId": "hombre-wing-chun-pelicula-de-accion-de-kung-fu-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GGtJnfB46gc"
+        }
+      ],
+      "updatedAt": "2025-03-26T16:00:18Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con",
+    "slug": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con",
+    "title": "Audio Latino - Demonio obtiene Cuerpo y masacra, los Guerreros Tribales se unen contra para resistir",
+    "image": "https://i.ytimg.com/vi/LhLbcbYEYO8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-05T14:30:28Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LhLbcbYEYO8",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Demonio obtiene Cuerpo y masacra, los Guerreros Tribales se unen contra para resistir",
+    "duration": 4591,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con-s1",
+      "seriesId": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con-ep-1",
+      "slug": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con-ep-1",
+      "seriesId": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con",
+      "seasonId": "audio-latino-demonio-obtiene-cuerpo-y-masacra-los-guerreros-tribales-se-unen-con-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LhLbcbYEYO8"
+        }
+      ],
+      "updatedAt": "2026-05-05T14:30:28Z"
+    }
+  ]
+}

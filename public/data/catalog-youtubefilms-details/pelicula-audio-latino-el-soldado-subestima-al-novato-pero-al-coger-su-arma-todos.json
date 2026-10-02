@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos",
+    "slug": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos",
+    "title": "Película Audio Latino - El Soldado subestima al Novato, pero al coger su Arma, ¡Todos Se Callan!",
+    "image": "https://i.ytimg.com/vi/K4cQ_-hvxgQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-02-27T14:00:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=K4cQ_-hvxgQ",
+    "channel": "@cine-esp",
+    "originalTitle": "Película Audio Latino - El Soldado subestima al Novato, pero al coger su Arma, ¡Todos Se Callan!",
+    "duration": 4987,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos-s1",
+      "seriesId": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos-ep-1",
+      "slug": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos-ep-1",
+      "seriesId": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos",
+      "seasonId": "pelicula-audio-latino-el-soldado-subestima-al-novato-pero-al-coger-su-arma-todos-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/K4cQ_-hvxgQ"
+        }
+      ],
+      "updatedAt": "2025-02-27T14:00:31Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre",
+    "slug": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre",
+    "title": "Audio Latino - Provocada por el Instructor, Chica decide Tomar en parte en el Entrenamiento de Tiro",
+    "image": "https://i.ytimg.com/vi/julX5EDfLuw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-07-24T14:30:42Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=julX5EDfLuw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Provocada por el Instructor, Chica decide Tomar en parte en el Entrenamiento de Tiro",
+    "duration": 7455,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre-s1",
+      "seriesId": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre-ep-1",
+      "slug": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre-ep-1",
+      "seriesId": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre",
+      "seasonId": "audio-latino-provocada-por-el-instructor-chica-decide-tomar-en-parte-en-el-entre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/julX5EDfLuw"
+        }
+      ],
+      "updatedAt": "2025-07-24T14:30:42Z"
+    }
+  ]
+}

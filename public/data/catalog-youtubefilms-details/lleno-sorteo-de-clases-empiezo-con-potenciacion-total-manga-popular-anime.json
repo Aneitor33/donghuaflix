@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime",
+    "slug": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime",
+    "title": "【LLENO】Sorteo de Clases: Empiezo con potenciación total！#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/AtbEY3wbBis/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:En este mundo donde todos cambian su clase mediante sorteos de cartas,la ruleta del destino divide a la gente por su estatus.Lin Feng solo consig...",
+    "year": 2026,
+    "updatedAt": "2026-05-25T10:00:35Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=AtbEY3wbBis",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Sorteo de Clases: Empiezo con potenciación total！#Manga popular #Anime",
+    "duration": 8371,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime-s1",
+      "seriesId": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime-ep-1",
+      "slug": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime-ep-1",
+      "seriesId": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime",
+      "seasonId": "lleno-sorteo-de-clases-empiezo-con-potenciacion-total-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/AtbEY3wbBis"
+        }
+      ],
+      "updatedAt": "2026-05-25T10:00:35Z"
+    }
+  ]
+}

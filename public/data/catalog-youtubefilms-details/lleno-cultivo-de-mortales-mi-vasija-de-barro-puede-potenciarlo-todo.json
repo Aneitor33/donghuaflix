@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo",
+    "slug": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo",
+    "title": "【LLENO】Cultivo de mortales: Mi vasija de barro puede potenciarlo todo",
+    "image": "https://i.ytimg.com/vi/-xu-w_XHHY0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Un joven que ha vivido bajo el techo de otros desde su infancia descubre por accidente una misteriosa vasija de barro mientras realiza trabajos de minería en una noche nevada. Consider...",
+    "year": 2026,
+    "updatedAt": "2026-09-17T09:00:36Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=-xu-w_XHHY0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Cultivo de mortales: Mi vasija de barro puede potenciarlo todo",
+    "duration": 7780,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo-s1",
+      "seriesId": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo-ep-1",
+      "slug": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo-ep-1",
+      "seriesId": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo",
+      "seasonId": "lleno-cultivo-de-mortales-mi-vasija-de-barro-puede-potenciarlo-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/-xu-w_XHHY0"
+        }
+      ],
+      "updatedAt": "2026-09-17T09:00:36Z"
+    }
+  ]
+}

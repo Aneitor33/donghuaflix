@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama-",
+    "slug": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama-",
+    "title": "💥Serie completa💥 [Poder de adivinación extraordinario: ¡Forjo una vida hermosa!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/I8aRfmTyt-Q/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "En su vida anterior, Jiang Chen pasó media vida luchando en batallas y errando solo por el mundo, y lo sacrificó todo a cambio de una oportunidad de volver a vivir. Al recobrar el conocimiento, se...",
+    "year": 2026,
+    "updatedAt": "2026-06-21T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=I8aRfmTyt-Q",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Poder de adivinación extraordinario: ¡Forjo una vida hermosa!] #drama #dramacorto",
+    "duration": 6830,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama--s1",
+      "seriesId": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama--ep-1",
+      "slug": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama--ep-1",
+      "seriesId": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama-",
+      "seasonId": "serie-completa-poder-de-adivinacion-extraordinario-forjo-una-vida-hermosa-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/I8aRfmTyt-Q"
+        }
+      ],
+      "updatedAt": "2026-06-21T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime",
+    "slug": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime",
+    "title": "Entró al Juego del Terror... ¡Pero Convenció a los Fantasmas de No Matarlo!💕#anime",
+    "image": "https://i.ytimg.com/vi/F4akBGKwTYI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-22T20:00:10Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=F4akBGKwTYI",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Entró al Juego del Terror... ¡Pero Convenció a los Fantasmas de No Matarlo!💕#anime",
+    "duration": 11246,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime-s1",
+      "seriesId": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime-ep-1",
+      "slug": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime-ep-1",
+      "seriesId": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime",
+      "seasonId": "entro-al-juego-del-terror-pero-convencio-a-los-fantasmas-de-no-matarlo-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/F4akBGKwTYI"
+        }
+      ],
+      "updatedAt": "2026-06-22T20:00:10Z"
+    }
+  ]
+}

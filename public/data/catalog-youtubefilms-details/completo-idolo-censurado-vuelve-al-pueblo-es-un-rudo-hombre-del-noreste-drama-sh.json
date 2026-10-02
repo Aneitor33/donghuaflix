@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh",
+    "slug": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh",
+    "title": "💥COMPLETO💥 [¡Ídolo censurado vuelve al pueblo: es un rudo hombre del noreste!] #drama #shortdrama",
+    "image": "https://i.ytimg.com/vi/Z7H9UnCyoko/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Su Xiao era un ídolo de gran popularidad. Su agencia lo creó con una imagen afeminada. Tras ofender al capital, fue despedido y toda la red se burló de su supuesta debilidad e incompetencia. Nadie...",
+    "year": 2026,
+    "updatedAt": "2026-08-27T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Z7H9UnCyoko",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥COMPLETO💥 [¡Ídolo censurado vuelve al pueblo: es un rudo hombre del noreste!] #drama #shortdrama",
+    "duration": 8591,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh-s1",
+      "seriesId": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh-ep-1",
+      "slug": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh-ep-1",
+      "seriesId": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh",
+      "seasonId": "completo-idolo-censurado-vuelve-al-pueblo-es-un-rudo-hombre-del-noreste-drama-sh-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Z7H9UnCyoko"
+        }
+      ],
+      "updatedAt": "2026-08-27T14:00:06Z"
+    }
+  ]
+}

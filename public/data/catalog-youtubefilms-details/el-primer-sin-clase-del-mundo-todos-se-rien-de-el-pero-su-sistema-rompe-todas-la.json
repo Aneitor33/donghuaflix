@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la",
+    "slug": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la",
+    "title": "¡El primer SIN CLASE del mundo! Todos se ríen de él, pero su sistema rompe todas las reglas!💕#anime",
+    "image": "https://i.ytimg.com/vi/nWrmvI0ktlY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-06-11T20:00:37Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nWrmvI0ktlY",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡El primer SIN CLASE del mundo! Todos se ríen de él, pero su sistema rompe todas las reglas!💕#anime",
+    "duration": 20702,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la-s1",
+      "seriesId": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la-ep-1",
+      "slug": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la-ep-1",
+      "seriesId": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la",
+      "seasonId": "el-primer-sin-clase-del-mundo-todos-se-rien-de-el-pero-su-sistema-rompe-todas-la-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nWrmvI0ktlY"
+        }
+      ],
+      "updatedAt": "2026-06-11T20:00:37Z"
+    }
+  ]
+}

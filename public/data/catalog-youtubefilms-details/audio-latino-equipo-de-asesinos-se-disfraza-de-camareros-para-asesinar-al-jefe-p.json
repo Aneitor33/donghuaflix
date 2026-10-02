@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p",
+    "slug": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p",
+    "title": "Audio Latino - Equipo de Asesinos se disfraza de Camareros para asesinar al jefe por el Heredero",
+    "image": "https://i.ytimg.com/vi/6-cV2tlX84A/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-18T14:30:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6-cV2tlX84A",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Equipo de Asesinos se disfraza de Camareros para asesinar al jefe por el Heredero.",
+    "duration": 5601,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p-s1",
+      "seriesId": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p-ep-1",
+      "slug": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p-ep-1",
+      "seriesId": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p",
+      "seasonId": "audio-latino-equipo-de-asesinos-se-disfraza-de-camareros-para-asesinar-al-jefe-p-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6-cV2tlX84A"
+        }
+      ],
+      "updatedAt": "2026-02-18T14:30:08Z"
+    }
+  ]
+}

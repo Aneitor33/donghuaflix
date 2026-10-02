@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse",
+    "slug": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse",
+    "title": "【LLENO】Empezando por copiarlo todo... ¡mi verdadero poder ya no puede ocultarse!",
+    "image": "https://i.ytimg.com/vi/9YiitcQoUfw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】En este mundo de artes marciales supremas donde reinan los guerreros, los débiles son meras hormigas, mientras que los verdaderamente poderosos pueden caminar sobre las estrellas y des...",
+    "year": 2026,
+    "updatedAt": "2026-10-01T04:00:21Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=9YiitcQoUfw",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Empezando por copiarlo todo... ¡mi verdadero poder ya no puede ocultarse!",
+    "duration": 8803,
+    "genres": [
+      "Artes Marciales",
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse-s1",
+      "seriesId": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse-ep-1",
+      "slug": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse-ep-1",
+      "seriesId": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse",
+      "seasonId": "lleno-empezando-por-copiarlo-todo-mi-verdadero-poder-ya-no-puede-ocultarse-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/9YiitcQoUfw"
+        }
+      ],
+      "updatedAt": "2026-10-01T04:00:21Z"
+    }
+  ]
+}

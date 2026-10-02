@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a",
+    "slug": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a",
+    "title": "Su Ex lo Traicionó... ¡Pero Esclavizó a Demonios y Vengó su Honor con Poder x10000!💕#anime",
+    "image": "https://i.ytimg.com/vi/CnlMuGwhCTs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-11T21:00:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CnlMuGwhCTs",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Su Ex lo Traicionó... ¡Pero Esclavizó a Demonios y Vengó su Honor con Poder x10000!💕#anime",
+    "duration": 5241,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a-s1",
+      "seriesId": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a-ep-1",
+      "slug": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a-ep-1",
+      "seriesId": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a",
+      "seasonId": "su-ex-lo-traiciono-pero-esclavizo-a-demonios-y-vengo-su-honor-con-poder-x10000-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/CnlMuGwhCTs"
+        }
+      ],
+      "updatedAt": "2026-09-11T21:00:00Z"
+    }
+  ]
+}

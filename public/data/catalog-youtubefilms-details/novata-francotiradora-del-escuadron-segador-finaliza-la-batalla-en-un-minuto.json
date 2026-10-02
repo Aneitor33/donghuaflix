@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto",
+    "slug": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto",
+    "title": "Novata Francotiradora del escuadrón Segador finaliza la batalla en un minuto",
+    "image": "https://i.ytimg.com/vi/ep5mFheA8aU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-04-03T15:30:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ep5mFheA8aU",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Novata Francotiradora del escuadrón Segador finaliza la batalla en un minuto",
+    "duration": 4262,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto-s1",
+      "seriesId": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto-ep-1",
+      "slug": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto-ep-1",
+      "seriesId": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto",
+      "seasonId": "novata-francotiradora-del-escuadron-segador-finaliza-la-batalla-en-un-minuto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ep5mFheA8aU"
+        }
+      ],
+      "updatedAt": "2026-04-03T15:30:00Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres",
+    "slug": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres",
+    "title": "【LLENO】Fantasía: ¡Suprimiendo a los Diez Demonios, Observando la Espada durante Tres Años! #Anime",
+    "image": "https://i.ytimg.com/vi/yFwcBs2jHRo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:El juego de señores de fantasía se ha lanzado a nivel mundial, atrapando a todos los jugadores en la zona de principiantes, obligándolos a un int...",
+    "year": 2026,
+    "updatedAt": "2026-05-13T04:00:52Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=yFwcBs2jHRo",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Fantasía: ¡Suprimiendo a los Diez Demonios, Observando la Espada durante Tres Años! #Anime",
+    "duration": 7752,
+    "genres": [
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres-s1",
+      "seriesId": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres-ep-1",
+      "slug": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres-ep-1",
+      "seriesId": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres",
+      "seasonId": "lleno-fantasia-suprimiendo-a-los-diez-demonios-observando-la-espada-durante-tres-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/yFwcBs2jHRo"
+        }
+      ],
+      "updatedAt": "2026-05-13T04:00:52Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia",
+    "slug": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia",
+    "title": "El Pintor de Pieles 2 Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/LYgOdE1zLWM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"El Pintor de Pieles 2\" cuenta la historia del pintor de pieles Fang Ji y su aprendiz Mu Yiqian, quienes usan las habilidades secretas de la pintura de pi...",
+    "year": 2025,
+    "updatedAt": "2025-08-30T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LYgOdE1zLWM",
+    "channel": "@moxispanish",
+    "originalTitle": "El Pintor de Pieles 2 | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 4743,
+    "genres": [
+      "Drama",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia",
+      "seasonId": "el-pintor-de-pieles-2-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LYgOdE1zLWM"
+        }
+      ],
+      "updatedAt": "2025-08-30T16:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form",
+    "slug": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form",
+    "title": "Audio Latino - La secta caza al Mejor Asesino, sin imaginar que toma Cualquier Forma",
+    "image": "https://i.ytimg.com/vi/nxb2ZxesbEI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-07-30T14:30:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nxb2ZxesbEI",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - La secta caza al Mejor Asesino, sin imaginar que toma Cualquier Forma.",
+    "duration": 4454,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form-s1",
+      "seriesId": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form-ep-1",
+      "slug": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form-ep-1",
+      "seriesId": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form",
+      "seasonId": "audio-latino-la-secta-caza-al-mejor-asesino-sin-imaginar-que-toma-cualquier-form-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nxb2ZxesbEI"
+        }
+      ],
+      "updatedAt": "2026-07-30T14:30:06Z"
+    }
+  ]
+}

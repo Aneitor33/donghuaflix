@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-amor-arrogante-pelicula-romantica-de-amor",
+    "slug": "el-amor-arrogante-pelicula-romantica-de-amor",
+    "title": "El Amor Arrogante Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/96TV0GamOUU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica \"El Amor Arrogante\" pertenece a la serie de películas \"Luxury Love\". La película es una adaptación de la novela escrita por Tianyou. La película cuenta una historia...",
+    "year": 2024,
+    "updatedAt": "2024-01-20T16:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=96TV0GamOUU",
+    "channel": "@moxispanish",
+    "originalTitle": "El Amor Arrogante | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 3738,
+    "genres": [
+      "Romance",
+      "Drama",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-amor-arrogante-pelicula-romantica-de-amor-s1",
+      "seriesId": "el-amor-arrogante-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-amor-arrogante-pelicula-romantica-de-amor-ep-1",
+      "slug": "el-amor-arrogante-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "el-amor-arrogante-pelicula-romantica-de-amor",
+      "seasonId": "el-amor-arrogante-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/96TV0GamOUU"
+        }
+      ],
+      "updatedAt": "2024-01-20T16:00:08Z"
+    }
+  ]
+}

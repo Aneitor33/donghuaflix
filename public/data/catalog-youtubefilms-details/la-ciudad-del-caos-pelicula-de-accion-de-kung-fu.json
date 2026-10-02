@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu",
+    "slug": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu",
+    "title": "La Ciudad del Caos Pelicula de Accion de Kung Fu",
+    "image": "https://i.ytimg.com/vi/xAj-aqzoq8Y/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de kung fu \"La Ciudad del Caos\" cuenta la historia de Ye Long, interpretado por Xie Mengwei, quien originalmente era el \"empleado\" más capaz del Grupo Tang, pero fue...",
+    "year": 2024,
+    "updatedAt": "2024-03-30T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=xAj-aqzoq8Y",
+    "channel": "@moxispanish",
+    "originalTitle": "La Ciudad del Caos | Pelicula de Accion de Kung Fu | Completa en Español HD",
+    "duration": 4387,
+    "genres": [
+      "Artes Marciales",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu-s1",
+      "seriesId": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu-ep-1",
+      "slug": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu-ep-1",
+      "seriesId": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu",
+      "seasonId": "la-ciudad-del-caos-pelicula-de-accion-de-kung-fu-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/xAj-aqzoq8Y"
+        }
+      ],
+      "updatedAt": "2024-03-30T16:00:06Z"
+    }
+  ]
+}

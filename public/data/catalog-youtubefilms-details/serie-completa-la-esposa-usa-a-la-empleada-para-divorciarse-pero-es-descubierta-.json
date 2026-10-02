@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta-",
+    "slug": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta-",
+    "title": "💥Serie completa💥 [La esposa usa a la empleada para divorciarse, pero es descubierta] #dramacorto",
+    "image": "https://i.ytimg.com/vi/YJMgXntB3u0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Shen Qingxue, que acababa de llegar a la gran ciudad para buscar trabajo, fue recomendada por su compañera de cuarto para trabajar como empleada doméstica en el hogar del profesor Zhang. Sin que el...",
+    "year": 2026,
+    "updatedAt": "2026-06-24T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=YJMgXntB3u0",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [La esposa usa a la empleada para divorciarse, pero es descubierta] #dramacorto",
+    "duration": 5887,
+    "genres": [
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta--s1",
+      "seriesId": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta--ep-1",
+      "slug": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta--ep-1",
+      "seriesId": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta-",
+      "seasonId": "serie-completa-la-esposa-usa-a-la-empleada-para-divorciarse-pero-es-descubierta--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YJMgXntB3u0"
+        }
+      ],
+      "updatedAt": "2026-06-24T14:00:06Z"
+    }
+  ]
+}

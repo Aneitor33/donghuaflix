@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala",
+    "slug": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala",
+    "title": "Los Cazarrecompensas lo apuestan todo en esta sola Bala",
+    "image": "https://i.ytimg.com/vi/spIhWobuCKc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-01-09T15:01:49Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=spIhWobuCKc",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp]  Los Cazarrecompensas lo apuestan todo en esta sola Bala...",
+    "duration": 7310,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala-s1",
+      "seriesId": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala-ep-1",
+      "slug": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala-ep-1",
+      "seriesId": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala",
+      "seasonId": "los-cazarrecompensas-lo-apuestan-todo-en-esta-sola-bala-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/spIhWobuCKc"
+        }
+      ],
+      "updatedAt": "2026-01-09T15:01:49Z"
+    }
+  ]
+}

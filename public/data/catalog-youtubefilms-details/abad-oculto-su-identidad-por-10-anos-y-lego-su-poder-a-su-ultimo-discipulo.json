@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo",
+    "slug": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo",
+    "title": "Abad ocultó su identidad por 10 años y legó su poder a su último discípulo",
+    "image": "https://i.ytimg.com/vi/r48R185rQVc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-01-27T15:30:39Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=r48R185rQVc",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Abad ocultó su identidad por 10 años y legó su poder a su último discípulo.",
+    "duration": 5171,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo-s1",
+      "seriesId": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo-ep-1",
+      "slug": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo-ep-1",
+      "seriesId": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo",
+      "seasonId": "abad-oculto-su-identidad-por-10-anos-y-lego-su-poder-a-su-ultimo-discipulo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/r48R185rQVc"
+        }
+      ],
+      "updatedAt": "2026-01-27T15:30:39Z"
+    }
+  ]
+}

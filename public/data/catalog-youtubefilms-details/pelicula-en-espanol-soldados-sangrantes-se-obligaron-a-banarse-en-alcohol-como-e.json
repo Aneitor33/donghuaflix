@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e",
+    "slug": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e",
+    "title": "Película en Español - Soldados Sangrantes se obligaron a Bañarse en Alcohol como entrenamiento",
+    "image": "https://i.ytimg.com/vi/CVju5nBRJNM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-06-02T14:00:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CVju5nBRJNM",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Soldados Sangrantes se obligaron a Bañarse en Alcohol como entrenamiento.",
+    "duration": 5458,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e-s1",
+      "seriesId": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e-ep-1",
+      "slug": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e-ep-1",
+      "seriesId": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e",
+      "seasonId": "pelicula-en-espanol-soldados-sangrantes-se-obligaron-a-banarse-en-alcohol-como-e-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/CVju5nBRJNM"
+        }
+      ],
+      "updatedAt": "2025-06-02T14:00:31Z"
+    }
+  ]
+}

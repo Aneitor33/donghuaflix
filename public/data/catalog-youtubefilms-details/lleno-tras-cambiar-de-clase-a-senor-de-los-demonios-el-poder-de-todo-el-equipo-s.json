@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s",
+    "slug": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s",
+    "title": "【LLENO】¡Tras cambiar de clase a Señor de los Demonios, el poder de todo el equipo se disparó!",
+    "image": "https://i.ytimg.com/vi/38sN7Z127xo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Los remordimientos de su vida pasada le brindaron a Yan Luo la oportunidad de empezar de nuevo. Tras renacer, despertó una clase oculta única —el «Rey Demonio»— y emprendió un camino h...",
+    "year": 2026,
+    "updatedAt": "2026-09-22T09:00:39Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=38sN7Z127xo",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Tras cambiar de clase a Señor de los Demonios, el poder de todo el equipo se disparó!",
+    "duration": 16189,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s-s1",
+      "seriesId": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s-ep-1",
+      "slug": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s-ep-1",
+      "seriesId": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s",
+      "seasonId": "lleno-tras-cambiar-de-clase-a-senor-de-los-demonios-el-poder-de-todo-el-equipo-s-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/38sN7Z127xo"
+        }
+      ],
+      "updatedAt": "2026-09-22T09:00:39Z"
+    }
+  ]
+}

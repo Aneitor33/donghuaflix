@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre",
+    "slug": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre",
+    "title": "【LLENO】Niña destruye fábrica con pistola de juguete, nadie le cree #DramaParaHombres",
+    "image": "https://i.ytimg.com/vi/IPj7OUZ_Ack/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 En una zona industrial ocurre una explosión devastadora. Una fábrica entera queda reducida a escombros tras la fuerte detonación. Todos buscan la causa del terrible accidente. Una peq...",
+    "year": 2026,
+    "updatedAt": "2026-09-24T04:00:34Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=IPj7OUZ_Ack",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Niña destruye fábrica con pistola de juguete, nadie le cree #DramaParaHombres",
+    "duration": 7623,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre-s1",
+      "seriesId": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre-ep-1",
+      "slug": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre-ep-1",
+      "seriesId": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre",
+      "seasonId": "lleno-nina-destruye-fabrica-con-pistola-de-juguete-nadie-le-cree-dramaparahombre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/IPj7OUZ_Ack"
+        }
+      ],
+      "updatedAt": "2026-09-24T04:00:34Z"
+    }
+  ]
+}

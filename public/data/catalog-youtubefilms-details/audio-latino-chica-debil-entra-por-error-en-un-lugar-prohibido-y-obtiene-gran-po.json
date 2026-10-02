@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po",
+    "slug": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po",
+    "title": "Audio Latino - Chica Débil entra por error en un Lugar Prohibido, y obtiene Gran Poder para Vengarse",
+    "image": "https://i.ytimg.com/vi/Wa34nNdWLXU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-07-18T14:30:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Wa34nNdWLXU",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Chica Débil entra por error en un Lugar Prohibido, y obtiene Gran Poder para Vengarse",
+    "duration": 11898,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po-s1",
+      "seriesId": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po-ep-1",
+      "slug": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po-ep-1",
+      "seriesId": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po",
+      "seasonId": "audio-latino-chica-debil-entra-por-error-en-un-lugar-prohibido-y-obtiene-gran-po-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Wa34nNdWLXU"
+        }
+      ],
+      "updatedAt": "2025-07-18T14:30:22Z"
+    }
+  ]
+}

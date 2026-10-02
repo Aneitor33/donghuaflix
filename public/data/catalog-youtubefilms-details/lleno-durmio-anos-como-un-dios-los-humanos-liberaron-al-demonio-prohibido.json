@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido",
+    "slug": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido",
+    "title": "【LLENO】Durmió años como un dios… ¡Los humanos liberaron al demonio prohibido!",
+    "image": "https://i.ytimg.com/vi/wptqqZSnpdI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 ¡Después de proteger a la humanidad durante 3000 años, el inmortal más poderoso ha despertado! Xia Xuan fue un legendario Supremo Inmortal que defendió el mundo mortal durante miles d...",
+    "year": 2026,
+    "updatedAt": "2026-08-04T09:00:09Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=wptqqZSnpdI",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Durmió 3000 años como un dios… ¡Los humanos liberaron al demonio prohibido!",
+    "duration": 8064,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido-s1",
+      "seriesId": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido-ep-1",
+      "slug": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido-ep-1",
+      "seriesId": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido",
+      "seasonId": "lleno-durmio-anos-como-un-dios-los-humanos-liberaron-al-demonio-prohibido-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/wptqqZSnpdI"
+        }
+      ],
+      "updatedAt": "2026-08-04T09:00:09Z"
+    }
+  ]
+}

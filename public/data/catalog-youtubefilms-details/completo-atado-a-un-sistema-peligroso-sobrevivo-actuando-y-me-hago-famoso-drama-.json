@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama-",
+    "slug": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama-",
+    "title": "💥COMPLETO💥 [Atado a un sistema peligroso: sobrevivo actuando y me hago famoso！] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/_LzcBcB6fKM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "He Xiao, un estudiante universitario, se une accidentalmente a un sistema especial que le exige dominar todas las habilidades de distintos personajes peligrosos. Las estrictas reglas de las misione...",
+    "year": 2026,
+    "updatedAt": "2026-08-28T13:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=_LzcBcB6fKM",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥COMPLETO💥 [Atado a un sistema peligroso: sobrevivo actuando y me hago famoso！] #drama #dramacorto",
+    "duration": 9875,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama--s1",
+      "seriesId": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama--ep-1",
+      "slug": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama--ep-1",
+      "seriesId": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama-",
+      "seasonId": "completo-atado-a-un-sistema-peligroso-sobrevivo-actuando-y-me-hago-famoso-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_LzcBcB6fKM"
+        }
+      ],
+      "updatedAt": "2026-08-28T13:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer-",
+    "slug": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer-",
+    "title": "💥FULL💥[¡Traicionado la noche de bodas: despierta el sistema anti‑cliché para vencer!] #drama #ai",
+    "image": "https://i.ytimg.com/vi/R7nhV5pL-j4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Xu Que, un joven del mundo moderno, transmigra para convertirse en el consorte real del Reino Huoyuan. El dueño original fue despojado de su cultivo y raíces espirituales por la princesa la noche d...",
+    "year": 2026,
+    "updatedAt": "2026-09-01T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=R7nhV5pL-j4",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[¡Traicionado la noche de bodas: despierta el sistema anti‑cliché para vencer!] #drama #ai",
+    "duration": 8787,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer--s1",
+      "seriesId": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer--ep-1",
+      "slug": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer--ep-1",
+      "seriesId": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer-",
+      "seasonId": "full-traicionado-la-noche-de-bodas-despierta-el-sistema-anti-cliche-para-vencer--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/R7nhV5pL-j4"
+        }
+      ],
+      "updatedAt": "2026-09-01T14:00:06Z"
+    }
+  ]
+}

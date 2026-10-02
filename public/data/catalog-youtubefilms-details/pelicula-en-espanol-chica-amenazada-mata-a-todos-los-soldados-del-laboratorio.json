@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio",
+    "slug": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio",
+    "title": "Película en Español - Chica Amenazada mata a Todos los Soldados del Laboratorio",
+    "image": "https://i.ytimg.com/vi/GDwHvX408Gs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-03-27T14:00:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GDwHvX408Gs",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Chica Amenazada mata a Todos los Soldados del Laboratorio.",
+    "duration": 9170,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio-s1",
+      "seriesId": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio-ep-1",
+      "slug": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio-ep-1",
+      "seriesId": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio",
+      "seasonId": "pelicula-en-espanol-chica-amenazada-mata-a-todos-los-soldados-del-laboratorio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GDwHvX408Gs"
+        }
+      ],
+      "updatedAt": "2025-03-27T14:00:24Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su",
+    "slug": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su",
+    "title": "Audio Latino - La Agente se infiltró en la Base Enemiga para eliminar al Último Sujeto de Prueba",
+    "image": "https://i.ytimg.com/vi/ys1pfOKtr5E/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-03T14:30:52Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ys1pfOKtr5E",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - La Agente se infiltró en la Base Enemiga para eliminar al Último Sujeto de Prueba",
+    "duration": 4840,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su-s1",
+      "seriesId": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su-ep-1",
+      "slug": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su-ep-1",
+      "seriesId": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su",
+      "seasonId": "audio-latino-la-agente-se-infiltro-en-la-base-enemiga-para-eliminar-al-ultimo-su-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ys1pfOKtr5E"
+        }
+      ],
+      "updatedAt": "2025-12-03T14:30:52Z"
+    }
+  ]
+}

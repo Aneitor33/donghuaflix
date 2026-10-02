@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr",
+    "slug": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr",
+    "title": "💥Serie completa💥 [Tras romper el compromiso: ¡Heredo cien mil millones en riquezas!] #drama #ai",
+    "image": "https://i.ytimg.com/vi/kXkZzVVx0ao/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "En el banquete de compromiso, la familia de la novia lo menospreció por su modesta condición económica y sus padres sencillos, rompiendo el contrato de matrimonio en público y burlándose de él sin...",
+    "year": 2026,
+    "updatedAt": "2026-07-28T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=kXkZzVVx0ao",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Tras romper el compromiso: ¡Heredo cien mil millones en riquezas!] #drama #ai",
+    "duration": 5253,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr-s1",
+      "seriesId": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr-ep-1",
+      "slug": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr-ep-1",
+      "seriesId": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr",
+      "seasonId": "serie-completa-tras-romper-el-compromiso-heredo-cien-mil-millones-en-riquezas-dr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kXkZzVVx0ao"
+        }
+      ],
+      "updatedAt": "2026-07-28T14:00:06Z"
+    }
+  ]
+}

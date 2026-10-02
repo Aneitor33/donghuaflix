@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a-",
+    "slug": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a-",
+    "title": "Película en Español - Tras la Selección, hombre se convierte en Soldado y conoce a su Rival Eterno",
+    "image": "https://i.ytimg.com/vi/0XV6_Dl3OeM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-04-30T14:00:03Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=0XV6_Dl3OeM",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Tras la Selección, hombre se convierte en Soldado y conoce a su Rival Eterno.",
+    "duration": 4931,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a--s1",
+      "seriesId": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a--ep-1",
+      "slug": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a--ep-1",
+      "seriesId": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a-",
+      "seasonId": "pelicula-en-espanol-tras-la-seleccion-hombre-se-convierte-en-soldado-y-conoce-a--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0XV6_Dl3OeM"
+        }
+      ],
+      "updatedAt": "2025-04-30T14:00:03Z"
+    }
+  ]
+}

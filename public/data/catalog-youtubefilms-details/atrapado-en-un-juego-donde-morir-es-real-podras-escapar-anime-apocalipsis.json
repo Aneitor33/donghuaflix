@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis",
+    "slug": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis",
+    "title": "Atrapado en Un Juego Donde Morir Es REAL… ¿Podrás Escapar? 🎮🔥 #anime #apocalipsis",
+    "image": "https://i.ytimg.com/vi/8PqfQD_pLhU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y los elementos visuales fueron creados con herramientas de IA, revisados y editados por nuestro equipo editor...",
+    "year": 2026,
+    "updatedAt": "2026-08-29T20:00:33Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=8PqfQD_pLhU",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Atrapado en Un Juego Donde Morir Es REAL… ¿Podrás Escapar? 🎮🔥 #anime #apocalipsis",
+    "duration": 4923,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis-s1",
+      "seriesId": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis-ep-1",
+      "slug": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis-ep-1",
+      "seriesId": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis",
+      "seasonId": "atrapado-en-un-juego-donde-morir-es-real-podras-escapar-anime-apocalipsis-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/8PqfQD_pLhU"
+        }
+      ],
+      "updatedAt": "2026-08-29T20:00:33Z"
+    }
+  ]
+}

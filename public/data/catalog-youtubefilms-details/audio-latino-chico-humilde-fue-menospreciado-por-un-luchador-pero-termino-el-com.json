@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com",
+    "slug": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com",
+    "title": "Audio latino- Chico Humilde fue menospreciado por un Luchador, pero terminó el combate con un Acto",
+    "image": "https://i.ytimg.com/vi/WecDVg2UGWY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-09-28T14:30:20Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WecDVg2UGWY",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino- Chico Humilde fue menospreciado por un Luchador, pero terminó el combate con un Acto.",
+    "duration": 5045,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com-s1",
+      "seriesId": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com-ep-1",
+      "slug": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com-ep-1",
+      "seriesId": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com",
+      "seasonId": "audio-latino-chico-humilde-fue-menospreciado-por-un-luchador-pero-termino-el-com-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WecDVg2UGWY"
+        }
+      ],
+      "updatedAt": "2025-09-28T14:30:20Z"
+    }
+  ]
+}

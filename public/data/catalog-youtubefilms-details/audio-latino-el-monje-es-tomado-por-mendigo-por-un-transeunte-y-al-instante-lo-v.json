@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v",
+    "slug": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v",
+    "title": "Audio Latino - El Monje es tomado por Mendigo por un transeúnte, y al instante Lo Vence con Kung Fu",
+    "image": "https://i.ytimg.com/vi/JL0CI_xBYJY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-01T14:30:13Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=JL0CI_xBYJY",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - El Monje es tomado por Mendigo por un transeúnte, y al instante Lo Vence con Kung Fu.",
+    "duration": 7088,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v-s1",
+      "seriesId": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v-ep-1",
+      "slug": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v-ep-1",
+      "seriesId": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v",
+      "seasonId": "audio-latino-el-monje-es-tomado-por-mendigo-por-un-transeunte-y-al-instante-lo-v-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/JL0CI_xBYJY"
+        }
+      ],
+      "updatedAt": "2026-05-01T14:30:13Z"
+    }
+  ]
+}

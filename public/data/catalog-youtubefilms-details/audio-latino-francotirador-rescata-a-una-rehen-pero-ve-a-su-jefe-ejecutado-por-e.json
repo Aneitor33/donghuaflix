@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e",
+    "slug": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e",
+    "title": "Audio Latino - Francotirador rescata a una Rehén, pero ve a su Jefe Ejecutado por el Enemigo",
+    "image": "https://i.ytimg.com/vi/al3Ex4Dj7KI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-06-24T14:30:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=al3Ex4Dj7KI",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Francotirador rescata a una Rehén, pero ve a su Jefe Ejecutado por el Enemigo.",
+    "duration": 4587,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e-s1",
+      "seriesId": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e-ep-1",
+      "slug": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e-ep-1",
+      "seriesId": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e",
+      "seasonId": "audio-latino-francotirador-rescata-a-una-rehen-pero-ve-a-su-jefe-ejecutado-por-e-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/al3Ex4Dj7KI"
+        }
+      ],
+      "updatedAt": "2026-06-24T14:30:24Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama-",
+    "slug": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama-",
+    "title": "💥Serie completa💥 [Ama de casa 10 años, vuelve magnate y los deja arrepentidos] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/00kenIPtYnY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Chen Fan renunció a una carrera bien remunerada y a un futuro prometedor por amor, y se dedicó plenamente a las labores del hogar durante diez años. Cuidó con esmero a su esposa Jiang Qianqian, su...",
+    "year": 2026,
+    "updatedAt": "2026-06-29T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=00kenIPtYnY",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Ama de casa 10 años, vuelve magnate y los deja arrepentidos] #drama #dramacorto",
+    "duration": 6963,
+    "genres": [
+      "Histórico",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama--s1",
+      "seriesId": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama--ep-1",
+      "slug": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama--ep-1",
+      "seriesId": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama-",
+      "seasonId": "serie-completa-ama-de-casa-10-anos-vuelve-magnate-y-los-deja-arrepentidos-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/00kenIPtYnY"
+        }
+      ],
+      "updatedAt": "2026-06-29T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura",
+    "slug": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura",
+    "title": "Juego de Charlie Charlie 4 Pelicula de Terror y Aventura",
+    "image": "https://i.ytimg.com/vi/3D-sAQOGVVc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de terror y aventuras \"Juego de Charlie Charlie 4\" trata sobre una historia de suspenso y suspenso. Song Duoduo es una chica nueva de una facultad de medicina. Con frecuencia...",
+    "year": 2025,
+    "updatedAt": "2025-12-24T16:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=3D-sAQOGVVc",
+    "channel": "@moxispanish",
+    "originalTitle": "Juego de Charlie Charlie 4 | Pelicula de Terror y Aventura | Completa en Español HD",
+    "duration": 5577,
+    "genres": [
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura-s1",
+      "seriesId": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura-ep-1",
+      "slug": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura-ep-1",
+      "seriesId": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura",
+      "seasonId": "juego-de-charlie-charlie-4-pelicula-de-terror-y-aventura-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/3D-sAQOGVVc"
+        }
+      ],
+      "updatedAt": "2025-12-24T16:00:08Z"
+    }
+  ]
+}

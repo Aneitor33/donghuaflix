@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto",
+    "slug": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto",
+    "title": "💥Serie completa💥 [Tres años en las sombras: el Señor Dragón regresa] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/WX151czIG7E/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Hace tres años, traicionado por su mejor amigo y su propia familia, cayó de la cumbre del poder al abismo en una sola noche. Cargado de infamia, se exilió lejos, y el Señor Dragón, que antaño gober...",
+    "year": 2026,
+    "updatedAt": "2026-07-05T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WX151czIG7E",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Tres años en las sombras: el Señor Dragón regresa] #drama #dramacorto",
+    "duration": 6363,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto-s1",
+      "seriesId": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto-ep-1",
+      "slug": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto",
+      "seasonId": "serie-completa-tres-anos-en-las-sombras-el-senor-dragon-regresa-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WX151czIG7E"
+        }
+      ],
+      "updatedAt": "2026-07-05T14:00:06Z"
+    }
+  ]
+}

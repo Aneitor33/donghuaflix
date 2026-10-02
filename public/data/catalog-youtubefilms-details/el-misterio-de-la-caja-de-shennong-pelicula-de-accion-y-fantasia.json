@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia",
+    "slug": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia",
+    "title": "El Misterio de La Caja de Shennong Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/wWRlbM0-exc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasia \"El Misterio de La Caja de Shennong\" cuenta una historia durante el período de la República de China, cuando las grandes potencias invadieron y los señore...",
+    "year": 2025,
+    "updatedAt": "2025-03-29T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=wWRlbM0-exc",
+    "channel": "@moxispanish",
+    "originalTitle": "El Misterio de La Caja de Shennong | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 5477,
+    "genres": [
+      "Acción",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia",
+      "seasonId": "el-misterio-de-la-caja-de-shennong-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/wWRlbM0-exc"
+        }
+      ],
+      "updatedAt": "2025-03-29T16:00:06Z"
+    }
+  ]
+}

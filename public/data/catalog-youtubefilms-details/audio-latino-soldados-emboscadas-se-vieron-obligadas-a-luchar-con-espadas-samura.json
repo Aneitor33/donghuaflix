@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura",
+    "slug": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura",
+    "title": "Audio Latino - Soldados Emboscadas se vieron obligadas a luchar con Espadas Samuráis",
+    "image": "https://i.ytimg.com/vi/W2lzyug299s/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-10-24T14:30:33Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=W2lzyug299s",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Soldados Emboscadas se vieron obligadas a luchar con Espadas Samuráis...",
+    "duration": 6472,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura-s1",
+      "seriesId": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura-ep-1",
+      "slug": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura-ep-1",
+      "seriesId": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura",
+      "seasonId": "audio-latino-soldados-emboscadas-se-vieron-obligadas-a-luchar-con-espadas-samura-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/W2lzyug299s"
+        }
+      ],
+      "updatedAt": "2025-10-24T14:30:33Z"
+    }
+  ]
+}

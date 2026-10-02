@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr",
+    "slug": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr",
+    "title": "💥Serie completa💥[Marido infiel abandona a su esposa con cáncer, él es el enfermo] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/uOQ0hs87_08/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Liu Yunshu amaba profundamente a su esposo y estaba dispuesta a ser ama de casa a tiempo completo por él. Un error en su examen médico la hizo creer erróneamente que padecía cáncer. Ella siempre cr...",
+    "year": 2026,
+    "updatedAt": "2026-07-03T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=uOQ0hs87_08",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥[Marido infiel abandona a su esposa con cáncer, él es el enfermo] #drama #dramacorto",
+    "duration": 3783,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr-s1",
+      "seriesId": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr-ep-1",
+      "slug": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr-ep-1",
+      "seriesId": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr",
+      "seasonId": "serie-completa-marido-infiel-abandona-a-su-esposa-con-cancer-el-es-el-enfermo-dr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/uOQ0hs87_08"
+        }
+      ],
+      "updatedAt": "2026-07-03T14:00:06Z"
+    }
+  ]
+}

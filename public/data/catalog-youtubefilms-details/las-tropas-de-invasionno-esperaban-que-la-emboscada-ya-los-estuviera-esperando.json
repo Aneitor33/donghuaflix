@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando",
+    "slug": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando",
+    "title": "Las Tropas de Invasiónno esperaban que la Emboscada ya los estuviera esperando…",
+    "image": "https://i.ytimg.com/vi/D3eUMLcqzis/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-01-14T15:30:14Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=D3eUMLcqzis",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Las Tropas de Invasiónno esperaban que la Emboscada ya los estuviera esperando…",
+    "duration": 4990,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando-s1",
+      "seriesId": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando-ep-1",
+      "slug": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando-ep-1",
+      "seriesId": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando",
+      "seasonId": "las-tropas-de-invasionno-esperaban-que-la-emboscada-ya-los-estuviera-esperando-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/D3eUMLcqzis"
+        }
+      ],
+      "updatedAt": "2026-01-14T15:30:14Z"
+    }
+  ]
+}

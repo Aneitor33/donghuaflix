@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient",
+    "slug": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient",
+    "title": "💥Serie completa💥 [Identidad multimillonaria revelada: la familia del ex se arrepiente] #drama #ai",
+    "image": "https://i.ytimg.com/vi/HcQp1ZxB438/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Lin Wan ocultó su fortuna multimillonaria y trabajó como ama de casa durante veinte años. El día de su cumpleaños, descubrió que su esposo había construido una cámara secreta para su amante dentro...",
+    "year": 2026,
+    "updatedAt": "2026-07-31T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=HcQp1ZxB438",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Identidad multimillonaria revelada: la familia del ex se arrepiente] #drama #ai",
+    "duration": 5159,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient-s1",
+      "seriesId": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient-ep-1",
+      "slug": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient-ep-1",
+      "seriesId": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient",
+      "seasonId": "serie-completa-identidad-multimillonaria-revelada-la-familia-del-ex-se-arrepient-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/HcQp1ZxB438"
+        }
+      ],
+      "updatedAt": "2026-07-31T14:00:06Z"
+    }
+  ]
+}

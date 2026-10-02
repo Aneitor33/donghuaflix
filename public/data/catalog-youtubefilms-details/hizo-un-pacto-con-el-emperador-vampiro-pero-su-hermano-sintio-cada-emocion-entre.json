@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre",
+    "slug": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre",
+    "title": "Hizo un pacto con el emperador vampiro, pero su hermano sintió cada emoción entre ambos!💕#anime",
+    "image": "https://i.ytimg.com/vi/OaMANcuJYrQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-08-24T20:00:01Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=OaMANcuJYrQ",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Hizo un pacto con el emperador vampiro, pero su hermano sintió cada emoción entre ambos!💕#anime",
+    "duration": 8450,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre-s1",
+      "seriesId": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre-ep-1",
+      "slug": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre-ep-1",
+      "seriesId": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre",
+      "seasonId": "hizo-un-pacto-con-el-emperador-vampiro-pero-su-hermano-sintio-cada-emocion-entre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OaMANcuJYrQ"
+        }
+      ],
+      "updatedAt": "2026-08-24T20:00:01Z"
+    }
+  ]
+}

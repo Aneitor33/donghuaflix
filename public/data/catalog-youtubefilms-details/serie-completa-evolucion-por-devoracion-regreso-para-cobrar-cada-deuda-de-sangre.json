@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre",
+    "slug": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre",
+    "title": "💥Serie completa💥 [Evolución por Devoración: Regreso para Cobrar Cada Deuda de Sangre] #drama",
+    "image": "https://i.ytimg.com/vi/LBJNs4fSre4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Lu Chen es traicionado y envenenado por su hermano y su novia, pierde su fortuna de miles de millones y sus padres corren grave peligro. Renace en la desesperación como una pequeña anguila eléctric...",
+    "year": 2026,
+    "updatedAt": "2026-07-17T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LBJNs4fSre4",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Evolución por Devoración: Regreso para Cobrar Cada Deuda de Sangre] #drama",
+    "duration": 8155,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre-s1",
+      "seriesId": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre-ep-1",
+      "slug": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre-ep-1",
+      "seriesId": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre",
+      "seasonId": "serie-completa-evolucion-por-devoracion-regreso-para-cobrar-cada-deuda-de-sangre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LBJNs4fSre4"
+        }
+      ],
+      "updatedAt": "2026-07-17T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr",
+    "slug": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr",
+    "title": "Audio Latino - Sicaria es contratada para sabotear una Misión Rival, y desata Guerra entre Bandas",
+    "image": "https://i.ytimg.com/vi/F4Il1xcy7e8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-16T14:30:14Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=F4Il1xcy7e8",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Sicaria es contratada para sabotear una Misión Rival, y desata  Guerra entre Bandas",
+    "duration": 11580,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr-s1",
+      "seriesId": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr-ep-1",
+      "slug": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr-ep-1",
+      "seriesId": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr",
+      "seasonId": "audio-latino-sicaria-es-contratada-para-sabotear-una-mision-rival-y-desata-guerr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/F4Il1xcy7e8"
+        }
+      ],
+      "updatedAt": "2025-12-16T14:30:14Z"
+    }
+  ]
+}

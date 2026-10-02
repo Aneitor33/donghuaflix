@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales",
+    "slug": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales",
+    "title": "El Rey de los Mendigos Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/LUruDRNJJoc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales wuxia \"El Rey de los Mendigos\" cuenta la historia de Su Qier, uno de los Diez Tigres de Guangdong, que luchó contra la Banda del Hacha y los gánst...",
+    "year": 2026,
+    "updatedAt": "2026-04-18T16:00:35Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LUruDRNJJoc",
+    "channel": "@moxispanish",
+    "originalTitle": "El Rey de los Mendigos | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 4758,
+    "genres": [
+      "Artes Marciales",
+      "Histórico",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "el-rey-de-los-mendigos-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LUruDRNJJoc"
+        }
+      ],
+      "updatedAt": "2026-04-18T16:00:35Z"
+    }
+  ]
+}

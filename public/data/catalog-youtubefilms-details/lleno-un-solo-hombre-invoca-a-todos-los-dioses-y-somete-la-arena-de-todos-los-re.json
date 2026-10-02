@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re",
+    "slug": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re",
+    "title": "【LLENO】¡Un solo hombre invoca a todos los dioses y somete la arena de todos los reinos!",
+    "image": "https://i.ytimg.com/vi/YFkCHfL2HwQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Una misteriosa arena aparece repentinamente, obligando a las naciones de todo el mundo a invocar a sus deidades mitológicas para la batalla. La nación derrotada perecerá. Sin embargo,...",
+    "year": 2026,
+    "updatedAt": "2026-09-02T02:00:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=YFkCHfL2HwQ",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Un solo hombre invoca a todos los dioses y somete la arena de todos los reinos!",
+    "duration": 8223,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re-s1",
+      "seriesId": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re-ep-1",
+      "slug": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re-ep-1",
+      "seriesId": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re",
+      "seasonId": "lleno-un-solo-hombre-invoca-a-todos-los-dioses-y-somete-la-arena-de-todos-los-re-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YFkCHfL2HwQ"
+        }
+      ],
+      "updatedAt": "2026-09-02T02:00:27Z"
+    }
+  ]
+}

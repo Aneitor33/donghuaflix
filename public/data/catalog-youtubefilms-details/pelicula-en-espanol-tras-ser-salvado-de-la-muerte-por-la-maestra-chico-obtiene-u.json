@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u",
+    "slug": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u",
+    "title": "Película en Español - Tras ser Salvado de la Muerte por la Maestra, chico Obtiene un gran Poder",
+    "image": "https://i.ytimg.com/vi/1190NcDe62E/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-04-28T14:00:03Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=1190NcDe62E",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Tras ser Salvado de la Muerte por la Maestra, chico Obtiene un gran Poder.",
+    "duration": 5586,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u-s1",
+      "seriesId": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u-ep-1",
+      "slug": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u-ep-1",
+      "seriesId": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u",
+      "seasonId": "pelicula-en-espanol-tras-ser-salvado-de-la-muerte-por-la-maestra-chico-obtiene-u-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/1190NcDe62E"
+        }
+      ],
+      "updatedAt": "2025-04-28T14:00:03Z"
+    }
+  ]
+}

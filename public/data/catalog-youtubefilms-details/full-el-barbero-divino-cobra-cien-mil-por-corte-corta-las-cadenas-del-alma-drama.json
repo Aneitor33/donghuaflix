@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama",
+    "slug": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama",
+    "title": "💥FULL💥 [El barbero divino cobra cien mil por corte, corta las cadenas del alma！] #drama #ai",
+    "image": "https://i.ytimg.com/vi/5wVAshbh18c/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Heredó el legado de su maestro, aprendió artes místicas extraordinarias y se convirtió en un barbero divino. Cobra cien mil por cada corte. Para los demás es un precio exorbitante, pero en realidad...",
+    "year": 2026,
+    "updatedAt": "2026-09-13T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=5wVAshbh18c",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥 [El barbero divino cobra cien mil por corte, corta las cadenas del alma！] #drama #ai",
+    "duration": 4229,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama-s1",
+      "seriesId": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama-ep-1",
+      "slug": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama-ep-1",
+      "seriesId": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama",
+      "seasonId": "full-el-barbero-divino-cobra-cien-mil-por-corte-corta-las-cadenas-del-alma-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/5wVAshbh18c"
+        }
+      ],
+      "updatedAt": "2026-09-13T14:00:06Z"
+    }
+  ]
+}

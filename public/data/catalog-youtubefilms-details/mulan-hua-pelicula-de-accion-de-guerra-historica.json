@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "mulan-hua-pelicula-de-accion-de-guerra-historica",
+    "slug": "mulan-hua-pelicula-de-accion-de-guerra-historica",
+    "title": "Mulan Hua Pelicula de Accion de Guerra Histórica",
+    "image": "https://i.ytimg.com/vi/S-kj-6N9nFs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película accion de guerra histórica \"Mulan Hua\" cuenta la legendaria historia de una niña guerrera, Hua Mulan. Durante las dinastías del Sur y del Norte, Roulan invadió las llanuras ce...",
+    "year": 2024,
+    "updatedAt": "2024-07-20T16:00:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=S-kj-6N9nFs",
+    "channel": "@moxispanish",
+    "originalTitle": "Mulan Hua | Pelicula de Accion de Guerra Histórica | Completa en Español HD",
+    "duration": 4450,
+    "genres": [
+      "Acción",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mulan-hua-pelicula-de-accion-de-guerra-historica-s1",
+      "seriesId": "mulan-hua-pelicula-de-accion-de-guerra-historica",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mulan-hua-pelicula-de-accion-de-guerra-historica-ep-1",
+      "slug": "mulan-hua-pelicula-de-accion-de-guerra-historica-ep-1",
+      "seriesId": "mulan-hua-pelicula-de-accion-de-guerra-historica",
+      "seasonId": "mulan-hua-pelicula-de-accion-de-guerra-historica-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/S-kj-6N9nFs"
+        }
+      ],
+      "updatedAt": "2024-07-20T16:00:07Z"
+    }
+  ]
+}

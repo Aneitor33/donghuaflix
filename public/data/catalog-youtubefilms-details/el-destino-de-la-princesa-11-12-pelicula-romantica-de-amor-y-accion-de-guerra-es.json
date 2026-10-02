@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es",
+    "slug": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es",
+    "title": "EL Destino de la Princesa 11-12 Pelicula Romantica de Amor y Accion de Guerra Español",
+    "image": "https://i.ytimg.com/vi/3E3LbviwZgw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor y accion de guerra historica \"EL Destino de la Princesa\" tiene un trasfondo: en el año 221 a. C., el primer emperador de Qin unificó los Siete Reinos. Luego...",
+    "year": 2024,
+    "updatedAt": "2024-12-11T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=3E3LbviwZgw",
+    "channel": "@moxispanish",
+    "originalTitle": "EL Destino de la Princesa 11-12 | Pelicula Romantica de Amor y Accion de Guerra | Español HD",
+    "duration": 5323,
+    "genres": [
+      "Drama",
+      "Histórico",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es-s1",
+      "seriesId": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es-ep-1",
+      "slug": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es-ep-1",
+      "seriesId": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es",
+      "seasonId": "el-destino-de-la-princesa-11-12-pelicula-romantica-de-amor-y-accion-de-guerra-es-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/3E3LbviwZgw"
+        }
+      ],
+      "updatedAt": "2024-12-11T16:00:06Z"
+    }
+  ]
+}

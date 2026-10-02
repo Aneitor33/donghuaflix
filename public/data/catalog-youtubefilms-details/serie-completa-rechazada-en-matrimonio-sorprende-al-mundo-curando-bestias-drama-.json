@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama-",
+    "slug": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama-",
+    "title": "💥Serie completa💥 [Rechazada en matrimonio, sorprende al mundo curando bestias] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/l7mKIbSf8Gg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Shen Wei, una veterinaria en prácticas, se transmigró a un libro y se convirtió en la infame princesa de la tribu del pavo real en el mundo de las bestias. En la historia original, esta princesa ma...",
+    "year": 2026,
+    "updatedAt": "2026-06-14T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=l7mKIbSf8Gg",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Rechazada en matrimonio, sorprende al mundo curando bestias] #drama #dramacorto",
+    "duration": 7673,
+    "genres": [
+      "Artes Marciales",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama--s1",
+      "seriesId": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama--ep-1",
+      "slug": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama--ep-1",
+      "seriesId": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama-",
+      "seasonId": "serie-completa-rechazada-en-matrimonio-sorprende-al-mundo-curando-bestias-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/l7mKIbSf8Gg"
+        }
+      ],
+      "updatedAt": "2026-06-14T14:00:06Z"
+    }
+  ]
+}

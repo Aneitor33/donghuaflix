@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a",
+    "slug": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a",
+    "title": "【LLENO】Después de quedar desempleado, desperté la vista penetrante#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/ZqlLxAw8rx4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:La vida le sonreía con dificultades y no paraba de tropezar en cada esquina, hasta que una oportunidad inesperada apareció en su momento más oscu...",
+    "year": 2026,
+    "updatedAt": "2026-06-16T10:00:38Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ZqlLxAw8rx4",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Después de quedar desempleado, desperté la vista penetrante#Manga popular #Anime",
+    "duration": 8557,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a-s1",
+      "seriesId": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a-ep-1",
+      "slug": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a-ep-1",
+      "seriesId": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a",
+      "seasonId": "lleno-despues-de-quedar-desempleado-desperte-la-vista-penetrante-manga-popular-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ZqlLxAw8rx4"
+        }
+      ],
+      "updatedAt": "2026-06-16T10:00:38Z"
+    }
+  ]
+}

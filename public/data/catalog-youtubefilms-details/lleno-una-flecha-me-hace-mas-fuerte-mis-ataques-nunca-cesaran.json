@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran",
+    "slug": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran",
+    "title": "【LLENO】Una flecha me hace más fuerte; mis ataques nunca cesarán",
+    "image": "https://i.ytimg.com/vi/fun1zrteFR0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】En la era digital, cualquiera puede desarrollar una profesión. Sin embargo, Xia Mu despertó la de un arquero común y corriente, enfrentándose al desprecio generalizado. Pero nadie sabe...",
+    "year": 2026,
+    "updatedAt": "2026-09-10T03:00:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=fun1zrteFR0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Una flecha me hace más fuerte; mis ataques nunca cesarán.",
+    "duration": 8495,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran-s1",
+      "seriesId": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran-ep-1",
+      "slug": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran-ep-1",
+      "seriesId": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran",
+      "seasonId": "lleno-una-flecha-me-hace-mas-fuerte-mis-ataques-nunca-cesaran-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/fun1zrteFR0"
+        }
+      ],
+      "updatedAt": "2026-09-10T03:00:00Z"
+    }
+  ]
+}

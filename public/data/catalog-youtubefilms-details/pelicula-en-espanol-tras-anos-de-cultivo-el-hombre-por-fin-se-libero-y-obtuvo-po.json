@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po",
+    "slug": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po",
+    "title": "Película en Español - Tras años de Cultivo, el hombre por fin Se Liberó y obtuvo Poder Divino Real",
+    "image": "https://i.ytimg.com/vi/Jknji6f6asM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-06-12T14:00:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Jknji6f6asM",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Tras años de Cultivo, el hombre por fin Se Liberó y obtuvo Poder Divino Real..",
+    "duration": 7989,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po-s1",
+      "seriesId": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po-ep-1",
+      "slug": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po-ep-1",
+      "seriesId": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po",
+      "seasonId": "pelicula-en-espanol-tras-anos-de-cultivo-el-hombre-por-fin-se-libero-y-obtuvo-po-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Jknji6f6asM"
+        }
+      ],
+      "updatedAt": "2025-06-12T14:00:27Z"
+    }
+  ]
+}

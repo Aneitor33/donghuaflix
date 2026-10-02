@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram",
+    "slug": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram",
+    "title": "💥COMPLETO💥 [El Emperador Divino Oculto: Joven Ocioso con Poder de Vida y Muerte！] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/52bcHs6AP1Y/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Hace treinta mil años, la humanidad fue esclavizada por tres razas: los dioses, los demonios y los monstruos, al borde de la extinción. En esta situación desesperada, Ye Wuchen surgió de la nada. D...",
+    "year": 2026,
+    "updatedAt": "2026-08-26T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=52bcHs6AP1Y",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥COMPLETO💥 [El Emperador Divino Oculto: Joven Ocioso con Poder de Vida y Muerte！] #drama #dramacorto",
+    "duration": 6257,
+    "genres": [
+      "Histórico",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram-s1",
+      "seriesId": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram-ep-1",
+      "slug": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram-ep-1",
+      "seriesId": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram",
+      "seasonId": "completo-el-emperador-divino-oculto-joven-ocioso-con-poder-de-vida-y-muerte-dram-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/52bcHs6AP1Y"
+        }
+      ],
+      "updatedAt": "2026-08-26T14:00:06Z"
+    }
+  ]
+}

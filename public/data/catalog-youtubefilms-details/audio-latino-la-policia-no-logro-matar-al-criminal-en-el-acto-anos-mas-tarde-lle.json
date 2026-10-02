@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle",
+    "slug": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle",
+    "title": "Audio Latino - La Policía no logró matar al Criminal en el Acto. Años más tarde, llegó la Venganza",
+    "image": "https://i.ytimg.com/vi/LaLU-utQ70M/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-11-04T14:30:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LaLU-utQ70M",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - La Policía no logró matar al Criminal en el Acto. Años más tarde, llegó la Venganza.",
+    "duration": 6341,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle-s1",
+      "seriesId": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle-ep-1",
+      "slug": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle-ep-1",
+      "seriesId": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle",
+      "seasonId": "audio-latino-la-policia-no-logro-matar-al-criminal-en-el-acto-anos-mas-tarde-lle-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LaLU-utQ70M"
+        }
+      ],
+      "updatedAt": "2025-11-04T14:30:19Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno-",
+    "slug": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno-",
+    "title": "Audio latino - Todos los Artistas que actuaron en la fiesta eran Asesinos; ninguno sobrevivió",
+    "image": "https://i.ytimg.com/vi/nqPJgGDQciQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-10-05T14:30:40Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nqPJgGDQciQ",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino -  Todos los Artistas que actuaron en la fiesta eran Asesinos; ninguno sobrevivió.",
+    "duration": 5704,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno--s1",
+      "seriesId": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno--ep-1",
+      "slug": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno--ep-1",
+      "seriesId": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno-",
+      "seasonId": "audio-latino-todos-los-artistas-que-actuaron-en-la-fiesta-eran-asesinos-ninguno--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nqPJgGDQciQ"
+        }
+      ],
+      "updatedAt": "2025-10-05T14:30:40Z"
+    }
+  ]
+}

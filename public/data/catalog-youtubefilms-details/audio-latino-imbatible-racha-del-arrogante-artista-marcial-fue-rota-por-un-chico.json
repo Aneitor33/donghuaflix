@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico",
+    "slug": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico",
+    "title": "Audio Latino - Imbatible Racha del Arrogante Artista Marcial fue Rota por un Chico Débil",
+    "image": "https://i.ytimg.com/vi/JC2ipatEPa0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-13T14:30:15Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=JC2ipatEPa0",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Imbatible Racha del Arrogante Artista Marcial fue Rota por un Chico Débil.",
+    "duration": 5282,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico-s1",
+      "seriesId": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico-ep-1",
+      "slug": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico-ep-1",
+      "seriesId": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico",
+      "seasonId": "audio-latino-imbatible-racha-del-arrogante-artista-marcial-fue-rota-por-un-chico-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/JC2ipatEPa0"
+        }
+      ],
+      "updatedAt": "2025-12-13T14:30:15Z"
+    }
+  ]
+}

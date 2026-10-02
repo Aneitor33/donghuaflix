@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime",
+    "slug": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime",
+    "title": "Lo arrojaron al abismo por ser débil… ¡volvió para gobernar los Cuatro Mares!💕#anime",
+    "image": "https://i.ytimg.com/vi/au9GdMMU4wg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-08-02T20:00:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=au9GdMMU4wg",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Lo arrojaron al abismo por ser débil… ¡volvió para gobernar los Cuatro Mares!💕#anime",
+    "duration": 5639,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime-s1",
+      "seriesId": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime-ep-1",
+      "slug": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime-ep-1",
+      "seriesId": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime",
+      "seasonId": "lo-arrojaron-al-abismo-por-ser-debil-volvio-para-gobernar-los-cuatro-mares-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/au9GdMMU4wg"
+        }
+      ],
+      "updatedAt": "2026-08-02T20:00:22Z"
+    }
+  ]
+}

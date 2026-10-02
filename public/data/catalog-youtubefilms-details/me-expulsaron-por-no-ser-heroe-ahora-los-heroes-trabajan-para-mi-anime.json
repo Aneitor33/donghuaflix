@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime",
+    "slug": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime",
+    "title": "Me Expulsaron por No Ser Héroe… Ahora los Héroes Trabajan Para Mí!💕#anime",
+    "image": "https://i.ytimg.com/vi/06wP6P4-hz0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-27T20:00:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=06wP6P4-hz0",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Me Expulsaron por No Ser Héroe… Ahora los Héroes Trabajan Para Mí!💕#anime",
+    "duration": 4991,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime-s1",
+      "seriesId": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime-ep-1",
+      "slug": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime-ep-1",
+      "seriesId": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime",
+      "seasonId": "me-expulsaron-por-no-ser-heroe-ahora-los-heroes-trabajan-para-mi-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/06wP6P4-hz0"
+        }
+      ],
+      "updatedAt": "2026-06-27T20:00:00Z"
+    }
+  ]
+}

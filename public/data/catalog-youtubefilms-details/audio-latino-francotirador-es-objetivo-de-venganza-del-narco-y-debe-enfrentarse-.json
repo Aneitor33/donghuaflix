@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse-",
+    "slug": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse-",
+    "title": "Audio Latino - Francotirador es objetivo de venganza del narco y debe enfrentarse a Mercenarios solo",
+    "image": "https://i.ytimg.com/vi/Th42hZU3434/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-07-03T15:31:30Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Th42hZU3434",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Francotirador es objetivo de venganza del narco y debe enfrentarse a Mercenarios solo",
+    "duration": 4247,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse--s1",
+      "seriesId": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse--ep-1",
+      "slug": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse--ep-1",
+      "seriesId": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse-",
+      "seasonId": "audio-latino-francotirador-es-objetivo-de-venganza-del-narco-y-debe-enfrentarse--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Th42hZU3434"
+        }
+      ],
+      "updatedAt": "2026-07-03T15:31:30Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod",
+    "slug": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod",
+    "title": "Soldados maltratan a civiles en la calle, un Obrero que pasa solo los vence a todos",
+    "image": "https://i.ytimg.com/vi/ressXytKDWk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-09-09T15:30:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ressXytKDWk",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Soldados maltratan a civiles en la calle, un Obrero que pasa solo los vence a todos.",
+    "duration": 7125,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod-s1",
+      "seriesId": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod-ep-1",
+      "slug": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod-ep-1",
+      "seriesId": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod",
+      "seasonId": "soldados-maltratan-a-civiles-en-la-calle-un-obrero-que-pasa-solo-los-vence-a-tod-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ressXytKDWk"
+        }
+      ],
+      "updatedAt": "2026-09-09T15:30:11Z"
+    }
+  ]
+}

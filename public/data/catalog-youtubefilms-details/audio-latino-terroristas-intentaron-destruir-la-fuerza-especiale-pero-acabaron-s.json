@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s",
+    "slug": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s",
+    "title": "Audio Latino - Terroristas intentaron destruir la Fuerza Especiale pero acabaron siendo Aniquilados",
+    "image": "https://i.ytimg.com/vi/4ZpBSGt1GcQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-11-07T14:30:03Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=4ZpBSGt1GcQ",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Terroristas intentaron destruir la Fuerza Especiale pero acabaron siendo Aniquilados",
+    "duration": 8508,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s-s1",
+      "seriesId": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s-ep-1",
+      "slug": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s-ep-1",
+      "seriesId": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s",
+      "seasonId": "audio-latino-terroristas-intentaron-destruir-la-fuerza-especiale-pero-acabaron-s-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/4ZpBSGt1GcQ"
+        }
+      ],
+      "updatedAt": "2025-11-07T14:30:03Z"
+    }
+  ]
+}

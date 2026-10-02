@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales",
+    "slug": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales",
+    "title": "Gran Serpiente vs. Kung Fu Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/bFzmE7792hc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales \"Las Palmas del Dragón\" trata sobre una historia en la dinastía Qing. Dos magistrados del remoto condado de Linjiang fueron asesinados sucesivamen...",
+    "year": 2026,
+    "updatedAt": "2026-08-26T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=bFzmE7792hc",
+    "channel": "@moxispanish",
+    "originalTitle": "Gran Serpiente vs. Kung Fu | Pelicula de Accion de Artes Marciales | Completa en Español 4K",
+    "duration": 4424,
+    "genres": [
+      "Artes Marciales",
+      "Fantasía/Cultivación",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "gran-serpiente-vs-kung-fu-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/bFzmE7792hc"
+        }
+      ],
+      "updatedAt": "2026-08-26T16:00:06Z"
+    }
+  ]
+}

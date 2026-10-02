@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas",
+    "slug": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas",
+    "title": "Audio Latino - Agente se infiltra sola en base enemiga para rescatar a sus colegas capturados",
+    "image": "https://i.ytimg.com/vi/DPFaksC2D8s/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-04T14:30:10Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=DPFaksC2D8s",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Agente se infiltra sola en base enemiga para rescatar a sus colegas capturados.",
+    "duration": 4478,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas-s1",
+      "seriesId": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas-ep-1",
+      "slug": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas-ep-1",
+      "seriesId": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas",
+      "seasonId": "audio-latino-agente-se-infiltra-sola-en-base-enemiga-para-rescatar-a-sus-colegas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/DPFaksC2D8s"
+        }
+      ],
+      "updatedAt": "2026-05-04T14:30:10Z"
+    }
+  ]
+}

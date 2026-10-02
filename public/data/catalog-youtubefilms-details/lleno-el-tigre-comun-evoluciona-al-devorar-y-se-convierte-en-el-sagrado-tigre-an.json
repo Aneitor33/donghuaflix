@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an",
+    "slug": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an",
+    "title": "【LLENO】El tigre común evoluciona al devorar y se convierte en el sagrado tigre ancestral",
+    "image": "https://i.ytimg.com/vi/EYYJ_nU7FlE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】He reencarnado como un tigre, pero soy el más débil de mi clan, un tigre ordinario. Estoy a punto de morir en el combate de la arena en siete días. Afortunadamente, despierto un sistem...",
+    "year": 2026,
+    "updatedAt": "2026-10-02T02:00:16Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=EYYJ_nU7FlE",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】El tigre común evoluciona al devorar y se convierte en el sagrado tigre ancestral",
+    "duration": 9362,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an-s1",
+      "seriesId": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an-ep-1",
+      "slug": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an-ep-1",
+      "seriesId": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an",
+      "seasonId": "lleno-el-tigre-comun-evoluciona-al-devorar-y-se-convierte-en-el-sagrado-tigre-an-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/EYYJ_nU7FlE"
+        }
+      ],
+      "updatedAt": "2026-10-02T02:00:16Z"
+    }
+  ]
+}

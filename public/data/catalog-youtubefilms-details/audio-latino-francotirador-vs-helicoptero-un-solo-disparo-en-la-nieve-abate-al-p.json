@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p",
+    "slug": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p",
+    "title": "Audio Latino - Francotirador vs. Helicóptero. Un solo Disparo en la nieve abate al Piloto",
+    "image": "https://i.ytimg.com/vi/jiF06ReYLZI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-20T14:30:41Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=jiF06ReYLZI",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Francotirador vs. Helicóptero. Un solo Disparo en la nieve abate al Piloto.",
+    "duration": 4466,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p-s1",
+      "seriesId": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p-ep-1",
+      "slug": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p-ep-1",
+      "seriesId": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p",
+      "seasonId": "audio-latino-francotirador-vs-helicoptero-un-solo-disparo-en-la-nieve-abate-al-p-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/jiF06ReYLZI"
+        }
+      ],
+      "updatedAt": "2025-12-20T14:30:41Z"
+    }
+  ]
+}

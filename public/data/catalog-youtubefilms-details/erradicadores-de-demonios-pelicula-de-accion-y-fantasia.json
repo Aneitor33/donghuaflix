@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia",
+    "slug": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia",
+    "title": "Erradicadores de Demonios Pelicula de Accion y Fantasia",
+    "image": "https://i.ytimg.com/vi/ggrOumy-iek/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y fantasía \"Erradicadores de Demonios\" narra la historia de los cuarenta años de la Gran Dinastía Zhao, cuando nació el Señor de las Bestias Bárbaras Occidentales y...",
+    "year": 2025,
+    "updatedAt": "2025-10-29T16:00:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ggrOumy-iek",
+    "channel": "@moxispanish",
+    "originalTitle": "Erradicadores de Demonios | Pelicula de Accion y Fantasia | Completa en Español HD",
+    "duration": 5988,
+    "genres": [
+      "Histórico",
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia-s1",
+      "seriesId": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia-ep-1",
+      "slug": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia-ep-1",
+      "seriesId": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia",
+      "seasonId": "erradicadores-de-demonios-pelicula-de-accion-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ggrOumy-iek"
+        }
+      ],
+      "updatedAt": "2025-10-29T16:00:07Z"
+    }
+  ]
+}

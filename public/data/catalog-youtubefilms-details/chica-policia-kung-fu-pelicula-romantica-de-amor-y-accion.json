@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion",
+    "slug": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion",
+    "title": "Chica Policía Kung Fu Pelicula Romantica de Amor y Accion",
+    "image": "https://i.ytimg.com/vi/2LOjAaaPkrA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor y acción \"Chica Policía Kung Fu\" trata sobre la desafiante policía Yang Yang, quien es enviada a un campus como agente encubierto. Su misión es proteger al t...",
+    "year": 2023,
+    "updatedAt": "2023-09-09T18:00:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=2LOjAaaPkrA",
+    "channel": "@moxispanish",
+    "originalTitle": "Chica Policía Kung Fu | Pelicula Romantica de Amor y Accion | Completa en Español HD",
+    "duration": 4722,
+    "genres": [
+      "Artes Marciales",
+      "Acción",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion-s1",
+      "seriesId": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion-ep-1",
+      "slug": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion-ep-1",
+      "seriesId": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion",
+      "seasonId": "chica-policia-kung-fu-pelicula-romantica-de-amor-y-accion-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2LOjAaaPkrA"
+        }
+      ],
+      "updatedAt": "2023-09-09T18:00:11Z"
+    }
+  ]
+}

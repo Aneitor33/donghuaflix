@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram",
+    "slug": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram",
+    "title": "💥Serie completa💥 [Doctora divina se disfraza de mendiga para curar al heredero] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/r6Rwo-maoUA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Chi Yin ocultó sus dos nobles identidades de Santo de la Medicina y Madre Dragón, y se disfrazó de mendiga. Con su extraordinaria habilidad médica y sabiduría, logró curar con éxito a Zhan Shiyan,...",
+    "year": 2026,
+    "updatedAt": "2026-06-13T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=r6Rwo-maoUA",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Doctora divina se disfraza de mendiga para curar al heredero] #drama #dramacorto",
+    "duration": 7689,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram-s1",
+      "seriesId": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram-ep-1",
+      "slug": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram-ep-1",
+      "seriesId": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram",
+      "seasonId": "serie-completa-doctora-divina-se-disfraza-de-mendiga-para-curar-al-heredero-dram-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/r6Rwo-maoUA"
+        }
+      ],
+      "updatedAt": "2026-06-13T14:00:06Z"
+    }
+  ]
+}

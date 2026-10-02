@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "amor-por-accidente-pelicula-romantica-de-amor",
+    "slug": "amor-por-accidente-pelicula-romantica-de-amor",
+    "title": "Amor por Accidente Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/GYD0gdtCX0c/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor \" Amor por Accidente \" trata sobre una historia de amor de Cenicienta. Cao Aiai es asistente en una empresa de publicidad. Zhan Shaoang es el único hijo de u...",
+    "year": 2023,
+    "updatedAt": "2023-12-16T16:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GYD0gdtCX0c",
+    "channel": "@moxispanish",
+    "originalTitle": "Amor por Accidente | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 5907,
+    "genres": [
+      "Drama",
+      "Comedia",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "amor-por-accidente-pelicula-romantica-de-amor-s1",
+      "seriesId": "amor-por-accidente-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "amor-por-accidente-pelicula-romantica-de-amor-ep-1",
+      "slug": "amor-por-accidente-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "amor-por-accidente-pelicula-romantica-de-amor",
+      "seasonId": "amor-por-accidente-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GYD0gdtCX0c"
+        }
+      ],
+      "updatedAt": "2023-12-16T16:00:08Z"
+    }
+  ]
+}

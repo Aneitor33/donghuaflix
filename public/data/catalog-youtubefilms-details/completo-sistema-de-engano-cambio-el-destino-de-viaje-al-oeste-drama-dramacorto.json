@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto",
+    "slug": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto",
+    "title": "💥COMPLETO💥 [Sistema de Engaño: ¡Cambio el destino de Viaje al Oeste!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/A5OsQqDHYAs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Zhou Qing se reencarna en el mundo de *Viaje al Oeste* y se convierte en el hermano mayor de la Montaña Fangcun. Incapaz de cultivar energía espiritual por sí mismo, activa accidentalmente el Siste...",
+    "year": 2026,
+    "updatedAt": "2026-08-28T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=A5OsQqDHYAs",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥COMPLETO💥 [Sistema de Engaño: ¡Cambio el destino de Viaje al Oeste!] #drama #dramacorto",
+    "duration": 9318,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Artes Marciales",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto-s1",
+      "seriesId": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto-ep-1",
+      "slug": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto-ep-1",
+      "seriesId": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto",
+      "seasonId": "completo-sistema-de-engano-cambio-el-destino-de-viaje-al-oeste-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/A5OsQqDHYAs"
+        }
+      ],
+      "updatedAt": "2026-08-28T14:00:06Z"
+    }
+  ]
+}

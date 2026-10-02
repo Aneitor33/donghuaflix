@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende-",
+    "slug": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende-",
+    "title": "Audio Latino - Chico Débil toma al Mono Divino como Maestro, sin esperarlo aprende el Arte Perdido!",
+    "image": "https://i.ytimg.com/vi/b5BwVCoVWKY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-06-21T14:30:31Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=b5BwVCoVWKY",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Chico Débil toma al Mono Divino como Maestro, sin esperarlo aprende el Arte Perdido!",
+    "duration": 4376,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende--s1",
+      "seriesId": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende--ep-1",
+      "slug": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende--ep-1",
+      "seriesId": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende-",
+      "seasonId": "audio-latino-chico-debil-toma-al-mono-divino-como-maestro-sin-esperarlo-aprende--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/b5BwVCoVWKY"
+        }
+      ],
+      "updatedAt": "2026-06-21T14:30:31Z"
+    }
+  ]
+}

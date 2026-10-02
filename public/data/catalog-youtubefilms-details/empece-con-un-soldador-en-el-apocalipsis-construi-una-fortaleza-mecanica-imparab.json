@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab",
+    "slug": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab",
+    "title": "Empecé con un soldador En el apocalipsis construí una fortaleza mecánica imparable!💕#anime",
+    "image": "https://i.ytimg.com/vi/nofV0K1n8KY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-10T20:00:36Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nofV0K1n8KY",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Empecé con un soldador  En el apocalipsis construí una fortaleza mecánica imparable!💕#anime",
+    "duration": 7586,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab-s1",
+      "seriesId": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab-ep-1",
+      "slug": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab-ep-1",
+      "seriesId": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab",
+      "seasonId": "empece-con-un-soldador-en-el-apocalipsis-construi-una-fortaleza-mecanica-imparab-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nofV0K1n8KY"
+        }
+      ],
+      "updatedAt": "2026-06-10T20:00:36Z"
+    }
+  ]
+}

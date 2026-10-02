@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue",
+    "slug": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue",
+    "title": "【LLENO】Empecé siendo un debilucho, ¡pero ahora puedo enfrentarme a mecas con el cuerpo desnudo!",
+    "image": "https://i.ytimg.com/vi/d4DcFQ4ZThM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】En una era dominada por los mechas, el poder psíquico reina de forma absoluta. Mientras la gente común solo puede contemplar con asombro a estos imponentes titanes de acero, Li Qingsha...",
+    "year": 2026,
+    "updatedAt": "2026-09-30T04:00:37Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=d4DcFQ4ZThM",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Empecé siendo un debilucho, ¡pero ahora puedo enfrentarme a mecas con el cuerpo desnudo!",
+    "duration": 8049,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue-s1",
+      "seriesId": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue-ep-1",
+      "slug": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue-ep-1",
+      "seriesId": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue",
+      "seasonId": "lleno-empece-siendo-un-debilucho-pero-ahora-puedo-enfrentarme-a-mecas-con-el-cue-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/d4DcFQ4ZThM"
+        }
+      ],
+      "updatedAt": "2026-09-30T04:00:37Z"
+    }
+  ]
+}

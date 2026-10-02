@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani",
+    "slug": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani",
+    "title": "Un Piloto del Futuro Reencarnó en el Cultivo y Creó su Propia Raíz Celestial💕#anime",
+    "image": "https://i.ytimg.com/vi/iCtlZCUwnAk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-17T21:00:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=iCtlZCUwnAk",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Un Piloto del Futuro Reencarnó en el Cultivo y Creó su Propia Raíz Celestial💕#anime",
+    "duration": 7205,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani-s1",
+      "seriesId": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani-ep-1",
+      "slug": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani-ep-1",
+      "seriesId": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani",
+      "seasonId": "un-piloto-del-futuro-reencarno-en-el-cultivo-y-creo-su-propia-raiz-celestial-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/iCtlZCUwnAk"
+        }
+      ],
+      "updatedAt": "2026-09-17T21:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode",
+    "slug": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode",
+    "title": "Audio Latino - Chica salva a un prisionero sin saber que fundaría el Clan más poderoso para ella",
+    "image": "https://i.ytimg.com/vi/Dd9SzZM_eO4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-01-09T14:30:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Dd9SzZM_eO4",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Chica salva a un prisionero sin saber que fundaría el Clan más poderoso para ella.",
+    "duration": 12316,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode-s1",
+      "seriesId": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode-ep-1",
+      "slug": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode-ep-1",
+      "seriesId": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode",
+      "seasonId": "audio-latino-chica-salva-a-un-prisionero-sin-saber-que-fundaria-el-clan-mas-pode-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Dd9SzZM_eO4"
+        }
+      ],
+      "updatedAt": "2026-01-09T14:30:19Z"
+    }
+  ]
+}

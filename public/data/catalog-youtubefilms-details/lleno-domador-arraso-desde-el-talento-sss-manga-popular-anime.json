@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime",
+    "slug": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime",
+    "title": "【LLENO】Domador: Arraso desde el talento SSS #Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/4Wmry2ayKZQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Pensé que mi ojo divino de rango SSS me haría famoso de inmediato, pero una piedra de despertar defectuosa me dejó sin ningún talento. Todo el co...",
+    "year": 2026,
+    "updatedAt": "2026-05-24T10:00:15Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=4Wmry2ayKZQ",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Domador: Arraso desde el talento SSS #Manga popular #Anime",
+    "duration": 7939,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime-s1",
+      "seriesId": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime-ep-1",
+      "slug": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime-ep-1",
+      "seriesId": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime",
+      "seasonId": "lleno-domador-arraso-desde-el-talento-sss-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/4Wmry2ayKZQ"
+        }
+      ],
+      "updatedAt": "2026-05-24T10:00:15Z"
+    }
+  ]
+}

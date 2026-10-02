@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd",
+    "slug": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd",
+    "title": "💥FULL💥[Señora del Fénix: ¡Hija secuestrada, contra todos sus enemigos!] #drama #ai #shortdrama",
+    "image": "https://i.ytimg.com/vi/KNn7jEu_6oo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Qin Ling, la poderosa Señora del Palacio Fénix, se oculta como sirvienta de limpieza para proteger a su hija Qin Miaomiao. De repente estalla una conspiración: las cuatro grandes familias se alían...",
+    "year": 2026,
+    "updatedAt": "2026-08-30T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=KNn7jEu_6oo",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[Señora del Fénix: ¡Hija secuestrada, contra todos sus enemigos!] #drama #ai #shortdrama",
+    "duration": 6539,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd-s1",
+      "seriesId": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd-ep-1",
+      "slug": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd-ep-1",
+      "seriesId": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd",
+      "seasonId": "full-senora-del-fenix-hija-secuestrada-contra-todos-sus-enemigos-drama-ai-shortd-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KNn7jEu_6oo"
+        }
+      ],
+      "updatedAt": "2026-08-30T14:00:06Z"
+    }
+  ]
+}

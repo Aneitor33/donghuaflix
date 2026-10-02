@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y",
+    "slug": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y",
+    "title": "Audio Latino - Narcos están a punto de ejecutar a la espía, sin saber que su Base ya está Expuesta",
+    "image": "https://i.ytimg.com/vi/tCS_oYIm__g/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-28T14:30:46Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=tCS_oYIm__g",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Narcos están a punto de ejecutar a la espía, sin saber que su Base ya está Expuesta.",
+    "duration": 5316,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y-s1",
+      "seriesId": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y-ep-1",
+      "slug": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y-ep-1",
+      "seriesId": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y",
+      "seasonId": "audio-latino-narcos-estan-a-punto-de-ejecutar-a-la-espia-sin-saber-que-su-base-y-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tCS_oYIm__g"
+        }
+      ],
+      "updatedAt": "2026-02-28T14:30:46Z"
+    }
+  ]
+}

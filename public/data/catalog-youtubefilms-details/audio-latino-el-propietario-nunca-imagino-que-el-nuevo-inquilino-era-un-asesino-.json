@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino-",
+    "slug": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino-",
+    "title": "Audio Latino - El Propietario nunca imaginó que el nuevo Inquilino era un Asesino a Sueldo en Misión",
+    "image": "https://i.ytimg.com/vi/Dq2jDWkEJYk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-02T14:30:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Dq2jDWkEJYk",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - El Propietario nunca imaginó que el nuevo Inquilino era un Asesino a Sueldo en Misión",
+    "duration": 5914,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino--s1",
+      "seriesId": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino--ep-1",
+      "slug": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino--ep-1",
+      "seriesId": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino-",
+      "seasonId": "audio-latino-el-propietario-nunca-imagino-que-el-nuevo-inquilino-era-un-asesino--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Dq2jDWkEJYk"
+        }
+      ],
+      "updatedAt": "2025-12-02T14:30:12Z"
+    }
+  ]
+}

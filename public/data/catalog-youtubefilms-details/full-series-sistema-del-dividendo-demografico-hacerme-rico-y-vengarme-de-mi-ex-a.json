@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a",
+    "slug": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a",
+    "title": "💥Full series💥 [Sistema del dividendo demográfico: Hacerme rico y vengarme de mi ex] #ai#dramacorto",
+    "image": "https://i.ytimg.com/vi/NkB_29Ig0_M/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El trabajador Chen Wenqiang fue humillado y abandonado por su novia por su pobreza familiar. Al regresar a su pueblo desanimado, activó por accidente el divino Sistema de Dividendo Demográfico: cua...",
+    "year": 2026,
+    "updatedAt": "2026-08-14T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=NkB_29Ig0_M",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Full series💥 [Sistema del dividendo demográfico: Hacerme rico y vengarme de mi ex] #ai#dramacorto",
+    "duration": 8791,
+    "genres": [
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a-s1",
+      "seriesId": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a-ep-1",
+      "slug": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a-ep-1",
+      "seriesId": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a",
+      "seasonId": "full-series-sistema-del-dividendo-demografico-hacerme-rico-y-vengarme-de-mi-ex-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/NkB_29Ig0_M"
+        }
+      ],
+      "updatedAt": "2026-08-14T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta",
+    "slug": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta",
+    "title": "【LLENO】SSS Ojo Divino: ¡Encontré una bestia mítica oculta!",
+    "image": "https://i.ytimg.com/vi/2FIMlgWqDx0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】El día de su despertar, el chico creyó que asombraría a todos con su talento de Ojo Divino de nivel SSS, pero debido a un fallo en su piedra de despertar, todos lo consideraron errónea...",
+    "year": 2026,
+    "updatedAt": "2026-08-25T02:00:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=2FIMlgWqDx0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】SSS Ojo Divino: ¡Encontré una bestia mítica oculta!",
+    "duration": 7965,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta-s1",
+      "seriesId": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta-ep-1",
+      "slug": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta-ep-1",
+      "seriesId": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta",
+      "seasonId": "lleno-sss-ojo-divino-encontre-una-bestia-mitica-oculta-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2FIMlgWqDx0"
+        }
+      ],
+      "updatedAt": "2026-08-25T02:00:24Z"
+    }
+  ]
+}

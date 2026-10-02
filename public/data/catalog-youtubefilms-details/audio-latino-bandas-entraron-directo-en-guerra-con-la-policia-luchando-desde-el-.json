@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el-",
+    "slug": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el-",
+    "title": "AUDIO LATINO ¡Bandas entraron directo en guerra con la policía! Luchando desde el río hasta el cielo",
+    "image": "https://i.ytimg.com/vi/me8O65WpIJ4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-04-07T14:00:54Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=me8O65WpIJ4",
+    "channel": "@cine-esp",
+    "originalTitle": "AUDIO LATINO ¡Bandas entraron directo en guerra con la policía! Luchando desde el río hasta el cielo",
+    "duration": 4663,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el--s1",
+      "seriesId": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el--ep-1",
+      "slug": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el--ep-1",
+      "seriesId": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el-",
+      "seasonId": "audio-latino-bandas-entraron-directo-en-guerra-con-la-policia-luchando-desde-el--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/me8O65WpIJ4"
+        }
+      ],
+      "updatedAt": "2025-04-07T14:00:54Z"
+    }
+  ]
+}

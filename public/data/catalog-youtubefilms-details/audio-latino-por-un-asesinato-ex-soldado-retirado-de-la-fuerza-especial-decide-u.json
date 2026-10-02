@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u",
+    "slug": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u",
+    "title": "Audio Latino - Por un Asesinato, Ex Soldado Retirado de la Fuerza Especial decide unirse al S.W.A.T",
+    "image": "https://i.ytimg.com/vi/CrFlylqS4WA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-07-14T14:30:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CrFlylqS4WA",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Por un Asesinato, Ex Soldado Retirado de la Fuerza Especial decide unirse al S.W.A.T.",
+    "duration": 5091,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u-s1",
+      "seriesId": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u-ep-1",
+      "slug": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u-ep-1",
+      "seriesId": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u",
+      "seasonId": "audio-latino-por-un-asesinato-ex-soldado-retirado-de-la-fuerza-especial-decide-u-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/CrFlylqS4WA"
+        }
+      ],
+      "updatedAt": "2025-07-14T14:30:17Z"
+    }
+  ]
+}

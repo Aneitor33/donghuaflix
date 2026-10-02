@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa",
+    "slug": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa",
+    "title": "【LLENO】¡Reencarnó como una pulga… y terminó siendo la bestia más poderosa!",
+    "image": "https://i.ytimg.com/vi/j5wPspBT_vI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Mientras todos reencarnaban como dragones o bestias legendarias, él despertó... ¡como una simple pulga! Cuando todo parecía perdido, obtiene un Sistema de Evolución Infinita y, por ac...",
+    "year": 2026,
+    "updatedAt": "2026-07-29T04:00:41Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=j5wPspBT_vI",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Reencarnó como una pulga… y terminó siendo la bestia más poderosa!",
+    "duration": 7310,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa-s1",
+      "seriesId": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa-ep-1",
+      "slug": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa-ep-1",
+      "seriesId": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa",
+      "seasonId": "lleno-reencarno-como-una-pulga-y-termino-siendo-la-bestia-mas-poderosa-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/j5wPspBT_vI"
+        }
+      ],
+      "updatedAt": "2026-07-29T04:00:41Z"
+    }
+  ]
+}

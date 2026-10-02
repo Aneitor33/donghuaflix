@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero",
+    "slug": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero",
+    "title": "【LLENO】¡Despertó al Devorador Supremo... y ahora puede tragarse el mundo entero!",
+    "image": "https://i.ytimg.com/vi/ntpvPKl-aOM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Condenado desde su nacimiento por un linaje inferior, estaba destinado a morir... hasta que despertó el legendario Sistema del Taotie Supremo. Gracias a un poder capaz de devorar cual...",
+    "year": 2026,
+    "updatedAt": "2026-08-03T09:00:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ntpvPKl-aOM",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Despertó al Devorador Supremo... y ahora puede tragarse el mundo entero!",
+    "duration": 7803,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero-s1",
+      "seriesId": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero-ep-1",
+      "slug": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero-ep-1",
+      "seriesId": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero",
+      "seasonId": "lleno-desperto-al-devorador-supremo-y-ahora-puede-tragarse-el-mundo-entero-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ntpvPKl-aOM"
+        }
+      ],
+      "updatedAt": "2026-08-03T09:00:11Z"
+    }
+  ]
+}

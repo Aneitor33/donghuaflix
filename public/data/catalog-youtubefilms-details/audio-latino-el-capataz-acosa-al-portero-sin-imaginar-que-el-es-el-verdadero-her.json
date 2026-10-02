@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her",
+    "slug": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her",
+    "title": "Audio Latino - El Capataz acosa al Portero, sin imaginar que él es el Verdadero Heredero de la Banda",
+    "image": "https://i.ytimg.com/vi/WjB20vX4YJo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-11-25T14:30:34Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WjB20vX4YJo",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - El Capataz acosa al Portero, sin imaginar que él es el Verdadero Heredero de la Banda",
+    "duration": 5283,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her-s1",
+      "seriesId": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her-ep-1",
+      "slug": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her-ep-1",
+      "seriesId": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her",
+      "seasonId": "audio-latino-el-capataz-acosa-al-portero-sin-imaginar-que-el-es-el-verdadero-her-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WjB20vX4YJo"
+        }
+      ],
+      "updatedAt": "2025-11-25T14:30:34Z"
+    }
+  ]
+}

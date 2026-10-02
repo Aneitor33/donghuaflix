@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "mision-de-rescate-pelicula-de-accion-de-guerra",
+    "slug": "mision-de-rescate-pelicula-de-accion-de-guerra",
+    "title": "Misión de Rescate Pelicula de Accion de Guerra",
+    "image": "https://i.ytimg.com/vi/UBpfeEwOKQY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de guerra de las fuerzas especiales \"Misión de Rescate\" cuenta que un equipo de fuerzas especiales chino aterriza en el sitio de la misión para arrestar a la misteri...",
+    "year": 2026,
+    "updatedAt": "2026-02-21T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=UBpfeEwOKQY",
+    "channel": "@moxispanish",
+    "originalTitle": "Misión de Rescate | Pelicula de Accion de Guerra | Completa en Español HD",
+    "duration": 3867,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mision-de-rescate-pelicula-de-accion-de-guerra-s1",
+      "seriesId": "mision-de-rescate-pelicula-de-accion-de-guerra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mision-de-rescate-pelicula-de-accion-de-guerra-ep-1",
+      "slug": "mision-de-rescate-pelicula-de-accion-de-guerra-ep-1",
+      "seriesId": "mision-de-rescate-pelicula-de-accion-de-guerra",
+      "seasonId": "mision-de-rescate-pelicula-de-accion-de-guerra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UBpfeEwOKQY"
+        }
+      ],
+      "updatedAt": "2026-02-21T16:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor",
+    "slug": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor",
+    "title": "💥Serie completa💥 [Renacida Ci Ci encuentra a su protector silencioso] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/onq20kpWiZk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Renacida y de regreso, Shen Yanci recordó que en su vida anterior había sido conspirada por Xie Yunlan y Su Lianyue, lo que provocó el colapso del negocio familiar y su muerte llena de resentimient...",
+    "year": 2026,
+    "updatedAt": "2026-06-12T14:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=onq20kpWiZk",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Renacida Ci Ci encuentra a su protector silencioso] #drama #dramacorto",
+    "duration": 7372,
+    "genres": [
+      "Artes Marciales",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor-s1",
+      "seriesId": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor-ep-1",
+      "slug": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor-ep-1",
+      "seriesId": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor",
+      "seasonId": "serie-completa-renacida-ci-ci-encuentra-a-su-protector-silencioso-drama-dramacor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/onq20kpWiZk"
+        }
+      ],
+      "updatedAt": "2026-06-12T14:00:08Z"
+    }
+  ]
+}

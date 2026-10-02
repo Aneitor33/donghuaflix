@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda",
+    "slug": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda",
+    "title": "【LLENO】¡El camión de juguete despierta, aplastando a todas las razas bajo sus ruedas!",
+    "image": "https://i.ytimg.com/vi/kVHxjTW6_88/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Todos pensaban que yo era solo un camión de juguete común... ¡pero no sabían que aplastaría al mundo entero y a sus innumerables razas! Tras renacer en el misterioso reino del \"Dao Na...",
+    "year": 2026,
+    "updatedAt": "2026-08-08T11:00:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=kVHxjTW6_88",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡El camión de juguete despierta, aplastando a todas las razas bajo sus ruedas!",
+    "duration": 7759,
+    "genres": [
+      "Artes Marciales",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda-s1",
+      "seriesId": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda-ep-1",
+      "slug": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda-ep-1",
+      "seriesId": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda",
+      "seasonId": "lleno-el-camion-de-juguete-despierta-aplastando-a-todas-las-razas-bajo-sus-rueda-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kVHxjTW6_88"
+        }
+      ],
+      "updatedAt": "2026-08-08T11:00:19Z"
+    }
+  ]
+}

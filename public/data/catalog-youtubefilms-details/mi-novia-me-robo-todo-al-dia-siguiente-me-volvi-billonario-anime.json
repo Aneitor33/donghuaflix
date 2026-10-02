@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime",
+    "slug": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime",
+    "title": "Mi novia me robó todo… al día siguiente me volví BILLONARIO!💕#anime",
+    "image": "https://i.ytimg.com/vi/-i3nUIiLapM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-19T20:00:38Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=-i3nUIiLapM",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Mi novia me robó todo… al día siguiente me volví BILLONARIO!💕#anime",
+    "duration": 6160,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime-s1",
+      "seriesId": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime-ep-1",
+      "slug": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime-ep-1",
+      "seriesId": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime",
+      "seasonId": "mi-novia-me-robo-todo-al-dia-siguiente-me-volvi-billonario-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/-i3nUIiLapM"
+        }
+      ],
+      "updatedAt": "2026-06-19T20:00:38Z"
+    }
+  ]
+}

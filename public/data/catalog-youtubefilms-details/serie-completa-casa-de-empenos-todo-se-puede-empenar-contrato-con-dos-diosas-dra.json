@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra",
+    "slug": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra",
+    "title": "💥Serie completa💥 [Casa de Empeños: Todo se puede empeñar, contrato con dos diosas.] #drama #ai",
+    "image": "https://i.ytimg.com/vi/Bx1jkih6PaY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "En la ciudad de Jiang hay una casa de empeños especial. Su dueño, Chen Mo, domina profundas artes místicas. La suerte, el matrimonio y el destino de la vida pueden intercambiarse por un precio acor...",
+    "year": 2026,
+    "updatedAt": "2026-07-30T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Bx1jkih6PaY",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Casa de Empeños: Todo se puede empeñar, contrato con dos diosas.] #drama #ai",
+    "duration": 6724,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra-s1",
+      "seriesId": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra-ep-1",
+      "slug": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra-ep-1",
+      "seriesId": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra",
+      "seasonId": "serie-completa-casa-de-empenos-todo-se-puede-empenar-contrato-con-dos-diosas-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Bx1jkih6PaY"
+        }
+      ],
+      "updatedAt": "2026-07-30T14:00:06Z"
+    }
+  ]
+}

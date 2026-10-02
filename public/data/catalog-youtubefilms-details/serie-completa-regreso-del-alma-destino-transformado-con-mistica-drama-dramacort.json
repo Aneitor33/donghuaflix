@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort",
+    "slug": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort",
+    "title": "💥Serie completa💥 [Regreso del alma: destino transformado con mística！] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/oFCI-yft6oo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "La soberana del reino místico regresa inesperadamente a la tierra al ocupar el cuerpo de la hija de la familia Xiao en la capital, quien sufrió una traición y fue atravesada por clavos expulsorios...",
+    "year": 2026,
+    "updatedAt": "2026-07-21T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=oFCI-yft6oo",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Regreso del alma: destino transformado con mística！] #drama #dramacorto",
+    "duration": 12059,
+    "genres": [
+      "Drama",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort-s1",
+      "seriesId": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort-ep-1",
+      "slug": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort-ep-1",
+      "seriesId": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort",
+      "seasonId": "serie-completa-regreso-del-alma-destino-transformado-con-mistica-drama-dramacort-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/oFCI-yft6oo"
+        }
+      ],
+      "updatedAt": "2026-07-21T14:00:06Z"
+    }
+  ]
+}

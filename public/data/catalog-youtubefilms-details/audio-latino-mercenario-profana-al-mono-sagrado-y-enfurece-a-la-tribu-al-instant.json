@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant",
+    "slug": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant",
+    "title": "Audio Latino - Mercenario profana al Mono Sagrado y enfurece a la Tribu. Al instante Paga con Sangre",
+    "image": "https://i.ytimg.com/vi/ff9rfvc81T4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-12-22T14:30:37Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ff9rfvc81T4",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Mercenario profana al Mono Sagrado y enfurece a la Tribu. Al instante Paga con Sangre",
+    "duration": 6714,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant-s1",
+      "seriesId": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant-ep-1",
+      "slug": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant-ep-1",
+      "seriesId": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant",
+      "seasonId": "audio-latino-mercenario-profana-al-mono-sagrado-y-enfurece-a-la-tribu-al-instant-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ff9rfvc81T4"
+        }
+      ],
+      "updatedAt": "2025-12-22T14:30:37Z"
+    }
+  ]
+}

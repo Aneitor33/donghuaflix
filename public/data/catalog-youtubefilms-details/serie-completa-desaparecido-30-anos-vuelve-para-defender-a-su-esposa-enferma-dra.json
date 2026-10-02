@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra",
+    "slug": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra",
+    "title": "💥Serie completa💥 [Desaparecido 30 años, vuelve para defender a su esposa enferma] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/W66HXhMyYNQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Después de la inundación que asoló la aldea Zhao, Zhao Qingfeng, que se encontraba en primera línea realizando labores de rescate, fue arrastrado por las aguas sin poder evitarlo. Treinta años desp...",
+    "year": 2026,
+    "updatedAt": "2026-06-30T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=W66HXhMyYNQ",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Desaparecido 30 años, vuelve para defender a su esposa enferma] #drama #dramacorto",
+    "duration": 7324,
+    "genres": [
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra-s1",
+      "seriesId": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra-ep-1",
+      "slug": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra-ep-1",
+      "seriesId": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra",
+      "seasonId": "serie-completa-desaparecido-30-anos-vuelve-para-defender-a-su-esposa-enferma-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/W66HXhMyYNQ"
+        }
+      ],
+      "updatedAt": "2026-06-30T14:00:06Z"
+    }
+  ]
+}

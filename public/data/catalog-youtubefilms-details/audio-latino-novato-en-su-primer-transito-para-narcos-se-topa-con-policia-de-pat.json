@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat",
+    "slug": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat",
+    "title": "Audio Latino - Novato en su primer tránsito para narcos, se topa con policía de patrulla",
+    "image": "https://i.ytimg.com/vi/GQltERZEEU4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-04T14:30:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GQltERZEEU4",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Novato en su primer tránsito para narcos, se topa con policía de patrulla.",
+    "duration": 4942,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat-s1",
+      "seriesId": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat-ep-1",
+      "slug": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat-ep-1",
+      "seriesId": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat",
+      "seasonId": "audio-latino-novato-en-su-primer-transito-para-narcos-se-topa-con-policia-de-pat-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GQltERZEEU4"
+        }
+      ],
+      "updatedAt": "2026-02-04T14:30:12Z"
+    }
+  ]
+}

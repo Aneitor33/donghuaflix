@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa",
+    "slug": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa",
+    "title": "Audio Latino - ¡El Difunto, Poseído por un Demonio, fundó la Secta más Poderosa!",
+    "image": "https://i.ytimg.com/vi/v3JT8MCfib4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-11-05T14:30:48Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=v3JT8MCfib4",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - ¡El Difunto, Poseído por un Demonio, fundó la Secta más Poderosa!",
+    "duration": 9916,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa-s1",
+      "seriesId": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa-ep-1",
+      "slug": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa-ep-1",
+      "seriesId": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa",
+      "seasonId": "audio-latino-el-difunto-poseido-por-un-demonio-fundo-la-secta-mas-poderosa-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/v3JT8MCfib4"
+        }
+      ],
+      "updatedAt": "2025-11-05T14:30:48Z"
+    }
+  ]
+}

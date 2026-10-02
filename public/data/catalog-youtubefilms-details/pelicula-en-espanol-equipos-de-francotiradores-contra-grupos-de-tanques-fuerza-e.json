@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e",
+    "slug": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e",
+    "title": "Película en Español - ¡Equipos de Francotiradores contra Grupos de Tanques! Fuerza Especial Real",
+    "image": "https://i.ytimg.com/vi/WgU-JD6aXvE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-05-13T14:00:48Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WgU-JD6aXvE",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - ¡Equipos de Francotiradores contra Grupos de Tanques! Fuerza Especial Real.",
+    "duration": 5424,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e-s1",
+      "seriesId": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e-ep-1",
+      "slug": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e-ep-1",
+      "seriesId": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e",
+      "seasonId": "pelicula-en-espanol-equipos-de-francotiradores-contra-grupos-de-tanques-fuerza-e-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WgU-JD6aXvE"
+        }
+      ],
+      "updatedAt": "2025-05-13T14:00:48Z"
+    }
+  ]
+}

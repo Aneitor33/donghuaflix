@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu",
+    "slug": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu",
+    "title": "Audio Latino - Mercenarios irrumpieron en la habitación de las Chicas, sin saber que eran Asesinas",
+    "image": "https://i.ytimg.com/vi/nZp6jL8-mMU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-11-06T14:30:43Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=nZp6jL8-mMU",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Mercenarios irrumpieron en la habitación de las Chicas, sin saber que eran Asesinas..",
+    "duration": 6054,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu-s1",
+      "seriesId": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu-ep-1",
+      "slug": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu-ep-1",
+      "seriesId": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu",
+      "seasonId": "audio-latino-mercenarios-irrumpieron-en-la-habitacion-de-las-chicas-sin-saber-qu-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/nZp6jL8-mMU"
+        }
+      ],
+      "updatedAt": "2025-11-06T14:30:43Z"
+    }
+  ]
+}

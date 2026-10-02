@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales",
+    "slug": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales",
+    "title": "El Dios de la Guerra Película de Acción y Artes Marciales",
+    "image": "https://i.ytimg.com/vi/EWnoqyc5r4I/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de guerra y artes marciales \"El Dios de la Guerra: Rey Lanling\" trata sobre la legendaria historia del Príncipe Langling, Gao Changgong, quien lideró el ejército del...",
+    "year": 2026,
+    "updatedAt": "2026-09-19T16:00:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=EWnoqyc5r4I",
+    "channel": "@moxispanish",
+    "originalTitle": "El Dios de la Guerra | Película de Acción y Artes Marciales | Completa en Español HD",
+    "duration": 4752,
+    "genres": [
+      "Acción",
+      "Histórico",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales-s1",
+      "seriesId": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales-ep-1",
+      "slug": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales-ep-1",
+      "seriesId": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales",
+      "seasonId": "el-dios-de-la-guerra-pelicula-de-accion-y-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/EWnoqyc5r4I"
+        }
+      ],
+      "updatedAt": "2026-09-19T16:00:07Z"
+    }
+  ]
+}

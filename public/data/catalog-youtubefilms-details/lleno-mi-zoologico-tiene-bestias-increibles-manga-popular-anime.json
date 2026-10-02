@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime",
+    "slug": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime",
+    "title": "【LLENO】Mi zoológico tiene bestias increíbles#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/Uw_mauowyDU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Vuelve al mundo por un inesperado viaje dimensional, cargado con deudas enormes. Su zoológico familiar está a punto de cerrar, y hasta sus seres...",
+    "year": 2026,
+    "updatedAt": "2026-06-03T04:00:09Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Uw_mauowyDU",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Mi zoológico tiene bestias increíbles#Manga popular #Anime",
+    "duration": 7755,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime-s1",
+      "seriesId": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime-ep-1",
+      "slug": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime-ep-1",
+      "seriesId": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime",
+      "seasonId": "lleno-mi-zoologico-tiene-bestias-increibles-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Uw_mauowyDU"
+        }
+      ],
+      "updatedAt": "2026-06-03T04:00:09Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "mi-novia-yakuza-pelicula-romantica-de-amor",
+    "slug": "mi-novia-yakuza-pelicula-romantica-de-amor",
+    "title": "Mi Novia Yakuza Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/v-pFgscWdxk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor \"Mi Novia Yakuza\" narra la historia de amor de Jiang Yidong (Chen Shangze) y Chen Xiner (Li Mengmeng), herederos de dos familias. Regresan a la universidad c...",
+    "year": 2025,
+    "updatedAt": "2025-12-31T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=v-pFgscWdxk",
+    "channel": "@moxispanish",
+    "originalTitle": "Mi Novia Yakuza | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 5213,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mi-novia-yakuza-pelicula-romantica-de-amor-s1",
+      "seriesId": "mi-novia-yakuza-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mi-novia-yakuza-pelicula-romantica-de-amor-ep-1",
+      "slug": "mi-novia-yakuza-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "mi-novia-yakuza-pelicula-romantica-de-amor",
+      "seasonId": "mi-novia-yakuza-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/v-pFgscWdxk"
+        }
+      ],
+      "updatedAt": "2025-12-31T16:00:06Z"
+    }
+  ]
+}

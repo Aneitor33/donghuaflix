@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram",
+    "slug": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram",
+    "title": "💥Serie completa💥 [Transportado: Mi amada zorra me protege en todo momento] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/OK4ZTFs9snk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Transportado accidentalmente a la convulsa época de la China Republicana, salvé a una zorra blanca atrapada por una serpiente gigante mientras cortaba leña. Para mi sorpresa, aquella zorra era Hu S...",
+    "year": 2026,
+    "updatedAt": "2026-07-27T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=OK4ZTFs9snk",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Transportado: Mi amada zorra me protege en todo momento] #drama #dramacorto",
+    "duration": 7548,
+    "genres": [
+      "Artes Marciales",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram-s1",
+      "seriesId": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram-ep-1",
+      "slug": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram-ep-1",
+      "seriesId": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram",
+      "seasonId": "serie-completa-transportado-mi-amada-zorra-me-protege-en-todo-momento-drama-dram-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OK4ZTFs9snk"
+        }
+      ],
+      "updatedAt": "2026-07-27T14:00:06Z"
+    }
+  ]
+}

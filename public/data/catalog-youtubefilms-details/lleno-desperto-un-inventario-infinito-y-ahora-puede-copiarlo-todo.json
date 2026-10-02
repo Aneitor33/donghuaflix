@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo",
+    "slug": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo",
+    "title": "【LLENO】¡DESPERTÓ UN INVENTARIO INFINITO Y AHORA PUEDE COPIARLO TODO!",
+    "image": "https://i.ytimg.com/vi/AkRf4lexvrw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Un día, el mundo entero queda conectado al misterioso Reino Divino, donde morir dentro del juego significa morir en la vida real. Cuando todos luchan desesperadamente por sobrevivir, L...",
+    "year": 2026,
+    "updatedAt": "2026-08-13T09:00:25Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=AkRf4lexvrw",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡DESPERTÓ UN INVENTARIO INFINITO Y AHORA PUEDE COPIARLO TODO!",
+    "duration": 8326,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo-s1",
+      "seriesId": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo-ep-1",
+      "slug": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo-ep-1",
+      "seriesId": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo",
+      "seasonId": "lleno-desperto-un-inventario-infinito-y-ahora-puede-copiarlo-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/AkRf4lexvrw"
+        }
+      ],
+      "updatedAt": "2026-08-13T09:00:25Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su",
+    "slug": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su",
+    "title": "Audio Latino - Asesinos Profesionales secuestraron a una niña solo para Matar a su Padre Policía",
+    "image": "https://i.ytimg.com/vi/ZFTTsgglaNA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-11-15T14:30:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ZFTTsgglaNA",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Asesinos Profesionales secuestraron a una niña solo para Matar a su Padre Policía.",
+    "duration": 5247,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su-s1",
+      "seriesId": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su-ep-1",
+      "slug": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su-ep-1",
+      "seriesId": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su",
+      "seasonId": "audio-latino-asesinos-profesionales-secuestraron-a-una-nina-solo-para-matar-a-su-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ZFTTsgglaNA"
+        }
+      ],
+      "updatedAt": "2025-11-15T14:30:27Z"
+    }
+  ]
+}

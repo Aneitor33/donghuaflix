@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales",
+    "slug": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales",
+    "title": "Kung Fusion Secuela Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/Wbwd-CPBI0Y/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de kung fu & artes marciales \"Kung Fusion Secuela: La Máscara Shura\" narra la historia del Demonio de la Nube de Fuego, protector de la ciudad. Posee el cuerpo de la...",
+    "year": 2026,
+    "updatedAt": "2026-05-16T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Wbwd-CPBI0Y",
+    "channel": "@moxispanish",
+    "originalTitle": "Kung Fusion Secuela | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 4410,
+    "genres": [
+      "Artes Marciales",
+      "Histórico",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "kung-fusion-secuela-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Wbwd-CPBI0Y"
+        }
+      ],
+      "updatedAt": "2026-05-16T16:00:06Z"
+    }
+  ]
+}

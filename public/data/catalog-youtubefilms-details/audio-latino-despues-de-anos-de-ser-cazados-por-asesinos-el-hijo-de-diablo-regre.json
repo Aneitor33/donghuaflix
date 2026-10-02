@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre",
+    "slug": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre",
+    "title": "Audio latino - Después de años de ser Cazados por asesinos, el Hijo de Diablo regresó para Vengarse",
+    "image": "https://i.ytimg.com/vi/cj8kE3e_YB0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-08-25T14:30:25Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=cj8kE3e_YB0",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - Después de años de ser Cazados por asesinos, el Hijo de Diablo regresó para Vengarse.",
+    "duration": 4443,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre-s1",
+      "seriesId": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre-ep-1",
+      "slug": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre-ep-1",
+      "seriesId": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre",
+      "seasonId": "audio-latino-despues-de-anos-de-ser-cazados-por-asesinos-el-hijo-de-diablo-regre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/cj8kE3e_YB0"
+        }
+      ],
+      "updatedAt": "2025-08-25T14:30:25Z"
+    }
+  ]
+}

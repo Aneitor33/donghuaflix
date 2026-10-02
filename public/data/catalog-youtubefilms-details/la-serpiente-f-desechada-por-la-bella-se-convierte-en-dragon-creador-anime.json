@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime",
+    "slug": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime",
+    "title": "¡La serpiente F desechada por la bella se convierte en dragón creador!💕#anime",
+    "image": "https://i.ytimg.com/vi/sku8nyNk3jI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-03T20:00:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=sku8nyNk3jI",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡La serpiente F desechada por la bella se convierte en dragón creador!💕#anime",
+    "duration": 11034,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime-s1",
+      "seriesId": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime-ep-1",
+      "slug": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime-ep-1",
+      "seriesId": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime",
+      "seasonId": "la-serpiente-f-desechada-por-la-bella-se-convierte-en-dragon-creador-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/sku8nyNk3jI"
+        }
+      ],
+      "updatedAt": "2026-06-03T20:00:12Z"
+    }
+  ]
+}

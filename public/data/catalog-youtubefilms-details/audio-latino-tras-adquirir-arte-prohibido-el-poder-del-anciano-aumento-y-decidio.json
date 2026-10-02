@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio",
+    "slug": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio",
+    "title": "Audio Latino - Tras adquirir Arte Prohibido, el poder del Anciano aumentó y decidio matar a su Líder",
+    "image": "https://i.ytimg.com/vi/ddtugOmOTFU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-07-21T14:30:35Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ddtugOmOTFU",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Tras adquirir Arte Prohibido, el poder del Anciano aumentó y decidio matar a su Líder",
+    "duration": 8537,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio-s1",
+      "seriesId": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio-ep-1",
+      "slug": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio-ep-1",
+      "seriesId": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio",
+      "seasonId": "audio-latino-tras-adquirir-arte-prohibido-el-poder-del-anciano-aumento-y-decidio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ddtugOmOTFU"
+        }
+      ],
+      "updatedAt": "2025-07-21T14:30:35Z"
+    }
+  ]
+}

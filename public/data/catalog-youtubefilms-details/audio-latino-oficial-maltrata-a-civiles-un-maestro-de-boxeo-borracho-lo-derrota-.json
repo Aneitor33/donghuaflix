@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota-",
+    "slug": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota-",
+    "title": "Audio Latino - Oficial maltrata a civiles, un Maestro de Boxeo Borracho lo derrota de un solo golpe!",
+    "image": "https://i.ytimg.com/vi/7y-_etV0kX0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-04-11T14:30:15Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7y-_etV0kX0",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Oficial maltrata a civiles, un Maestro de Boxeo Borracho lo derrota de un solo golpe!",
+    "duration": 8166,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota--s1",
+      "seriesId": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota--ep-1",
+      "slug": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota--ep-1",
+      "seriesId": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota-",
+      "seasonId": "audio-latino-oficial-maltrata-a-civiles-un-maestro-de-boxeo-borracho-lo-derrota--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7y-_etV0kX0"
+        }
+      ],
+      "updatedAt": "2026-04-11T14:30:15Z"
+    }
+  ]
+}

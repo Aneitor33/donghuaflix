@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia",
+    "slug": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia",
+    "title": "Audio Latino - Generala Humillada sola derrota a Todos los Enemigos que la desafían",
+    "image": "https://i.ytimg.com/vi/E4Zkf77hBZM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-05-28T14:30:32Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=E4Zkf77hBZM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Generala Humillada sola derrota a Todos los Enemigos que la desafían.",
+    "duration": 4995,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia-s1",
+      "seriesId": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia-ep-1",
+      "slug": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia-ep-1",
+      "seriesId": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia",
+      "seasonId": "audio-latino-generala-humillada-sola-derrota-a-todos-los-enemigos-que-la-desafia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/E4Zkf77hBZM"
+        }
+      ],
+      "updatedAt": "2026-05-28T14:30:32Z"
+    }
+  ]
+}

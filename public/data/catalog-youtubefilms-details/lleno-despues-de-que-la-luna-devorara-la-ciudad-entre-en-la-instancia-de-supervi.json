@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi",
+    "slug": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi",
+    "title": "【LLENO】¡Después de que la luna devorara la ciudad, entré en la instancia de supervivencia!",
+    "image": "https://i.ytimg.com/vi/x6IT0vjqDqY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Tras la aparición de una extraña luna, toda la ciudad sufrió cambios inexplicables. Calles, edificios y personas se vieron envueltos en un conjunto desconocido de reglas de supervivenc...",
+    "year": 2026,
+    "updatedAt": "2026-09-06T03:00:28Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=x6IT0vjqDqY",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Después de que la luna devorara la ciudad, entré en la instancia de supervivencia!",
+    "duration": 7779,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi-s1",
+      "seriesId": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi-ep-1",
+      "slug": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi-ep-1",
+      "seriesId": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi",
+      "seasonId": "lleno-despues-de-que-la-luna-devorara-la-ciudad-entre-en-la-instancia-de-supervi-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/x6IT0vjqDqY"
+        }
+      ],
+      "updatedAt": "2026-09-06T03:00:28Z"
+    }
+  ]
+}

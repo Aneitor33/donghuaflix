@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan",
+    "slug": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan",
+    "title": "Soldado de élite se infiltra solo en la Base Enemiga y libera a Todos sus Compañeros",
+    "image": "https://i.ytimg.com/vi/K_7lRctABnk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-03-03T15:30:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=K_7lRctABnk",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Soldado de élite se infiltra solo en la Base Enemiga y libera a Todos sus Compañeros",
+    "duration": 6668,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan-s1",
+      "seriesId": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan-ep-1",
+      "slug": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan-ep-1",
+      "seriesId": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan",
+      "seasonId": "soldado-de-elite-se-infiltra-solo-en-la-base-enemiga-y-libera-a-todos-sus-compan-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/K_7lRctABnk"
+        }
+      ],
+      "updatedAt": "2026-03-03T15:30:17Z"
+    }
+  ]
+}

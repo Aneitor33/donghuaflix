@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-drama-dramacorto",
+    "slug": "serie-completa-drama-dramacorto",
+    "title": "💥Serie completa💥 #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/qkGwQ54Zsvg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Tang Yan se transmigra accidentalmente al mundo del entretenimiento y despierta el Sistema Supremo del Entretenimiento, pero poco después es abandonado sin piedad por Shen Xinyan, una belleza unive...",
+    "year": 2026,
+    "updatedAt": "2026-08-11T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=qkGwQ54Zsvg",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Despierta el Sistema del Entretenimiento: Nueva vida！] #drama #dramacorto",
+    "duration": 9993,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-drama-dramacorto-s1",
+      "seriesId": "serie-completa-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-drama-dramacorto-ep-1",
+      "slug": "serie-completa-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-drama-dramacorto",
+      "seasonId": "serie-completa-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/qkGwQ54Zsvg"
+        }
+      ],
+      "updatedAt": "2026-08-11T14:00:06Z"
+    }
+  ]
+}

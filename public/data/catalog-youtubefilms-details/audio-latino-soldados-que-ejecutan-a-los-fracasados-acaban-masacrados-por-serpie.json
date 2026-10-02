@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie",
+    "slug": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie",
+    "title": "Audio latino- Soldados que ejecutan a los fracasados acaban masacrados por Serpientes Experimentales",
+    "image": "https://i.ytimg.com/vi/3ulfiHiTm3g/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-09-26T14:30:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=3ulfiHiTm3g",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino- Soldados que ejecutan a los fracasados acaban masacrados por Serpientes Experimentales",
+    "duration": 4509,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie-s1",
+      "seriesId": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie-ep-1",
+      "slug": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie-ep-1",
+      "seriesId": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie",
+      "seasonId": "audio-latino-soldados-que-ejecutan-a-los-fracasados-acaban-masacrados-por-serpie-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/3ulfiHiTm3g"
+        }
+      ],
+      "updatedAt": "2025-09-26T14:30:06Z"
+    }
+  ]
+}

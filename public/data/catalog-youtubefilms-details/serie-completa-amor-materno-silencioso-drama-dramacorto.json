@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-amor-materno-silencioso-drama-dramacorto",
+    "slug": "serie-completa-amor-materno-silencioso-drama-dramacorto",
+    "title": "💥Serie completa💥 [Amor Materno Silencioso] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/4oWII23R130/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Qin Xiulan, una mujer de origen rural, crió a su hijo Chen Xiaolong con inmensos sacrificios. Cuando el joven se graduó, alcanzó el éxito profesional y se casó con Zhou Ling, heredera de una famili...",
+    "year": 2026,
+    "updatedAt": "2026-06-16T05:44:01Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=4oWII23R130",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Amor Materno Silencioso] #drama #dramacorto",
+    "duration": 7870,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-amor-materno-silencioso-drama-dramacorto-s1",
+      "seriesId": "serie-completa-amor-materno-silencioso-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-amor-materno-silencioso-drama-dramacorto-ep-1",
+      "slug": "serie-completa-amor-materno-silencioso-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-amor-materno-silencioso-drama-dramacorto",
+      "seasonId": "serie-completa-amor-materno-silencioso-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/4oWII23R130"
+        }
+      ],
+      "updatedAt": "2026-06-16T05:44:01Z"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime",
+    "slug": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime",
+    "title": "【LLENO】Mis Rayos Supremos Superan a Todos los Genios#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/FbyOFmuvlNc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Todos creían que el joven terminaría en lo más bajo de la escala. La molesta habilidad de Grado E que aparecía en su certificado de despertar lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-21T10:00:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=FbyOFmuvlNc",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Mis Rayos Supremos Superan a Todos los Genios#Manga popular #Anime",
+    "duration": 8014,
+    "genres": [
+      "Artes Marciales",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime-s1",
+      "seriesId": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime-ep-1",
+      "slug": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime-ep-1",
+      "seriesId": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime",
+      "seasonId": "lleno-mis-rayos-supremos-superan-a-todos-los-genios-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/FbyOFmuvlNc"
+        }
+      ],
+      "updatedAt": "2026-06-21T10:00:22Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "batalla-por-la-patria-pelicula-de-accion-guerra",
+    "slug": "batalla-por-la-patria-pelicula-de-accion-guerra",
+    "title": "Batalla por la Patria Pelicula de Accion Guerra",
+    "image": "https://i.ytimg.com/vi/0txBKWLBgD8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de guerra histórica \"Xin Qiji 1162, Batalla por la Patria\" cuenta que durante el período Shaoxing de la Dinastía Song del Sur, uno de los más grandes poetas, también...",
+    "year": 2026,
+    "updatedAt": "2026-09-16T16:00:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=0txBKWLBgD8",
+    "channel": "@moxispanish",
+    "originalTitle": "Batalla por la Patria 1162 | Pelicula de Accion Guerra | Completa en Español HD",
+    "duration": 6618,
+    "genres": [
+      "Acción",
+      "Histórico",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "batalla-por-la-patria-pelicula-de-accion-guerra-s1",
+      "seriesId": "batalla-por-la-patria-pelicula-de-accion-guerra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "batalla-por-la-patria-pelicula-de-accion-guerra-ep-1",
+      "slug": "batalla-por-la-patria-pelicula-de-accion-guerra-ep-1",
+      "seriesId": "batalla-por-la-patria-pelicula-de-accion-guerra",
+      "seasonId": "batalla-por-la-patria-pelicula-de-accion-guerra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0txBKWLBgD8"
+        }
+      ],
+      "updatedAt": "2026-09-16T16:00:11Z"
+    }
+  ]
+}

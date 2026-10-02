@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci",
+    "slug": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci",
+    "title": "Audio Latino - Terroristas secuestran pueblo para combatir, sin saber que un ejéfcito los aniquila",
+    "image": "https://i.ytimg.com/vi/P9dHEZJ5m3M/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-07-15T15:00:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=P9dHEZJ5m3M",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Terroristas secuestran pueblo para combatir, sin saber que un ejéfcito los aniquila",
+    "duration": 4972,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci-s1",
+      "seriesId": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci-ep-1",
+      "slug": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci-ep-1",
+      "seriesId": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci",
+      "seasonId": "audio-latino-terroristas-secuestran-pueblo-para-combatir-sin-saber-que-un-ejefci-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/P9dHEZJ5m3M"
+        }
+      ],
+      "updatedAt": "2026-07-15T15:00:19Z"
+    }
+  ]
+}

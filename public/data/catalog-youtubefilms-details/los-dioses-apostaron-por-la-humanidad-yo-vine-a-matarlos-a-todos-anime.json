@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime",
+    "slug": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime",
+    "title": "¡Los Dioses Apostaron por la Humanidad... Yo Vine a Matarlos a Todos!💕#anime",
+    "image": "https://i.ytimg.com/vi/0PXO__xsmnY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "🎬 Los dioses usan a la humanidad como fichas de apuesta en siete mortales batallas de arena. Lin Ye, un joven de Huaxia, hereda el Ojo Celestial de Yang Jian y empuña la Alabarda de Tres Puntas y...",
+    "year": 2026,
+    "updatedAt": "2026-07-07T20:00:39Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=0PXO__xsmnY",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡Los Dioses Apostaron por la Humanidad... Yo Vine a Matarlos a Todos!💕#anime",
+    "duration": 7244,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime-s1",
+      "seriesId": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime-ep-1",
+      "slug": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime-ep-1",
+      "seriesId": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime",
+      "seasonId": "los-dioses-apostaron-por-la-humanidad-yo-vine-a-matarlos-a-todos-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0PXO__xsmnY"
+        }
+      ],
+      "updatedAt": "2026-07-07T20:00:39Z"
+    }
+  ]
+}

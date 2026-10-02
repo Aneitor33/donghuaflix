@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia",
+    "slug": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia",
+    "title": "Adiós Señorita Perdedora Pelicula Viaje en el Tiempo y Comedia",
+    "image": "https://i.ytimg.com/vi/Z5fh0WMzltU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película \"Adiós Señorita Perdedora\" trata sobre una comedia que viaja en el tiempo. Jia Xiaodie es una chica tonta en el trabajo. Un día la despidieron y por casualidad recibió una cám...",
+    "year": 2025,
+    "updatedAt": "2025-10-18T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Z5fh0WMzltU",
+    "channel": "@moxispanish",
+    "originalTitle": "Adiós Señorita Perdedora | Pelicula Viaje en el Tiempo y Comedia | Completa en Español HD",
+    "duration": 7229,
+    "genres": [
+      "Comedia",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia-s1",
+      "seriesId": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia-ep-1",
+      "slug": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia-ep-1",
+      "seriesId": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia",
+      "seasonId": "adios-senorita-perdedora-pelicula-viaje-en-el-tiempo-y-comedia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Z5fh0WMzltU"
+        }
+      ],
+      "updatedAt": "2025-10-18T16:00:06Z"
+    }
+  ]
+}

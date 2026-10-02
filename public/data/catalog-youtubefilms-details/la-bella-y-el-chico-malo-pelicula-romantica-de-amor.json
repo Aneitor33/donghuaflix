@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor",
+    "slug": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor",
+    "title": "La Bella y el Chico Malo Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/mhqnTdm1MiY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor \"La Bella y el Chico Malo\" trata sobre una historia de sueños, amor y música. A'Feng (apodado \"Madman\"), A'Wei, Datou (la banda de dirección) y Xiaobao (la b...",
+    "year": 2025,
+    "updatedAt": "2025-06-11T16:01:16Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=mhqnTdm1MiY",
+    "channel": "@moxispanish",
+    "originalTitle": "La Bella y el Chico Malo | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 5298,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor-s1",
+      "seriesId": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor-ep-1",
+      "slug": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor",
+      "seasonId": "la-bella-y-el-chico-malo-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/mhqnTdm1MiY"
+        }
+      ],
+      "updatedAt": "2025-06-11T16:01:16Z"
+    }
+  ]
+}

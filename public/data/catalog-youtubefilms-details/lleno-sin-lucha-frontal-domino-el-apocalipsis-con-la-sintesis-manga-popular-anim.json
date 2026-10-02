@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim",
+    "slug": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim",
+    "title": "【LLENO】Sin lucha frontal, domino el apocalipsis con la síntesis#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/IHt4J3OxYEU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:El fin del mundo asola la tierra, y todos cultivan poderes de combate para luchar ferozmente. Él despierta un poder único de síntesis, capaz de c...",
+    "year": 2026,
+    "updatedAt": "2026-05-22T10:00:37Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=IHt4J3OxYEU",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Sin lucha frontal, domino el apocalipsis con la síntesis#Manga popular #Anime",
+    "duration": 7368,
+    "genres": [
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim-s1",
+      "seriesId": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim-ep-1",
+      "slug": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim-ep-1",
+      "seriesId": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim",
+      "seasonId": "lleno-sin-lucha-frontal-domino-el-apocalipsis-con-la-sintesis-manga-popular-anim-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/IHt4J3OxYEU"
+        }
+      ],
+      "updatedAt": "2026-05-22T10:00:37Z"
+    }
+  ]
+}

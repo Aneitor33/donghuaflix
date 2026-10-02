@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "la-lucha-de-la-actriz-pelicula-de-adolescentes",
+    "slug": "la-lucha-de-la-actriz-pelicula-de-adolescentes",
+    "title": "La Lucha de la Actriz Pelicula de Adolescentes",
+    "image": "https://i.ytimg.com/vi/GRPPn7zIHIY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de adolescentes \"La Lucha de la Actriz\" trata sobre cuatro chicas universitarias: Li Ruoxi, Qiao Zi, Siqi y Mengmeng, cuyo sueño es convertirse en estrellas de cine famosas y...",
+    "year": 2025,
+    "updatedAt": "2025-01-25T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GRPPn7zIHIY",
+    "channel": "@moxispanish",
+    "originalTitle": "La Lucha de la Actriz | Pelicula de Adolescentes | Completa en Español HD",
+    "duration": 5478,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-lucha-de-la-actriz-pelicula-de-adolescentes-s1",
+      "seriesId": "la-lucha-de-la-actriz-pelicula-de-adolescentes",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-lucha-de-la-actriz-pelicula-de-adolescentes-ep-1",
+      "slug": "la-lucha-de-la-actriz-pelicula-de-adolescentes-ep-1",
+      "seriesId": "la-lucha-de-la-actriz-pelicula-de-adolescentes",
+      "seasonId": "la-lucha-de-la-actriz-pelicula-de-adolescentes-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GRPPn7zIHIY"
+        }
+      ],
+      "updatedAt": "2025-01-25T16:00:06Z"
+    }
+  ]
+}

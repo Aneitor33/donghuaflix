@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t",
+    "slug": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t",
+    "title": "Audio Latino - Soldados Mal Equipados contra Enemigo Fuerte: La Batalla Final con Terreno",
+    "image": "https://i.ytimg.com/vi/7ViyYLTB9vI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-04-30T14:30:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7ViyYLTB9vI",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Soldados Mal Equipados contra Enemigo Fuerte: La Batalla Final con Terreno",
+    "duration": 5592,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t-s1",
+      "seriesId": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t-ep-1",
+      "slug": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t-ep-1",
+      "seriesId": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t",
+      "seasonId": "audio-latino-soldados-mal-equipados-contra-enemigo-fuerte-la-batalla-final-con-t-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7ViyYLTB9vI"
+        }
+      ],
+      "updatedAt": "2026-04-30T14:30:11Z"
+    }
+  ]
+}

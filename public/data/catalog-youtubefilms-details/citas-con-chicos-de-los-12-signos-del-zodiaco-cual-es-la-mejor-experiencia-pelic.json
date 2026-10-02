@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic",
+    "slug": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic",
+    "title": "Citas con chicos de los 12 signos del zodiaco: ¿cuál es la mejor experiencia? Pelicula en Español",
+    "image": "https://i.ytimg.com/vi/dsA1EQc_WIE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor y comedia \"Los 12 Novios del Zodiaco\" se creó a partir del programa de citas \"If You Are the One\" en Jiangsu TV, sobre la historia detrás del programa de tel...",
+    "year": 2026,
+    "updatedAt": "2026-09-23T16:00:14Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=dsA1EQc_WIE",
+    "channel": "@moxispanish",
+    "originalTitle": "Citas con chicos de los 12 signos del zodiaco: ¿cuál es la mejor experiencia? | Pelicula en Español",
+    "duration": 5695,
+    "genres": [
+      "Comedia",
+      "Histórico",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic-s1",
+      "seriesId": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic-ep-1",
+      "slug": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic-ep-1",
+      "seriesId": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic",
+      "seasonId": "citas-con-chicos-de-los-12-signos-del-zodiaco-cual-es-la-mejor-experiencia-pelic-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/dsA1EQc_WIE"
+        }
+      ],
+      "updatedAt": "2026-09-23T16:00:14Z"
+    }
+  ]
+}

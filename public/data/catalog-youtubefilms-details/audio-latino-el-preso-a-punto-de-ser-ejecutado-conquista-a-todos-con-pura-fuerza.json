@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza",
+    "slug": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza",
+    "title": "Audio Latino - El Preso a punto de ser Ejecutado conquista a Todos con pura fuerza bruta",
+    "image": "https://i.ytimg.com/vi/_w3V1-tJVkE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-08-25T14:30:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=_w3V1-tJVkE",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - El Preso a punto de ser Ejecutado conquista a Todos con pura fuerza bruta.",
+    "duration": 8116,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza-s1",
+      "seriesId": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza-ep-1",
+      "slug": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza-ep-1",
+      "seriesId": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza",
+      "seasonId": "audio-latino-el-preso-a-punto-de-ser-ejecutado-conquista-a-todos-con-pura-fuerza-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_w3V1-tJVkE"
+        }
+      ],
+      "updatedAt": "2026-08-25T14:30:22Z"
+    }
+  ]
+}

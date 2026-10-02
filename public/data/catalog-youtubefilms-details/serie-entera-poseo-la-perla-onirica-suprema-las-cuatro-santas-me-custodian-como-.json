@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como-",
+    "slug": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como-",
+    "title": "💥Serie entera💥 [Poseo la Perla Onírica Suprema; las cuatro Santas me custodian como esposas] #drama",
+    "image": "https://i.ytimg.com/vi/T9HpWF-UbqY/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El joven viajero a través del tiempo posee una perla onírica extraordinaria. En sus sueños alcanza el rango de Soberano Marcial y cuenta con cuatro hermosas Santas a su lado, pero en la realidad es...",
+    "year": 2026,
+    "updatedAt": "2026-08-08T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=T9HpWF-UbqY",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie entera💥 [Poseo la Perla Onírica Suprema; las cuatro Santas me custodian como esposas] #drama",
+    "duration": 8362,
+    "genres": [
+      "Artes Marciales",
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como--s1",
+      "seriesId": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como--ep-1",
+      "slug": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como--ep-1",
+      "seriesId": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como-",
+      "seasonId": "serie-entera-poseo-la-perla-onirica-suprema-las-cuatro-santas-me-custodian-como--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/T9HpWF-UbqY"
+        }
+      ],
+      "updatedAt": "2026-08-08T14:00:06Z"
+    }
+  ]
+}

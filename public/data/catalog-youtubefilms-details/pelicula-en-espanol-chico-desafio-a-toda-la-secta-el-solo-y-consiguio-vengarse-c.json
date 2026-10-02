@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c",
+    "slug": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c",
+    "title": "Película en Español - ¡Chico Desafió a Toda la Secta él Solo y consiguió Vengarse con Poder Divino!",
+    "image": "https://i.ytimg.com/vi/Sv4-qkNGkM4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-05-16T14:00:47Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Sv4-qkNGkM4",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - ¡Chico Desafió a Toda la Secta él Solo y consiguió Vengarse con Poder Divino!",
+    "duration": 5353,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c-s1",
+      "seriesId": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c-ep-1",
+      "slug": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c-ep-1",
+      "seriesId": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c",
+      "seasonId": "pelicula-en-espanol-chico-desafio-a-toda-la-secta-el-solo-y-consiguio-vengarse-c-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Sv4-qkNGkM4"
+        }
+      ],
+      "updatedAt": "2025-05-16T14:00:47Z"
+    }
+  ]
+}

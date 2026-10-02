@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas",
+    "slug": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas",
+    "title": "💥Serie completa💥 [¡El Dios de la Guerra Regresa: Salva a Su Esposa e Hija Perseguidas!] #drama",
+    "image": "https://i.ytimg.com/vi/GyrHnyXq6vM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Ye Chen es el Señor del Palacio Divino Celestial. Tras ser incriminado, vivió cinco años en el exilio. Regresa a Jiangcheng bajo una identidad oculta y presencia cómo su esposa e hija sufren humill...",
+    "year": 2026,
+    "updatedAt": "2026-08-01T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GyrHnyXq6vM",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [¡El Dios de la Guerra Regresa: Salva a Su Esposa e Hija Perseguidas!] #drama",
+    "duration": 6475,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas-s1",
+      "seriesId": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas-ep-1",
+      "slug": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas-ep-1",
+      "seriesId": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas",
+      "seasonId": "serie-completa-el-dios-de-la-guerra-regresa-salva-a-su-esposa-e-hija-perseguidas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GyrHnyXq6vM"
+        }
+      ],
+      "updatedAt": "2026-08-01T14:00:06Z"
+    }
+  ]
+}

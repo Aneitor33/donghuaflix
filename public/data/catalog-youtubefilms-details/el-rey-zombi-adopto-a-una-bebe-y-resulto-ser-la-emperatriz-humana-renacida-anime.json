@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime",
+    "slug": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime",
+    "title": "¡El Rey Zombi Adoptó a una Bebé… y Resultó ser la Emperatriz Humana Renacida!💕#anime",
+    "image": "https://i.ytimg.com/vi/JCGWiyIzOw4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-25T20:00:22Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=JCGWiyIzOw4",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡El Rey Zombi Adoptó a una Bebé… y Resultó ser la Emperatriz Humana Renacida!💕#anime",
+    "duration": 6550,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime-s1",
+      "seriesId": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime-ep-1",
+      "slug": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime-ep-1",
+      "seriesId": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime",
+      "seasonId": "el-rey-zombi-adopto-a-una-bebe-y-resulto-ser-la-emperatriz-humana-renacida-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/JCGWiyIzOw4"
+        }
+      ],
+      "updatedAt": "2026-06-25T20:00:22Z"
+    }
+  ]
+}

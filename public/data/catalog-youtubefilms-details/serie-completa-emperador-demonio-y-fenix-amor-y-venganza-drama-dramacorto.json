@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto",
+    "slug": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto",
+    "title": "💥Serie completa💥 [Emperador Demonio y Fénix: Amor y Venganza] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/ZwdHTMAHVp4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El Emperador Demonio Cang Linyuan, para proteger a la raza de los fénix de nueve colores de la esclavitud de la raza celestial, urdió un engaño colosal sobre la extinción de la raza fénix. Se casó...",
+    "year": 2026,
+    "updatedAt": "2026-06-09T20:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ZwdHTMAHVp4",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Emperador Demonio y Fénix: Amor y Venganza] #drama #dramacorto",
+    "duration": 5753,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Drama",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto-s1",
+      "seriesId": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto-ep-1",
+      "slug": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto",
+      "seasonId": "serie-completa-emperador-demonio-y-fenix-amor-y-venganza-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ZwdHTMAHVp4"
+        }
+      ],
+      "updatedAt": "2026-06-09T20:00:06Z"
+    }
+  ]
+}

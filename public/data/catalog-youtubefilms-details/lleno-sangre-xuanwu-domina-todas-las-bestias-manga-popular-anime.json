@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime",
+    "slug": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime",
+    "title": "【LLENO】Sangre Xuánwǔ domina todas las bestias#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/haF20sCn0Tk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Empezó su vida siendo débil y maltratado por todos. Para volverse poderoso, devoró bestias demoníacas y fusionó poderes extraordinarios uno tras...",
+    "year": 2026,
+    "updatedAt": "2026-06-23T10:00:34Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=haF20sCn0Tk",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Sangre Xuánwǔ domina todas las bestias#Manga popular #Anime",
+    "duration": 8009,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime-s1",
+      "seriesId": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime-ep-1",
+      "slug": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime-ep-1",
+      "seriesId": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime",
+      "seasonId": "lleno-sangre-xuanwu-domina-todas-las-bestias-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/haF20sCn0Tk"
+        }
+      ],
+      "updatedAt": "2026-06-23T10:00:34Z"
+    }
+  ]
+}

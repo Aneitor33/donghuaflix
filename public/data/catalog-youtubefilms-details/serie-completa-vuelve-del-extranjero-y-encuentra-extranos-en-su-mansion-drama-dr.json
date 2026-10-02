@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr",
+    "slug": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr",
+    "title": "💥Serie completa💥 [Vuelve del extranjero y encuentra extraños en su mansión] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/Fs9LdZ-W3Nw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Shen Qingxue regresa del extranjero y se lleva la terrible sorpresa de que su villa ha sido usurpada por desconocidos como Jiang Chunmei y Xu Daniu, quienes incluso llegan a afirmar que ella es la...",
+    "year": 2026,
+    "updatedAt": "2026-06-28T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Fs9LdZ-W3Nw",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Vuelve del extranjero y encuentra extraños en su mansión] #drama #dramacorto",
+    "duration": 4988,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr-s1",
+      "seriesId": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr-ep-1",
+      "slug": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr-ep-1",
+      "seriesId": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr",
+      "seasonId": "serie-completa-vuelve-del-extranjero-y-encuentra-extranos-en-su-mansion-drama-dr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Fs9LdZ-W3Nw"
+        }
+      ],
+      "updatedAt": "2026-06-28T14:00:06Z"
+    }
+  ]
+}

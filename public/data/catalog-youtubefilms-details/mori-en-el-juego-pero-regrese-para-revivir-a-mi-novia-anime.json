@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime",
+    "slug": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime",
+    "title": "¡Morí en el juego… pero regresé para revivir a mi novia!💕#anime",
+    "image": "https://i.ytimg.com/vi/5Y7DdmTd2tc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-16T20:00:28Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=5Y7DdmTd2tc",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¡Morí en el juego… pero regresé para revivir a mi novia!💕#anime",
+    "duration": 6001,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime-s1",
+      "seriesId": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime-ep-1",
+      "slug": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime-ep-1",
+      "seriesId": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime",
+      "seasonId": "mori-en-el-juego-pero-regrese-para-revivir-a-mi-novia-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/5Y7DdmTd2tc"
+        }
+      ],
+      "updatedAt": "2026-07-16T20:00:28Z"
+    }
+  ]
+}

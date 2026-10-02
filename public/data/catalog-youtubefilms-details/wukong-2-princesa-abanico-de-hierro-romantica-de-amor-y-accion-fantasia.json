@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia",
+    "slug": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia",
+    "title": "Wukong 2: Princesa Abanico de Hierro Romantica de Amor y Accion Fantasia",
+    "image": "https://i.ytimg.com/vi/NBZLnNiml28/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor y accion fantasia \"Viaje de Ensueño 2: La Princesa Abanico de Hierro\" narra la historia de un desastre en las Montañas Llameantes. El poder del abanico de pl...",
+    "year": 2025,
+    "updatedAt": "2025-08-23T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=NBZLnNiml28",
+    "channel": "@moxispanish",
+    "originalTitle": "Wukong 2: Princesa Abanico de Hierro | Romantica de Amor y Accion Fantasia | Completa en Español HD",
+    "duration": 5663,
+    "genres": [
+      "Romance",
+      "Fantasía/Cultivación",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia-s1",
+      "seriesId": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia-ep-1",
+      "slug": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia-ep-1",
+      "seriesId": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia",
+      "seasonId": "wukong-2-princesa-abanico-de-hierro-romantica-de-amor-y-accion-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/NBZLnNiml28"
+        }
+      ],
+      "updatedAt": "2025-08-23T16:00:06Z"
+    }
+  ]
+}

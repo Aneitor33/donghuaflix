@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una-",
+    "slug": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una-",
+    "title": "【LLENO】¡Renacido en un pueblo de pescadores, logré pescar el mejor marisco con una sola red!",
+    "image": "https://i.ytimg.com/vi/U99lB9ZekUw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】En su vida pasada, Zhang Yuanchuan perdió oportunidades una y otra vez, y finalmente vio impotente cómo su esposa lo abandonaba, un remordimiento que lo atormentó el resto de su vida....",
+    "year": 2026,
+    "updatedAt": "2026-09-06T04:00:11Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=U99lB9ZekUw",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Renacido en un pueblo de pescadores, logré pescar el mejor marisco con una sola red!",
+    "duration": 7834,
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una--s1",
+      "seriesId": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una--ep-1",
+      "slug": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una--ep-1",
+      "seriesId": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una-",
+      "seasonId": "lleno-renacido-en-un-pueblo-de-pescadores-logre-pescar-el-mejor-marisco-con-una--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/U99lB9ZekUw"
+        }
+      ],
+      "updatedAt": "2026-09-06T04:00:11Z"
+    }
+  ]
+}

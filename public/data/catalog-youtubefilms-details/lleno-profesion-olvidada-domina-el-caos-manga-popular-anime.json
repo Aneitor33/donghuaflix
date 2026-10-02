@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime",
+    "slug": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime",
+    "title": "【LLENO】Profesión Olvidada Domina el Caos#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/6SMRD2UproU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Todo el mundo menosprecia las humildes profesiones auxiliares, sin saber que oculta un potencial asombroso. Por azar despierta una rara doble pro...",
+    "year": 2026,
+    "updatedAt": "2026-05-29T10:00:18Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6SMRD2UproU",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Profesión Olvidada Domina el Caos#Manga popular #Anime",
+    "duration": 7814,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime-s1",
+      "seriesId": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime-ep-1",
+      "slug": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime-ep-1",
+      "seriesId": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime",
+      "seasonId": "lleno-profesion-olvidada-domina-el-caos-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6SMRD2UproU"
+        }
+      ],
+      "updatedAt": "2026-05-29T10:00:18Z"
+    }
+  ]
+}

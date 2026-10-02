@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a",
+    "slug": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a",
+    "title": "Audio Latino - Dos Sectas de Asesinos se unen por primera vez, solo para eliminar a Soldados Monjes",
+    "image": "https://i.ytimg.com/vi/-DppZC1p2Z0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-03-29T14:30:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=-DppZC1p2Z0",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Dos Sectas de Asesinos se unen por primera vez, solo para eliminar a Soldados Monjes",
+    "duration": 4986,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a-s1",
+      "seriesId": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a-ep-1",
+      "slug": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a-ep-1",
+      "seriesId": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a",
+      "seasonId": "audio-latino-dos-sectas-de-asesinos-se-unen-por-primera-vez-solo-para-eliminar-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/-DppZC1p2Z0"
+        }
+      ],
+      "updatedAt": "2026-03-29T14:30:00Z"
+    }
+  ]
+}

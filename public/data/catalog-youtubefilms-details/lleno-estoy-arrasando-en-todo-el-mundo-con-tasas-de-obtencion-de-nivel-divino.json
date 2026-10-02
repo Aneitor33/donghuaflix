@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino",
+    "slug": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino",
+    "title": "【LLENO】¡Estoy arrasando en todo el mundo con tasas de obtención de nivel divino!",
+    "image": "https://i.ytimg.com/vi/PO2RslvSUcM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】Hace un siglo, el mundo de los videojuegos invadió la realidad, dando paso a una era en la que cualquiera podía despertar una clase. El día del Despertar, el prodigio Zhang Mu solo obt...",
+    "year": 2026,
+    "updatedAt": "2026-10-02T04:00:07Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=PO2RslvSUcM",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Estoy arrasando en todo el mundo con tasas de obtención de nivel divino!",
+    "duration": 8192,
+    "genres": [
+      "Acción",
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino-s1",
+      "seriesId": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino-ep-1",
+      "slug": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino-ep-1",
+      "seriesId": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino",
+      "seasonId": "lleno-estoy-arrasando-en-todo-el-mundo-con-tasas-de-obtencion-de-nivel-divino-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PO2RslvSUcM"
+        }
+      ],
+      "updatedAt": "2026-10-02T04:00:07Z"
+    }
+  ]
+}

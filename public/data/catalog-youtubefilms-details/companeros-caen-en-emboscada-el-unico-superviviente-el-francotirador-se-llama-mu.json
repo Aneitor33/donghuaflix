@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu",
+    "slug": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu",
+    "title": "Compañeros caen en emboscada, el único superviviente, el francotirador se llama \"Muerte Blanca\"",
+    "image": "https://i.ytimg.com/vi/uRtdhbyKHUk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-01-19T14:31:00Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=uRtdhbyKHUk",
+    "channel": "@cine-esp",
+    "originalTitle": "Compañeros caen en emboscada, el único superviviente, el francotirador se llama \"Muerte Blanca\".",
+    "duration": 4704,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu-s1",
+      "seriesId": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu-ep-1",
+      "slug": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu-ep-1",
+      "seriesId": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu",
+      "seasonId": "companeros-caen-en-emboscada-el-unico-superviviente-el-francotirador-se-llama-mu-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/uRtdhbyKHUk"
+        }
+      ],
+      "updatedAt": "2026-01-19T14:31:00Z"
+    }
+  ]
+}

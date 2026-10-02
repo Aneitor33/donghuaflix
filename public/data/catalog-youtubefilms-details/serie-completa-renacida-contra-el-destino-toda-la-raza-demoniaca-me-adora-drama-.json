@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama-",
+    "slug": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama-",
+    "title": "💥Serie completa💥 [Renacida contra el destino: ¡Toda la raza demoníaca me adora!] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/ZZ-ta9IaWLI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Ying Ning nació con un hueso de espada innato extremadamente raro, destinada a convertirse en una cultivadora sin parangón. En su vida pasada, se unió por error a una secta inmortal hipócrita. Sus...",
+    "year": 2026,
+    "updatedAt": "2026-08-02T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ZZ-ta9IaWLI",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Renacida contra el destino: ¡Toda la raza demoníaca me adora!] #drama #dramacorto",
+    "duration": 8755,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Artes Marciales",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama--s1",
+      "seriesId": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama--ep-1",
+      "slug": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama--ep-1",
+      "seriesId": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama-",
+      "seasonId": "serie-completa-renacida-contra-el-destino-toda-la-raza-demoniaca-me-adora-drama--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ZZ-ta9IaWLI"
+        }
+      ],
+      "updatedAt": "2026-08-02T14:00:06Z"
+    }
+  ]
+}

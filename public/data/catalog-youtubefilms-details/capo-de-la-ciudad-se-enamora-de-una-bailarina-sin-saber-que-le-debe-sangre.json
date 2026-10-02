@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre",
+    "slug": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre",
+    "title": "Capo de la ciudad se enamora de una Bailarina, sin saber que Le Debe Sangre",
+    "image": "https://i.ytimg.com/vi/h8zHoOWjxy4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-09-21T15:30:32Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=h8zHoOWjxy4",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Capo de la ciudad se enamora de una Bailarina, sin saber que Le Debe Sangre...",
+    "duration": 4689,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre-s1",
+      "seriesId": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre-ep-1",
+      "slug": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre-ep-1",
+      "seriesId": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre",
+      "seasonId": "capo-de-la-ciudad-se-enamora-de-una-bailarina-sin-saber-que-le-debe-sangre-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/h8zHoOWjxy4"
+        }
+      ],
+      "updatedAt": "2026-09-21T15:30:32Z"
+    }
+  ]
+}

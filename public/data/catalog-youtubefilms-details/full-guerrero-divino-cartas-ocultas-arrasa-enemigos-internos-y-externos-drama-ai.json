@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai",
+    "slug": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai",
+    "title": "💥FULL💥[Guerrero Divino: ¡Cartas ocultas, arrasa enemigos internos y externos!] #drama #ai",
+    "image": "https://i.ytimg.com/vi/apuinVZoKPE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El príncipe sexto Meng Chen sufre el robo de la energía imperial del dragón dentro de su cuerpo. Se mantiene oculto y acumula poderosas cartas ocultas en secreto. La gran tribu de brujos espiritual...",
+    "year": 2026,
+    "updatedAt": "2026-08-31T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=apuinVZoKPE",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[Guerrero Divino: ¡Cartas ocultas, arrasa enemigos internos y externos!] #drama #ai",
+    "duration": 10139,
+    "genres": [
+      "Acción",
+      "Fantasía/Cultivación",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai-s1",
+      "seriesId": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai-ep-1",
+      "slug": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai-ep-1",
+      "seriesId": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai",
+      "seasonId": "full-guerrero-divino-cartas-ocultas-arrasa-enemigos-internos-y-externos-drama-ai-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/apuinVZoKPE"
+        }
+      ],
+      "updatedAt": "2026-08-31T14:00:06Z"
+    }
+  ]
+}

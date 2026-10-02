@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "cazador-de-dragones-pelicula-de-accion-y-aventura",
+    "slug": "cazador-de-dragones-pelicula-de-accion-y-aventura",
+    "title": "Cazador de Dragones Pelicula de Accion y Aventura",
+    "image": "https://i.ytimg.com/vi/ksNOudQSjOc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción y aventuras \"Cazador de Dragones\" cuenta una historia que sucedió a finales de la dinastía Qing. Una expedición biológica dirigida por el padre de Qin Xiaofeng fue a...",
+    "year": 2025,
+    "updatedAt": "2025-05-17T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=ksNOudQSjOc",
+    "channel": "@moxispanish",
+    "originalTitle": "Cazador de Dragones | Pelicula de Accion y Aventura | Completa en Español HD",
+    "duration": 4348,
+    "genres": [
+      "Histórico",
+      "Fantasía/Cultivación",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "cazador-de-dragones-pelicula-de-accion-y-aventura-s1",
+      "seriesId": "cazador-de-dragones-pelicula-de-accion-y-aventura",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "cazador-de-dragones-pelicula-de-accion-y-aventura-ep-1",
+      "slug": "cazador-de-dragones-pelicula-de-accion-y-aventura-ep-1",
+      "seriesId": "cazador-de-dragones-pelicula-de-accion-y-aventura",
+      "seasonId": "cazador-de-dragones-pelicula-de-accion-y-aventura-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ksNOudQSjOc"
+        }
+      ],
+      "updatedAt": "2025-05-17T16:00:06Z"
+    }
+  ]
+}

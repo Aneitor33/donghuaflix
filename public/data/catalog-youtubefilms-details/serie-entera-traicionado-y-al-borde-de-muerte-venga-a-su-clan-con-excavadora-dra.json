@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra",
+    "slug": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra",
+    "title": "💥Serie entera💥 [Traicionado y al borde de muerte: venga a su clan con excavadora] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/mYBpiG-jwp4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Se transmigra a un mundo de cultivo fantástico. Desde el inicio, su compromiso es anulado, es humillado públicamente y todo su clan es aniquilado. Cuando está en su punto más bajo, sumido en la des...",
+    "year": 2026,
+    "updatedAt": "2026-08-19T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=mYBpiG-jwp4",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie entera💥 [Traicionado y al borde de muerte: venga a su clan con excavadora] #drama #dramacorto",
+    "duration": 10787,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra-s1",
+      "seriesId": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra-ep-1",
+      "slug": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra-ep-1",
+      "seriesId": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra",
+      "seasonId": "serie-entera-traicionado-y-al-borde-de-muerte-venga-a-su-clan-con-excavadora-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/mYBpiG-jwp4"
+        }
+      ],
+      "updatedAt": "2026-08-19T14:00:06Z"
+    }
+  ]
+}

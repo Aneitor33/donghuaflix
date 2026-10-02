@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco",
+    "slug": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco",
+    "title": "💥Serie completa💥 [Ciudad de Escombros: Amor Profundo en el Apocalipsis] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/UXXOTUpscGU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "El segundo año después del estallido del apocalipsis, Tian Tian salió a buscar suministros y fue traicionada por su exnovio Zhang Yong y su mejor amiga Wang Kexin, quienes la empujaron hacia la hor...",
+    "year": 2026,
+    "updatedAt": "2026-06-06T21:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=UXXOTUpscGU",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Ciudad de Escombros: Amor Profundo en el Apocalipsis] #drama #dramacorto",
+    "duration": 6653,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco-s1",
+      "seriesId": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco-ep-1",
+      "slug": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco-ep-1",
+      "seriesId": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco",
+      "seasonId": "serie-completa-ciudad-de-escombros-amor-profundo-en-el-apocalipsis-drama-dramaco-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UXXOTUpscGU"
+        }
+      ],
+      "updatedAt": "2026-06-06T21:00:06Z"
+    }
+  ]
+}

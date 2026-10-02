@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su",
+    "slug": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su",
+    "title": "Audio Latino El Químico entra voluntariamente en la prisión, solo para Matar a su Enemigo",
+    "image": "https://i.ytimg.com/vi/-7gPwOMVw9Q/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-08-23T14:30:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=-7gPwOMVw9Q",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino El Químico entra voluntariamente en la prisión, solo para Matar a su Enemigo.",
+    "duration": 8307,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su-s1",
+      "seriesId": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su-ep-1",
+      "slug": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su-ep-1",
+      "seriesId": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su",
+      "seasonId": "audio-latino-el-quimico-entra-voluntariamente-en-la-prision-solo-para-matar-a-su-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/-7gPwOMVw9Q"
+        }
+      ],
+      "updatedAt": "2026-08-23T14:30:17Z"
+    }
+  ]
+}

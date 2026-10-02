@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor",
+    "slug": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor",
+    "title": "Superman Prehistórico Pelicula de Ciencia Ficción y Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/PRfv4sfVxko/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de ciencia ficción y romántica de amor \"Superman Prehistórico\" trata sobre una historia de acción y amor de ciencia ficción. Hace quince mil años, la civilización atlante se h...",
+    "year": 2025,
+    "updatedAt": "2025-09-03T16:00:46Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=PRfv4sfVxko",
+    "channel": "@moxispanish",
+    "originalTitle": "Superman Prehistórico | Pelicula de Ciencia Ficción y Romantica de Amor | Completa en Español HD",
+    "duration": 5779,
+    "genres": [
+      "Histórico",
+      "Acción",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor-s1",
+      "seriesId": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor-ep-1",
+      "slug": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor-ep-1",
+      "seriesId": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor",
+      "seasonId": "superman-prehistorico-pelicula-de-ciencia-ficcion-y-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PRfv4sfVxko"
+        }
+      ],
+      "updatedAt": "2025-09-03T16:00:46Z"
+    }
+  ]
+}

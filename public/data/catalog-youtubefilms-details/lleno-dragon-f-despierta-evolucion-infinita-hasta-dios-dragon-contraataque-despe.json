@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe",
+    "slug": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe",
+    "title": "【LLENO】Dragón F despierta evolución infinita hasta dios dragón #Contraataque #Despertar",
+    "image": "https://i.ytimg.com/vi/6yKc_uU9OOA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 En un mundo donde las bestias y los contratos definen el poder, los nacimientos débiles están destinados a ser olvidados. Pero el destino cambia cuando un pequeño dragón de fuego de r...",
+    "year": 2026,
+    "updatedAt": "2026-09-23T04:00:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6yKc_uU9OOA",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Dragón F despierta evolución infinita hasta dios dragón #Contraataque #Despertar",
+    "duration": 8937,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe-s1",
+      "seriesId": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe-ep-1",
+      "slug": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe-ep-1",
+      "seriesId": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe",
+      "seasonId": "lleno-dragon-f-despierta-evolucion-infinita-hasta-dios-dragon-contraataque-despe-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6yKc_uU9OOA"
+        }
+      ],
+      "updatedAt": "2026-09-23T04:00:19Z"
+    }
+  ]
+}

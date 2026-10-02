@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime",
+    "slug": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime",
+    "title": "Mi Ex Me Traicionó... ¡Ahora Todas las Reinas Demonio Me Obedecen!💕#anime",
+    "image": "https://i.ytimg.com/vi/SezBrQy1qA0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-02T20:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=SezBrQy1qA0",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Mi Ex Me Traicionó... ¡Ahora Todas las Reinas Demonio Me Obedecen!💕#anime",
+    "duration": 5241,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime-s1",
+      "seriesId": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime-ep-1",
+      "slug": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime-ep-1",
+      "seriesId": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime",
+      "seasonId": "mi-ex-me-traiciono-ahora-todas-las-reinas-demonio-me-obedecen-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SezBrQy1qA0"
+        }
+      ],
+      "updatedAt": "2026-07-02T20:00:23Z"
+    }
+  ]
+}

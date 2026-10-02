@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime",
+    "slug": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime",
+    "title": "【LLENO】Todas las chicas elementales, invencible en cada pelea#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/CYHxKew5V1Q/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:El joven se hace cada vez más poderoso y reúne a un grupo de chicas con poderes de todos los elementos. Al fusionar sus fuerzas al máximo, despie...",
+    "year": 2026,
+    "updatedAt": "2026-06-08T10:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CYHxKew5V1Q",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Todas las chicas elementales, invencible en cada pelea#Manga popular #Anime",
+    "duration": 7176,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime-s1",
+      "seriesId": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime-ep-1",
+      "slug": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime-ep-1",
+      "seriesId": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime",
+      "seasonId": "lleno-todas-las-chicas-elementales-invencible-en-cada-pelea-manga-popular-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/CYHxKew5V1Q"
+        }
+      ],
+      "updatedAt": "2026-06-08T10:00:23Z"
+    }
+  ]
+}

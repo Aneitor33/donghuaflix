@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales",
+    "slug": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales",
+    "title": "El Lobo Sangriento Pelicula de Accion de Artes Marciales",
+    "image": "https://i.ytimg.com/vi/x6Ow051rLx4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de acción de artes marciales \"El Lobo Sangriento\" cuenta la historia del guardia imperial \"Royal Cat\" Zhan Zhao y el héroe de Jianghu \"Golden Mouse\" Bai Yutang, quienes trabaj...",
+    "year": 2024,
+    "updatedAt": "2024-01-27T16:00:10Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=x6Ow051rLx4",
+    "channel": "@moxispanish",
+    "originalTitle": "El Lobo Sangriento | Pelicula de Accion de Artes Marciales | Completa en Español HD",
+    "duration": 5004,
+    "genres": [
+      "Histórico",
+      "Artes Marciales",
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales-s1",
+      "seriesId": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales-ep-1",
+      "slug": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales-ep-1",
+      "seriesId": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales",
+      "seasonId": "el-lobo-sangriento-pelicula-de-accion-de-artes-marciales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/x6Ow051rLx4"
+        }
+      ],
+      "updatedAt": "2024-01-27T16:00:10Z"
+    }
+  ]
+}

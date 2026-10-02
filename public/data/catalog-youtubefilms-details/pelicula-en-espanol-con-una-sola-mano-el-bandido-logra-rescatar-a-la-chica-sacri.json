@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri",
+    "slug": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri",
+    "title": "Película en Español - Con una sola mano, el Bandido logra rescatar a la Chica Sacrificada del asedio",
+    "image": "https://i.ytimg.com/vi/qEX514xrBPs/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-07-12T15:01:30Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=qEX514xrBPs",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - Con una sola mano, el Bandido logra rescatar a la Chica Sacrificada del asedio",
+    "duration": 9110,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri-s1",
+      "seriesId": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri-ep-1",
+      "slug": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri-ep-1",
+      "seriesId": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri",
+      "seasonId": "pelicula-en-espanol-con-una-sola-mano-el-bandido-logra-rescatar-a-la-chica-sacri-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/qEX514xrBPs"
+        }
+      ],
+      "updatedAt": "2025-07-12T15:01:30Z"
+    }
+  ]
+}

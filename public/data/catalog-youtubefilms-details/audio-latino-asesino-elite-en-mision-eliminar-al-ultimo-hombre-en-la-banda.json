@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda",
+    "slug": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda",
+    "title": "Audio Latino - Asesino Élite en Misión: Eliminar al Último Hombre en la Banda",
+    "image": "https://i.ytimg.com/vi/4j7WxxqukXw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2025,
+    "updatedAt": "2025-11-30T14:30:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=4j7WxxqukXw",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Asesino Élite en Misión: Eliminar al Último Hombre en la Banda",
+    "duration": 6288,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda-s1",
+      "seriesId": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda-ep-1",
+      "slug": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda-ep-1",
+      "seriesId": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda",
+      "seasonId": "audio-latino-asesino-elite-en-mision-eliminar-al-ultimo-hombre-en-la-banda-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/4j7WxxqukXw"
+        }
+      ],
+      "updatedAt": "2025-11-30T14:30:04Z"
+    }
+  ]
+}

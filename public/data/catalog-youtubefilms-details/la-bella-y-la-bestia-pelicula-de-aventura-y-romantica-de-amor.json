@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor",
+    "slug": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor",
+    "title": "La Bella y la Bestia Pelicula de Aventura y Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/muqEyiEytb4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película de aventura y romantica de amor \"La Bella y la Bestia\" narra la historia de una niña rebelde, Xiao Xue, quien acaba de pelearse con los funcionarios de administración urbana y...",
+    "year": 2026,
+    "updatedAt": "2026-04-22T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=muqEyiEytb4",
+    "channel": "@moxispanish",
+    "originalTitle": "La Bella y la Bestia | Pelicula de Aventura y Romantica de Amor | Completa en Español HD",
+    "duration": 3761,
+    "genres": [
+      "Drama",
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor-s1",
+      "seriesId": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor-ep-1",
+      "slug": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor-ep-1",
+      "seriesId": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor",
+      "seasonId": "la-bella-y-la-bestia-pelicula-de-aventura-y-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/muqEyiEytb4"
+        }
+      ],
+      "updatedAt": "2026-04-22T16:00:06Z"
+    }
+  ]
+}

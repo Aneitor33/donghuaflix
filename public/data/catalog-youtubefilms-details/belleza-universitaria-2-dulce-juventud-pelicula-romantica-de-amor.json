@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor",
+    "slug": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor",
+    "title": "Belleza Universitaria 2 Dulce Juventud Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/6OapNKPZc_Y/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor \"Belleza Universitaria 2 Dulce Juventud\" también se llama \"A la edad de diecisiete años\". Cuando Ai Meili fue a la universidad, decidió formar una banda y as...",
+    "year": 2024,
+    "updatedAt": "2024-02-03T16:00:08Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6OapNKPZc_Y",
+    "channel": "@moxispanish",
+    "originalTitle": "Belleza Universitaria 2 Dulce Juventud | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 5569,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor-s1",
+      "seriesId": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor-ep-1",
+      "slug": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor",
+      "seasonId": "belleza-universitaria-2-dulce-juventud-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6OapNKPZc_Y"
+        }
+      ],
+      "updatedAt": "2024-02-03T16:00:08Z"
+    }
+  ]
+}

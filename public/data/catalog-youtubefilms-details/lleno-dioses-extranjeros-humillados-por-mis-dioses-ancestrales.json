@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales",
+    "slug": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales",
+    "title": "【LLENO】¡Dioses extranjeros humillados por mis Dioses Ancestrales！",
+    "image": "https://i.ytimg.com/vi/vYxjfgs6pkc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción 】 ¡Los dioses de otros mundos intentaron destruir nuestro país porque pensaban que no teníamos protectores! 🌍☠️ Pero un estudiante de historia despierta el artefacto definitivo: ¡El C...",
+    "year": 2026,
+    "updatedAt": "2026-07-07T04:00:33Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=vYxjfgs6pkc",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】¡Dioses extranjeros humillados por mis Dioses Ancestrales！",
+    "duration": 7768,
+    "genres": [
+      "Acción",
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales-s1",
+      "seriesId": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales-ep-1",
+      "slug": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales-ep-1",
+      "seriesId": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales",
+      "seasonId": "lleno-dioses-extranjeros-humillados-por-mis-dioses-ancestrales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/vYxjfgs6pkc"
+        }
+      ],
+      "updatedAt": "2026-07-07T04:00:33Z"
+    }
+  ]
+}

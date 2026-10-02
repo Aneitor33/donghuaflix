@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast",
+    "slug": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast",
+    "title": "【LLENO】La Pequeña Lagartija Obtiene Poderes Especiales y Explora un Mundo Fantástico #Contraataque",
+    "image": "https://i.ytimg.com/vi/wU5s3DWA8SE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 Al borde de un bosque oscuro, una humilde pequeña lagartija despierta un poder extraordinario que nadie esperaba. Comienza su aventura para descubrir todos los secretos de este vasto...",
+    "year": 2026,
+    "updatedAt": "2026-09-14T02:00:20Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=wU5s3DWA8SE",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】La Pequeña Lagartija Obtiene Poderes Especiales y Explora un Mundo Fantástico #Contraataque",
+    "duration": 7975,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast-s1",
+      "seriesId": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast-ep-1",
+      "slug": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast-ep-1",
+      "seriesId": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast",
+      "seasonId": "lleno-la-pequena-lagartija-obtiene-poderes-especiales-y-explora-un-mundo-fantast-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/wU5s3DWA8SE"
+        }
+      ],
+      "updatedAt": "2026-09-14T02:00:20Z"
+    }
+  ]
+}

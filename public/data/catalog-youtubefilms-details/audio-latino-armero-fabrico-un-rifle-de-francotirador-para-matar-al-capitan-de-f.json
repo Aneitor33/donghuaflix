@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f",
+    "slug": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f",
+    "title": "Audio latino - Armero fabricó un Rifle de Francotirador para matar al Capitán de Fuerzas Especiales",
+    "image": "https://i.ytimg.com/vi/WFPFpG-_0DA/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-10-02T14:30:21Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=WFPFpG-_0DA",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino - Armero fabricó un Rifle de Francotirador para matar al Capitán de Fuerzas Especiales.",
+    "duration": 4786,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f-s1",
+      "seriesId": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f-ep-1",
+      "slug": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f-ep-1",
+      "seriesId": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f",
+      "seasonId": "audio-latino-armero-fabrico-un-rifle-de-francotirador-para-matar-al-capitan-de-f-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WFPFpG-_0DA"
+        }
+      ],
+      "updatedAt": "2025-10-02T14:30:21Z"
+    }
+  ]
+}

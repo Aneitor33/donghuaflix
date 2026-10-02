@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v",
+    "slug": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v",
+    "title": "Batalla Final del Rey Polar. Hermanos que perdieron a su familia por fin pueden Vengarse",
+    "image": "https://i.ytimg.com/vi/XDI_Cf_MKPw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-10-27T14:30:28Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=XDI_Cf_MKPw",
+    "channel": "@cine-esp",
+    "originalTitle": "[ESP DUB] Batalla Final del Rey Polar. Hermanos que perdieron a su familia por fin pueden Vengarse",
+    "duration": 8321,
+    "genres": [
+      "Acción",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v-s1",
+      "seriesId": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v-ep-1",
+      "slug": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v-ep-1",
+      "seriesId": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v",
+      "seasonId": "batalla-final-del-rey-polar-hermanos-que-perdieron-a-su-familia-por-fin-pueden-v-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/XDI_Cf_MKPw"
+        }
+      ],
+      "updatedAt": "2025-10-27T14:30:28Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto",
+    "slug": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto",
+    "title": "💥Serie completa💥 [Panda renacido: el país me pide no hui] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/VaLA_FO8g1E/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Un oficinista exhausto muere repentinamente y renace como un panda gigante del zoológico de la capital. Despierta un Sistema de Evolución de Bestias Divinas, dotándolo de una inteligencia extraordi...",
+    "year": 2026,
+    "updatedAt": "2026-07-08T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=VaLA_FO8g1E",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Panda renacido: el país me pide no hui] #drama #dramacorto",
+    "duration": 7970,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto-s1",
+      "seriesId": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto-ep-1",
+      "slug": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto-ep-1",
+      "seriesId": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto",
+      "seasonId": "serie-completa-panda-renacido-el-pais-me-pide-no-hui-drama-dramacorto-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VaLA_FO8g1E"
+        }
+      ],
+      "updatedAt": "2026-07-08T14:00:06Z"
+    }
+  ]
+}

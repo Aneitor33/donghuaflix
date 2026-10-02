@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte-",
+    "slug": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte-",
+    "title": "¿Sobrevivió al avión y cayó en un foso de cadáveres? Su muerte lo hace más fuerte!💕#anime",
+    "image": "https://i.ytimg.com/vi/6d5rTX4j_fo/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-06-12T20:00:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=6d5rTX4j_fo",
+    "channel": "@anime_multiverso",
+    "originalTitle": "¿Sobrevivió al avión y cayó en un foso de cadáveres? Su muerte lo hace más fuerte!💕#anime",
+    "duration": 9011,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte--s1",
+      "seriesId": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte--ep-1",
+      "slug": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte--ep-1",
+      "seriesId": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte-",
+      "seasonId": "sobrevivio-al-avion-y-cayo-en-un-foso-de-cadaveres-su-muerte-lo-hace-mas-fuerte--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/6d5rTX4j_fo"
+        }
+      ],
+      "updatedAt": "2026-06-12T20:00:04Z"
+    }
+  ]
+}

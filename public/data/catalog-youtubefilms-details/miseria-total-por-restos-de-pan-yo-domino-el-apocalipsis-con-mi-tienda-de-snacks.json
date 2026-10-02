@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks",
+    "slug": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks",
+    "title": "Miseria total por restos de pan｜Yo domino el apocalipsis con mi tienda de snacks modernos!💕#anime",
+    "image": "https://i.ytimg.com/vi/K6vGFJOlz0s/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-06-04T20:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=K6vGFJOlz0s",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Miseria total por restos de pan｜Yo domino el apocalipsis con mi tienda de snacks modernos!💕#anime",
+    "duration": 7463,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks-s1",
+      "seriesId": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks-ep-1",
+      "slug": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks-ep-1",
+      "seriesId": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks",
+      "seasonId": "miseria-total-por-restos-de-pan-yo-domino-el-apocalipsis-con-mi-tienda-de-snacks-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/K6vGFJOlz0s"
+        }
+      ],
+      "updatedAt": "2026-06-04T20:00:23Z"
+    }
+  ]
+}

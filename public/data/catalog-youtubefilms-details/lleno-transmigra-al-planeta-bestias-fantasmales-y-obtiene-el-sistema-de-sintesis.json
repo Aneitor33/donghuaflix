@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis",
+    "slug": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis",
+    "title": "【LLENO】Transmigra al Planeta Bestias Fantasmales y Obtiene el Sistema de Síntesis de Bestias#Sistema",
+    "image": "https://i.ytimg.com/vi/80LrbHrdyP0/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción】 En el planeta de las bestias fantasmales, las criaturas mágicas conviven con los humanos. Criar y entrenar estas bestias es el camino para ganar fama y poder, y solo los talentosos pu...",
+    "year": 2026,
+    "updatedAt": "2026-09-30T09:00:12Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=80LrbHrdyP0",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Transmigra al Planeta Bestias Fantasmales y Obtiene el Sistema de Síntesis de Bestias#Sistema",
+    "duration": 16635,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis-s1",
+      "seriesId": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis-ep-1",
+      "slug": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis-ep-1",
+      "seriesId": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis",
+      "seasonId": "lleno-transmigra-al-planeta-bestias-fantasmales-y-obtiene-el-sistema-de-sintesis-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/80LrbHrdyP0"
+        }
+      ],
+      "updatedAt": "2026-09-30T09:00:12Z"
+    }
+  ]
+}

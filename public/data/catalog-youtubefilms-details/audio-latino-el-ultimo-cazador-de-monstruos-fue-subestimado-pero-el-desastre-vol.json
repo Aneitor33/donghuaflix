@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol",
+    "slug": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol",
+    "title": "Audio latino- El Último Cazador de Monstruos fue Subestimado, pero el Desastre Volvió a Ocurrir",
+    "image": "https://i.ytimg.com/vi/3jtAxggIvEM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: #acción #película #Chinese Television Dramas #ChineseKungfu#kickboxing#MMAFighterKungFu#武侠#金庸",
+    "year": 2025,
+    "updatedAt": "2025-10-04T14:30:04Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=3jtAxggIvEM",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio latino- El Último Cazador de Monstruos fue Subestimado, pero el Desastre Volvió a Ocurrir...",
+    "duration": 5292,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol-s1",
+      "seriesId": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol-ep-1",
+      "slug": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol-ep-1",
+      "seriesId": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol",
+      "seasonId": "audio-latino-el-ultimo-cazador-de-monstruos-fue-subestimado-pero-el-desastre-vol-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/3jtAxggIvEM"
+        }
+      ],
+      "updatedAt": "2025-10-04T14:30:04Z"
+    }
+  ]
+}

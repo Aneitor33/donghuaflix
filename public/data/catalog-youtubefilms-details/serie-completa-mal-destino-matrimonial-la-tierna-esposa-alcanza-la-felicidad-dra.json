@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra",
+    "slug": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra",
+    "title": "💥Serie completa💥 [Mal destino matrimonial: la tierna esposa alcanza la felicidad] #drama #dramacorto",
+    "image": "https://i.ytimg.com/vi/31pC_3k64JI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Tuve que casarme en lugar de mi hermana para complacerla, pensando que este matrimonio sería una desgracia.Sin embargo, mi esposo es un hombre gentil y bondadoso. Aprecia mi inocencia y ternura, me...",
+    "year": 2026,
+    "updatedAt": "2026-07-06T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=31pC_3k64JI",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥Serie completa💥 [Mal destino matrimonial: la tierna esposa alcanza la felicidad] #drama #dramacorto",
+    "duration": 8355,
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra-s1",
+      "seriesId": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra-ep-1",
+      "slug": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra-ep-1",
+      "seriesId": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra",
+      "seasonId": "serie-completa-mal-destino-matrimonial-la-tierna-esposa-alcanza-la-felicidad-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/31pC_3k64JI"
+        }
+      ],
+      "updatedAt": "2026-07-06T14:00:06Z"
+    }
+  ]
+}

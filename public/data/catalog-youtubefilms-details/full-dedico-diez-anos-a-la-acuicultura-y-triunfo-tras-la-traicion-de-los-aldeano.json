@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano",
+    "slug": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano",
+    "title": "💥FULL💥[Dedicó diez años a la acuicultura y triunfó tras la traición de los aldeanos！] #drama #ai",
+    "image": "https://i.ytimg.com/vi/h2ThdvHbGsg/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Lin Feng dedicó diez años a desarrollar un sistema de recirculación para peces de agua fría resistentes al frío y siempre suministraba productos a los aldeanos del pueblo pesquero a un precio mínim...",
+    "year": 2026,
+    "updatedAt": "2026-09-17T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=h2ThdvHbGsg",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[Dedicó diez años a la acuicultura y triunfó tras la traición de los aldeanos！] #drama #ai",
+    "duration": 5468,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano-s1",
+      "seriesId": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano-ep-1",
+      "slug": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano-ep-1",
+      "seriesId": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano",
+      "seasonId": "full-dedico-diez-anos-a-la-acuicultura-y-triunfo-tras-la-traicion-de-los-aldeano-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/h2ThdvHbGsg"
+        }
+      ],
+      "updatedAt": "2026-09-17T14:00:06Z"
+    }
+  ]
+}

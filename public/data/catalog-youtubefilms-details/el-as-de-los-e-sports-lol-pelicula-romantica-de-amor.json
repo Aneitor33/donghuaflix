@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor",
+    "slug": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor",
+    "title": "El As de los E-sports: LoL Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/1ljuuY6Ool8/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor en el campus \"El As de los E-sports: LoL\" narra la historia de los deportes electrónicos del juego \"League of Legends\". Li Chunfeng ama los deportes electrón...",
+    "year": 2025,
+    "updatedAt": "2025-11-05T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=1ljuuY6Ool8",
+    "channel": "@moxispanish",
+    "originalTitle": "El As de los E-sports: LoL | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 3776,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor-s1",
+      "seriesId": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor-ep-1",
+      "slug": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor",
+      "seasonId": "el-as-de-los-e-sports-lol-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/1ljuuY6Ool8"
+        }
+      ],
+      "updatedAt": "2025-11-05T16:00:06Z"
+    }
+  ]
+}

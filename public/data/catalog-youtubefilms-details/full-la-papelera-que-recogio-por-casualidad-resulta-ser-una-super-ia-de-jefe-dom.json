@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom",
+    "slug": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom",
+    "title": "💥FULL💥[La papelera que recogió por casualidad resulta ser una super IA de jefe dominante] #drama#ai",
+    "image": "https://i.ytimg.com/vi/vE76leVKdmw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "La empleada común Lin Xiaobai hace una increíble ganga. Compra una papelera de segunda mano desechada por 99 yuanes y descubre accidentalmente a Atong, una IA experimental de máximo valor de 50 mil...",
+    "year": 2026,
+    "updatedAt": "2026-09-07T14:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=vE76leVKdmw",
+    "channel": "@kb025-p4s",
+    "originalTitle": "💥FULL💥[La papelera que recogió por casualidad resulta ser una super IA de jefe dominante] #drama#ai",
+    "duration": 4561,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom-s1",
+      "seriesId": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom-ep-1",
+      "slug": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom-ep-1",
+      "seriesId": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom",
+      "seasonId": "full-la-papelera-que-recogio-por-casualidad-resulta-ser-una-super-ia-de-jefe-dom-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/vE76leVKdmw"
+        }
+      ],
+      "updatedAt": "2026-09-07T14:00:06Z"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor",
+    "slug": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor",
+    "title": "El Jefe y La Chica Rebelde Pelicula Romantica de Amor",
+    "image": "https://i.ytimg.com/vi/t3p_V7JmrP4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romántica de amor \"El Jefe y La Chica Rebelde\" trata sobre la dulce historia de amor de un jefe autoritario, An Chenmo, y su novia spice, Nuoxi. Estudio: Cloud Media. Producto...",
+    "year": 2025,
+    "updatedAt": "2025-10-25T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=t3p_V7JmrP4",
+    "channel": "@moxispanish",
+    "originalTitle": "El Jefe y La Chica Rebelde | Pelicula Romantica de Amor | Completa en Español HD",
+    "duration": 7137,
+    "genres": [
+      "Histórico",
+      "Romance",
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor-s1",
+      "seriesId": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor-ep-1",
+      "slug": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor-ep-1",
+      "seriesId": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor",
+      "seasonId": "el-jefe-y-la-chica-rebelde-pelicula-romantica-de-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/t3p_V7JmrP4"
+        }
+      ],
+      "updatedAt": "2025-10-25T16:00:06Z"
+    }
+  ]
+}

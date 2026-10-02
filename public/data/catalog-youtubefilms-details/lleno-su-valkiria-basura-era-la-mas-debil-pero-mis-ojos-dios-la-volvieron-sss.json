@@ -1,0 +1,48 @@
+{
+  "series": {
+    "id": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss",
+    "slug": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss",
+    "title": "【LLENO】Su \"VALKIRIA BASURA\" era la más débil, ¡pero mis OJOS DIOS la volvieron SSS!",
+    "image": "https://i.ytimg.com/vi/l1VRR1KTumE/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "【Descripción 】: ¡El fin del mundo ha llegado y las bestias terroríficas dominan la Tierra! En la era del Contrato de Valkirias, todo el mundo se vuelve loco por conseguir a las guerreras de mayor r...",
+    "year": 2026,
+    "updatedAt": "2026-06-30T09:00:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=l1VRR1KTumE",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Su \"VALKIRIA BASURA\" era la más débil, ¡pero mis OJOS DIOS la volvieron SSS!",
+    "duration": 7822,
+    "genres": [
+      "Fantasía/Cultivación",
+      "Romance"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss-s1",
+      "seriesId": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss-ep-1",
+      "slug": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss-ep-1",
+      "seriesId": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss",
+      "seasonId": "lleno-su-valkiria-basura-era-la-mas-debil-pero-mis-ojos-dios-la-volvieron-sss-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/l1VRR1KTumE"
+        }
+      ],
+      "updatedAt": "2026-06-30T09:00:17Z"
+    }
+  ]
+}

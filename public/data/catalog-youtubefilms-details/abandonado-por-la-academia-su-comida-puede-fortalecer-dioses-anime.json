@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime",
+    "slug": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime",
+    "title": "Abandonado por la Academia! Su Comida Puede Fortalecer Dioses💕#anime",
+    "image": "https://i.ytimg.com/vi/LaVaqb5n2h4/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-05-17T20:00:23Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LaVaqb5n2h4",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Abandonado por la Academia! Su Comida Puede Fortalecer Dioses💕#anime",
+    "duration": 7291,
+    "genres": [
+      "Histórico"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime-s1",
+      "seriesId": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime-ep-1",
+      "slug": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime-ep-1",
+      "seriesId": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime",
+      "seasonId": "abandonado-por-la-academia-su-comida-puede-fortalecer-dioses-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LaVaqb5n2h4"
+        }
+      ],
+      "updatedAt": "2026-05-17T20:00:23Z"
+    }
+  ]
+}

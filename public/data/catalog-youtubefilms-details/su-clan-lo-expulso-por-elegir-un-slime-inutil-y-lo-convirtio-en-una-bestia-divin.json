@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin",
+    "slug": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin",
+    "title": "Su clan lo expulsó por elegir un slime inútil… ¡y lo convirtió en una bestia divina!💕#anime",
+    "image": "https://i.ytimg.com/vi/A58HURdtdoM/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-08-17T20:00:20Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=A58HURdtdoM",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Su clan lo expulsó por elegir un slime inútil… ¡y lo convirtió en una bestia divina!💕#anime",
+    "duration": 8241,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin-s1",
+      "seriesId": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin-ep-1",
+      "slug": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin-ep-1",
+      "seriesId": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin",
+      "seasonId": "su-clan-lo-expulso-por-elegir-un-slime-inutil-y-lo-convirtio-en-una-bestia-divin-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/A58HURdtdoM"
+        }
+      ],
+      "updatedAt": "2026-08-17T20:00:20Z"
+    }
+  ]
+}

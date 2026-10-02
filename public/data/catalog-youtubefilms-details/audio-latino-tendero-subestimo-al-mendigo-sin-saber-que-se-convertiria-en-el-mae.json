@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae",
+    "slug": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae",
+    "title": "Audio Latino - Tendero subestimó al Mendigo, sin saber que se convertiría en el Maestro del ejército",
+    "image": "https://i.ytimg.com/vi/SSi9M8kFKDk/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-02-07T14:30:17Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=SSi9M8kFKDk",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Tendero subestimó al Mendigo, sin saber que se convertiría en el Maestro del ejército",
+    "duration": 5546,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae-s1",
+      "seriesId": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae-ep-1",
+      "slug": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae-ep-1",
+      "seriesId": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae",
+      "seasonId": "audio-latino-tendero-subestimo-al-mendigo-sin-saber-que-se-convertiria-en-el-mae-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SSi9M8kFKDk"
+        }
+      ],
+      "updatedAt": "2026-02-07T14:30:17Z"
+    }
+  ]
+}

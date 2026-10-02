@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al",
+    "slug": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al",
+    "title": "Película en Español - ¡La Francotirador empieza a Vengarse! La Única que Localiza al Asesino",
+    "image": "https://i.ytimg.com/vi/SGLtE0gi8SI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Bienvenido a nuestro Facebook: https://www.facebook.com/HuashiTV.Esp Lobo Guerrero Ataca | Blade Edge Drawn / Epecial Arms 2 | 我是特种兵之利刃出鞘 Sinopsis： A finales de los 80, dientes de Lobo brigada de r...",
+    "year": 2025,
+    "updatedAt": "2025-05-17T14:00:42Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=SGLtE0gi8SI",
+    "channel": "@cine-esp",
+    "originalTitle": "Película en Español - ¡La Francotirador empieza a Vengarse! La Única que Localiza al Asesino.",
+    "duration": 5513,
+    "genres": [
+      "Drama"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al-s1",
+      "seriesId": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al-ep-1",
+      "slug": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al-ep-1",
+      "seriesId": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al",
+      "seasonId": "pelicula-en-espanol-la-francotirador-empieza-a-vengarse-la-unica-que-localiza-al-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SGLtE0gi8SI"
+        }
+      ],
+      "updatedAt": "2025-05-17T14:00:42Z"
+    }
+  ]
+}

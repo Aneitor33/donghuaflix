@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a",
+    "slug": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a",
+    "title": "Audio Latino - Mendigo Débil recibe Aprobación de Arma Divino, comienza el camino a ser Dios Marcial",
+    "image": "https://i.ytimg.com/vi/XMfMCyssWEU/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-03-13T14:30:25Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=XMfMCyssWEU",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino - Mendigo Débil recibe Aprobación de Arma Divino, comienza el camino a ser Dios Marcial",
+    "duration": 5936,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a-s1",
+      "seriesId": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a-ep-1",
+      "slug": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a-ep-1",
+      "seriesId": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a",
+      "seasonId": "audio-latino-mendigo-debil-recibe-aprobacion-de-arma-divino-comienza-el-camino-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/XMfMCyssWEU"
+        }
+      ],
+      "updatedAt": "2026-03-13T14:30:25Z"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales",
+    "slug": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales",
+    "title": "Para Vengar a sus Hermanos, el Joven heredó sus Equipos Finales",
+    "image": "https://i.ytimg.com/vi/2sRiFbXtmBI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+    "year": 2025,
+    "updatedAt": "2025-11-20T15:30:02Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=2sRiFbXtmBI",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Para Vengar a sus Hermanos, el Joven heredó sus Equipos Finales.",
+    "duration": 6335,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales-s1",
+      "seriesId": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales-ep-1",
+      "slug": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales-ep-1",
+      "seriesId": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales",
+      "seasonId": "para-vengar-a-sus-hermanos-el-joven-heredo-sus-equipos-finales-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2sRiFbXtmBI"
+        }
+      ],
+      "updatedAt": "2025-11-20T15:30:02Z"
+    }
+  ]
+}

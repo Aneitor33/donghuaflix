@@ -1,0 +1,49 @@
+{
+  "series": {
+    "id": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol",
+    "slug": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol",
+    "title": "Doble Identidad 2 Pelicula Romantica de Amor y Accion de Artes Marciales Español",
+    "image": "https://i.ytimg.com/vi/LoaDKc-wXRI/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Sinopsis: La película romantica de amor y acción de artes marciales \"Doble Identidad \" cuenta la dulce historia de amor de Lan Xiaoyu, una chica de la capital con una apariencia promedio. Su padre,...",
+    "year": 2025,
+    "updatedAt": "2025-04-26T16:00:06Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=LoaDKc-wXRI",
+    "channel": "@moxispanish",
+    "originalTitle": "Doble Identidad 2 | Pelicula Romantica de Amor y Accion de Artes Marciales | Español HD",
+    "duration": 4450,
+    "genres": [
+      "Acción",
+      "Drama",
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol-s1",
+      "seriesId": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol-ep-1",
+      "slug": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol-ep-1",
+      "seriesId": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol",
+      "seasonId": "doble-identidad-2-pelicula-romantica-de-amor-y-accion-de-artes-marciales-espanol-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LoaDKc-wXRI"
+        }
+      ],
+      "updatedAt": "2025-04-26T16:00:06Z"
+    }
+  ]
+}

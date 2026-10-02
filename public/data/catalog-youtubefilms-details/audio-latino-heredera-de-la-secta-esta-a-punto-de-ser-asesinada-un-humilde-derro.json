@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro",
+    "slug": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro",
+    "title": "Audio Latino -Heredera de la secta está a punto de ser Asesinada, un Humilde derrota a los asesinos",
+    "image": "https://i.ytimg.com/vi/8KnEelaw_1k/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+    "year": 2026,
+    "updatedAt": "2026-09-01T15:30:01Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=8KnEelaw_1k",
+    "channel": "@cine-esp",
+    "originalTitle": "Audio Latino -Heredera de la secta está a punto de ser Asesinada, un Humilde derrota a los asesinos.",
+    "duration": 4326,
+    "genres": [
+      "Fantasía/Cultivación"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro-s1",
+      "seriesId": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro-ep-1",
+      "slug": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro-ep-1",
+      "seriesId": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro",
+      "seasonId": "audio-latino-heredera-de-la-secta-esta-a-punto-de-ser-asesinada-un-humilde-derro-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/8KnEelaw_1k"
+        }
+      ],
+      "updatedAt": "2026-09-01T15:30:01Z"
+    }
+  ]
+}

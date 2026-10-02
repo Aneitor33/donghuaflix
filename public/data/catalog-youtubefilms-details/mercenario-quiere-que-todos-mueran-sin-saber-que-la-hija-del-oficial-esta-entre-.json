@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre-",
+    "slug": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre-",
+    "title": "Mercenario quiere que todos mueran, sin saber que la Hija del Oficial está entre ellos",
+    "image": "https://i.ytimg.com/vi/p1IJa3JG3ns/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-04-30T15:30:27Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=p1IJa3JG3ns",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Mercenario quiere que todos mueran, sin saber que la Hija del Oficial está entre ellos",
+    "duration": 5101,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre--s1",
+      "seriesId": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre-",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre--ep-1",
+      "slug": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre--ep-1",
+      "seriesId": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre-",
+      "seasonId": "mercenario-quiere-que-todos-mueran-sin-saber-que-la-hija-del-oficial-esta-entre--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/p1IJa3JG3ns"
+        }
+      ],
+      "updatedAt": "2026-04-30T15:30:27Z"
+    }
+  ]
+}

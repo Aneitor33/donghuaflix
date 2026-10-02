@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim",
+    "slug": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim",
+    "title": "【LLENO】Puerta Xuanwu, te recompenso por escoltar a Tang Sanzang.#Manga popular #Anime",
+    "image": "https://i.ytimg.com/vi/QItbKlw8w9s/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "⌛ Bienvenidos al mundo de Manga Theater. 🎬 Resumen:Tras activar inesperadamente un sistema de recompensas multiplicado por diez mil, el otrora insignificante guardia acompañante en el viaje al Oes...",
+    "year": 2026,
+    "updatedAt": "2026-05-15T10:00:40Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=QItbKlw8w9s",
+    "channel": "@animaciondesinchew",
+    "originalTitle": "【LLENO】Puerta Xuanwu, te recompenso por escoltar a Tang Sanzang.#Manga popular #Anime",
+    "duration": 7935,
+    "genres": [
+      "Artes Marciales"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim-s1",
+      "seriesId": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim-ep-1",
+      "slug": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim-ep-1",
+      "seriesId": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim",
+      "seasonId": "lleno-puerta-xuanwu-te-recompenso-por-escoltar-a-tang-sanzang-manga-popular-anim-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/QItbKlw8w9s"
+        }
+      ],
+      "updatedAt": "2026-05-15T10:00:40Z"
+    }
+  ]
+}

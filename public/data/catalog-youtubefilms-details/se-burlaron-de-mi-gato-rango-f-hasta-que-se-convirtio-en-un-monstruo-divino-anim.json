@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim",
+    "slug": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim",
+    "title": "Se Burlaron de Mi Gato Rango F... ¡Hasta Que se Convirtió en un Monstruo Divino!💕#anime",
+    "image": "https://i.ytimg.com/vi/Rr-cdRuFuEw/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+    "year": 2026,
+    "updatedAt": "2026-07-05T20:00:28Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=Rr-cdRuFuEw",
+    "channel": "@anime_multiverso",
+    "originalTitle": "Se Burlaron de Mi Gato Rango F... ¡Hasta Que se Convirtió en un Monstruo Divino!💕#anime",
+    "duration": 7273,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim-s1",
+      "seriesId": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim-ep-1",
+      "slug": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim-ep-1",
+      "seriesId": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim",
+      "seasonId": "se-burlaron-de-mi-gato-rango-f-hasta-que-se-convirtio-en-un-monstruo-divino-anim-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Rr-cdRuFuEw"
+        }
+      ],
+      "updatedAt": "2026-07-05T20:00:28Z"
+    }
+  ]
+}

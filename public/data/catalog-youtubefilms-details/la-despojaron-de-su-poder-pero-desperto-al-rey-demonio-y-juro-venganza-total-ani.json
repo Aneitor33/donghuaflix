@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani",
+    "slug": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani",
+    "title": "La Despojaron de su Poder... ¡Pero Despertó al Rey Demonio y Juró Venganza Total!💕#anime",
+    "image": "https://i.ytimg.com/vi/0btJYOV0OYQ/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+    "year": 2026,
+    "updatedAt": "2026-09-19T21:00:19Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=0btJYOV0OYQ",
+    "channel": "@anime_multiverso",
+    "originalTitle": "La Despojaron de su Poder... ¡Pero Despertó al Rey Demonio y Juró Venganza Total!💕#anime",
+    "duration": 5590,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani-s1",
+      "seriesId": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani-ep-1",
+      "slug": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani-ep-1",
+      "seriesId": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani",
+      "seasonId": "la-despojaron-de-su-poder-pero-desperto-al-rey-demonio-y-juro-venganza-total-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0btJYOV0OYQ"
+        }
+      ],
+      "updatedAt": "2026-09-19T21:00:19Z"
+    }
+  ]
+}

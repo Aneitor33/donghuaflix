@@ -1,0 +1,47 @@
+{
+  "series": {
+    "id": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado",
+    "slug": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado",
+    "title": "Jefa bajo la lluvia se enamora de su Subordinado, sin saber que ya está Casado…",
+    "image": "https://i.ytimg.com/vi/lJJqKMHVyYc/maxresdefault.jpg",
+    "status": "Finalizada",
+    "type": "movie",
+    "contentType": "movie",
+    "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+    "year": 2026,
+    "updatedAt": "2026-05-01T15:01:24Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=lJJqKMHVyYc",
+    "channel": "@freshesp",
+    "originalTitle": "[Doblado Esp] Jefa bajo la lluvia se enamora de su Subordinado, sin saber que ya está Casado…",
+    "duration": 6986,
+    "genres": [
+      "Acción"
+    ],
+    "source": "youtube_yt"
+  },
+  "seasons": [
+    {
+      "id": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado-s1",
+      "seriesId": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado",
+      "number": 1,
+      "title": "Película"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado-ep-1",
+      "slug": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado-ep-1",
+      "seriesId": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado",
+      "seasonId": "jefa-bajo-la-lluvia-se-enamora-de-su-subordinado-sin-saber-que-ya-esta-casado-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/lJJqKMHVyYc"
+        }
+      ],
+      "updatedAt": "2026-05-01T15:01:24Z"
+    }
+  ]
+}
