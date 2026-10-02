@@ -323,6 +323,16 @@ function rebuildMovie(s) {
   };
 }
 
+/* ==================== SHARDS DE DETALLE ============================= */
+/* Mismo algoritmo que app.js: las fichas se agrupan en SHARD_COUNT
+   archivos para no agotar el límite de 20.000 archivos de Pages. */
+const SHARD_COUNT = 64;
+function shardIndexOf(key) {
+  let h = 0;
+  for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return Math.abs(h) % SHARD_COUNT;
+}
+
 /* ============================== MAIN ================================= */
 
 async function main() {
@@ -449,17 +459,24 @@ async function main() {
   fs.writeFileSync(path.join(outDir, 'catalog-youtubefilms.json'), JSON.stringify(catalog, null, 2));
   fs.writeFileSync(path.join(outDir, 'catalog-youtubefilms-index.json'), JSON.stringify(liteIndex));
 
-  let written = 0;
+  // Limpiar fichas antiguas (un archivo por película ya no se usa -> shards)
+  for (const f of fs.readdirSync(detailsDir)) {
+    fs.unlinkSync(path.join(detailsDir, f));
+  }
+
+  // Agrupar en shards deterministas (mismo hash que app.js)
+  const shards = new Map();
   for (const m of allMovies) {
-    const safe = m.series.slug.replace(/[^a-zA-Z0-9._-]/g, '_');
-    fs.writeFileSync(
-      path.join(detailsDir, `${safe}.json`),
-      JSON.stringify({
-        series: m.series,
-        seasons: m.seasons,
-        episodes: m.episodes,
-      }, null, 2)
-    );
+    const sh = shardIndexOf(m.series.slug);
+    if (!shards.has(sh)) shards.set(sh, { series: [], seasons: [], episodes: [] });
+    const b = shards.get(sh);
+    b.series.push(m.series);
+    for (const s of m.seasons) b.seasons.push(s);
+    for (const e of m.episodes) b.episodes.push(e);
+  }
+  let written = 0;
+  for (const [sh, b] of [...shards.entries()].sort((a, b2) => a[0] - b2[0])) {
+    fs.writeFileSync(path.join(detailsDir, `shard-${sh}.json`), JSON.stringify(b));
     written++;
   }
 
@@ -468,7 +485,7 @@ async function main() {
   console.log(`[yt-films] Nuevas películas  : ${stats.newItems} (omitidas las ya conocidas)`);
   console.log(`[yt-films] Ignorados (cortos): ${stats.ignoredDuration} (duración < ${MIN_DURATION_SECONDS}s)`);
   console.log(`[yt-films] Total catálogo    : ${allMovies.length} películas`);
-  console.log(`[yt-films] Detalles   : ${written} fichas en catalog-youtubefilms-details/`);
+  console.log(`[yt-films] Shards     : ${written} archivos (máx. ${SHARD_COUNT}) para ${allMovies.length} películas`);
   if (stats.errors.length) {
     console.log('[yt-films] Errores:', JSON.stringify(stats.errors, null, 2));
     process.exitCode = 2;
