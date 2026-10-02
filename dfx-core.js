@@ -881,13 +881,15 @@
       donghuacli:   "public/data/catalog-donghuacli-index.json",
       dramasyt:     "public/data/catalog-dramasyt-index.json",
       peliculas:    "public/data/catalog-peliculas-index.json",
-      doramas:      "public/data/catalog-doramas-index.json"
+      doramas:      "public/data/catalog-doramas-index.json",
+      youtubefilms: "public/data/catalog-youtubefilms-index.json"
     },
     labels: {
       donghualife: "DonghuaLife", donghuasub: "DonghuaSub",
  donghuacli: "DonghuaCLI",
       dramasyt: "DramasYT",
-      peliculas: "Películas", doramas: "Doramas"
+      peliculas: "Películas", doramas: "Doramas",
+      youtubefilms: "YouTube Films"
     },
     maxPerSection: 12,
     maxGrid: 60
