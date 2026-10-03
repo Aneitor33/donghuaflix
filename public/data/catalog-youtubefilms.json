@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-03T11:47:01.206Z",
+    "syncedAt": "2026-10-03T16:27:59.659Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1440,
-      "newInThisSync": 0,
-      "scanned": 47,
-      "ignoredByDuration": 47,
+      "movies": 1441,
+      "newInThisSync": 1,
+      "scanned": 49,
+      "ignoredByDuration": 48,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma",
+      "slug": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma",
+      "title": "Audio Latino - Asesinos del Desierto forman Alianza, meses después nace la Secta más Fuerte",
+      "image": "https://i.ytimg.com/vi/gbxWofhp8OA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-03T14:30:06Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=gbxWofhp8OA",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Asesinos del Desierto forman Alianza, meses después nace la Secta más Fuerte.",
+      "duration": 5502,
+      "genres": [
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
       "slug": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
@@ -29340,6 +29360,12 @@
   ],
   "seasons": [
     {
+      "id": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma-s1",
+      "seriesId": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-s1",
       "seriesId": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
       "number": 1,
@@ -37981,6 +38007,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma-ep-1",
+      "slug": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma-ep-1",
+      "seriesId": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma",
+      "seasonId": "audio-latino-asesinos-del-desierto-forman-alianza-meses-despues-nace-la-secta-ma-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/gbxWofhp8OA"
+        }
+      ],
+      "updatedAt": "2026-10-03T14:30:06Z"
+    },
     {
       "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-ep-1",
       "slug": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-ep-1",
