@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-02T23:58:00.285Z",
+    "syncedAt": "2026-10-03T05:25:20.810Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1439,
-      "newInThisSync": 0,
-      "scanned": 47,
+      "movies": 1440,
+      "newInThisSync": 1,
+      "scanned": 48,
       "ignoredByDuration": 47,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
+      "slug": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
+      "title": "【LLENO】Ojo del Apocalipsis, yo decido la evolución de las bestias domadas",
+      "image": "https://i.ytimg.com/vi/UlxmD2CH_8k/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】¿Qué importan los colores raros? ¡Puedo ver las rutas de evolución divina! Su Yuan viaja al mundo donde todos domestican bestias. En la prueba de talento despierta el talento divino \"O...",
+      "year": 2026,
+      "updatedAt": "2026-10-03T04:00:24Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=UlxmD2CH_8k",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Ojo del Apocalipsis, yo decido la evolución de las bestias domadas",
+      "duration": 9170,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a",
       "slug": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a",
@@ -29320,6 +29340,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-s1",
+      "seriesId": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a-s1",
       "seriesId": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a",
       "number": 1,
@@ -37955,6 +37981,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-ep-1",
+      "slug": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-ep-1",
+      "seriesId": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas",
+      "seasonId": "lleno-ojo-del-apocalipsis-yo-decido-la-evolucion-de-las-bestias-domadas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UlxmD2CH_8k"
+        }
+      ],
+      "updatedAt": "2026-10-03T04:00:24Z"
+    },
     {
       "id": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a-ep-1",
       "slug": "un-lavacoches-oculto-desafio-a-la-ia-asesina-y-destruyo-a-los-pilotos-de-elite-a-ep-1",
