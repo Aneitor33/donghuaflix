@@ -211,40 +211,64 @@ function buildMovie(video, channel) {
 /* ===================== VIDEOS SUBIDOS DEL CANAL ===================== */
 
 async function resolveChannelId(handle) {
-  const data = await ytGet('channels', {
-    part: 'snippet',
-    forHandle: handle.replace(/^@/, ''),
-    maxResults: 1,
-  });
+  const h = handle.replace(/^@/, '');
+  // Paso 1: resolver el canal por handle
+  const data = await ytGet('channels', { part: 'snippet', forHandle: h, maxResults: 1 });
   const ch = data.items && data.items[0];
   if (!ch) throw new Error(`Canal no encontrado: ${handle}`);
-  return { id: ch.id, title: ch.snippet.title };
+  // Paso 2: pedir contentDetails por ID (garantizado; forHandle a veces lo omite)
+  const det = await ytGet('channels', { part: 'contentDetails', id: ch.id });
+  const uploadsId = det.items && det.items[0] && det.items[0].contentDetails
+    && det.items[0].contentDetails.relatedPlaylists
+    && det.items[0].contentDetails.relatedPlaylists.uploads;
+  if (!uploadsId) throw new Error(`Sin playlist de uploads para ${handle} (id ${ch.id})`);
+  return { id: ch.id, title: ch.snippet.title, uploadsId };
 }
 
-// Pestaña "Videos" del canal: search por channelId + type=video, más recientes primero
-async function listUploadedVideoIds(channelId, maxItems) {
-  const ids = [];
+// Pestaña "Videos" del canal: la playlist de uploads ES la pestaña Videos
+// (mismo contenido y orden que search.list channelId+order=date, pero cuesta
+// 1 unidad por página en vez de 100). Ver https://developers.google.com/youtube/v3/docs/channels
+// SYNC INCREMENTAL: solo devuelve videos NO presentes en el catálogo.
+// Las uploads están ordenadas de más reciente a más antigua, así que en
+// cuanto una página entera ya es conocida, todo lo demás también lo es
+// (early-exit) -> las syncs siguientes leen 1-2 páginas y terminan.
+async function listNewVideoIds(uploadsId, knownIds, maxItems) {
+  const newIds = [];
+  let known = 0;
   let pageToken = '';
+  let page = 0;
   do {
-    const data = await ytGet('search', {
-      part: 'snippet',
-      channelId,
-      type: 'video',
-      order: 'date',
+    const data = await ytGet('playlistItems', {
+      part: 'snippet,contentDetails',  // snippet da resourceId.videoId, contentDetails da videoId
+      playlistId: uploadsId,
       maxResults: 50,
       pageToken,
     });
-    for (const it of data.items || []) {
-      if (it.id?.videoId) ids.push(it.id.videoId);
+    const items = data.items || [];
+    page++;
+    let pageNew = 0;
+    for (const it of items) {
+      const vid = (it.contentDetails && it.contentDetails.videoId)
+        || (it.snippet && it.snippet.resourceId && it.snippet.resourceId.videoId);
+      if (!vid) continue;
+      if (knownIds.has(vid)) { known++; continue; }
+      newIds.push(vid);
+      pageNew++;
     }
+    console.log(`[yt-films]   página ${page}: ${pageNew} nuevos, ${items.length - pageNew} ya conocidos`);
     pageToken = data.nextPageToken || '';
-    if (ids.length >= maxItems) break;
+    if (pageNew === 0) {
+      console.log('[yt-films]   early-exit: el resto ya está en el catálogo ✓');
+      break;
+    }
+    if (newIds.length >= maxItems) break;
   } while (pageToken);
-  return ids.slice(0, maxItems);
+  return { newIds: newIds.slice(0, maxItems), known };
 }
 
 async function fetchVideos(videoIds) {
   const videos = [];
+  if (!videoIds.length) return videos;
   for (let i = 0; i < videoIds.length; i += 50) {
     const chunk = videoIds.slice(i, i + 50);
     const data = await ytGet('videos', {
@@ -257,22 +281,79 @@ async function fetchVideos(videoIds) {
   return videos;
 }
 
+/* ==================== SYNC INCREMENTAL ============================== */
+
+// Extrae el videoId de YouTube de una ficha existente
+function videoIdFromSeries(s) {
+  const m = /(?:v=|\/embed\/)([\w-]{11})/.exec(s.sourceUrl || '');
+  return m ? m[1] : null;
+}
+
+// Lee el catálogo ya commiteado para omitir lo conocido en la próxima sync
+function loadExistingCatalog() {
+  const p = path.join(process.cwd(), 'public', 'data', 'catalog-youtubefilms.json');
+  const map = new Map();
+  if (!fs.existsSync(p)) return map;
+  try {
+    const cat = JSON.parse(fs.readFileSync(p, 'utf8'));
+    for (const s of cat.series || []) {
+      const vid = videoIdFromSeries(s);
+      if (vid) map.set(vid, s);
+    }
+    console.log(`[yt-films] Catálogo existente: ${map.size} películas (se omitirán)`);
+  } catch (e) {
+    console.warn(`[yt-films] No se pudo leer el catálogo existente (${e.message}); sync completa`);
+  }
+  return map;
+}
+
+// Reconstruye la ficha {series, seasons, episodes} a partir de una series guardada
+function rebuildMovie(s) {
+  const slug = s.slug || s.id;
+  const vid = videoIdFromSeries(s) || slug;
+  return {
+    series: s,
+    seasons: [{ id: `${slug}-s1`, seriesId: slug, number: 1, title: 'Película' }],
+    episodes: [{
+      id: `${slug}-ep-1`, slug: `${slug}-ep-1`, seriesId: slug, seasonId: `${slug}-s1`,
+      number: 1, title: 'Ver película',
+      servers: [{ name: 'YouTube', url: `https://www.youtube-nocookie.com/embed/${vid}` }],
+      updatedAt: s.updatedAt,
+    }],
+  };
+}
+
+/* ==================== SHARDS DE DETALLE ============================= */
+/* Mismo algoritmo que app.js: las fichas se agrupan en SHARD_COUNT
+   archivos para no agotar el límite de 20.000 archivos de Pages. */
+const SHARD_COUNT = 64;
+function shardIndexOf(key) {
+  let h = 0;
+  for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return Math.abs(h) % SHARD_COUNT;
+}
+
 /* ============================== MAIN ================================= */
 
 async function main() {
   const startedAt = new Date();
-  const allMovies = [];   // {series, seasons, episodes}
-  const seenSlugs = new Set();
-  const stats = { scanned: 0, kept: 0, ignoredDuration: 0, errors: [] };
+
+  // ── Sync incremental: arrancamos con lo que ya está commiteado ──
+  const existingMap = loadExistingCatalog();
+  const allMovies = [...existingMap.values()].map(rebuildMovie);
+  const seenSlugs = new Set(allMovies.map((m) => m.series.slug));
+  console.log(`[yt-films] Sync incremental sobre ${allMovies.length} películas existentes`);
+
+  const stats = { scanned: 0, kept: 0, newItems: 0, ignoredDuration: 0, errors: [] };
 
   for (const ch of CHANNELS) {
     try {
       console.log(`[yt-films] Procesando ${ch.handle} (pestaña Videos)...`);
-      const { id: channelId, title: channelTitle } = await resolveChannelId(ch.handle);
-      const ids = await listUploadedVideoIds(channelId, MAX_VIDEOS_PER_CHANNEL);
-      const videos = await fetchVideos(ids);
+      const { title: channelTitle, uploadsId } = await resolveChannelId(ch.handle);
+      const { newIds, known } = await listNewVideoIds(uploadsId, new Set(existingMap.keys()), MAX_VIDEOS_PER_CHANNEL);
+      console.log(`[yt-films]   ${channelTitle}: ${newIds.length} nuevos, ${known} ya en catálogo`);
+      const videos = await fetchVideos(newIds);
       stats.scanned += videos.length;
-      console.log(`[yt-films]   ${channelTitle}: ${videos.length} videos revisados`);
 
       for (const v of videos) {
         const dur = isoDurationToSeconds(v.contentDetails?.duration);
@@ -292,12 +373,20 @@ async function main() {
         seenSlugs.add(slug);
 
         allMovies.push(movie);
+        existingMap.set(v.id, movie.series); // por si el slug sufrió cambio
         stats.kept++;
+        stats.newItems++;
       }
     } catch (err) {
       console.error(`[yt-films] ERROR en ${ch.handle}: ${err.message}`);
       stats.errors.push({ channel: ch.handle, error: err.message });
     }
+  }
+
+  // Diagnóstico: canales resueltos pero 0 videos leídos = algo va mal en la API
+  if (stats.scanned === 0) {
+    console.error('[yt-films] FATAL: 0 videos escaneados. Revisa los logs de páginas de playlist.');
+    process.exit(1);
   }
 
   // Más recientes primero (por fecha de publicación)
@@ -313,10 +402,12 @@ async function main() {
     minDurationSeconds: MIN_DURATION_SECONDS,
     counts: {
       movies: allMovies.length,
+      newInThisSync: stats.newItems,
       scanned: stats.scanned,
       ignoredByDuration: stats.ignoredDuration,
       errors: stats.errors.length,
     },
+    incremental: true,
     channels: CHANNELS.map((c) => c.handle),
   };
 
@@ -331,6 +422,11 @@ async function main() {
 
   /* ------- índice ligero compacto: claves i/s/t/p/g/st/ty/y/c/e/u ----- */
   const liteIndex = {
+    // ⚠️ OJO: app.js lee compact/genres/imageBase/detailsBase A NIVEL RAÍZ
+    compact: true,
+    genres: GENRE_LIST,
+    imageBase: 'https://i.ytimg.com/vi/',
+    detailsBase: 'catalog-youtubefilms-details',
     meta: {
       source: 'youtubefilms-youtube',
       version: 2,
@@ -368,25 +464,33 @@ async function main() {
   fs.writeFileSync(path.join(outDir, 'catalog-youtubefilms.json'), JSON.stringify(catalog, null, 2));
   fs.writeFileSync(path.join(outDir, 'catalog-youtubefilms-index.json'), JSON.stringify(liteIndex));
 
-  let written = 0;
+  // Limpiar fichas antiguas (un archivo por película ya no se usa -> shards)
+  for (const f of fs.readdirSync(detailsDir)) {
+    fs.unlinkSync(path.join(detailsDir, f));
+  }
+
+  // Agrupar en shards deterministas (mismo hash que app.js)
+  const shards = new Map();
   for (const m of allMovies) {
-    const safe = m.series.slug.replace(/[^a-zA-Z0-9._-]/g, '_');
-    fs.writeFileSync(
-      path.join(detailsDir, `${safe}.json`),
-      JSON.stringify({
-        series: m.series,
-        seasons: m.seasons,
-        episodes: m.episodes,
-      }, null, 2)
-    );
+    const sh = shardIndexOf(m.series.slug);
+    if (!shards.has(sh)) shards.set(sh, { series: [], seasons: [], episodes: [] });
+    const b = shards.get(sh);
+    b.series.push(m.series);
+    for (const s of m.seasons) b.seasons.push(s);
+    for (const e of m.episodes) b.episodes.push(e);
+  }
+  let written = 0;
+  for (const [sh, b] of [...shards.entries()].sort((a, b2) => a[0] - b2[0])) {
+    fs.writeFileSync(path.join(detailsDir, `shard-${sh}.json`), JSON.stringify(b));
     written++;
   }
 
   console.log('------------------------------------------------------------');
-  console.log(`[yt-films] Escaneados : ${stats.scanned} (pestaña Videos de ${CHANNELS.length} canales)`);
-  console.log(`[yt-films] Ignorados  : ${stats.ignoredDuration} (duración < ${MIN_DURATION_SECONDS}s)`);
-  console.log(`[yt-films] Películas  : ${stats.kept} guardadas`);
-  console.log(`[yt-films] Detalles   : ${written} fichas en catalog-youtubefilms-details/`);
+  console.log(`[yt-films] Nuevos procesados : ${stats.scanned}`);
+  console.log(`[yt-films] Nuevas películas  : ${stats.newItems} (omitidas las ya conocidas)`);
+  console.log(`[yt-films] Ignorados (cortos): ${stats.ignoredDuration} (duración < ${MIN_DURATION_SECONDS}s)`);
+  console.log(`[yt-films] Total catálogo    : ${allMovies.length} películas`);
+  console.log(`[yt-films] Shards     : ${written} archivos (máx. ${SHARD_COUNT}) para ${allMovies.length} películas`);
   if (stats.errors.length) {
     console.log('[yt-films] Errores:', JSON.stringify(stats.errors, null, 2));
     process.exitCode = 2;
