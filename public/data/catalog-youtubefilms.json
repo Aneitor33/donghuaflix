@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-03T21:24:17.854Z",
+    "syncedAt": "2026-10-04T06:01:04.712Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1443,
-      "newInThisSync": 2,
-      "scanned": 49,
-      "ignoredByDuration": 47,
+      "movies": 1444,
+      "newInThisSync": 1,
+      "scanned": 47,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
+      "slug": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
+      "title": "【LLENO】Talento de domador de bestias de nivel SSS: miles de chicas bestia compran por el contrato",
+      "image": "https://i.ytimg.com/vi/sxTpjAHNWEg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Baiye viaja a un mundo donde todos contratan bestias. En este mundo, los hombres despiertan como domadores de bestias y las mujeres se transforman en poderosas chicas bestia. En la cer...",
+      "year": 2026,
+      "updatedAt": "2026-10-04T04:00:04Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=sxTpjAHNWEg",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Talento de domador de bestias de nivel SSS: miles de chicas bestia compran por el contrato",
+      "duration": 8754,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime",
       "slug": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime",
@@ -29402,6 +29422,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--s1",
+      "seriesId": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime-s1",
       "seriesId": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime",
       "number": 1,
@@ -38061,6 +38087,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--ep-1",
+      "slug": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--ep-1",
+      "seriesId": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
+      "seasonId": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/sxTpjAHNWEg"
+        }
+      ],
+      "updatedAt": "2026-10-04T04:00:04Z"
+    },
     {
       "id": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime-ep-1",
       "slug": "la-exiliaron-para-morir-viajo-al-futuro-y-volvio-con-armas-y-medicina-anime-ep-1",
