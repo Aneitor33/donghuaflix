@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-04T06:01:04.712Z",
+    "syncedAt": "2026-10-04T12:29:23.992Z",
     "minDurationSeconds": 3600,
     "counts": {
       "movies": 1444,
-      "newInThisSync": 1,
-      "scanned": 47,
+      "newInThisSync": 0,
+      "scanned": 46,
       "ignoredByDuration": 46,
       "errors": 0
     },
