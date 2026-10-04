@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-04T12:29:23.992Z",
+    "syncedAt": "2026-10-04T21:35:48.144Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1444,
-      "newInThisSync": 0,
-      "scanned": 46,
+      "movies": 1447,
+      "newInThisSync": 3,
+      "scanned": 49,
       "ignoredByDuration": 46,
       "errors": 0
     },
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani",
+      "slug": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani",
+      "title": "¡Los Villanos le Exigieron Dinero, Él Construyó su Propio Puente y los Arruinó!💕#anime",
+      "image": "https://i.ytimg.com/vi/kgvjWgrcRxQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+      "year": 2026,
+      "updatedAt": "2026-10-04T21:00:14Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=kgvjWgrcRxQ",
+      "channel": "@anime_multiverso",
+      "originalTitle": "¡Los Villanos le Exigieron Dinero, Él Construyó su Propio Puente y los Arruinó!💕#anime",
+      "duration": 6864,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod",
+      "slug": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod",
+      "title": "Audio Latino - Heredera de la Banda sola asesina a su Enemigo para disputar el poder",
+      "image": "https://i.ytimg.com/vi/os-Ycw4V9Ls/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-04T15:30:35Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=os-Ycw4V9Ls",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Heredera de la Banda sola asesina a su Enemigo para disputar el poder",
+      "duration": 5106,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a",
+      "slug": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a",
+      "title": "Audio Latino - Capitán de Élite lidera un Ejército y con fuerza absoluta rescata a su prometida",
+      "image": "https://i.ytimg.com/vi/YZZbelWiH1s/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-04T14:33:58Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=YZZbelWiH1s",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Capitán de Élite lidera un Ejército y con fuerza absoluta rescata a su prometida",
+      "duration": 4934,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
       "slug": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
@@ -29422,6 +29482,24 @@
   ],
   "seasons": [
     {
+      "id": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani-s1",
+      "seriesId": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod-s1",
+      "seriesId": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a-s1",
+      "seriesId": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--s1",
       "seriesId": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran-",
       "number": 1,
@@ -38087,6 +38165,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani-ep-1",
+      "slug": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani-ep-1",
+      "seriesId": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani",
+      "seasonId": "los-villanos-le-exigieron-dinero-el-construyo-su-propio-puente-y-los-arruino-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/kgvjWgrcRxQ"
+        }
+      ],
+      "updatedAt": "2026-10-04T21:00:14Z"
+    },
+    {
+      "id": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod-ep-1",
+      "slug": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod-ep-1",
+      "seriesId": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod",
+      "seasonId": "audio-latino-heredera-de-la-banda-sola-asesina-a-su-enemigo-para-disputar-el-pod-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/os-Ycw4V9Ls"
+        }
+      ],
+      "updatedAt": "2026-10-04T15:30:35Z"
+    },
+    {
+      "id": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a-ep-1",
+      "slug": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a-ep-1",
+      "seriesId": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a",
+      "seasonId": "audio-latino-capitan-de-elite-lidera-un-ejercito-y-con-fuerza-absoluta-rescata-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YZZbelWiH1s"
+        }
+      ],
+      "updatedAt": "2026-10-04T14:33:58Z"
+    },
     {
       "id": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--ep-1",
       "slug": "lleno-talento-de-domador-de-bestias-de-nivel-sss-miles-de-chicas-bestia-compran--ep-1",
