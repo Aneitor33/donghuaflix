@@ -3,10 +3,10 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-05T14:52:34.292Z",
+    "syncedAt": "2026-10-06T00:07:55.275Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1449,
+      "movies": 1450,
       "newInThisSync": 1,
       "scanned": 49,
       "ignoredByDuration": 48,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
+      "slug": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
+      "title": "La Trató como una Criada... ¡Hasta que Ella Reveló que Era la Diosa de la Guerra!💕#anime",
+      "image": "https://i.ytimg.com/vi/APe1lQBgW9g/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+      "year": 2026,
+      "updatedAt": "2026-10-05T21:00:33Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=APe1lQBgW9g",
+      "channel": "@anime_multiverso",
+      "originalTitle": "La Trató como una Criada... ¡Hasta que Ella Reveló que Era la Diosa de la Guerra!💕#anime",
+      "duration": 5561,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi",
       "slug": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi",
@@ -29522,6 +29542,12 @@
   ],
   "seasons": [
     {
+      "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-s1",
+      "seriesId": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi-s1",
       "seriesId": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi",
       "number": 1,
@@ -38217,6 +38243,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-ep-1",
+      "slug": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-ep-1",
+      "seriesId": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
+      "seasonId": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/APe1lQBgW9g"
+        }
+      ],
+      "updatedAt": "2026-10-05T21:00:33Z"
+    },
     {
       "id": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi-ep-1",
       "slug": "audio-latino-novato-de-la-prision-desafia-a-la-banda-mas-grande-y-funda-su-propi-ep-1",
