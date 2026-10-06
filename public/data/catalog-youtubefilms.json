@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-06T00:07:55.275Z",
+    "syncedAt": "2026-10-06T06:29:35.314Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1450,
-      "newInThisSync": 1,
-      "scanned": 49,
-      "ignoredByDuration": 48,
+      "movies": 1452,
+      "newInThisSync": 2,
+      "scanned": 52,
+      "ignoredByDuration": 50,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,46 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores",
+      "slug": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores",
+      "title": "【LLENO】Talento Zerg SSS, el mar de insectos arrasa el mundo de los señores",
+      "image": "https://i.ytimg.com/vi/UoB7KBlF6xU/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Mientras otros despiertan unidades divinas y gozan de gran gloria, yo empiezo con una abeja aguijona considerada inútil y soy ridiculizado por toda la clase. Sin embargo, desbloqueo un...",
+      "year": 2026,
+      "updatedAt": "2026-10-06T04:00:30Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=UoB7KBlF6xU",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Talento Zerg SSS, el mar de insectos arrasa el mundo de los señores",
+      "duration": 7989,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable",
+      "slug": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable",
+      "title": "【LLENO】Empezando como cucaracha y estrechando lazos con una diosa adorable",
+      "image": "https://i.ytimg.com/vi/LwsCZW1Z1cU/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Zhu Fei se reencarna inesperadamente en una cucaracha común, pero se vincula con un \"Sistema de Devoración Infinita\" y se adentra en un mundo repleto de bestias exóticas. Tras sellar u...",
+      "year": 2026,
+      "updatedAt": "2026-10-06T02:00:19Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=LwsCZW1Z1cU",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Empezando como cucaracha y estrechando lazos con una diosa adorable",
+      "duration": 8642,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
       "slug": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
@@ -29542,6 +29582,18 @@
   ],
   "seasons": [
     {
+      "id": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores-s1",
+      "seriesId": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable-s1",
+      "seriesId": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-s1",
       "seriesId": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani",
       "number": 1,
@@ -38243,6 +38295,36 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores-ep-1",
+      "slug": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores-ep-1",
+      "seriesId": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores",
+      "seasonId": "lleno-talento-zerg-sss-el-mar-de-insectos-arrasa-el-mundo-de-los-senores-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UoB7KBlF6xU"
+        }
+      ],
+      "updatedAt": "2026-10-06T04:00:30Z"
+    },
+    {
+      "id": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable-ep-1",
+      "slug": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable-ep-1",
+      "seriesId": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable",
+      "seasonId": "lleno-empezando-como-cucaracha-y-estrechando-lazos-con-una-diosa-adorable-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LwsCZW1Z1cU"
+        }
+      ],
+      "updatedAt": "2026-10-06T02:00:19Z"
+    },
     {
       "id": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-ep-1",
       "slug": "la-trato-como-una-criada-hasta-que-ella-revelo-que-era-la-diosa-de-la-guerra-ani-ep-1",
