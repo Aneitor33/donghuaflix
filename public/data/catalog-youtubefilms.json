@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-06T18:27:38.590Z",
+    "syncedAt": "2026-10-06T23:40:45.263Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1455,
-      "newInThisSync": 3,
-      "scanned": 52,
+      "movies": 1456,
+      "newInThisSync": 1,
+      "scanned": 50,
       "ignoredByDuration": 49,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
+      "slug": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
+      "title": "¡El Dios de la Espada se Hizo Pasar por Borracho y Cortó el Poder de los Dioses!💕#anime",
+      "image": "https://i.ytimg.com/vi/IC0tfi5seAo/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+      "year": 2026,
+      "updatedAt": "2026-10-06T21:00:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=IC0tfi5seAo",
+      "channel": "@anime_multiverso",
+      "originalTitle": "¡El Dios de la Espada se Hizo Pasar por Borracho y Cortó el Poder de los Dioses!💕#anime",
+      "duration": 5277,
+      "genres": [
+        "Fantasía/Cultivación",
+        "Artes Marciales"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca",
       "slug": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca",
@@ -29643,6 +29664,12 @@
   ],
   "seasons": [
     {
+      "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-s1",
+      "seriesId": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca-s1",
       "seriesId": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca",
       "number": 1,
@@ -38374,6 +38401,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-ep-1",
+      "slug": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-ep-1",
+      "seriesId": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
+      "seasonId": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/IC0tfi5seAo"
+        }
+      ],
+      "updatedAt": "2026-10-06T21:00:03Z"
+    },
     {
       "id": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca-ep-1",
       "slug": "chico-rescata-a-la-heredera-del-oficial-y-por-eso-llega-a-prision-y-se-vuelve-ca-ep-1",
