@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-07T13:33:51.977Z",
+    "syncedAt": "2026-10-07T23:10:06.384Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1456,
-      "newInThisSync": 0,
-      "scanned": 51,
-      "ignoredByDuration": 51,
+      "movies": 1460,
+      "newInThisSync": 4,
+      "scanned": 53,
+      "ignoredByDuration": 49,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,88 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
+      "slug": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
+      "title": "¡Renació como un Hámster, Escucharon su Mente y Salvaron al Príncipe Caído!💕#anime",
+      "image": "https://i.ytimg.com/vi/HKL8wNWpJac/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+      "year": 2026,
+      "updatedAt": "2026-10-07T21:00:31Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=HKL8wNWpJac",
+      "channel": "@anime_multiverso",
+      "originalTitle": "¡Renació como un Hámster, Escucharon su Mente y Salvaron al Príncipe Caído!💕#anime",
+      "duration": 6261,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish",
+      "slug": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish",
+      "title": "Detective Dee, El General Esqueleto Pelicula de Accion y Misterio",
+      "image": "https://i.ytimg.com/vi/zlj2l9c9N1Q/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Sinopsis: La película de acción de artes marciales y misterio \"Detective Dee, El General Esqueleto\" narra la historia del período Wu Zhou de la dinastía Tang, cuando el gobernador de Yuzhou organiz...",
+      "year": 2026,
+      "updatedAt": "2026-10-07T16:00:08Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=zlj2l9c9N1Q",
+      "channel": "@moxispanish",
+      "originalTitle": "Detective Dee, El General Esqueleto | Pelicula de Accion y Misterio | Completa en Español HD",
+      "duration": 4652,
+      "genres": [
+        "Histórico",
+        "Artes Marciales",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo",
+      "slug": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo",
+      "title": "Audio Latino - Matones acosan a los civiles, un leñador que pasa los derriba a todos él solo",
+      "image": "https://i.ytimg.com/vi/u6rmUqGCR7c/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-07T15:00:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=u6rmUqGCR7c",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Matones acosan a los civiles, un leñador que pasa los derriba a todos él solo.",
+      "duration": 7125,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra",
+      "slug": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra",
+      "title": "💥COMPLETO💥 [Alquilo novia por doscientos al día, ¡resultó ser una multimillonaria!] #drama #ai",
+      "image": "https://i.ytimg.com/vi/k3DYvcl9aSg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Tang Yu, fundadora de un grupo empresarial de miles de millones, se hace pasar por mendiga para buscar a un hombre que la quiera de verdad. Sin embargo, su exnovio y su mejor amiga se burlan cruelm...",
+      "year": 2026,
+      "updatedAt": "2026-10-07T14:00:11Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=k3DYvcl9aSg",
+      "channel": "@kb025-p4s",
+      "originalTitle": "💥COMPLETO💥 [Alquilo novia por doscientos al día, ¡resultó ser una multimillonaria!] #drama #ai",
+      "duration": 5628,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
       "slug": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
@@ -29664,6 +29746,30 @@
   ],
   "seasons": [
     {
+      "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-s1",
+      "seriesId": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish-s1",
+      "seriesId": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo-s1",
+      "seriesId": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra-s1",
+      "seriesId": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-s1",
       "seriesId": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a",
       "number": 1,
@@ -38401,6 +38507,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-ep-1",
+      "slug": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-ep-1",
+      "seriesId": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
+      "seasonId": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/HKL8wNWpJac"
+        }
+      ],
+      "updatedAt": "2026-10-07T21:00:31Z"
+    },
+    {
+      "id": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish-ep-1",
+      "slug": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish-ep-1",
+      "seriesId": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish",
+      "seasonId": "detective-dee-el-general-esqueleto-pelicula-de-accion-y-misterio-moxispanish-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/zlj2l9c9N1Q"
+        }
+      ],
+      "updatedAt": "2026-10-07T16:00:08Z"
+    },
+    {
+      "id": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo-ep-1",
+      "slug": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo-ep-1",
+      "seriesId": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo",
+      "seasonId": "audio-latino-matones-acosan-a-los-civiles-un-lenador-que-pasa-los-derriba-a-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/u6rmUqGCR7c"
+        }
+      ],
+      "updatedAt": "2026-10-07T15:00:17Z"
+    },
+    {
+      "id": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra-ep-1",
+      "slug": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra-ep-1",
+      "seriesId": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra",
+      "seasonId": "completo-alquilo-novia-por-doscientos-al-dia-resulto-ser-una-multimillonaria-dra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/k3DYvcl9aSg"
+        }
+      ],
+      "updatedAt": "2026-10-07T14:00:11Z"
+    },
     {
       "id": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-ep-1",
       "slug": "el-dios-de-la-espada-se-hizo-pasar-por-borracho-y-corto-el-poder-de-los-dioses-a-ep-1",
