@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-07T23:10:06.384Z",
+    "syncedAt": "2026-10-08T06:14:40.367Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1460,
-      "newInThisSync": 4,
-      "scanned": 53,
+      "movies": 1461,
+      "newInThisSync": 1,
+      "scanned": 50,
       "ignoredByDuration": 49,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar-",
+      "slug": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar-",
+      "title": "【LLENO】¿La clase de apoyo es débil? ¡Mira cómo devoro todo a mi paso hasta alcanzar la divinidad!",
+      "image": "https://i.ytimg.com/vi/GB3TVlGuMck/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Tras ser transportado a un mundo donde todos domestican bestias, el protagonista invoca a una bestia de apoyo de rango C —una criatura universalmente despreciada— durante la ceremonia...",
+      "year": 2026,
+      "updatedAt": "2026-10-08T04:00:30Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=GB3TVlGuMck",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¿La clase de apoyo es débil? ¡Mira cómo devoro todo a mi paso hasta alcanzar la divinidad!",
+      "duration": 8494,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
       "slug": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
@@ -29746,6 +29766,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar--s1",
+      "seriesId": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-s1",
       "seriesId": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime",
       "number": 1,
@@ -38507,6 +38533,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar--ep-1",
+      "slug": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar--ep-1",
+      "seriesId": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar-",
+      "seasonId": "lleno-la-clase-de-apoyo-es-debil-mira-como-devoro-todo-a-mi-paso-hasta-alcanzar--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GB3TVlGuMck"
+        }
+      ],
+      "updatedAt": "2026-10-08T04:00:30Z"
+    },
     {
       "id": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-ep-1",
       "slug": "renacio-como-un-hamster-escucharon-su-mente-y-salvaron-al-principe-caido-anime-ep-1",
