@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-08T23:25:43.352Z",
+    "syncedAt": "2026-10-09T06:17:35.038Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1465,
-      "newInThisSync": 4,
-      "scanned": 52,
-      "ignoredByDuration": 48,
+      "movies": 1466,
+      "newInThisSync": 1,
+      "scanned": 50,
+      "ignoredByDuration": 49,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni",
+      "slug": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni",
+      "title": "【LLENO】Despierta una Clase Oculta con Habilidades Imparables #Contraataque #ContenidoParaHombres",
+      "image": "https://i.ytimg.com/vi/YfOta3GGJj4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】 En una era donde todas las personas despiertan clases profesionales al crecer, el talento visible define el futuro de cada guerrero. Los talentos comunes son ignorados, mientras que l...",
+      "year": 2026,
+      "updatedAt": "2026-10-09T04:00:25Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=YfOta3GGJj4",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Despierta una Clase Oculta con Habilidades Imparables #Contraataque #ContenidoParaHombres",
+      "duration": 17351,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim",
       "slug": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim",
@@ -29848,6 +29868,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni-s1",
+      "seriesId": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim-s1",
       "seriesId": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim",
       "number": 1,
@@ -38639,6 +38665,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni-ep-1",
+      "slug": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni-ep-1",
+      "seriesId": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni",
+      "seasonId": "lleno-despierta-una-clase-oculta-con-habilidades-imparables-contraataque-conteni-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YfOta3GGJj4"
+        }
+      ],
+      "updatedAt": "2026-10-09T04:00:25Z"
+    },
     {
       "id": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim-ep-1",
       "slug": "la-doctora-genio-del-futuro-salvo-al-principe-mortal-y-conquisto-el-imperio-anim-ep-1",
