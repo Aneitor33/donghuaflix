@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-09T18:24:12.962Z",
+    "syncedAt": "2026-10-10T06:00:31.727Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1469,
-      "newInThisSync": 3,
-      "scanned": 51,
+      "movies": 1470,
+      "newInThisSync": 1,
+      "scanned": 49,
       "ignoredByDuration": 48,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a",
+      "slug": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a",
+      "title": "¡Soportó 10 Años de Humillación, Despertó el Dragón Sagrado y Vengó a sus Padres!💕#anime",
+      "image": "https://i.ytimg.com/vi/VJJxkCjuda4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. ¡Bienvenido a \"Anime Multiverso\"!✨ Aquí tienes acceso a una enorme colección de animes con...",
+      "year": 2026,
+      "updatedAt": "2026-10-09T23:00:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VJJxkCjuda4",
+      "channel": "@anime_multiverso",
+      "originalTitle": "¡Soportó 10 Años de Humillación, Despertó el Dragón Sagrado y Vengó a sus Padres!💕#anime",
+      "duration": 5222,
+      "genres": [
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el",
       "slug": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el",
@@ -29929,6 +29949,12 @@
   ],
   "seasons": [
     {
+      "id": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a-s1",
+      "seriesId": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el-s1",
       "seriesId": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el",
       "number": 1,
@@ -38744,6 +38770,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a-ep-1",
+      "slug": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a-ep-1",
+      "seriesId": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a",
+      "seasonId": "soporto-10-anos-de-humillacion-desperto-el-dragon-sagrado-y-vengo-a-sus-padres-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VJJxkCjuda4"
+        }
+      ],
+      "updatedAt": "2026-10-09T23:00:22Z"
+    },
     {
       "id": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el-ep-1",
       "slug": "al-ser-rescatada-por-el-lider-enemigo-la-hija-del-maestro-se-va-enamorando-de-el-ep-1",
