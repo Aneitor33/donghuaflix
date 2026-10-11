@@ -80,6 +80,12 @@ const EP_FAIL_STREAK_ABORT = Math.max(10, Number(process.env.EP_FAIL_STREAK_ABOR
    vuelven a rastrear para renovar tokens caducados (embedshortener ~48h).
    Así los enlaces de la web siempre están frescos. */
 const REFRESH_DAYS = Math.max(0, Number(process.env.REFRESH_DAYS || 0));
+/* Refresco por horas (prioridad). Los tokens de embedshortener caducan ~48h:
+   con REFRESH_HOURS=6 y sync cada 6h los enlaces nunca llegan a caducar. */
+const REFRESH_HOURS = Math.max(0, Number(process.env.REFRESH_HOURS || 0));
+const REFRESH_MS = REFRESH_HOURS > 0 ? REFRESH_HOURS * 3600000
+                 : REFRESH_DAYS > 0 ? REFRESH_DAYS * 86400000
+                 : 0;
 
 /* Proxy opcional */
 const PROXY_URL = (process.env.FLIX_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
@@ -1210,13 +1216,18 @@ async function main() {
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
       if (oldEp && (oldEp.servers || []).length > 0) {
-        if (REFRESH_DAYS > 0 && oldEp.updatedAt) {
-          const ageDays = (Date.now() - new Date(oldEp.updatedAt).getTime()) / 86400000;
-          if (ageDays > REFRESH_DAYS) {
-            /* Tokens caducados: se re-rastrea para renovarlos */
+        if (REFRESH_MS > 0 && oldEp.updatedAt) {
+          const ageMs = Date.now() - new Date(oldEp.updatedAt).getTime();
+          if (ageMs > REFRESH_MS) {
+            /* Tokens caducados: se re-rastrea para renovarlos. Si el raw no
+               trae URL, se sintetiza la del patrón habitual del sitio. */
+            let refreshUrls = (slot.urls && slot.urls.length ? slot.urls : []);
+            if (!refreshUrls.length) {
+              refreshUrls = [`${SOURCE.base}/capitulos/${S.id}-${seasonNum}x${slot.number}`];
+            }
             epQueue.push({
               seriesId: S.id, seasonId, season: seasonNum, number: slot.number,
-              urls: (slot.urls && slot.urls.length ? slot.urls : []),
+              urls: refreshUrls,
               refresh: true
             });
           }
@@ -1267,7 +1278,17 @@ async function main() {
         const epNum = Number(m[3]);
         const seasonId = `${seriesSlug}-t${seasonNum}`;
         const epKey = `${seasonId}|${epNum}`;
-        if (existingEp.get(epKey) && (existingEp.get(epKey).servers || []).length > 0) continue;
+        const existingSitemapEp = existingEp.get(epKey);
+        if (existingSitemapEp && (existingSitemapEp.servers || []).length > 0) {
+          /* Refresco programado: funciona incluso sin raws (cobertura total) */
+          if (REFRESH_MS > 0 && existingSitemapEp.updatedAt &&
+              (Date.now() - new Date(existingSitemapEp.updatedAt).getTime()) > REFRESH_MS &&
+              !epQueue.some(j => j.seasonId === seasonId && j.number === epNum)) {
+            epQueue.push({ seriesId: seriesSlug, seasonId, season: seasonNum, number: epNum, urls: [u], refresh: true });
+            addedFromSitemap++;
+          }
+          continue;
+        }
         if (epQueue.some(j => j.seasonId === seasonId && j.number === epNum)) continue;
         epQueue.push({ seriesId: seriesSlug, seasonId, season: seasonNum, number: epNum, urls: [u] });
         addedFromSitemap++;
@@ -1287,7 +1308,7 @@ async function main() {
     return ageA - ageB;
   });
   const refreshCount = epQueue.filter(j => j.refresh).length;
-  if (refreshCount) console.log(`♻️  Refresco de tokens: ${refreshCount} episodios con servidores de más de ${REFRESH_DAYS} días se re-rastrearán`);
+  if (refreshCount) console.log(`♻️  Refresco de tokens: ${refreshCount} episodios con servidores de más de ${REFRESH_HOURS > 0 ? REFRESH_HOURS + 'h' : REFRESH_DAYS + ' días'} se re-rastrearán`);
 
   const myQueue = SHARDED
     ? epQueue.filter(j => shardOf(`${j.seasonId}|${j.number}`) === SHARD_INDEX)

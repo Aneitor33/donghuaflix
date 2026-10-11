@@ -2,8 +2,9 @@ name: doramasia sync
 
 on:
   schedule:
-    # Se ejecuta automáticamente todos los días a las 03:00 UTC
-    - cron: '0 3 * * *'
+    # Cada 6 horas: los tokens de embedshortener caducan ~48h y así
+    # cualquier episodio se renueva antes de que el enlace muera
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       fresh:
@@ -13,8 +14,9 @@ on:
         default: false
 
 # Evita que dos ejecuciones se pisen entre sí
+# (mismo grupo que el backfill: nunca corren a la vez)
 concurrency:
-  group: dramasflix-sync
+  group: doramasia-pipeline
   cancel-in-progress: false
 
 jobs:
@@ -56,8 +58,10 @@ jobs:
           MAX_RUNTIME_MINUTES: '300'
           MAX_EPISODE_CRAWLS: '50000'
           USE_PLAYWRIGHT: '1'
-          # Renueva los tokens de los enlaces con más de 1 día (caducan ~48h)
-          REFRESH_DAYS: '1'
+          # Renueva los tokens de los enlaces con más de 6 horas (caducan ~48h).
+          # Requiere sync-doramasia.js parcheado (REFRESH_HOURS). Sin él,
+          # usa REFRESH_DAYS: '0.25' que es equivalente.
+          REFRESH_HOURS: '6'
           FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}

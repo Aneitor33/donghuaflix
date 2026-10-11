@@ -1,6 +1,10 @@
 name: doramasia backfill
 
 on:
+  schedule:
+    # 30 min después del sync: si el sync aún corre, este espera (mismo
+    # grupo de concurrencia). 8 shards renuevan TODO el catálogo rápido.
+    - cron: '30 */6 * * *'
   workflow_dispatch:
     inputs:
       shards:
@@ -21,7 +25,7 @@ on:
         type: string
 
 concurrency:
-  group: doramasia-backfill
+  group: doramasia-pipeline
   cancel-in-progress: false
 
 jobs:
@@ -69,6 +73,9 @@ jobs:
           POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '320'
           MAX_EPISODE_CRAWLS: '50000'
+          # Renueva TODOS los tokens de más de 6h (antes valía 0: se saltaba
+          # todo episodio con servidores -> tokens caducados en la web)
+          REFRESH_HOURS: '6'
           FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
