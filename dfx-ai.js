@@ -51,7 +51,7 @@
   /* géneros con peso: favoritos ×3 + historial reciente ×2 */
   function genreWeights() {
     var w = {};
-    var add = function (s, wgt) { seriesGenres(s).forEach(function (g) { var k = fold2(g); w[k] = (w[k] || 0) + wgt; }); };
+    var add = function (s, wgt) { genresWithExtra(s).forEach(function (g) { var k = fold2(g); w[k] = (w[k] || 0) + wgt; }); };
     getFavs().forEach(function (id) { var s = findSeries(id); if (s) add(s, 3); });
     var hist = Object.entries(getHistory())
       .sort(function (a, b) { return (b[1].timestamp || 0) - (a[1].timestamp || 0); })
@@ -85,6 +85,25 @@
     'cultivación': ['xianxia', 'wuxia', 'inmortal', 'immortal', 'celestial']
   };
 
+  /* Géneros enriquecidos desde public/data/dfx-genres.json (generado por tools/enrich-genres.mjs) */
+  var GENRES_EXTRA = {};
+  if (typeof fetch === 'function' && typeof document !== 'undefined') {
+    fetch('public/data/dfx-genres.json', { cache: 'no-cache' }).then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (j) {
+      if (j && typeof j === 'object' && !Array.isArray(j)) GENRES_EXTRA = j;
+    }).catch(function () {});
+  }
+  function genresWithExtra(x) {
+    var base = seriesGenres(x) || [];
+    var key = x && (x.slug || x.id);
+    var ex = key ? GENRES_EXTRA[key] : null;
+    if (!ex || !ex.length) return base;
+    var out2 = base.slice();
+    ex.forEach(function (g) { if (out2.indexOf(g) === -1) out2.push(g); });
+    return out2;
+  }
+
   var DFXAI;
   if (typeof window !== 'undefined') { window.DFXAI = window.DFXAI || {}; DFXAI = window.DFXAI; }
   else { globalThis.DFXAI = globalThis.DFXAI || {}; DFXAI = globalThis.DFXAI; }
@@ -101,7 +120,7 @@
 
     var score = function (s) {
       var sc = 0;
-      seriesGenres(s).forEach(function (g) { sc += W[fold2(g)] || 0; });
+      genresWithExtra(s).forEach(function (g) { sc += W[fold2(g)] || 0; });
       return sc + recencyBoost(s) + (isAiring(s) ? 0.5 : 0);
     };
     var excludeSeen = function (s) { return histIds.indexOf(s.id) === -1; };
@@ -134,7 +153,7 @@
         break;
       case 'genre': {
         var byGenre = pool.filter(function (s) {
-          return seriesGenres(s).some(function (g) { return fold2(g) === fold2(intent.genre); });
+          return genresWithExtra(s).some(function (g) { return fold2(g) === fold2(intent.genre); });
         }).sort(sortScore);
         if (!byGenre.length) {
           var kws = THEME_KEYWORDS[fold2(intent.genre)];
@@ -150,10 +169,10 @@
       }
       case 'favs': {
         var favGenres = {};
-        favIds.forEach(function (id) { var s = findSeries(id); if (s) seriesGenres(s).forEach(function (g) { favGenres[fold2(g)] = 1; }); });
+        favIds.forEach(function (id) { var s = findSeries(id); if (s) genresWithExtra(s).forEach(function (g) { favGenres[fold2(g)] = 1; }); });
         out = pool.filter(function (s) {
           if (favIds.indexOf(s.id) !== -1) return false;
-          return seriesGenres(s).some(function (g) { return favGenres[fold2(g)]; });
+          return genresWithExtra(s).some(function (g) { return favGenres[fold2(g)]; });
         }).sort(sortScore);
         break;
       }
@@ -163,14 +182,14 @@
         var sg = seriesGenres(seed).map(fold2);
         out = pool.filter(function (s) {
           if (s.id === seed.id) return false;
-          return seriesGenres(s).some(function (g) { return sg.indexOf(fold2(g)) !== -1; });
+          return genresWithExtra(s).some(function (g) { return sg.indexOf(fold2(g)) !== -1; });
         }).sort(sortScore);
         break;
       }
       case 'different': {
         var top = topGenreKeys.slice(0, 4);
         out = pool.filter(function (s) {
-          return seriesGenres(s).every(function (g) { return top.indexOf(fold2(g)) === -1; });
+          return genresWithExtra(s).every(function (g) { return top.indexOf(fold2(g)) === -1; });
         }).sort(sortScore);
         if (!out.length) out = pool.filter(excludeSeen).sort(function (a, b) { return recencyBoost(b) - recencyBoost(a); });
         break;
@@ -187,7 +206,7 @@
     return recommend(intent, limit || 20).map(function (s) {
       return {
         id: String(s.id), title: cleanTitle(s),
-        genres: seriesGenres(s).slice(0, 4), status: s.status || '',
+        genres: genresWithExtra(s).slice(0, 4), status: s.status || '',
         eps: epsOf(s) || null, year: s.year || null
       };
     });
@@ -197,7 +216,7 @@
   function catalogGenres() {
     var g = (getDB().genres || []).map(function (x) { return x.name || x; });
     var set = {};
-    (getDB().series || []).forEach(function (s) { seriesGenres(s).forEach(function (x) { set[x] = 1; }); });
+    (getDB().series || []).forEach(function (s) { genresWithExtra(s).forEach(function (x) { set[x] = 1; }); });
     var all = g.concat(Object.keys(set));
     return all.filter(function (v, i, a) { return a.indexOf(v) === i; });
   }
@@ -235,7 +254,7 @@
     return {
       topGenres: Object.keys(W).sort(function (a, b) { return W[b] - W[a]; }).slice(0, 5).map(function (k) {
         var orig = k;
-        (getDB().series || []).some(function (s) { return seriesGenres(s).some(function (g) { if (fold2(g) === k) orig = g; return fold2(g) === k; }); });
+        (getDB().series || []).some(function (s) { return genresWithExtra(s).some(function (g) { if (fold2(g) === k) orig = g; return fold2(g) === k; }); });
         return orig;
       }),
       favCount: getFavs().length,
@@ -396,7 +415,7 @@
   function cardHTML(s, reason) {
     var img = getSeriesImage(s);
     var meta = [];
-    var g = seriesGenres(s); if (g.length) meta.push(esc2(g.slice(0, 2).join(' · ')));
+    var g = genresWithExtra(s); if (g.length) meta.push(esc2(g.slice(0, 2).join(' · ')));
     if (epsOf(s)) meta.push(epsOf(s) + ' eps');
     if (s.status) meta.push(esc2(s.status));
     var thumb = img
