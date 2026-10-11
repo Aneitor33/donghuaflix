@@ -76,7 +76,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      - name: Rebuild: borrar catálogo y redescubrir series
+      - name: 'Rebuild: borrar catálogo y redescubrir series'
         env:
           MODE: full
           FRESH: '1'
