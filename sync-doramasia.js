@@ -1337,7 +1337,7 @@ async function main() {
   }
 
   let failedEps = 0, crawled = 0;
-  let unavailableEps = 0;
+  let unavailableEps = 0, diedEps = 0;
   let epFailStreak = 0;
   const failReasons = new Map();
   const okTimes = [];
@@ -1446,30 +1446,54 @@ async function main() {
       });
       newEps++;
     } else {
-      failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
-      failures[fk] = (failures[fk] || 0) + 1;
-      epFailStreak++;
-      const reason = errs.length ? errs[errs.length - 1].split(' → ')[1] : 'página cargada pero sin servidores detectados';
-      failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
-      if (failedEps <= 5) {
-        console.log(`   ❌ Fallo #${failedEps} (${job.seasonId} · cap ${job.number}):`);
-        for (const e of errs.slice(0, 3)) console.log(`      ${e}`);
-        if (!errs.length) console.log(`      ${job.urls[0]} → cargó pero 0 servidores detectados`);
-      }
-      if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
-        epAbortEarly = true;
-        const topAbort = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
-        console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos. Motivo más frecuente: ${topAbort ? `${topAbort[0]} (×${topAbort[1]})` : 'desconocido'}. Abortando la fase de episodios.`);
+      /* Refresco: la página carga (sin errores de red) pero ya no tiene
+         servers → contenido muerto en la fuente. Se marca con updatedAt
+         nuevo para no reintentarlo cada ciclo y NO corta la racha.
+         Salvaguarda: solo se marca si ya hubo >=1 éxito en esta corrida;
+         si la extracción falla globalmente, nada se etiqueta y el abort
+         por racha de fallos sigue actuando. */
+      const canMarkDead = job.refresh && !errs.length && okTimes.length > 0;
+      if (canMarkDead) {
+        diedEps++;
+        epFailStreak = 0;
+        const eid = `${job.seasonId}-e${job.number}`;
+        const prevEp = db.episodes.find(e => e.id === eid);
+        upsert(db.episodes, {
+          id: eid, slug: eid,
+          title: (prevEp && prevEp.title) || `Capítulo ${job.number}`,
+          sourceUrl: job.urls[0] || (prevEp && prevEp.sourceUrl) || null,
+          servers: (prevEp && prevEp.servers) || [],
+          seriesId: job.seriesId, seasonId: job.seasonId, number: job.number,
+          updatedAt: new Date().toISOString(),
+          serversDead: true
+        });
+        delete failures[fk];
+      } else {
+        failedEps++;
+        failures[fk] = (failures[fk] || 0) + 1;
+        epFailStreak++;
+        const reason = errs.length ? errs[errs.length - 1].split(' → ')[1] : 'página cargada pero sin servidores detectados';
+        failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
+        if (failedEps <= 5) {
+          console.log(`   ❌ Fallo #${failedEps} (${job.seasonId} · cap ${job.number}):`);
+          for (const e of errs.slice(0, 3)) console.log(`      ${e}`);
+          if (!errs.length) console.log(`      ${job.urls[0]} → cargó pero 0 servidores detectados`);
+        }
+        if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
+          epAbortEarly = true;
+          const topAbort = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
+          console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos. Motivo más frecuente: ${topAbort ? `${topAbort[0]} (×${topAbort[1]})` : 'desconocido'}. Abortando la fase de episodios.`);
+        }
       }
     }
 
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
-      console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
-      if (crawled >= 25 && newEps === 0 && unavailableEps / crawled >= 0.8 && !epAbortEarly) {
+      console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, muertos: ${diedEps}, ~${epsPerMin}/min)`);
+      if (crawled >= 25 && newEps === 0 && (unavailableEps + diedEps) / crawled >= 0.8 && !epAbortEarly) {
         epAbortEarly = true;
-        console.log(`   🧱 ${unavailableEps}/${crawled} episodios retirados de la fuente ("aún no está disponible"). Abortando: revisa SOURCE_BASE o migra de fuente.`);
+        console.log(`   🧱 ${unavailableEps + diedEps}/${crawled} episodios retirados/sin servers en la fuente. Abortando: revisa SOURCE_BASE o migra de fuente.`);
       }
       const recentOk = okTimes.filter(t => Date.now() - t < 10 * 60000).length;
       if (crawled > 120 && recentOk < 5 && !epAbortEarly) {
@@ -1507,7 +1531,7 @@ async function main() {
     const top = [...failReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     console.log(`📉 Motivos de fallo: ${top.map(([r, c]) => `${r} (×${c})`).join(' | ')}`);
   }
-  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | retirados: ${unavailableEps} | rastreados: ${crawled}`);
+  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | retirados: ${unavailableEps} | muertos: ${diedEps} | rastreados: ${crawled}`);
 }
 
 if (process.env.FLIX_SELFTEST === '1') {
