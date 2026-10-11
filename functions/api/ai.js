@@ -145,6 +145,30 @@ async function callGroq(key, model, prompt) {
   } finally { clearTimeout(t); }
 }
 
+var geminiModelCache = null;
+async function resolveGeminiModel(key, requested) {
+  if (requested) return requested;
+  if (geminiModelCache) return geminiModelCache;
+  var fallback = 'gemini-2.5-flash-lite';
+  try {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, 8000);
+    var r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + encodeURIComponent(key) + '&pageSize=200', { signal: ctrl.signal });
+    clearTimeout(t);
+    if (r.ok) {
+      var j = await r.json();
+      var names = (j.models || [])
+        .filter(function (m) { return (m.supportedGenerationMethods || []).indexOf('generateContent') !== -1; })
+        .map(function (m) { return String(m.name || '').replace(/^models\//, ''); });
+      var pick = function (re) { return names.filter(function (n) { return re.test(n); }).sort().reverse()[0]; };
+      geminiModelCache = pick(/flash-lite/i) || pick(/flash/i) || names.sort().reverse()[0] || fallback;
+      return geminiModelCache;
+    }
+  } catch (e) { /* cae al fallback */ }
+  geminiModelCache = fallback;
+  return geminiModelCache;
+}
+
 async function callWorkersAI(AI, prompt) {
   var out = await AI.run('@cf/meta/llama-3.2-3b-instruct', {
     max_tokens: 320,
@@ -179,7 +203,8 @@ export async function onRequestPost(context) {
   var prompt = buildPrompt(data);
 
   var providers = [];
-  if (env.GEMINI_API_KEY) providers.push({ name: 'gemini', call: function () { return callGemini(env.GEMINI_API_KEY, env.GEMINI_MODEL || 'gemini-2.5-flash-lite', prompt); } });
+  var geminiModel = await resolveGeminiModel(env.GEMINI_API_KEY, env.GEMINI_MODEL);
+  if (env.GEMINI_API_KEY) providers.push({ name: 'gemini', call: function () { return callGemini(env.GEMINI_API_KEY, geminiModel, prompt); } });
   if (env.GROQ_API_KEY) providers.push({ name: 'groq', call: function () { return callGroq(env.GROQ_API_KEY, env.GROQ_MODEL || 'gpt-oss-20b', prompt); } });
   if (env.AI) providers.push({ name: 'workers-ai', call: function () { return callWorkersAI(env.AI, prompt); } });
 
