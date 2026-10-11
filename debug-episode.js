@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * debug-episode.js — v2: diagnóstico con INTERACCIÓN
- * 1) Estado del proxy (sin mostrar secretos)
- * 2) Detección de muro VIP / login en el HTML
- * 3) Playwright: lista botones candidatos, HACE CLIC en el de reproducción,
- *    espera, y vuelca iframes + TODAS las llamadas a API/interesantes.
+ * debug-episode.js — v3: ¿DÓNDE está el player ahora?
+ * - Vuelca TODOS los <a> con href de la página de episodio (texto + URL)
+ * - Vuelca el texto visible completo (zona del reproductor / muros)
+ * - Cabeceras de la respuesta RSC de 71 bytes
+ * - Prueba la ruta /browser
  */
 const FETCH_TIMEOUT_MS = Number(process.env.FETCH_TIMEOUT_MS || 20000);
 const PROXY_URL = (process.env.FLIX_PROXY_URL || '').replace(/\/+$/, '');
@@ -14,108 +14,77 @@ const PROXY_HOSTS = (process.env.FLIX_PROXY_HOSTS || 'doramasia.com,www.doramasi
 const EP_URL = process.env.DEBUG_EPISODE_URL ||
   'https://doramasia.com/capitulos/is-there-equation-in-love-1x3';
 
-console.log(`🔍 Diagnóstico v2 de ${EP_URL}`);
-console.log(`   Proxy URL: ${PROXY_URL ? 'definida' : 'NO'} | Proxy KEY: ${PROXY_KEY ? 'definida' : '⚠️ VACÍA'} | Hosts: ${PROXY_HOSTS.join(', ')}`);
+console.log(`🔍 Diagnóstico v3 de ${EP_URL}`);
 
-/* ── 1) HTML estático: gating + proxies de contenido ── */
-async function fetchHtml(url) {
-  const useProxy = PROXY_URL && PROXY_KEY && PROXY_HOSTS.includes(new URL(url).hostname);
-  const target = useProxy ? `${PROXY_URL}/?u=${encodeURIComponent(url)}` : url;
-  const res = await fetch(target, {
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: useProxy ? { 'x-proxy-key': PROXY_KEY } : {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-      'Accept-Language': 'es-ES,es;q=0.9'
-    }
+const { chromium } = await import('playwright');
+const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+const ctx = await browser.newContext({
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  locale: 'es-ES'
+});
+const page = await ctx.newPage();
+
+/* Cabeceras de cada respuesta del documento (para el RSC de 71 bytes) */
+page.on('response', res => {
+  const u = res.url();
+  if (u.split('?')[0] !== EP_URL.split('?')[0]) return;
+  const h = {};
+  ['content-type', 'location', 'x-middleware-rewrite', 'x-nextjs-prerender'].forEach(k => {
+    const v = res.headers()[k]; if (v) h[k] = v;
   });
-  return { status: res.status, html: await res.text(), proxied: useProxy };
+  res.text().then(t => {
+    console.log(`   [doc-response] ${res.status()} | ${t.length} bytes | ${JSON.stringify(h)}`);
+    if (t.length < 300) console.log(`     cuerpo: ${t}`);
+  }).catch(() => {});
+});
+
+await page.goto(EP_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+await page.waitForTimeout(6000);
+
+/* 1) Todos los enlaces: texto + href */
+const links = await page.$$eval('a[href]', els =>
+  els.map(e => ({ t: (e.textContent || '').trim().slice(0, 60), h: e.href }))
+     .filter(x => x.h && !x.h.includes('_next') && !x.h.startsWith('javascript'))
+);
+console.log(`\n1) Enlaces en la página (${links.length}):`);
+const seen = new Set();
+for (const l of links) {
+  const k = l.h;
+  if (seen.has(k)) continue;
+  seen.add(k);
+  console.log(`   "${l.t}" → ${l.h}`);
+  if (seen.size > 45) { console.log('   …(truncado)'); break; }
 }
 
-const { status, html, proxied } = await fetchHtml(EP_URL);
-console.log(`\n1) HTML: HTTP ${status} | ${html.length} bytes | proxied=${proxied}`);
-
-const gate = [];
-for (const [label, re] of [
-  ['VIP', /vip/i], ['registro', /registr/i], ['login/sesión', /inicia sesi|login|sign in/i],
-  ['premium', /premium/i], ['suscripción', /suscrip/i], ['planes', /planes/i]
-]) if (re.test(html)) gate.push(label);
-console.log(`   Palabras de muro detectadas en HTML: ${gate.length ? gate.join(', ') : 'ninguna'}`);
-
-for (const m of html.matchAll(/<iframe[^>]+src=["']([^"']+)["']/gi)) {
-  console.log(`   iframe en HTML estático: ${m[1]}`);
+/* 2) Texto visible completo (recortado) — busca muros de login/VIP */
+const bodyText = await page.evaluate(() => document.body.innerText.replace(/\n{2,}/g, '\n'));
+console.log(`\n2) Texto visible (${bodyText.length} chars), primeros 2000:`);
+console.log(bodyText.slice(0, 2000));
+const walls = [];
+for (const m of bodyText.matchAll(/.{0,60}(inicia sesi|iniciar sesi|registrate|regístrate|crea tu cuenta|premium|vip|suscripci|miembro|acceso).{0,60}/gi)) {
+  walls.push(m[0].replace(/\n/g, ' '));
 }
+console.log(`\n   Frases de muro/login encontradas: ${walls.length}`);
+walls.slice(0, 8).forEach(w => console.log(`   → "${w}"`));
 
-/* ── 2) Playwright con interacción ── */
-console.log('\n2) Playwright (con clics):');
+/* 3) Iframes y objetos embed */
+const frames = await page.$$eval('iframe, embed, object, video', els =>
+  els.map(e => e.src || e.data || '(sin src)'));
+console.log(`\n3) iframe/embed/object/video en DOM: ${frames.length}`, frames.slice(0, 5));
+
+/* 4) ¿Algún elemento con estilo de player (clases)? */
+const playerish = await page.$$eval('[class*="player"], [class*="video"], [id*="player"], [class*="reproductor"]', els =>
+  els.map(e => `${e.tagName}.${String(e.className).slice(0, 60)}#${e.id}`).slice(0, 10));
+console.log(`\n4) Elementos con clase/id de player: ${playerish.length}`, playerish);
+
+/* 5) Ruta /browser */
 try {
-  const { chromium } = await import('playwright');
-  const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
-  const ctx = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-    locale: 'es-ES'
-  });
-  const page = await ctx.newPage();
+  const r = await page.goto('https://doramasia.com/browser', { waitUntil: 'domcontentloaded', timeout: 20000 });
+  await page.waitForTimeout(2500);
+  const bt = await page.evaluate(() => document.body.innerText.slice(0, 400));
+  console.log(`\n5) /browser → HTTP ${r.status()} | texto: ${bt.replace(/\n/g, ' | ').slice(0, 300)}`);
+} catch (e) { console.log(`\n5) /browser → ERROR ${e.message}`); }
 
-  const interesting = [];
-  page.on('response', res => {
-    const u = res.url();
-    if (/_next\/static|\.(js|css|png|jpe?g|webp|svg|woff2?|ico)(\?|$)/.test(u)) return;
-    res.text().then(t => {
-      const hit = /embedshortener|"(?:link|url|src|embed|file)":"https?:|m3u8|\.mp4/.test(t);
-      interesting.push({ u: u.slice(0, 160), len: t.length, hit });
-    }).catch(() => {});
-  });
-
-  await page.goto(EP_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await page.waitForTimeout(5000);
-
-  /* Botones/enlaces con texto de reproducción */
-  const cands = await page.$$eval('button, a, [role="button"], li', els =>
-    els.map(e => (e.textContent || '').trim())
-       .filter(t => t && t.length < 50 && /ver|play|reproducir|mirar|servidor|server|cap[ií]tulo|opci|hd|latino|sub/i.test(t))
-  );
-  console.log(`   Candidatos clicables (${cands.length}):`, JSON.stringify([...new Set(cands)].slice(0, 20)));
-
-  const iframesBefore = await page.$$eval('iframe[src]', els => els.map(e => e.src)).catch(() => []);
-  console.log(`   Iframes ANTES de clicar: ${iframesBefore.length}`);
-
-  /* Clicar el candidato más probable */
-  const locs = page.locator('button, a, [role="button"], li');
-  const n = Math.min(await locs.count(), 80);
-  let clicked = null;
-  for (let i = 0; i < n; i++) {
-    const el = locs.nth(i);
-    const txt = ((await el.innerText().catch(() => '')) || '').trim();
-    if (txt && txt.length < 40 && /^(ver|play|reproducir|mirar)|servidor|server|opciones|op\d/i.test(txt)) {
-      await el.scrollIntoViewIfNeeded().catch(() => {});
-      await el.click({ timeout: 3000 }).catch(() => null);
-      clicked = txt;
-      break;
-    }
-  }
-  console.log(`   Clicado: ${clicked || 'nada (no hubo candidato)'}`);
-  await page.waitForTimeout(6000);
-
-  const iframesAfter = await page.$$eval('iframe[src]', els => els.map(e => e.src)).catch(() => []);
-  console.log(`   Iframes DESPUÉS: ${iframesAfter.length}${iframesAfter.length ? ' → ' + iframesAfter.slice(0, 3).join(' | ') : ''}`);
-
-  /* A veces el player va dentro de un div con data-* */
-  const dataUrls = await page.$$eval('[data-url], [data-embed], [data-src], [data-link], [data-player], [data-server]', els =>
-    els.map(e => e.getAttribute('data-url') || e.getAttribute('data-embed') || e.getAttribute('data-src') || e.getAttribute('data-link') || e.getAttribute('data-player') || e.getAttribute('data-server')).filter(Boolean)
-  ).catch(() => []);
-  console.log(`   Atributos data-* con URL: ${dataUrls.length}${dataUrls.length ? ' → ' + dataUrls.slice(0, 3).join(' | ') : ''}`);
-
-  await page.waitForTimeout(2000);
-  const hits = interesting.filter(r => r.hit);
-  console.log(`\n   Peticiones "interesantes": ${interesting.length} | con posibles servers: ${hits.length}`);
-  for (const h of hits.slice(0, 5)) console.log(`     HIT → ${h.u} (${h.len} bytes)`);
-  const apis = interesting.filter(r => /api|rsc|episode|capitulo|player|server/i.test(r.u));
-  console.log(`   Peticiones a posibles API (${apis.length}):`);
-  for (const a of apis.slice(0, 10)) console.log(`     → ${a.u} (${a.len} bytes)`);
-
-  await browser.close();
-} catch (e) {
-  console.log(`   Playwright ERROR: ${e.message}`);
-}
-console.log('\n✅ Diagnóstico v2 terminado. Manda esta salida completa.');
+await browser.close();
+console.log('\n✅ Diagnóstico v3 terminado. Manda esta salida completa.');
 process.exit(0);
