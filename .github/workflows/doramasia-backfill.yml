@@ -1,10 +1,6 @@
 name: doramasia backfill
 
 on:
-  schedule:
-    # 30 min después del sync: si el sync aún corre, este espera (mismo
-    # grupo de concurrencia). 8 shards renuevan TODO el catálogo rápido.
-    - cron: '30 */6 * * *'
   workflow_dispatch:
     inputs:
       shards:
@@ -13,6 +9,11 @@ on:
         default: '8'
         type: choice
         options: ['4', '6', '8']
+      rebuild:
+        description: 'REBUILD: borra el catálogo y lo reconstruye desde 0 (solo contenido con vídeo). Copia de seguridad automática con restauración si sale mal.'
+        required: false
+        type: boolean
+        default: false
       merge_run_id:
         description: 'RESCATE: ID del run cancelado cuyos artefactos fusionar (vacío = comportamiento normal)'
         required: false
@@ -25,13 +26,91 @@ on:
         type: string
 
 concurrency:
-  group: doramasia-pipeline
+  group: doramasia-backfill
   cancel-in-progress: false
 
 jobs:
+  # Solo en modo rebuild: copia de seguridad del catálogo + borrado + redescubrimiento
+  # de series (MODE=full con FRESH=1). Genera el catálogo base y los raws que
+  # los shards usarán para rastrear los vídeos.
+  prepare:
+    if: ${{ inputs.rebuild && inputs.merge_run_id == '' && inputs.merge_artifact_ids == '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Instalar Playwright + Chromium
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
+      - name: Copia de seguridad del catálogo
+        run: |
+          if [ -f public/data/catalog-doramasia.json ]; then
+            mkdir -p /tmp/backup
+            cp public/data/catalog-doramasia.json /tmp/backup/catalog-doramasia.json
+            node -e "const db=require('/tmp/backup/catalog-doramasia.json'); console.log('💾 Backup: ' + db.series.length + ' series, ' + (db.episodes||[]).length + ' episodios')"
+          else
+            echo "No hay catálogo previo; se construye desde cero."
+          fi
+
+      - name: Subir copia de seguridad (artefacto)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-backup
+          path: /tmp/backup/catalog-doramasia.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Rebuild: borrar catálogo y redescubrir series
+        env:
+          MODE: full
+          FRESH: '1'
+          WORKERS: '10'
+          HOST_LIMIT: '8'
+          FETCH_TIMEOUT_MS: '20000'
+          FETCH_RETRIES: '2'
+          POLITENESS_MS: '300'
+          MAX_RUNTIME_MINUTES: '320'
+          MAX_EPISODE_CRAWLS: '50000'
+          USE_PLAYWRIGHT: '1'
+          FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
+        run: node sync-doramasia.js
+
+      - name: Guardar catálogo base y raws
+        if: ${{ always() }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A public/data || true
+          if git diff --staged --quiet; then
+            echo "Sin cambios que guardar."
+            exit 0
+          fi
+          git commit -m "chore(data): rebuild - catálogo base de DoramasIA"
+          git pull --rebase origin main || true
+          git push || echo "⚠️ Push falló; los shards no podrán leer los raws"
+
   # Cada runner procesa ~1/N de los episodios. NO tocan git:
   # suben su resultado como artefacto y el job merge se encarga del repo.
   episodes:
+    needs: prepare
     # En modo rescate (merge_run_id o merge_artifact_ids != '') solo corre el merge
     if: ${{ inputs.merge_run_id == '' && inputs.merge_artifact_ids == '' }}
     runs-on: ubuntu-latest
@@ -73,9 +152,6 @@ jobs:
           POLITENESS_MS: '300'
           MAX_RUNTIME_MINUTES: '320'
           MAX_EPISODE_CRAWLS: '50000'
-          # Renueva TODOS los tokens de más de 6h (antes valía 0: se saltaba
-          # todo episodio con servidores -> tokens caducados en la web)
-          REFRESH_HOURS: '6'
           FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
           FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
           FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
@@ -113,6 +189,14 @@ jobs:
       - name: Instalar dependencias
         run: npm ci || npm install
 
+      - name: Descargar copia de seguridad (solo rebuild)
+        if: ${{ inputs.rebuild }}
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: catalog-backup
+          path: /tmp/backup
+
       - name: Descargar shards (de este run)
         if: ${{ inputs.merge_run_id == '' && inputs.merge_artifact_ids == '' }}
         uses: actions/download-artifact@v4
@@ -144,6 +228,26 @@ jobs:
           MODE: merge
           SHARD_TOTAL: ${{ inputs.shards }}
         run: node sync-doramasia.js
+
+      - name: Seguridad del rebuild (restaura el backup si el resultado es demasiado pequeño)
+        if: ${{ always() && inputs.rebuild }}
+        run: |
+          RESULT=$(node -e "const db=require('./public/data/catalog-doramasia.json'); console.log((db.series||[]).length + ' ' + (db.episodes||[]).length)")
+          SERIES=$(echo $RESULT | cut -d' ' -f1)
+          EPS=$(echo $RESULT | cut -d' ' -f2)
+          echo "Resultado del rebuild: $SERIES series, $EPS episodios"
+          if [ "$SERIES" -lt 800 ] || [ "$EPS" -lt 5000 ]; then
+            if [ -f /tmp/backup/catalog-doramasia.json ]; then
+              echo "::error::Rebuild demasiado pequeño ($SERIES series, $EPS eps). La extracción no está funcionando (revisa FLIX_PROXY_KEY). Restaurando la copia de seguridad..."
+              cp /tmp/backup/catalog-doramasia.json public/data/catalog-doramasia.json
+              rm -rf public/data/catalog-doramasia-index.json public/data/catalog-doramasia-details
+              echo "Copia de seguridad restaurada."
+            else
+              echo "::error::Rebuild demasiado pequeño y no hay backup que restaurar."
+            fi
+          else
+            echo "Rebuild dentro de lo esperado. Se conserva."
+          fi
 
       - name: Dividir catálogo en índice + fichas
         run: node split-catalog.js public/data/catalog-doramasia.json
