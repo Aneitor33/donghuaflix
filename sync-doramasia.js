@@ -108,10 +108,14 @@ async function withHostLimit(host, fn) {
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
 
+/* Fuente configurable: si el sitio cierra el grifo (login wall / contenido
+   retirado), apunta a otro clon de la plataforma con SOURCE_BASE/SOURCE_SEEDS
+   sin tocar nada más del pipeline. */
+const SOURCE_BASE = (process.env.SOURCE_BASE || 'https://doramasia.com').replace(/\/+$/, '');
 const SOURCE = {
-  id: 'doramasia',
-  base: 'https://doramasia.com',
-  seeds: ['/doramas?countries=china'],
+  id: process.env.SOURCE_ID || 'doramasia',
+  base: SOURCE_BASE,
+  seeds: (process.env.SOURCE_SEEDS || '/doramas?countries=china').split(',').map(s => s.trim()).filter(Boolean),
   // Solo China continental + Hong Kong + Taiwán (doramas chinos)
   allowedCountries: ['china', 'hong kong', 'taiwan', 'hongkong', 'taiwán'],
   maxPages: 250,
@@ -418,6 +422,11 @@ function epCode(slug, pathname) {
   if (m) return { season: 1, number: Number(m[1]) };
   return { season: 1, number: null };
 }
+
+/* La fuente retiró el episodio: la página responde 200 pero con este aviso.
+   OJO: NO detectar "iniciar-sesion" como muro — ese enlace está en el
+   navbar de TODAS las páginas (botón "ENTRA AHORA" para anónimos). */
+const UNAVAIL_RE = /a[uú]n no est[aá] disponible|este (?:episodio|cap[ií]tulo) no est[aá] disponible/i;
 
 const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidurl|multijugadora|tio)[\/.]/i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
@@ -1063,6 +1072,7 @@ async function mergeShards() {
 
 async function main() {
   console.log('🚀 DRAMASFLIX SYNC INICIADO');
+  console.log(`🌐 Fuente: ${SOURCE.base}${process.env.SOURCE_BASE ? ' (vía SOURCE_BASE)' : ''}`);
   console.log(`⚙️  Config: workers=${WORKERS} timeout=${FETCH_TIMEOUT_MS}ms reintentos=${FETCH_RETRIES} hostLimit=${HOST_LIMIT} proxy=${PROXY_URL ? 'sí' : 'NO (directo)'} modo=${MODE}${SHARDED ? ` shard=${SHARD_INDEX + 1}/${SHARD_TOTAL}` : ''}`);
 
   if (MODE === 'merge') return mergeShards();
@@ -1327,6 +1337,7 @@ async function main() {
   }
 
   let failedEps = 0, crawled = 0;
+  let unavailableEps = 0;
   let epFailStreak = 0;
   const failReasons = new Map();
   const okTimes = [];
@@ -1340,12 +1351,14 @@ async function main() {
     let pageTitle = null;
     const errs = [];
     let lastHtml = null;
+    let jobUnavailable = false;
 
     for (const u of job.urls) {
       if (timeUp()) break;
       try {
         const html = await fetchHtml(u);
         lastHtml = html;
+        if (UNAVAIL_RE.test(html)) { jobUnavailable = true; break; }
         let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
         for (const s of parsed.servers) {
@@ -1398,7 +1411,25 @@ async function main() {
     }
 
     crawled++;
-    if (servers.length) {
+    if (jobUnavailable) {
+      /* La fuente retiró el episodio: se marca como verificado (updatedAt)
+         para no reintentarlo cada ciclo, pero se conservan los servers
+         antiguos por si la fuente lo repone. No es un fallo de extracción. */
+      epFailStreak = 0;
+      unavailableEps++;
+      const eid = `${job.seasonId}-e${job.number}`;
+      const prevEp = db.episodes.find(e => e.id === eid);
+      upsert(db.episodes, {
+        id: eid, slug: eid,
+        title: (prevEp && prevEp.title) || `Capítulo ${job.number}`,
+        sourceUrl: job.urls[0] || (prevEp && prevEp.sourceUrl) || null,
+        servers: (prevEp && prevEp.servers) || [],
+        seriesId: job.seriesId, seasonId: job.seasonId, number: job.number,
+        updatedAt: new Date().toISOString(),
+        unavailable: true
+      });
+      delete failures[`${job.seasonId}|${job.number}`];
+    } else if (servers.length) {
       epFailStreak = 0;
       okTimes.push(Date.now());
       delete failures[`${job.seasonId}|${job.number}`];
@@ -1436,6 +1467,10 @@ async function main() {
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
       console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
+      if (crawled >= 25 && newEps === 0 && unavailableEps / crawled >= 0.8 && !epAbortEarly) {
+        epAbortEarly = true;
+        console.log(`   🧱 ${unavailableEps}/${crawled} episodios retirados de la fuente ("aún no está disponible"). Abortando: revisa SOURCE_BASE o migra de fuente.`);
+      }
       const recentOk = okTimes.filter(t => Date.now() - t < 10 * 60000).length;
       if (crawled > 120 && recentOk < 5 && !epAbortEarly) {
         epAbortEarly = true;
@@ -1472,7 +1507,7 @@ async function main() {
     const top = [...failReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     console.log(`📉 Motivos de fallo: ${top.map(([r, c]) => `${r} (×${c})`).join(' | ')}`);
   }
-  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | rastreados: ${crawled}`);
+  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | retirados: ${unavailableEps} | rastreados: ${crawled}`);
 }
 
 if (process.env.FLIX_SELFTEST === '1') {
