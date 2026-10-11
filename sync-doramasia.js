@@ -80,12 +80,6 @@ const EP_FAIL_STREAK_ABORT = Math.max(10, Number(process.env.EP_FAIL_STREAK_ABOR
    vuelven a rastrear para renovar tokens caducados (embedshortener ~48h).
    Así los enlaces de la web siempre están frescos. */
 const REFRESH_DAYS = Math.max(0, Number(process.env.REFRESH_DAYS || 0));
-/* Refresco por horas (prioridad). Los tokens de embedshortener caducan ~48h:
-   con REFRESH_HOURS=6 y sync cada 6h los enlaces nunca llegan a caducar. */
-const REFRESH_HOURS = Math.max(0, Number(process.env.REFRESH_HOURS || 0));
-const REFRESH_MS = REFRESH_HOURS > 0 ? REFRESH_HOURS * 3600000
-                 : REFRESH_DAYS > 0 ? REFRESH_DAYS * 86400000
-                 : 0;
 
 /* Proxy opcional */
 const PROXY_URL = (process.env.FLIX_PROXY_URL || process.env.DORAMAS_PROXY_URL || '').replace(/\/+$/, '');
@@ -108,14 +102,10 @@ async function withHostLimit(host, fn) {
 const T0 = Date.now();
 const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
 
-/* Fuente configurable: si el sitio cierra el grifo (login wall / contenido
-   retirado), apunta a otro clon de la plataforma con SOURCE_BASE/SOURCE_SEEDS
-   sin tocar nada más del pipeline. */
-const SOURCE_BASE = (process.env.SOURCE_BASE || 'https://doramasia.com').replace(/\/+$/, '');
 const SOURCE = {
-  id: process.env.SOURCE_ID || 'doramasia',
-  base: SOURCE_BASE,
-  seeds: (process.env.SOURCE_SEEDS || '/doramas?countries=china').split(',').map(s => s.trim()).filter(Boolean),
+  id: 'doramasia',
+  base: 'https://doramasia.com',
+  seeds: ['/doramas?countries=china'],
   // Solo China continental + Hong Kong + Taiwán (doramas chinos)
   allowedCountries: ['china', 'hong kong', 'taiwan', 'hongkong', 'taiwán'],
   maxPages: 250,
@@ -422,11 +412,6 @@ function epCode(slug, pathname) {
   if (m) return { season: 1, number: Number(m[1]) };
   return { season: 1, number: null };
 }
-
-/* La fuente retiró el episodio: la página responde 200 pero con este aviso.
-   OJO: NO detectar "iniciar-sesion" como muro — ese enlace está en el
-   navbar de TODAS las páginas (botón "ENTRA AHORA" para anónimos). */
-const UNAVAIL_RE = /a[uú]n no est[aá] disponible|este (?:episodio|cap[ií]tulo) no est[aá] disponible/i;
 
 const PLAYER_PATH = /\/(?:player|play|embed|goto|stream|e|video|reproductor|vidurl|multijugadora|tio)[\/.]/i;
 const IMAGE_ASSET_RE = /\.(?:jpe?g|png|gif|webp|svg|ico|css|js|woff2?)(\?|#|$)/i;
@@ -1072,7 +1057,6 @@ async function mergeShards() {
 
 async function main() {
   console.log('🚀 DRAMASFLIX SYNC INICIADO');
-  console.log(`🌐 Fuente: ${SOURCE.base}${process.env.SOURCE_BASE ? ' (vía SOURCE_BASE)' : ''}`);
   console.log(`⚙️  Config: workers=${WORKERS} timeout=${FETCH_TIMEOUT_MS}ms reintentos=${FETCH_RETRIES} hostLimit=${HOST_LIMIT} proxy=${PROXY_URL ? 'sí' : 'NO (directo)'} modo=${MODE}${SHARDED ? ` shard=${SHARD_INDEX + 1}/${SHARD_TOTAL}` : ''}`);
 
   if (MODE === 'merge') return mergeShards();
@@ -1226,18 +1210,13 @@ async function main() {
       const epKey = `${seasonId}|${slot.number}`;
       const oldEp = existingEp.get(epKey);
       if (oldEp && (oldEp.servers || []).length > 0) {
-        if (REFRESH_MS > 0 && oldEp.updatedAt) {
-          const ageMs = Date.now() - new Date(oldEp.updatedAt).getTime();
-          if (ageMs > REFRESH_MS) {
-            /* Tokens caducados: se re-rastrea para renovarlos. Si el raw no
-               trae URL, se sintetiza la del patrón habitual del sitio. */
-            let refreshUrls = (slot.urls && slot.urls.length ? slot.urls : []);
-            if (!refreshUrls.length) {
-              refreshUrls = [`${SOURCE.base}/capitulos/${S.id}-${seasonNum}x${slot.number}`];
-            }
+        if (REFRESH_DAYS > 0 && oldEp.updatedAt) {
+          const ageDays = (Date.now() - new Date(oldEp.updatedAt).getTime()) / 86400000;
+          if (ageDays > REFRESH_DAYS) {
+            /* Tokens caducados: se re-rastrea para renovarlos */
             epQueue.push({
               seriesId: S.id, seasonId, season: seasonNum, number: slot.number,
-              urls: refreshUrls,
+              urls: (slot.urls && slot.urls.length ? slot.urls : []),
               refresh: true
             });
           }
@@ -1288,17 +1267,7 @@ async function main() {
         const epNum = Number(m[3]);
         const seasonId = `${seriesSlug}-t${seasonNum}`;
         const epKey = `${seasonId}|${epNum}`;
-        const existingSitemapEp = existingEp.get(epKey);
-        if (existingSitemapEp && (existingSitemapEp.servers || []).length > 0) {
-          /* Refresco programado: funciona incluso sin raws (cobertura total) */
-          if (REFRESH_MS > 0 && existingSitemapEp.updatedAt &&
-              (Date.now() - new Date(existingSitemapEp.updatedAt).getTime()) > REFRESH_MS &&
-              !epQueue.some(j => j.seasonId === seasonId && j.number === epNum)) {
-            epQueue.push({ seriesId: seriesSlug, seasonId, season: seasonNum, number: epNum, urls: [u], refresh: true });
-            addedFromSitemap++;
-          }
-          continue;
-        }
+        if (existingEp.get(epKey) && (existingEp.get(epKey).servers || []).length > 0) continue;
         if (epQueue.some(j => j.seasonId === seasonId && j.number === epNum)) continue;
         epQueue.push({ seriesId: seriesSlug, seasonId, season: seasonNum, number: epNum, urls: [u] });
         addedFromSitemap++;
@@ -1318,7 +1287,7 @@ async function main() {
     return ageA - ageB;
   });
   const refreshCount = epQueue.filter(j => j.refresh).length;
-  if (refreshCount) console.log(`♻️  Refresco de tokens: ${refreshCount} episodios con servidores de más de ${REFRESH_HOURS > 0 ? REFRESH_HOURS + 'h' : REFRESH_DAYS + ' días'} se re-rastrearán`);
+  if (refreshCount) console.log(`♻️  Refresco de tokens: ${refreshCount} episodios con servidores de más de ${REFRESH_DAYS} días se re-rastrearán`);
 
   const myQueue = SHARDED
     ? epQueue.filter(j => shardOf(`${j.seasonId}|${j.number}`) === SHARD_INDEX)
@@ -1337,7 +1306,6 @@ async function main() {
   }
 
   let failedEps = 0, crawled = 0;
-  let unavailableEps = 0, diedEps = 0;
   let epFailStreak = 0;
   const failReasons = new Map();
   const okTimes = [];
@@ -1351,14 +1319,12 @@ async function main() {
     let pageTitle = null;
     const errs = [];
     let lastHtml = null;
-    let jobUnavailable = false;
 
     for (const u of job.urls) {
       if (timeUp()) break;
       try {
         const html = await fetchHtml(u);
         lastHtml = html;
-        if (UNAVAIL_RE.test(html)) { jobUnavailable = true; break; }
         let parsed = parseEpisode(html, u);
         if (parsed.title) pageTitle = parsed.title;
         for (const s of parsed.servers) {
@@ -1411,25 +1377,7 @@ async function main() {
     }
 
     crawled++;
-    if (jobUnavailable) {
-      /* La fuente retiró el episodio: se marca como verificado (updatedAt)
-         para no reintentarlo cada ciclo, pero se conservan los servers
-         antiguos por si la fuente lo repone. No es un fallo de extracción. */
-      epFailStreak = 0;
-      unavailableEps++;
-      const eid = `${job.seasonId}-e${job.number}`;
-      const prevEp = db.episodes.find(e => e.id === eid);
-      upsert(db.episodes, {
-        id: eid, slug: eid,
-        title: (prevEp && prevEp.title) || `Capítulo ${job.number}`,
-        sourceUrl: job.urls[0] || (prevEp && prevEp.sourceUrl) || null,
-        servers: (prevEp && prevEp.servers) || [],
-        seriesId: job.seriesId, seasonId: job.seasonId, number: job.number,
-        updatedAt: new Date().toISOString(),
-        unavailable: true
-      });
-      delete failures[`${job.seasonId}|${job.number}`];
-    } else if (servers.length) {
+    if (servers.length) {
       epFailStreak = 0;
       okTimes.push(Date.now());
       delete failures[`${job.seasonId}|${job.number}`];
@@ -1446,55 +1394,27 @@ async function main() {
       });
       newEps++;
     } else {
+      failedEps++;
       const fk = `${job.seasonId}|${job.number}`;
-      /* Refresco: la página carga (sin errores de red) pero ya no tiene
-         servers → contenido muerto en la fuente. Se marca con updatedAt
-         nuevo para no reintentarlo cada ciclo y NO corta la racha.
-         Salvaguarda: solo se marca si ya hubo >=1 éxito en esta corrida;
-         si la extracción falla globalmente, nada se etiqueta y el abort
-         por racha de fallos sigue actuando. */
-      const canMarkDead = job.refresh && !errs.length && okTimes.length > 0;
-      if (canMarkDead) {
-        diedEps++;
-        epFailStreak = 0;
-        const eid = `${job.seasonId}-e${job.number}`;
-        const prevEp = db.episodes.find(e => e.id === eid);
-        upsert(db.episodes, {
-          id: eid, slug: eid,
-          title: (prevEp && prevEp.title) || `Capítulo ${job.number}`,
-          sourceUrl: job.urls[0] || (prevEp && prevEp.sourceUrl) || null,
-          servers: (prevEp && prevEp.servers) || [],
-          seriesId: job.seriesId, seasonId: job.seasonId, number: job.number,
-          updatedAt: new Date().toISOString(),
-          serversDead: true
-        });
-        delete failures[fk];
-      } else {
-        failedEps++;
-        failures[fk] = (failures[fk] || 0) + 1;
-        epFailStreak++;
-        const reason = errs.length ? errs[errs.length - 1].split(' → ')[1] : 'página cargada pero sin servidores detectados';
-        failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
-        if (failedEps <= 5) {
-          console.log(`   ❌ Fallo #${failedEps} (${job.seasonId} · cap ${job.number}):`);
-          for (const e of errs.slice(0, 3)) console.log(`      ${e}`);
-          if (!errs.length) console.log(`      ${job.urls[0]} → cargó pero 0 servidores detectados`);
-        }
-        if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
-          epAbortEarly = true;
-          const topAbort = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
-          console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos. Motivo más frecuente: ${topAbort ? `${topAbort[0]} (×${topAbort[1]})` : 'desconocido'}. Abortando la fase de episodios.`);
-        }
+      failures[fk] = (failures[fk] || 0) + 1;
+      epFailStreak++;
+      const reason = errs.length ? errs[errs.length - 1].split(' → ')[1] : 'página cargada pero sin servidores detectados';
+      failReasons.set(reason, (failReasons.get(reason) || 0) + 1);
+      if (failedEps <= 5) {
+        console.log(`   ❌ Fallo #${failedEps} (${job.seasonId} · cap ${job.number}):`);
+        for (const e of errs.slice(0, 3)) console.log(`      ${e}`);
+        if (!errs.length) console.log(`      ${job.urls[0]} → cargó pero 0 servidores detectados`);
+      }
+      if (epFailStreak >= EP_FAIL_STREAK_ABORT && !epAbortEarly) {
+        epAbortEarly = true;
+        const topAbort = [...failReasons.entries()].sort((a, b) => b[1] - a[1])[0];
+        console.log(`   🛑 ${epFailStreak} episodios fallidos consecutivos. Motivo más frecuente: ${topAbort ? `${topAbort[0]} (×${topAbort[1]})` : 'desconocido'}. Abortando la fase de episodios.`);
       }
     }
 
     if (crawled % 20 === 0) {
       const epsPerMin = (crawled / ((Date.now() - t0Eps) / 60000)).toFixed(1);
-      console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, muertos: ${diedEps}, ~${epsPerMin}/min)`);
-      if (crawled >= 25 && newEps === 0 && (unavailableEps + diedEps) / crawled >= 0.8 && !epAbortEarly) {
-        epAbortEarly = true;
-        console.log(`   🧱 ${unavailableEps + diedEps}/${crawled} episodios retirados/sin servers en la fuente. Abortando: revisa SOURCE_BASE o migra de fuente.`);
-      }
+      console.log(`   🎞️  Episodios: ${crawled}/${myQueue.length} (ok acumulados: ${newEps}, fallos: ${failedEps}, ~${epsPerMin}/min)`);
       const recentOk = okTimes.filter(t => Date.now() - t < 10 * 60000).length;
       if (crawled > 120 && recentOk < 5 && !epAbortEarly) {
         epAbortEarly = true;
@@ -1531,7 +1451,7 @@ async function main() {
     const top = [...failReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     console.log(`📉 Motivos de fallo: ${top.map(([r, c]) => `${r} (×${c})`).join(' | ')}`);
   }
-  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | retirados: ${unavailableEps} | muertos: ${diedEps} | rastreados: ${crawled}`);
+  console.log(`🎉 SYNC TERMINADO — series: ${db.series.length} | episodios: ${db.episodes.length} | nuevos: ${newEps} | fallidos: ${failedEps} | rastreados: ${crawled}`);
 }
 
 if (process.env.FLIX_SELFTEST === '1') {
