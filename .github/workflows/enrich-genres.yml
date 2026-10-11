@@ -1,0 +1,26 @@
+name: Enrich genres
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 0'
+permissions:
+  contents: write
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Enriquecer generos (AniList/TMDB)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: node tools/enrich-genres.mjs
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add public/data/dfx-genres.json
+          git diff --cached --quiet || git commit -m "chore(data): generos enriquecidos (AniList/TMDB)"
+          git push
