@@ -1,0 +1,40 @@
+name: debug episode
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL de episodio a diagnosticar'
+        required: true
+        default: 'https://doramasia.com/capitulos/is-there-equation-in-love-1x3'
+        type: string
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Instalar Playwright + Chromium
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
+      - name: Diagnosticar episodio
+        env:
+          DEBUG_EPISODE_URL: ${{ inputs.url }}
+          FLIX_PROXY_HOSTS: 'doramasia.com,www.doramasia.com'
+          FLIX_PROXY_URL: ${{ secrets.FLIX_PROXY_URL }}
+          FLIX_PROXY_KEY: ${{ secrets.FLIX_PROXY_KEY }}
+        run: node debug-episode.js
