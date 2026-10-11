@@ -77,6 +77,14 @@
     return false;
   }
 
+  /* Sinónimos temáticos: cuando un género no existe en el catálogo activo
+     (p. ej. "Cultivo" en doramas), se busca por palabras clave en los títulos reales. */
+  var THEME_KEYWORDS = {
+    'cultivo': ['xianxia', 'wuxia', 'inmortal', 'immortal', 'celestial', 'espada', 'sword', 'fox spirit', 'jade', 'tao', 'espíritu', 'spirit', 'fairy', 'demonio', 'demon', 'deidad', 'divino', 'cielo', 'montaña', 'montana', 'reino', 'pacto'],
+    'artes marciales': ['martial', 'wuxia', 'kung fu', 'espada', 'sword', 'guerrero', 'warrior', 'dominator', 'lucha', 'pelea', 'fist', 'puño', 'kunlun', 'secta'],
+    'cultivación': ['xianxia', 'wuxia', 'inmortal', 'immortal', 'celestial']
+  };
+
   var DFXAI;
   if (typeof window !== 'undefined') { window.DFXAI = window.DFXAI || {}; DFXAI = window.DFXAI; }
   else { globalThis.DFXAI = globalThis.DFXAI || {}; DFXAI = globalThis.DFXAI; }
@@ -124,11 +132,22 @@
       case 'movie':
         out = pool.filter(function (s) { return (s.type || '').toLowerCase() === 'movie'; }).sort(sortScore);
         break;
-      case 'genre':
-        out = pool.filter(function (s) {
+      case 'genre': {
+        var byGenre = pool.filter(function (s) {
           return seriesGenres(s).some(function (g) { return fold2(g) === fold2(intent.genre); });
         }).sort(sortScore);
+        if (!byGenre.length) {
+          var kws = THEME_KEYWORDS[fold2(intent.genre)];
+          if (kws) {
+            byGenre = pool.filter(function (s) {
+              var t = fold2(cleanTitle(s));
+              return kws.some(function (k) { return t.indexOf(fold2(k)) !== -1; });
+            }).sort(sortScore);
+          }
+        }
+        out = byGenre;
         break;
+      }
       case 'favs': {
         var favGenres = {};
         favIds.forEach(function (id) { var s = findSeries(id); if (s) seriesGenres(s).forEach(function (g) { favGenres[fold2(g)] = 1; }); });
