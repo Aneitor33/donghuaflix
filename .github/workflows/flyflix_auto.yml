@@ -8,20 +8,25 @@ on:
       fuente:
         description: "Fuente del catálogo"
         required: true
-        default: flyflix
+        default: tmdb
         type: choice
         options:
-          - flyflix            # TODO el catálogo que lista flyflix.net
+          - flyflix            # catálogo que lista flyflix.net (~40-100)
           - tmdb               # top N trending/populares de TMDB
       cantidad:
-        description: "Top N (solo si fuente = tmdb)"
+        description: "Top N (solo si fuente = tmdb) - máx real ~10,000 por tipo"
         required: true
-        default: "20"
+        default: "2000"
         type: string
       workers:
         description: "Workers paralelos"
         required: true
-        default: "20"
+        default: "50"
+        type: string
+      series_detalladas:
+        description: "Series con estructura completa de episodios (resto: S1E1)"
+        required: true
+        default: "150"
         type: string
 
 jobs:
@@ -34,27 +39,45 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Instalar dependencias
         run: pip install requests pyyaml
 
-      - name: Ejecutar scraper automático
+      - name: 1/4 Scraper de URLs (flyflix + verificación HTTP)
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: |
-          FUENTE="${{ github.event.inputs.fuente || 'flyflix' }}"
-          WORKERS="${{ github.event.inputs.workers || '20' }}"
+          mkdir -p resultados
+          FUENTE="${{ github.event.inputs.fuente || 'tmdb' }}"
+          WORKERS="${{ github.event.inputs.workers || '50' }}"
           FECHA=$(date +%Y-%m-%d)
           if [ "$FUENTE" = "flyflix" ]; then
             python flyflix_scraper.py --flyflix --workers "$WORKERS" \
-              --salida "resultados/$FECHA.json"
+              --salida "resultados/$FECHA-flyflix.json"
           else
-            CANTIDAD="${{ github.event.inputs.cantidad || '20' }}"
+            CANTIDAD="${{ github.event.inputs.cantidad || '2000' }}"
             python flyflix_scraper.py --auto "$CANTIDAD" --fuente tmdb \
-              --workers "$WORKERS" --salida "resultados/$FECHA.json"
+              --workers "$WORKERS" --salida "resultados/$FECHA-tmdb.json"
           fi
+
+      - name: 2/4 Construir catálogo flyflix (metadatos TMDB)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          TV_DETAIL_LIMIT: ${{ github.event.inputs.series_detalladas || '150' }}
+          SLEEP_MS: "260"
+        run: node flyflix-catalog-build.js --latest
+
+      - name: 3/4 Generar índice lite + detalles
+        run: node split-catalog.js public/data/catalog-flyflix.json
+
+      - name: 4/4 Regenerar índice maestro
+        run: node build-master-index.js
 
       - name: Guardar resultados en el repo
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Scraping automático ${{ github.run_number }}"
-          file_pattern: "resultados/*.json resultados/*.csv"
+          commit_message: "Scraping flyflix ${{ github.run_number }}"
+          file_pattern: "resultados/*.json resultados/*.csv public/data/catalog-flyflix*.json public/data/catalog-flyflix-details/*.json public/data/catalog-index.json"
