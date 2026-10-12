@@ -1,56 +1,101 @@
 # ============================================================
-# Flyflix Tester — Configuración
-# Edita este archivo para añadir casos sin tocar el código
+# Flyflix Scraper — Configuración de servidores y workers
 # ============================================================
 
-# --- Pistas para detectar servidores de video en la red ---
-video_hints:
-  - embed
-  - iframe
-  - player
-  - m3u8
-  - .mp4
-  - .mkv
-  - vidsrc
-  - vidlink
-  - vidmoly
-  - streamtape
-  - dood
-  - mixdrop
-  - filemoon
-  - autoembed
-  - moviesapi
-  - smashy
+# --- Workers paralelos (elige según tu CPU/red) ---
+workers: 10
+verificar_urls: true        # HEAD request para comprobar que el servidor responde
+timeout_verificacion: 10    # segundos
 
-# --- Espera tras cargar la página (ms) ---
-espera_ms: 9000
-espera_tras_episodio_ms: 4000
+# --- API de TMDB (para resolver títulos → IDs) ---
+# Obtén key gratis en https://www.themoviedb.org/settings/api
+# O déjala vacía y usa la variable de entorno TMDB_API_KEY
+tmdb_api_key: ""
 
-# --- Selectores CSS del player (ajústalos si el sitio cambia) ---
-selectores:
-  player: "iframe, video, [class*='player'], [id*='player'], button:has-text('Play')"
-  temporada: "select"          # <select> de temporadas
-  episodio: "a, button, li, div[role='button']"  # botones de episodios
+# --- Servidores embed compatibles con TMDB IDs ---
+# activo: true → se incluye en cada resultado
+# verificado: true → probado por nosotros en flyflix.net
+servidores:
+  - nombre: cinesrc
+    dominio: "https://cinesrc.st"
+    movie: "/embed/movie/{id}"
+    tv: "/embed/tv/{id}?s={s}&e={e}"
+    activo: true
+    verificado: true
 
-# --- Casos de prueba reales del sitemap de flyflix.net ---
-casos:
-  - tipo: movie
-    nombre: "Spider-Man: Brand New Day"
-    url: https://flyflix.net/watch/969681
-    tmdb_id: 969681
-    season: null
-    episode: null
+  - nombre: vidlink
+    dominio: "https://vidlink.pro"
+    movie: "/movie/{id}"
+    tv: "/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
 
-  - tipo: tv
-    nombre: "Carrie (serie)"
-    url: https://flyflix.net/watch/288673-tv
-    tmdb_id: 288673
-    season: 1
-    episode: 1
+  - nombre: vidsrc-cc
+    dominio: "https://vidsrc.cc"
+    movie: "/v2/embed/movie/{id}"
+    tv: "/v2/embed/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
 
-  - tipo: tv
-    nombre: "The Office"
-    url: https://flyflix.net/watch/2316-tv
-    tmdb_id: 2316
-    season: 2
-    episode: 3
+  - nombre: vidsrc-xyz
+    dominio: "https://vidsrc.xyz"
+    movie: "/embed/movie?tmdb={id}"
+    tv: "/embed/tv?tmdb={id}&season={s}&episode={e}"
+    activo: true
+    verificado: false
+
+  - nombre: autoembed
+    dominio: "https://autoembed.co"
+    movie: "/movie/tmdb/{id}"
+    tv: "/tv/tmdb/{id}/{s}/{e}"
+    activo: true
+    verificado: false
+
+  - nombre: embed-su
+    dominio: "https://embed.su"
+    movie: "/embed/movie/{id}"
+    tv: "/embed/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
+
+  - nombre: moviesapi
+    dominio: "https://moviesapi.club"
+    movie: "/movie/{id}"
+    tv: "/tv/{id}-{s}-{e}"
+    activo: true
+    verificado: false
+
+  - nombre: player-videasy
+    dominio: "https://player.videasy.net"
+    movie: "/movie/{id}"
+    tv: "/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
+
+  - nombre: vidfast
+    dominio: "https://vidfast.co"
+    movie: "/movie/{id}"
+    tv: "/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
+
+  - nombre: flixwave
+    dominio: "https://flixwave.to"
+    movie: "/movie/{id}"
+    tv: "/tv/{id}/{s}/{e}"
+    activo: true
+    verificado: false
+
+  - nombre: smashystream
+    dominio: "https://embed.smashystream.com"
+    movie: "/playere.php?tmdb={id}"
+    tv: "/playere.php?tmdb={id}&season={s}&episode={e}"
+    activo: false
+    verificado: false
+
+  - nombre: vidsrc-me
+    dominio: "https://vidsrc.me"
+    movie: "/embed/movie?tmdb={id}"
+    tv: "/embed/tv?tmdb={id}&season={s}&episode={e}"
+    activo: false
+    verificado: false
