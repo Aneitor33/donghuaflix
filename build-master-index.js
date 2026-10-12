@@ -1,9 +1,11 @@
 // build-master-index.js — Regenera public/data/catalog-index.json
 // (descubre automáticamente los catalog-*-index.json de public/data)
-const fs = require('fs');
-const path = require('path');
+// ESM — el package.json del repo tiene "type": "module"
+import fs from 'node:fs';
+import path from 'node:path';
 
-const DATA_DIR = path.join(__dirname, 'public', 'data');
+const ROOT = process.cwd();
+const DATA_DIR = path.join(ROOT, 'public', 'data');
 const OUT_FILE = path.join(DATA_DIR, 'catalog-index.json');
 
 const CATALOGS = [
@@ -43,5 +45,4 @@ for (const cat of CATALOGS) {
 }
 
 fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2));
-console.log(`
-🎉 ${OUT_FILE} regenerado con ${out.catalogs.length} catálogos`);
+console.log(`\n🎉 ${OUT_FILE} regenerado con ${out.catalogs.length} catálogos`);
