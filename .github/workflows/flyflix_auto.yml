@@ -3,11 +3,6 @@ name: Flyflix Auto Scraper
 on:
   schedule:
     - cron: "0 6 * * *"        # todos los días a las 06:00 UTC
-
-# ⚠️ NUNCA dos runs a la vez: el nuevo se encola hasta que termine el activo
-concurrency:
-  group: flyflix-scraper
-  cancel-in-progress: false
   workflow_dispatch:
     inputs:
       fuente:
@@ -44,8 +39,13 @@ concurrency:
         default: "no"
         type: choice
         options:
-          - no
-          - si
+          - "no"
+          - "si"
+
+# ⚠️ NUNCA dos runs a la vez: el nuevo se encola hasta que termine el activo
+concurrency:
+  group: flyflix-scraper
+  cancel-in-progress: false
 
 jobs:
   scrape:
