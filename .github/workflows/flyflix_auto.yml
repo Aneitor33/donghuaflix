@@ -41,6 +41,14 @@ on:
         options:
           - "no"
           - "si"
+      probe_idiomas:
+        description: "Analizar servidores con espanol (subs/audio)"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "no"
+          - "si"
 
 # ⚠️ NUNCA dos runs a la vez: el nuevo se encola hasta que termine el activo
 concurrency:
@@ -137,7 +145,8 @@ jobs:
           git add -A resultados public/data/catalog-flyflix.json \
                   public/data/catalog-flyflix-index.json \
                   public/data/catalog-flyflix-details \
-                  public/data/catalog-index.json probe-idiomas.json
+                  public/data/catalog-index.json
+          git add probe-idiomas.json 2>/dev/null || true
           git commit -m "Scraping flyflix ${{ github.run_number }} (completo)"
           for t in 1 2 3 4 5; do
             git pull --rebase --autostash && git push && break
