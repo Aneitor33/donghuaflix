@@ -248,6 +248,8 @@ def main():
     ap.add_argument("--servidores", help="subconjunto: cinesrc,vidlink,...")
     ap.add_argument("--workers", type=int, help="workers paralelos")
     ap.add_argument("--sin-verificar", action="store_true")
+    ap.add_argument("--max", type=int, metavar="N",
+                    help="procesar como máximo N ítems pendientes (modo checkpoint)")
     ap.add_argument("--tmdb-key", help="API key de TMDB (o env TMDB_API_KEY)")
     ap.add_argument("--config", default="flyflix_config.yml")
     ap.add_argument("--salida", default="flyflix_scraped.json")
@@ -298,18 +300,43 @@ def main():
             it["nombre"] = nombre
             print(f"✔ '{it['titulo']}' → {nombre} (ID {tid})")
 
-    print(f"▶ Procesando {len(items)} ítem(s) con {workers} workers "
+    def clave(it):
+        return f"{it['tipo']}:{it['id']}"
+
+    # --- Reanudación: cargar progreso previo del mismo archivo de salida ---
+    previos = {}
+    if not args.desde_cero and Path(args.salida).exists():
+        try:
+            for r in json.loads(Path(args.salida).read_text(encoding="utf-8")):
+                previos[clave(r)] = r
+            if previos:
+                print(f"♻️  Reanudando: {len(previos)} ítems ya procesados se saltan")
+        except Exception as e:
+            print(f"!! Progreso previo ilegible ({e}) — se empieza de cero")
+
+    pendientes = [it for it in items if clave(it) not in previos]
+    if args.max:
+        pendientes = pendientes[:args.max]
+    restantes = len([it for it in items if clave(it) not in previos]) - len(pendientes)
+    resultados = list(previos.values())
+    print(f"▶ Procesando {len(pendientes)} ítem(s) con {workers} workers "
           f"({'con' if check else 'sin'} verificación HTTP)...")
-    resultados = []
+    n = 0
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futuros = {ex.submit(procesar_item, it, servidores, cfg, check): it
-                   for it in items}
+                   for it in pendientes}
         for fut in as_completed(futuros):
             r = fut.result()
             resultados.append(r)
+            previos[clave(r)] = r
+            n += 1
+            if n % 25 == 0:   # checkpoint cada 25 ítems
+                Path(args.salida).write_text(
+                    json.dumps(resultados, ensure_ascii=False), encoding="utf-8")
             ok = sum(1 for u in r["servers"]
                      if not check or (u.get("http_status") or 0) < 400)
             print(f"  [{r['tipo']}] ID {r['id']}: {ok}/{len(r['servers'])} servidores OK")
+    print(f"PENDIENTES:{restantes if args.max else 0}")
 
     resultados.sort(key=lambda r: r.get("origen", ""))
     out = Path(args.salida)
