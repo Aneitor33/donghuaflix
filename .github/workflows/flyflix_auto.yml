@@ -86,10 +86,14 @@ jobs:
             OUT=$(python flyflix_scraper.py $ARGS --workers "$WORKERS" \
                     --max "$CHUNK" --salida "$SALIDA" 2>&1)
             echo "$OUT" | tail -20
-            git add "$SALIDA" && git commit -m "checkpoint scraper $i" || true
+            if git add resultados/ && git commit -m "checkpoint scraper $i"; then
+              for t in 1 2 3 4 5; do
+                git pull --rebase --autostash && git push && break
+                echo "push rechazado, reintentando en 10s..." && sleep 10
+              done
+            fi
             echo "$OUT" | grep -q "PENDIENTES:0" && break
           done
-          git push
 
       # ── PASO 2: Builder TMDB con chunks y commit por chunk ──
       - name: 2/5 Construir catálogo (chunks reanudables)
@@ -104,8 +108,12 @@ jobs:
             OUT=$(node flyflix-catalog-build.js --latest --max=$CHUNK 2>&1)
             echo "$OUT" | tail -15
             git add public/data/catalog-flyflix.json.partial resultados/ 2>/dev/null || true
-            git commit -m "checkpoint builder $i" || true
-            git push
+            if git commit -m "checkpoint builder $i"; then
+              for t in 1 2 3 4 5; do
+                git pull --rebase --autostash && git push && break
+                echo "push rechazado, reintentando en 10s..." && sleep 10
+              done
+            fi
             echo "$OUT" | grep -q "PENDIENTES:0" && break
           done
 
@@ -125,5 +133,8 @@ jobs:
                   public/data/catalog-flyflix-index.json \
                   public/data/catalog-flyflix-details \
                   public/data/catalog-index.json probe-idiomas.json
-          git commit -m "Scraping flyflix ${{ github.run_number }} (completo)" || true
-          git push
+          git commit -m "Scraping flyflix ${{ github.run_number }} (completo)"
+          for t in 1 2 3 4 5; do
+            git pull --rebase --autostash && git push && break
+            echo "push rechazado, reintentando en 10s..." && sleep 10
+          done
