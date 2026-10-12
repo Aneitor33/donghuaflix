@@ -224,17 +224,41 @@ def seleccionar_episodio(page, caso, hits, resultado):
             hits.add(u)
 
 
+
+
+def cargar_config(ruta):
+    """Carga casos/selector/pistas desde un .yml (requiere PyYAML) o .json."""
+    ruta = Path(ruta)
+    if not ruta.exists():
+        print(f"!! Config no encontrada: {ruta} — uso valores por defecto")
+        return None
+    if ruta.suffix.lower() in (".yml", ".yaml"):
+        try:
+            import yaml
+        except ImportError:
+            sys.exit("Instala PyYAML:  pip install pyyaml")
+        cfg = yaml.safe_load(ruta.read_text(encoding="utf-8"))
+    else:
+        cfg = json.loads(ruta.read_text(encoding="utf-8"))
+    print(f"✔ Config cargada: {ruta} ({len(cfg.get('casos', []))} casos)")
+    return cfg
+
+
 def main():
     ap = argparse.ArgumentParser(description="Tester de servidores flyflix.net")
     ap.add_argument("--headless", action="store_true",
                     help="sin ventana (puede bloquearlo Cloudflare)")
     ap.add_argument("--url", help="probar una sola URL en lugar de los casos por defecto")
     ap.add_argument("--espera", type=int, default=9000, help="ms de espera tras cargar")
+    ap.add_argument("--config", default="flyflix_config.yml",
+                    help="archivo .yml/.json con casos y selectores")
     args = ap.parse_args()
 
     from playwright.sync_api import sync_playwright
 
-    casos = TEST_CASES
+    cfg = cargar_config(args.config)
+    casos = (cfg.get("casos") if cfg else None) or TEST_CASES
+    espera = args.espera or (cfg or {}).get("espera_ms", 9000)
     if args.url:
         m = re.search(r"/watch/(\d+)(-tv)?", args.url)
         casos = [{
@@ -252,7 +276,7 @@ def main():
             args=["--disable-blink-features=AutomationControlled"],
         )
         for caso in casos:
-            resultados.append(probar_caso(browser, caso, args.headless, args.espera))
+            resultados.append(probar_caso(browser, caso, args.headless, espera))
         browser.close()
 
     out = Path("flyflix_test_results.json")
