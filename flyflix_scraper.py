@@ -144,6 +144,74 @@ def leer_archivo(path):
     return items
 
 
+
+
+def obtener_catalogo_tmdb(api_key, cantidad=20):
+    """Obtiene automáticamente películas y series trending de TMDB."""
+    items = []
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key.startswith("ey") else {}
+    params = {} if headers else {"api_key": api_key}
+    listas = [
+        ("movie", f"https://api.themoviedb.org/3/trending/movie/week"),
+        ("tv", f"https://api.themoviedb.org/3/trending/tv/week"),
+        ("movie", f"https://api.themoviedb.org/3/movie/popular"),
+        ("tv", f"https://api.themoviedb.org/3/tv/popular"),
+    ]
+    vistos = set()
+    for tipo, url in listas:
+        try:
+            r = requests.get(url, params={**params, "language": "es-ES"},
+                             headers=headers, timeout=15)
+            r.raise_for_status()
+            for res in r.json().get("results", []):
+                rid = res.get("id")
+                if rid in vistos:
+                    continue
+                vistos.add(rid)
+                nombre = res.get("title") or res.get("name") or ""
+                items.append({"tipo": tipo, "id": rid, "nombre": nombre,
+                              "season": 1, "episode": 1, "origen": "TMDB-auto"})
+                if sum(1 for i in items if i["tipo"] == tipo) >= cantidad:
+                    break
+        except Exception as e:
+            print(f"  ! Error lista {url}: {e}")
+    return items
+
+
+
+
+def obtener_catalogo_flyflix():
+    """Extrae TODOS los IDs que flyflix.net lista en su sitemap y páginas.
+    No necesita API key: la fuente es el propio sitio."""
+    ids = {}   # tmdb_id -> tipo
+    fuentes = [
+        "https://flyflix.net/sitemap.xml",
+        "https://flyflix.net/movies",
+        "https://flyflix.net/tv",
+        "https://flyflix.net/discover",
+    ]
+    hdrs = {"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                           "AppleWebKit/537.36 Chrome/126.0 Safari/537.36")}
+    for url in fuentes:
+        try:
+            r = requests.get(url, headers=hdrs, timeout=20)
+            if r.status_code != 200:
+                print(f"  ! {url} → HTTP {r.status_code} (¿Cloudflare?)")
+                continue
+            encontrados = re.findall(r"/watch/(\d+)(-tv)?", r.text)
+            n = 0
+            for tid, sufijo in encontrados:
+                if tid not in ids:
+                    ids[tid] = "tv" if sufijo else "movie"
+                    n += 1
+            print(f"  ✔ {url}: {n} IDs nuevos")
+        except Exception as e:
+            print(f"  ! Error {url}: {e}")
+    items = [{"tipo": t, "id": int(i), "season": 1, "episode": 1,
+              "origen": "flyflix"} for i, t in ids.items()]
+    return items
+
+
 def main():
     ap = argparse.ArgumentParser(description="Scraper rápido de servidores embed TMDB")
     ap.add_argument("--id", type=int, help="TMDB ID directo")
@@ -152,6 +220,12 @@ def main():
     ap.add_argument("--temporada", "--t", type=int, dest="t")
     ap.add_argument("--episodio", "--e", type=int, dest="e")
     ap.add_argument("--archivo", help="archivo con lista de títulos/IDs")
+    ap.add_argument("--auto", type=int, metavar="N",
+                    help="catálogo automático: top N películas + top N series de TMDB")
+    ap.add_argument("--flyflix", action="store_true",
+                    help="catálogo completo: extrae TODOS los IDs que lista flyflix.net")
+    ap.add_argument("--fuente", choices=["tmdb", "flyflix"], default="tmdb",
+                    help="fuente del catálogo automático (default: tmdb)")
     ap.add_argument("--servidores", help="subconjunto: cinesrc,vidlink,...")
     ap.add_argument("--workers", type=int, help="workers paralelos (override del .yml)")
     ap.add_argument("--sin-verificar", action="store_true",
@@ -178,7 +252,19 @@ def main():
 
     # --- Construir lista de ítems ---
     items = []
-    if args.archivo:
+    if args.flyflix or (args.auto and args.fuente == "flyflix"):
+        print("▶ Extrayendo catálogo completo de flyflix.net...")
+        items = obtener_catalogo_flyflix()
+        print(f"✔ {len(items)} títulos del catálogo flyflix")
+    elif args.auto:
+        api_key_auto = (args.tmdb_key or cfg.get("tmdb_api_key")
+                        or os.environ.get("TMDB_API_KEY", ""))
+        if not api_key_auto:
+            sys.exit("Modo --auto requiere TMDB_API_KEY (secret de GitHub o --tmdb-key)")
+        print(f"▶ Obteniendo catálogo automático (top {args.auto} de cada tipo)...")
+        items = obtener_catalogo_tmdb(api_key_auto, args.auto)
+        print(f"✔ {len(items)} títulos del catálogo TMDB")
+    elif args.archivo:
         items = leer_archivo(args.archivo)
     elif args.id:
         items = [{"tipo": args.tipo, "id": args.id,
