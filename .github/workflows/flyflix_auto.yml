@@ -5,8 +5,16 @@ on:
     - cron: "0 6 * * *"        # todos los días a las 06:00 UTC
   workflow_dispatch:
     inputs:
+      fuente:
+        description: "Fuente del catálogo"
+        required: true
+        default: flyflix
+        type: choice
+        options:
+          - flyflix            # TODO el catálogo que lista flyflix.net
+          - tmdb               # top N trending/populares de TMDB
       cantidad:
-        description: "Top N de películas y de series"
+        description: "Top N (solo si fuente = tmdb)"
         required: true
         default: "20"
         type: string
@@ -33,11 +41,17 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: |
-          CANTIDAD="${{ github.event.inputs.cantidad || '20' }}"
+          FUENTE="${{ github.event.inputs.fuente || 'flyflix' }}"
           WORKERS="${{ github.event.inputs.workers || '20' }}"
           FECHA=$(date +%Y-%m-%d)
-          python flyflix_scraper.py --auto "$CANTIDAD" --workers "$WORKERS" \
-            --salida "resultados/$FECHA.json"
+          if [ "$FUENTE" = "flyflix" ]; then
+            python flyflix_scraper.py --flyflix --workers "$WORKERS" \
+              --salida "resultados/$FECHA.json"
+          else
+            CANTIDAD="${{ github.event.inputs.cantidad || '20' }}"
+            python flyflix_scraper.py --auto "$CANTIDAD" --fuente tmdb \
+              --workers "$WORKERS" --salida "resultados/$FECHA.json"
+          fi
 
       - name: Guardar resultados en el repo
         uses: stefanzweifel/git-auto-commit-action@v5
