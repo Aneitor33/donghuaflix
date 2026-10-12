@@ -26,7 +26,7 @@ let INPUT = args.find(a => !a.startsWith('--'));
 if (args.includes('--latest')) {
   const dir = 'resultados';
   const files = fs.existsSync(dir)
-    ? fs.readdirSync(dir).filter(f => f.endsWith('.json'))
+    ? fs.readdirSync(dir).filter(f => f.endsWith('.json') && !f.includes('.catalog.'))
     : [];
   if (!files.length) { console.error('No hay resultados/*.json'); process.exit(1); }
   // elegir por fecha de modificación real, no por nombre
@@ -40,6 +40,10 @@ if (!INPUT || !fs.existsSync(INPUT)) {
 }
 
 const OUT = process.env.OUT || 'public/data/catalog-flyflix.json';
+const PARTIAL = OUT + '.partial';
+const DESDE_CERO = args.includes('--desde-cero');
+const MAX = Number((args.find(a => a.startsWith('--max=')) || '').split('=')[1] || 0);
+if (DESDE_CERO && fs.existsSync(PARTIAL)) fs.rmSync(PARTIAL);
 const TV_DETAIL_LIMIT = Number(process.env.TV_DETAIL_LIMIT || 150);
 const SLEEP_MS = Number(process.env.SLEEP_MS || 260);   // ~4 req/s (rate limit TMDB)
 const IMG = p => (p ? `https://image.tmdb.org/t/p/w300${p}` : null);
@@ -62,9 +66,22 @@ const data = JSON.parse(fs.readFileSync(INPUT, 'utf8'));
 const items = Array.isArray(data) ? data : (data.items || []);
 console.log(`📥 ${INPUT}: ${items.length} títulos`);
 
-// ── Catálogo de salida ──
-const db = { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
-const allGenres = new Set();
+// ── Catálogo de salida (con reanudación desde .partial) ──
+let db = { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
+if (!DESDE_CERO && fs.existsSync(PARTIAL)) {
+  try {
+    db = JSON.parse(fs.readFileSync(PARTIAL, 'utf8'));
+    console.log(`♻️  Reanudando: ${db.series.length} títulos ya enriquecidos se saltan`);
+  } catch { /* partial corrupto → empezar de cero */ }
+}
+const hechos = new Set(db.series.map(s => s.id));
+const allGenres = new Set(db.genres || []);
+let procesados = 0, guardados = 0;
+function guardar() {
+  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  fs.writeFileSync(PARTIAL, JSON.stringify(db));
+}
+function limite() { return MAX && procesados >= MAX; }
 const upsert = (arr, item) => {
   const i = arr.findIndex(e => e.id === item.id);
   if (i === -1) arr.push(item); else arr[i] = { ...arr[i], ...item };
@@ -83,6 +100,9 @@ function okServers(item) {
 // ══ PELÍCULAS ══
 for (const item of movieItems) {
   const slug = `movie-${item.id}`;
+  if (hechos.has(slug)) { done++; continue; }
+  if (limite()) break;
+  procesados++;
   try {
     const m = await tmdb(`https://api.themoviedb.org/3/movie/${item.id}`);
     const year = m.release_date ? Number(m.release_date.slice(0, 4)) : null;
@@ -113,14 +133,18 @@ for (const item of movieItems) {
     failed++;
     console.log(`  ⚠️ peli ${item.id}: ${e.message}`);
   }
-  if (++done % 50 === 0) console.log(`  ⏳ ${done}/${items.length}`);
+  hechos.add(slug);
+  if (++guardados % 10 === 0) guardar();
+  if (++done % 50 === 0) console.log(`  ⏳ ${done}/${items.length} (parcial guardado)`);
   await sleep(SLEEP_MS);
 }
 
 // ══ SERIES ══
-let tvRank = 0;
-for (const item of tvItems) {
+for (const [tvRank, item] of tvItems.entries()) {
   const slug = `tv-${item.id}`;
+  if (hechos.has(slug)) { done++; continue; }
+  if (limite()) break;
+  procesados++;
   try {
     const t = await tmdb(`https://api.themoviedb.org/3/tv/${item.id}`);
     const year = t.first_air_date ? Number(t.first_air_date.slice(0, 4)) : null;
@@ -178,11 +202,12 @@ for (const item of tvItems) {
         });
       }
     }
-    tvRank++;
   } catch (e) {
     failed++;
     console.log(`  ⚠️ serie ${item.id}: ${e.message}`);
   }
+  hechos.add(slug);
+  if (++guardados % 10 === 0) guardar();
   if (++done % 50 === 0) console.log(`  ⏳ ${done}/${items.length} (${tvRank} series detalladas)`);
   await sleep(SLEEP_MS);
 }
@@ -198,9 +223,17 @@ db.meta = {
   items: items.length, enriched: done - failed, failed
 };
 
-fs.mkdirSync(path.dirname(OUT), { recursive: true });
-fs.writeFileSync(OUT, JSON.stringify(db));
-const mb = (fs.statSync(OUT).size / 1024 / 1024).toFixed(2);
-console.log(`\n✅ ${OUT} (${mb} MB)`);
-console.log(`   series: ${db.series.length} | seasons: ${db.seasons.length} | episodes: ${db.episodes.length}`);
+const pendientes = items.filter(i => !hechos.has(`${i.tipo}-${i.id}`)).length;
+guardar();   // último partial por si acaso
+if (pendientes === 0) {
+  fs.writeFileSync(OUT, JSON.stringify(db));
+  fs.rmSync(PARTIAL);
+  const mb = (fs.statSync(OUT).size / 1024 / 1024).toFixed(2);
+  console.log(`✅ CATÁLOGO COMPLETO: ${OUT} (${mb} MB)`);
+  console.log(`   series: ${db.series.length} | seasons: ${db.seasons.length} | episodes: ${db.episodes.length}`);
+  console.log('🧹 Checkpoint eliminado');
+} else {
+  console.log(`⏸️  CHUNK PAUSADO: quedan ${pendientes} pendientes (reanudable)`);
+}
+console.log(`PENDIENTES:${pendientes}`);
 console.log(`   géneros: ${db.genres.length} | fallidos: ${failed}`);
