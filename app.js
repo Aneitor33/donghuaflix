@@ -17,7 +17,7 @@ const CATALOGS = [
 const FILM_CATS = ['youtubefilms', 'dramasyt'];
 
 /* Catálogos cuyas fichas van agrupadas en shards (límite de 20.000 archivos de Cloudflare Pages) */
-const SHARDED_CATS = ['youtubefilms'];
+const SHARDED_CATS = ['youtubefilms', 'flyflix'];
 const SHARD_COUNT = 64;
 function shardIndexOf(key) {
   let h = 0;
