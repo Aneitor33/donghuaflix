@@ -1,0 +1,56 @@
+# ============================================================
+# Flyflix Tester — Configuración
+# Edita este archivo para añadir casos sin tocar el código
+# ============================================================
+
+# --- Pistas para detectar servidores de video en la red ---
+video_hints:
+  - embed
+  - iframe
+  - player
+  - m3u8
+  - .mp4
+  - .mkv
+  - vidsrc
+  - vidlink
+  - vidmoly
+  - streamtape
+  - dood
+  - mixdrop
+  - filemoon
+  - autoembed
+  - moviesapi
+  - smashy
+
+# --- Espera tras cargar la página (ms) ---
+espera_ms: 9000
+espera_tras_episodio_ms: 4000
+
+# --- Selectores CSS del player (ajústalos si el sitio cambia) ---
+selectores:
+  player: "iframe, video, [class*='player'], [id*='player'], button:has-text('Play')"
+  temporada: "select"          # <select> de temporadas
+  episodio: "a, button, li, div[role='button']"  # botones de episodios
+
+# --- Casos de prueba reales del sitemap de flyflix.net ---
+casos:
+  - tipo: movie
+    nombre: "Spider-Man: Brand New Day"
+    url: https://flyflix.net/watch/969681
+    tmdb_id: 969681
+    season: null
+    episode: null
+
+  - tipo: tv
+    nombre: "Carrie (serie)"
+    url: https://flyflix.net/watch/288673-tv
+    tmdb_id: 288673
+    season: 1
+    episode: 1
+
+  - tipo: tv
+    nombre: "The Office"
+    url: https://flyflix.net/watch/2316-tv
+    tmdb_id: 2316
+    season: 2
+    episode: 3
