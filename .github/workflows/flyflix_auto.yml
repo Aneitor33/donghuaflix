@@ -3,6 +3,11 @@ name: Flyflix Auto Scraper
 on:
   schedule:
     - cron: "0 6 * * *"        # todos los días a las 06:00 UTC
+
+# ⚠️ NUNCA dos runs a la vez: el nuevo se encola hasta que termine el activo
+concurrency:
+  group: flyflix-scraper
+  cancel-in-progress: false
   workflow_dispatch:
     inputs:
       fuente:
@@ -106,7 +111,7 @@ jobs:
           CHUNK="${{ github.event.inputs.tamano_chunk || '200' }}"
           for i in $(seq 1 200); do
             OUT=$(node flyflix-catalog-build.js --latest --max=$CHUNK 2>&1)
-            echo "$OUT" | tail -15
+            echo "$OUT" | grep -E "PENDIENTES|CHUNK|COMPLETO|🧹|📄|♻|⚠|Error" | tail -20
             git add public/data/catalog-flyflix.json.partial resultados/ 2>/dev/null || true
             if git commit -m "checkpoint builder $i"; then
               for t in 1 2 3 4 5; do
