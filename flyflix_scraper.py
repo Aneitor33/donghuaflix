@@ -250,6 +250,8 @@ def main():
     ap.add_argument("--sin-verificar", action="store_true")
     ap.add_argument("--max", type=int, metavar="N",
                     help="procesar como máximo N ítems pendientes (modo checkpoint)")
+    ap.add_argument("--desde-cero", action="store_true",
+                    help="ignorar progreso previo y empezar de cero")
     ap.add_argument("--tmdb-key", help="API key de TMDB (o env TMDB_API_KEY)")
     ap.add_argument("--config", default="flyflix_config.yml")
     ap.add_argument("--salida", default="flyflix_scraped.json")
