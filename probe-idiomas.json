@@ -1,0 +1,93 @@
+[
+  {
+    "servidor": "cinesrc",
+    "url": "https://cinesrc.st/embed/movie/969681",
+    "senales": [],
+    "html_bytes": 19635,
+    "error": null,
+    "http": 200,
+    "pistas_subs": [],
+    "spanish_subs": 0
+  },
+  {
+    "servidor": "vidlink",
+    "url": "https://vidlink.pro/movie/969681",
+    "senales": [
+      "selector-lang"
+    ],
+    "html_bytes": 194207,
+    "error": null,
+    "http": 200,
+    "pistas_subs": [],
+    "spanish_subs": 0
+  },
+  {
+    "servidor": "vidsrc-cc",
+    "url": "https://vidsrc.cc/v2/embed/movie/969681",
+    "senales": [],
+    "html_bytes": 5481,
+    "error": null,
+    "http": 403,
+    "pistas_subs": [],
+    "spanish_subs": 0
+  },
+  {
+    "servidor": "vidsrc-xyz",
+    "url": "https://vidsrc.xyz/embed/movie?tmdb=969681",
+    "senales": [],
+    "html_bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "servidor": "autoembed",
+    "url": "https://autoembed.co/movie/tmdb/969681",
+    "senales": [],
+    "html_bytes": 3442,
+    "error": null,
+    "http": 200,
+    "pistas_subs": [],
+    "spanish_subs": 0
+  },
+  {
+    "servidor": "embed-su",
+    "url": "https://embed.su/embed/movie/969681",
+    "senales": [],
+    "html_bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "servidor": "moviesapi",
+    "url": "https://moviesapi.club/movie/969681",
+    "senales": [],
+    "html_bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "servidor": "player-videasy",
+    "url": "https://player.videasy.net/movie/969681",
+    "senales": [
+      "subs-genericos",
+      "audio-latino",
+      "selector-lang"
+    ],
+    "html_bytes": 18088,
+    "error": null,
+    "http": 200,
+    "pistas_subs": [],
+    "spanish_subs": 0
+  },
+  {
+    "servidor": "vidfast",
+    "url": "https://vidfast.co/movie/969681",
+    "senales": [],
+    "html_bytes": 0,
+    "error": "fetch failed"
+  },
+  {
+    "servidor": "flixwave",
+    "url": "https://flixwave.to/movie/969681",
+    "senales": [],
+    "html_bytes": 0,
+    "error": "fetch failed"
+  }
+]
