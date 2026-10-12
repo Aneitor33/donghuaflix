@@ -1,0 +1,46 @@
+name: Flyflix Auto Scraper
+
+on:
+  schedule:
+    - cron: "0 6 * * *"        # todos los días a las 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      cantidad:
+        description: "Top N de películas y de series"
+        required: true
+        default: "20"
+        type: string
+      workers:
+        description: "Workers paralelos"
+        required: true
+        default: "20"
+        type: string
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install requests pyyaml
+
+      - name: Ejecutar scraper automático
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          CANTIDAD="${{ github.event.inputs.cantidad || '20' }}"
+          WORKERS="${{ github.event.inputs.workers || '20' }}"
+          FECHA=$(date +%Y-%m-%d)
+          python flyflix_scraper.py --auto "$CANTIDAD" --workers "$WORKERS" \
+            --salida "resultados/$FECHA.json"
+
+      - name: Guardar resultados en el repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Scraping automático ${{ github.run_number }}"
+          file_pattern: "resultados/*.json resultados/*.csv"
