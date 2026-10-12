@@ -135,7 +135,7 @@ jobs:
 
       - name: 4/5 (opcional) Probe de idiomas por servidor
         if: ${{ github.event.inputs.probe_idiomas == 'si' }}
-        run: node flyflix-probe-lang.js
+        run: node flyflix-probe-lang.js || echo "⚠️ probe no disponible, se omite"
 
       - name: 5/5 Regenerar índice maestro
         run: node build-master-index.js
