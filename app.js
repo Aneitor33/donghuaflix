@@ -3,37 +3,17 @@ console.log("%c DonghuaFlix — Creado por @bledark__ ", "background:#000;color:
 let DB = { series: [], seasons: [], episodes: [], genres: [], meta: {} };
 
 /* ---------- MULTI-CATÁLOGO (Donghuas / Cdramas / ...) ---------- */
-const DONGHUA_CATS = ['donghualife', 'donghuasub', 'dramasyt', 'dramasflix'];
+const DONGHUA_CATS = ['donghualife', 'donghuasub', 'donghuacli', 'dramasyt', 'dramasflix'];
 const CATALOGS = [
   { id: 'donghualife',   file: './public/data/catalog-donghualife.json',   index: './public/data/catalog-donghualife-index.json',   label: 'DonghuaLife' },
   { id: 'donghuasub',    file: './public/data/catalog-donghuasub.json',    index: './public/data/catalog-donghuasub-index.json',    label: 'DonghuaSub' },
+  { id: 'donghuacli',    file: './public/data/catalog-donghuacli.json',    index: './public/data/catalog-donghuacli-index.json',    label: 'DonghuaCLI' },
   { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
+  { id: 'doramasia',  file: './public/data/catalog-doramasia.json',  index: './public/data/catalog-doramasia-index.json',  label: 'DoramasIA' },   // catálogo completo (sin índice lite)
+  { id: 'peliculas', file: './public/data/catalog-peliculas.json',  index: './public/data/catalog-peliculas-index.json',  label: 'Películas' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' },
-  { id: 'youtubefilms', file: './public/data/catalog-youtubefilms.json', index: './public/data/catalog-youtubefilms-index.json', label: 'YouTube Films' },
-  { id: 'flyflix', file: './public/data/catalog-flyflix.json', index: './public/data/catalog-flyflix-index.json', label: 'Flyflix' }
+  { id: 'youtubefilms', file: './public/data/catalog-youtubefilms.json', index: './public/data/catalog-youtubefilms-index.json', label: 'YouTube Films' }
 ];
-
-/* Catálogos cuyas portadas se muestran en horizontal (16:9) */
-const FILM_CATS = ['youtubefilms', 'dramasyt'];
-
-/* Catálogos cuyas fichas van agrupadas en shards (límite de 20.000 archivos de Cloudflare Pages) */
-const SHARDED_CATS = ['youtubefilms'];
-const SHARD_COUNT = 64;
-function shardIndexOf(key) {
-  let h = 0;
-  for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) | 0;
-  return Math.abs(h) % SHARD_COUNT;
-}
-const SRC_LABEL = {
-  donghualife: 'DonghuaLife',
-  donghuasub: 'DonghuaSub',
-  dramasyt: 'DramasYT',
-  dramasflix: 'DramasFlix',
-  doramas: 'Doramas',
-  youtubefilms: 'YouTube Films',
-  flyflix: 'Flyflix'
-};
-
 
 /* Catálogos cuyas portadas se muestran en horizontal (16:9) */
 const FILM_CATS = ['youtubefilms', 'dramasyt'];
