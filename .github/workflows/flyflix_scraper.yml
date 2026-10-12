@@ -1,0 +1,94 @@
+name: Flyflix Scraper
+
+on:
+  workflow_dispatch:      # solo manual: botón "Run workflow" con menú
+    inputs:
+      tmdb_id:
+        description: "ID de TMDB (ej: 969681)"
+        required: false
+        type: string
+      titulo:
+        description: "O título a buscar (ej: The Office) - deja ID vacío"
+        required: false
+        type: string
+      tipo:
+        description: "Tipo"
+        required: true
+        default: movie
+        type: choice
+        options:
+          - movie
+          - tv
+      temporada:
+        description: "Temporada (solo series)"
+        required: false
+        default: "1"
+        type: string
+      episodio:
+        description: "Episodio (solo series)"
+        required: false
+        default: "1"
+        type: string
+      servidores:
+        description: "Servidores (vacío = todos los activos, o ej: cinesrc,vidlink)"
+        required: false
+        type: string
+      workers:
+        description: "Workers paralelos"
+        required: true
+        default: "10"
+        type: string
+      verificar:
+        description: "Verificar URLs con HTTP"
+        required: true
+        default: "si"
+        type: choice
+        options:
+          - si
+          - no
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install requests pyyaml
+
+      - name: Ejecutar scraper
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.tmdb_id }}" ]; then
+            ARGS="$ARGS --id ${{ inputs.tmdb_id }}"
+          elif [ -n "${{ inputs.titulo }}" ]; then
+            ARGS="$ARGS --titulo '${{ inputs.titulo }}'"
+          fi
+          ARGS="$ARGS --tipo ${{ inputs.tipo }}"
+          if [ "${{ inputs.tipo }}" = "tv" ]; then
+            ARGS="$ARGS --temporada ${{ inputs.temporada }} --episodio ${{ inputs.episodio }}"
+          fi
+          if [ -n "${{ inputs.servidores }}" ]; then
+            ARGS="$ARGS --servidores ${{ inputs.servidores }}"
+          fi
+          ARGS="$ARGS --workers ${{ inputs.workers }}"
+          if [ "${{ inputs.verificar }}" = "no" ]; then
+            ARGS="$ARGS --sin-verificar"
+          fi
+          echo "Comando: python flyflix_scraper.py $ARGS"
+          python flyflix_scraper.py $ARGS
+
+      - name: Subir resultados
+        uses: actions/upload-artifact@v4
+        with:
+          name: flyflix-scraped
+          path: |
+            flyflix_scraped.json
+            flyflix_scraped.csv
+          retention-days: 30
