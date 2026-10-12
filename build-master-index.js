@@ -11,8 +11,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CATALOGS = [
   { id: 'donghualife', label: 'DonghuaLife', index: 'catalog-donghualife-index.json' },
   { id: 'donghuasub',  label: 'DonghuaSub',  index: 'catalog-donghuasub-index.json' },
-  { id: 'flyflix', label: 'Flyflix', index: 'catalog-flyflix-index.json' },
+  { id: 'donghuacli',  label: 'DonghuaCLI',  index: 'catalog-donghuacli-index.json' },
   { id: 'dramasyt',    label: 'DramasYT',    index: 'catalog-dramasyt-index.json' },
+  { id: 'peliculas',   label: 'Peliculas',   index: 'catalog-peliculas-index.json' },
   { id: 'doramas',     label: 'Doramas',     index: 'catalog-doramas-index.json' },
   { id: 'youtubefilms', label: 'YouTube Films', index: 'catalog-youtubefilms-index.json' }
 ];
