@@ -1,37 +1,47 @@
-/* Regenera public/data/catalog-index.json como INDICE MAESTRO ligero.
-   Anadir al final de cada workflow de sincronizacion:
-     node build-master-index.js && git add -A public/data && git commit -m "index maestro" && git push
-*/
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+// build-master-index.js — Regenera public/data/catalog-index.json
+// (descubre automáticamente los catalog-*-index.json de public/data)
+const fs = require('fs');
+const path = require('path');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(__dirname, 'public', 'data');
+const OUT_FILE = path.join(DATA_DIR, 'catalog-index.json');
 
 const CATALOGS = [
-  { id: 'donghualife', label: 'DonghuaLife', index: 'catalog-donghualife-index.json' },
-  { id: 'donghuasub',  label: 'DonghuaSub',  index: 'catalog-donghuasub-index.json' },
-  { id: 'donghuacli',  label: 'DonghuaCLI',  index: 'catalog-donghuacli-index.json' },
-  { id: 'dramasyt',    label: 'DramasYT',    index: 'catalog-dramasyt-index.json' },
-  { id: 'peliculas',   label: 'Peliculas',   index: 'catalog-peliculas-index.json' },
-  { id: 'doramas',     label: 'Doramas',     index: 'catalog-doramas-index.json' },
-  { id: 'youtubefilms', label: 'YouTube Films', index: 'catalog-youtubefilms-index.json' }
+  { id: 'dramasyt', label: 'Dramas & Series YouTube', index: 'catalog-dramasyt-index.json' },
+  { id: 'doramas', label: 'Doramas', index: 'catalog-doramas-index.json' },
+  { id: 'youtubefilms', label: 'YouTube Films', index: 'catalog-youtubefilms-index.json' },
+  { id: 'donghualife', label: 'Donghua Life', index: 'catalog-donghualife-index.json' },
+  { id: 'donghuasub', label: 'DonghuaSub', index: 'catalog-donghuasub-index.json' },
+  { id: 'flyflix', label: 'Flyflix', index: 'catalog-flyflix-index.json' },
 ];
 
-const dir = path.join(__dirname, 'public', 'data');
-let imageBase = '';
-const catalogs = [];
+const out = {
+  version: 1,
+  generatedAt: new Date().toISOString(),
+  imageBase: 'https://image.tmdb.org/t/p/w300',
+  catalogs: []
+};
 
-for (const c of CATALOGS) {
-  const p = path.join(dir, c.index);
-  if (!fs.existsSync(p)) { console.log('sin indice:', c.index); continue; }
+for (const cat of CATALOGS) {
+  const p = path.join(DATA_DIR, cat.index);
+  if (!fs.existsSync(p)) {
+    console.warn(`⚠️  No existe ${cat.index} — se omite "${cat.label}"`);
+    continue;
+  }
   try {
-    const idx = JSON.parse(fs.readFileSync(p, 'utf8'));
-    if (!imageBase && idx.imageBase) imageBase = idx.imageBase;
-    catalogs.push({ id: c.id, label: c.label, index: c.index, series: Array.isArray(idx.series) ? idx.series.length : 0 });
-  } catch (e) { console.log('no legible:', c.index); }
+    const j = JSON.parse(fs.readFileSync(p, 'utf8'));
+    out.catalogs.push({
+      id: cat.id,
+      label: cat.label,
+      index: cat.index,
+      series: Array.isArray(j.series) ? j.series.length : 0
+    });
+    console.log(`✅ ${cat.label}: ${j.series.length} títulos`);
+  } catch (e) {
+    console.warn(`⚠️  Error leyendo ${cat.index}: ${e.message}`);
+  }
 }
 
-const out = { version: 1, generatedAt: new Date().toISOString(), imageBase, catalogs };
-fs.writeFileSync(path.join(dir, 'catalog-index.json'), JSON.stringify(out));
-console.log('catalog-index.json:', catalogs.length, 'catalogos');
+fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2));
+console.log(`
+🎉 ${OUT_FILE} regenerado con ${out.catalogs.length} catálogos`);
