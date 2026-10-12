@@ -26,10 +26,13 @@ let INPUT = args.find(a => !a.startsWith('--'));
 if (args.includes('--latest')) {
   const dir = 'resultados';
   const files = fs.existsSync(dir)
-    ? fs.readdirSync(dir).filter(f => f.endsWith('.json')).sort()
+    ? fs.readdirSync(dir).filter(f => f.endsWith('.json'))
     : [];
   if (!files.length) { console.error('No hay resultados/*.json'); process.exit(1); }
-  INPUT = path.join(dir, files[files.length - 1]);
+  // elegir por fecha de modificación real, no por nombre
+  INPUT = path.join(dir, files.reduce((a, b) =>
+    fs.statSync(path.join(dir, a)).mtimeMs > fs.statSync(path.join(dir, b)).mtimeMs ? a : b));
+  console.log(`📄 Último resultado por mtime: ${INPUT}`);
 }
 if (!INPUT || !fs.existsSync(INPUT)) {
   console.error(`No encuentro el archivo de resultados: ${INPUT}`);
