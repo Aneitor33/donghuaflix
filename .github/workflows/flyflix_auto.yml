@@ -11,10 +11,10 @@ on:
         default: tmdb
         type: choice
         options:
-          - flyflix            # catálogo que lista flyflix.net (~40-100)
-          - tmdb               # top N trending/populares de TMDB
+          - flyflix
+          - tmdb
       cantidad:
-        description: "Top N (solo si fuente = tmdb) - máx real ~10,000 por tipo"
+        description: "Top N (fuente tmdb) - máx real ~10,000 por tipo"
         required: true
         default: "2000"
         type: string
@@ -24,10 +24,23 @@ on:
         default: "50"
         type: string
       series_detalladas:
-        description: "Series con estructura completa de episodios (resto: S1E1)"
+        description: "Series con estructura completa (resto: S1E1)"
         required: true
         default: "150"
         type: string
+      tamano_chunk:
+        description: "Títulos por chunk (checkpoint con commit)"
+        required: true
+        default: "200"
+        type: string
+      solo_empaquetar:
+        description: "SALTAR scraping y builder - solo re-empaquetar shards del catalog-flyflix.json existente"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - no
+          - si
 
 jobs:
   scrape:
@@ -46,38 +59,71 @@ jobs:
       - name: Instalar dependencias
         run: pip install requests pyyaml
 
-      - name: 1/4 Scraper de URLs (flyflix + verificación HTTP)
+      - name: Configurar git para checkpoints
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # ── PASO 1: Scraper con checkpoints (reanudable) ──
+      - name: 1/5 Scraper de URLs (con checkpoints)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' }}
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: |
           mkdir -p resultados
           FUENTE="${{ github.event.inputs.fuente || 'tmdb' }}"
           WORKERS="${{ github.event.inputs.workers || '50' }}"
+          CHUNK="${{ github.event.inputs.tamano_chunk || '200' }}"
           FECHA=$(date +%Y-%m-%d)
           if [ "$FUENTE" = "flyflix" ]; then
-            python flyflix_scraper.py --flyflix --workers "$WORKERS" \
-              --salida "resultados/$FECHA-flyflix.json"
+            SALIDA="resultados/$FECHA-flyflix.json"
+            ARGS="--flyflix"
           else
-            CANTIDAD="${{ github.event.inputs.cantidad || '2000' }}"
-            python flyflix_scraper.py --auto "$CANTIDAD" --fuente tmdb \
-              --workers "$WORKERS" --salida "resultados/$FECHA-tmdb.json"
+            SALIDA="resultados/$FECHA-tmdb.json"
+            ARGS="--auto ${{ github.event.inputs.cantidad || '2000' }} --fuente tmdb"
           fi
+          for i in $(seq 1 200); do
+            OUT=$(python flyflix_scraper.py $ARGS --workers "$WORKERS" \
+                    --max "$CHUNK" --salida "$SALIDA" 2>&1)
+            echo "$OUT" | tail -20
+            git add "$SALIDA" && git commit -m "checkpoint scraper $i" || true
+            echo "$OUT" | grep -q "PENDIENTES:0" && break
+          done
+          git push
 
-      - name: 2/4 Construir catálogo flyflix (metadatos TMDB)
+      # ── PASO 2: Builder TMDB con chunks y commit por chunk ──
+      - name: 2/5 Construir catálogo (chunks reanudables)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' }}
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TV_DETAIL_LIMIT: ${{ github.event.inputs.series_detalladas || '150' }}
           SLEEP_MS: "260"
-        run: node flyflix-catalog-build.js --latest
+        run: |
+          CHUNK="${{ github.event.inputs.tamano_chunk || '200' }}"
+          for i in $(seq 1 200); do
+            OUT=$(node flyflix-catalog-build.js --latest --max=$CHUNK 2>&1)
+            echo "$OUT" | tail -15
+            git add public/data/catalog-flyflix.json.partial resultados/ 2>/dev/null || true
+            git commit -m "checkpoint builder $i" || true
+            git push
+            echo "$OUT" | grep -q "PENDIENTES:0" && break
+          done
 
-      - name: 3/4 Generar índice lite + detalles
-        run: node split-catalog.js public/data/catalog-flyflix.json
+      - name: 3/5 Generar índice lite + detalles
+        run: node split-catalog.js public/data/catalog-flyflix.json && node flyflix-shard-pack.js
 
-      - name: 4/4 Regenerar índice maestro
+      - name: 4/5 (opcional) Probe de idiomas por servidor
+        if: ${{ github.event.inputs.probe_idiomas == 'si' }}
+        run: node flyflix-probe-lang.js
+
+      - name: 5/5 Regenerar índice maestro
         run: node build-master-index.js
 
-      - name: Guardar resultados en el repo
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Scraping flyflix ${{ github.run_number }}"
-          file_pattern: "resultados/*.json resultados/*.csv public/data/catalog-flyflix*.json public/data/catalog-flyflix-details/*.json public/data/catalog-index.json"
+      - name: Commit final (incluye borrados)
+        run: |
+          git add -A resultados public/data/catalog-flyflix.json \
+                  public/data/catalog-flyflix-index.json \
+                  public/data/catalog-flyflix-details \
+                  public/data/catalog-index.json probe-idiomas.json
+          git commit -m "Scraping flyflix ${{ github.run_number }} (completo)" || true
+          git push
