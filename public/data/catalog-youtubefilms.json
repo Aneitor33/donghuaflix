@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-13T14:20:37.245Z",
+    "syncedAt": "2026-10-13T22:52:52.753Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1482,
-      "newInThisSync": 1,
-      "scanned": 52,
-      "ignoredByDuration": 51,
+      "movies": 1485,
+      "newInThisSync": 3,
+      "scanned": 53,
+      "ignoredByDuration": 50,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi",
+      "slug": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi",
+      "title": "Audio Latino - Excomando vuelve al país y con su Último Camarada vivo cumple la Misión Final",
+      "image": "https://i.ytimg.com/vi/EOxu3DmYxUY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-13T15:30:35Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=EOxu3DmYxUY",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Excomando vuelve al país y con su Último Camarada vivo cumple la Misión Final.",
+      "duration": 5450,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder",
+      "slug": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder",
+      "title": "Audio Latino - Mendigo halla arma legendaria, y descubre que en realidad es Heredero del Maestro",
+      "image": "https://i.ytimg.com/vi/Ngw8bwJlfPk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-13T14:30:04Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Ngw8bwJlfPk",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Mendigo halla arma legendaria, y descubre que en realidad es Heredero del Maestro.",
+      "duration": 8242,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar",
+      "slug": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar",
+      "title": "💥FULL💥[El alma de Wukong se dispersa por los Tres Reinos,el Patriarca Bodhi los arrasa！] #drama #ai",
+      "image": "https://i.ytimg.com/vi/YvGsGygxrMA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "¡El engaño impactante de los dos monos verdaderos! El Buda engañó a los Tres Reinos. En el Templo del Trueno Grande no fue el macaco de seis orejas el que fue reprimido y refinado, sino Sun Wukong,...",
+      "year": 2026,
+      "updatedAt": "2026-10-13T14:00:09Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=YvGsGygxrMA",
+      "channel": "@kb025-p4s",
+      "originalTitle": "💥FULL💥[El alma de Wukong se dispersa por los Tres Reinos,el Patriarca Bodhi los arrasa！] #drama #ai",
+      "duration": 4981,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota",
       "slug": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota",
@@ -30197,6 +30257,24 @@
   ],
   "seasons": [
     {
+      "id": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi-s1",
+      "seriesId": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder-s1",
+      "seriesId": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar-s1",
+      "seriesId": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota-s1",
       "seriesId": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota",
       "number": 1,
@@ -39090,6 +39168,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi-ep-1",
+      "slug": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi-ep-1",
+      "seriesId": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi",
+      "seasonId": "audio-latino-excomando-vuelve-al-pais-y-con-su-ultimo-camarada-vivo-cumple-la-mi-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/EOxu3DmYxUY"
+        }
+      ],
+      "updatedAt": "2026-10-13T15:30:35Z"
+    },
+    {
+      "id": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder-ep-1",
+      "slug": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder-ep-1",
+      "seriesId": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder",
+      "seasonId": "audio-latino-mendigo-halla-arma-legendaria-y-descubre-que-en-realidad-es-hereder-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Ngw8bwJlfPk"
+        }
+      ],
+      "updatedAt": "2026-10-13T14:30:04Z"
+    },
+    {
+      "id": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar-ep-1",
+      "slug": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar-ep-1",
+      "seriesId": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar",
+      "seasonId": "full-el-alma-de-wukong-se-dispersa-por-los-tres-reinos-el-patriarca-bodhi-los-ar-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/YvGsGygxrMA"
+        }
+      ],
+      "updatedAt": "2026-10-13T14:00:09Z"
+    },
     {
       "id": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota-ep-1",
       "slug": "lleno-guerra-en-el-mundo-de-artes-marciales-elevadas-empuno-la-hoja-para-derrota-ep-1",
