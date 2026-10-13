@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-13T00:48:09.407Z",
+  "generatedAt": "2026-10-13T05:35:01.878Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -13,7 +13,7 @@
       "id": "doramas",
       "label": "Doramas",
       "index": "catalog-doramas-index.json",
-      "series": 183
+      "series": 184
     },
     {
       "id": "youtubefilms",
@@ -37,7 +37,7 @@
       "id": "flyflix",
       "label": "Flyflix",
       "index": "catalog-flyflix-index.json",
-      "series": 40
+      "series": 10954
     }
   ]
 }
