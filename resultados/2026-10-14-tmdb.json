@@ -279998,5 +279998,2035 @@
         "http_status": null
       }
     ]
+  },
+  {
+    "tipo": "tv",
+    "id": 316178,
+    "nombre": "クロエマ",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/316178?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=316178&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/316178-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/316178/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 271053,
+    "nombre": "I Love LA",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/271053?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=271053&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/271053-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/271053/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 288671,
+    "nombre": "El mapa de los anhelos",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/288671?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=288671&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/288671-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/288671/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 225399,
+    "nombre": "El gatopardo",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/225399?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=225399&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/225399-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/225399/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 797,
+    "nombre": "Have I Got News for You",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/797?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=797&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/797-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/797/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 101870,
+    "nombre": "Blow Up",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/101870?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=101870&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/101870-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/101870/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 95897,
+    "nombre": "Overflow",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/95897?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=95897&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/95897-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/95897/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 70311,
+    "nombre": "Quanzhi Fashi",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/70311?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=70311&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/70311-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/70311/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 280916,
+    "nombre": "Mi página en los 90",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/280916?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=280916&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/280916-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/280916/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 336280,
+    "nombre": "Næste Bjergetape",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/336280?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=336280&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/336280-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/336280/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 253476,
+    "nombre": "Journal with Witch",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/253476?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=253476&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/253476-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/253476/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 297710,
+    "nombre": "修学旅行で仲良くないグループに入りました",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/297710?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=297710&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/297710-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/297710/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 252372,
+    "nombre": "Mindfulness para asesinos",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/252372?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=252372&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/252372-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/252372/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 1398,
+    "nombre": "Los Soprano",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/1398?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=1398&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/1398-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/1398/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 298469,
+    "nombre": "99 to Beat",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/298469?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=298469&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/298469-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/298469/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 320695,
+    "nombre": "Third Person",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/320695?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=320695&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/320695-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/320695/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 323031,
+    "nombre": "Omerta",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/323031?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=323031&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/323031-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/323031/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 27023,
+    "nombre": "The Oscars",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/27023?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=27023&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/27023-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/27023/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 112482,
+    "nombre": "Ice Airport Alaska",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/112482?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=112482&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/112482-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/112482/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 40758,
+    "nombre": "Großstadtrevier",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/40758?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=40758&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/40758-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/40758/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 249039,
+    "nombre": "Black Rabbit",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/249039?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=249039&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/249039-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/249039/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 332943,
+    "nombre": "Part-Timers",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/332943?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=332943&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/332943-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/332943/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 307652,
+    "nombre": "嘘が嘘で嘘は嘘だ",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/307652?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=307652&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/307652-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/307652/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 336077,
+    "nombre": "Blogueirinha Entrevista",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/336077?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=336077&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/336077-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/336077/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 328656,
+    "nombre": "Cocktail Wars",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/328656?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=328656&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/328656-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/328656/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 14808,
+    "nombre": "Mujeres ricas de Nueva York",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/14808?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=14808&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/14808-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/14808/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 291,
+    "nombre": "Coronation Street",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/291?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=291&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/291-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/291/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 280948,
+    "nombre": "Fiebre de primavera",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/280948?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=280948&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/280948-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/280948/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
+  },
+  {
+    "tipo": "tv",
+    "id": 82856,
+    "nombre": "The Mandalorian",
+    "season": 1,
+    "episode": 1,
+    "origen": "TMDB-auto",
+    "servers": [
+      {
+        "servidor": "cinesrc",
+        "url": "https://cinesrc.st/embed/tv/82856?s=1&e=1",
+        "verificado_por_nosotros": true,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidlink",
+        "url": "https://vidlink.pro/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidsrc-cc",
+        "url": "https://vidsrc.cc/v2/embed/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 403
+      },
+      {
+        "servidor": "vidsrc-xyz",
+        "url": "https://vidsrc.xyz/embed/tv?tmdb=82856&season=1&episode=1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "autoembed",
+        "url": "https://autoembed.co/tv/tmdb/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 404
+      },
+      {
+        "servidor": "embed-su",
+        "url": "https://embed.su/embed/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "moviesapi",
+        "url": "https://moviesapi.club/tv/82856-1-1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "player-videasy",
+        "url": "https://player.videasy.net/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": 200
+      },
+      {
+        "servidor": "vidfast",
+        "url": "https://vidfast.co/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      },
+      {
+        "servidor": "flixwave",
+        "url": "https://flixwave.to/tv/82856/1/1",
+        "verificado_por_nosotros": false,
+        "http_status": null
+      }
+    ]
   }
 ]
