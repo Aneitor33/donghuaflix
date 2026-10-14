@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-14T12:29:26.634Z",
+  "generatedAt": "2026-10-14T17:18:38.610Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -19,7 +19,7 @@
       "id": "youtubefilms",
       "label": "YouTube Films",
       "index": "catalog-youtubefilms-index.json",
-      "series": 1485
+      "series": 1489
     },
     {
       "id": "donghualife",
