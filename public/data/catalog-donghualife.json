@@ -2,12 +2,12 @@
   "meta": {
     "version": 5,
     "source": "https://donghualife.com/",
-    "syncedAt": "2026-10-13T14:39:15.733Z",
+    "syncedAt": "2026-10-13T23:06:41.008Z",
     "lastSync": {
       "status": "success",
       "type": "full",
-      "startedAt": "2026-10-13T14:31:48.349Z",
-      "finishedAt": "2026-10-13T14:39:15.733Z",
+      "startedAt": "2026-10-13T23:06:40.995Z",
+      "finishedAt": "2026-10-13T23:06:41.008Z",
       "error": null,
       "catalogComplete": false
     }
