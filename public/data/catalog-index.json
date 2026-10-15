@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-15T04:49:44.599Z",
+  "generatedAt": "2026-10-15T11:39:38.504Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -25,7 +25,7 @@
       "id": "donghualife",
       "label": "Donghua Life",
       "index": "catalog-donghualife-index.json",
-      "series": 361
+      "series": 362
     },
     {
       "id": "donghuasub",
