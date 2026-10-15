@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-14T21:46:50.303Z",
+    "syncedAt": "2026-10-15T04:49:44.500Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1489,
-      "newInThisSync": 0,
-      "scanned": 51,
+      "movies": 1490,
+      "newInThisSync": 1,
+      "scanned": 52,
       "ignoredByDuration": 51,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo",
+      "slug": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo",
+      "title": "【LLENO】Poder de los Runas Divinas: el apoyo decide el destino del mundo",
+      "image": "https://i.ytimg.com/vi/T9voCt3oHOw/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Chu Chen llega al mundo de la Profesión Universal y despierta la profesión oculta Maestro de Runas Divinas. Puede dibujar antiguas runas divinas para sus compañeros, otorgándoles poten...",
+      "year": 2026,
+      "updatedAt": "2026-10-15T04:00:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=T9voCt3oHOw",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Poder de los Runas Divinas: el apoyo decide el destino del mundo",
+      "duration": 9353,
+      "genres": [
+        "Artes Marciales",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas",
       "slug": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas",
@@ -30337,6 +30358,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo-s1",
+      "seriesId": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas-s1",
       "seriesId": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas",
       "number": 1,
@@ -39272,6 +39299,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo-ep-1",
+      "slug": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo-ep-1",
+      "seriesId": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo",
+      "seasonId": "lleno-poder-de-los-runas-divinas-el-apoyo-decide-el-destino-del-mundo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/T9voCt3oHOw"
+        }
+      ],
+      "updatedAt": "2026-10-15T04:00:22Z"
+    },
     {
       "id": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas-ep-1",
       "slug": "mendigo-de-kung-fu-vence-a-piratas-y-sin-querer-conquista-a-tres-asesinas-ep-1",
