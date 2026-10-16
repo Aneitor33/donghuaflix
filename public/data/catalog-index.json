@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-16T11:33:21.491Z",
+  "generatedAt": "2026-10-16T12:09:11.234Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -37,7 +37,7 @@
       "id": "flyflix",
       "label": "Flyflix",
       "index": "catalog-flyflix-index.json",
-      "series": 4343
+      "series": 4139
     }
   ]
 }
