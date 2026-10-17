@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-17T10:53:17.179Z",
+    "syncedAt": "2026-10-17T15:42:06.693Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1497,
-      "newInThisSync": 0,
-      "scanned": 48,
-      "ignoredByDuration": 48,
+      "movies": 1500,
+      "newInThisSync": 3,
+      "scanned": 50,
+      "ignoredByDuration": 47,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
+      "slug": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
+      "title": "Audio Latino - Samurái desprecia el kung fu, ¡pero una luchadora humilde lo vence de un golpe!",
+      "image": "https://i.ytimg.com/vi/HuB3Ma7f_Bs/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-17T15:30:24Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=HuB3Ma7f_Bs",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Samurái desprecia el kung fu, ¡pero una luchadora humilde lo vence de un golpe!",
+      "duration": 5440,
+      "genres": [
+        "Artes Marciales"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es",
+      "slug": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es",
+      "title": "Audio Latino - Soldado oculta identidad y transporta el cuerpo de camarada, pero es forzada a matar",
+      "image": "https://i.ytimg.com/vi/Eb9c9aXMxn4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-17T14:30:13Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Eb9c9aXMxn4",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Soldado oculta identidad y transporta el cuerpo de camarada, pero es forzada a matar",
+      "duration": 8557,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai",
+      "slug": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai",
+      "title": "💥FULL💥 [Con identidad oculta, la agredida es la hija del mariscal！] #drama #ai",
+      "image": "https://i.ytimg.com/vi/aCz0GLb4NU8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "En la Shanghái de la época de la República de China, el mariscal Zhang Yuting está gravemente enfermo y al borde de la muerte. Su única hija Zhang Jingxuan, que regresa tras estudiar en el extranje...",
+      "year": 2026,
+      "updatedAt": "2026-10-17T14:00:10Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=aCz0GLb4NU8",
+      "channel": "@kb025-p4s",
+      "originalTitle": "💥FULL💥 [Con identidad oculta, la agredida es la hija del mariscal！] #drama #ai",
+      "duration": 5657,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de",
       "slug": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de",
@@ -30500,6 +30560,24 @@
   ],
   "seasons": [
     {
+      "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-s1",
+      "seriesId": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es-s1",
+      "seriesId": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai-s1",
+      "seriesId": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de-s1",
       "seriesId": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de",
       "number": 1,
@@ -39483,6 +39561,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-ep-1",
+      "slug": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-ep-1",
+      "seriesId": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
+      "seasonId": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/HuB3Ma7f_Bs"
+        }
+      ],
+      "updatedAt": "2026-10-17T15:30:24Z"
+    },
+    {
+      "id": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es-ep-1",
+      "slug": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es-ep-1",
+      "seriesId": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es",
+      "seasonId": "audio-latino-soldado-oculta-identidad-y-transporta-el-cuerpo-de-camarada-pero-es-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Eb9c9aXMxn4"
+        }
+      ],
+      "updatedAt": "2026-10-17T14:30:13Z"
+    },
+    {
+      "id": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai-ep-1",
+      "slug": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai-ep-1",
+      "seriesId": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai",
+      "seasonId": "full-con-identidad-oculta-la-agredida-es-la-hija-del-mariscal-drama-ai-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/aCz0GLb4NU8"
+        }
+      ],
+      "updatedAt": "2026-10-17T14:00:10Z"
+    },
     {
       "id": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de-ep-1",
       "slug": "instructora-reta-a-duelo-al-soldado-que-la-humillo-pero-sin-querer-se-enamora-de-ep-1",
