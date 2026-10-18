@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-18T11:18:26.749Z",
+    "syncedAt": "2026-10-18T15:56:45.851Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1500,
-      "newInThisSync": 0,
-      "scanned": 47,
+      "movies": 1504,
+      "newInThisSync": 4,
+      "scanned": 51,
       "ignoredByDuration": 47,
       "errors": 0
     },
@@ -32,6 +32,87 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o",
+      "slug": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o",
+      "title": "Chica con enfermedad terminal se enamora a primera vista del Doctor. Un milagro ocurre",
+      "image": "https://i.ytimg.com/vi/VFSJoJ_5n2c/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-18T15:30:37Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VFSJoJ_5n2c",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica con enfermedad terminal se enamora a primera vista del Doctor. Un milagro ocurre",
+      "duration": 5767,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de",
+      "slug": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de",
+      "title": "Audio Latino - Mejor francotirador se hace mercenario de la banda para vengarse de la policía",
+      "image": "https://i.ytimg.com/vi/dO-1Hwq3kic/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-18T14:30:25Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=dO-1Hwq3kic",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Mejor francotirador se hace mercenario de la banda para vengarse de la policía.",
+      "duration": 7456,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold",
+      "slug": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold",
+      "title": "Audio Latino - Bajo fuego absoluto, el ejército al final se reduce a un último soldado",
+      "image": "https://i.ytimg.com/vi/Xh48UvggeSA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-18T14:30:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Xh48UvggeSA",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Bajo fuego absoluto, el ejército al final se reduce a un último soldado.",
+      "duration": 5154,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor",
+      "slug": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor",
+      "title": "💥COMPLETO💥 [¡Renací en, en esta vida no le fallaré a mi hija biológica!] #drama #dramacorto",
+      "image": "https://i.ytimg.com/vi/SRYUoN4BbDM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Chen Sihai fue ciego en su vida anterior, favoreció a su hijastro y descuidó a su hija biológica Chen Qianqian. Al envejecer, fue abandonado por la familia Qin, su hija rompió relaciones con él y m...",
+      "year": 2026,
+      "updatedAt": "2026-10-18T14:00:09Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=SRYUoN4BbDM",
+      "channel": "@kb025-p4s",
+      "originalTitle": "💥COMPLETO💥 [¡Renací en 1994, en esta vida no le fallaré a mi hija biológica!] #drama #dramacorto",
+      "duration": 5612,
+      "genres": [
+        "Romance",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
       "slug": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
@@ -30560,6 +30641,30 @@
   ],
   "seasons": [
     {
+      "id": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o-s1",
+      "seriesId": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de-s1",
+      "seriesId": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold-s1",
+      "seriesId": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor-s1",
+      "seriesId": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-s1",
       "seriesId": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de",
       "number": 1,
@@ -39561,6 +39666,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o-ep-1",
+      "slug": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o-ep-1",
+      "seriesId": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o",
+      "seasonId": "chica-con-enfermedad-terminal-se-enamora-a-primera-vista-del-doctor-un-milagro-o-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VFSJoJ_5n2c"
+        }
+      ],
+      "updatedAt": "2026-10-18T15:30:37Z"
+    },
+    {
+      "id": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de-ep-1",
+      "slug": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de-ep-1",
+      "seriesId": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de",
+      "seasonId": "audio-latino-mejor-francotirador-se-hace-mercenario-de-la-banda-para-vengarse-de-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/dO-1Hwq3kic"
+        }
+      ],
+      "updatedAt": "2026-10-18T14:30:25Z"
+    },
+    {
+      "id": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold-ep-1",
+      "slug": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold-ep-1",
+      "seriesId": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold",
+      "seasonId": "audio-latino-bajo-fuego-absoluto-el-ejercito-al-final-se-reduce-a-un-ultimo-sold-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Xh48UvggeSA"
+        }
+      ],
+      "updatedAt": "2026-10-18T14:30:17Z"
+    },
+    {
+      "id": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor-ep-1",
+      "slug": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor-ep-1",
+      "seriesId": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor",
+      "seasonId": "completo-renaci-en-en-esta-vida-no-le-fallare-a-mi-hija-biologica-drama-dramacor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SRYUoN4BbDM"
+        }
+      ],
+      "updatedAt": "2026-10-18T14:00:09Z"
+    },
     {
       "id": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-ep-1",
       "slug": "audio-latino-samurai-desprecia-el-kung-fu-pero-una-luchadora-humilde-lo-vence-de-ep-1",
