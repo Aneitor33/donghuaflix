@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-19T04:51:09.533Z",
+  "generatedAt": "2026-10-19T13:31:15.686Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -13,13 +13,13 @@
       "id": "doramas",
       "label": "Doramas",
       "index": "catalog-doramas-index.json",
-      "series": 188
+      "series": 189
     },
     {
       "id": "youtubefilms",
       "label": "YouTube Films",
       "index": "catalog-youtubefilms-index.json",
-      "series": 1504
+      "series": 1505
     },
     {
       "id": "donghualife",
