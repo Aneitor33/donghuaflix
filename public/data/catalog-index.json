@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-22T17:17:19.693Z",
+  "generatedAt": "2026-10-22T21:43:09.612Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -32,12 +32,6 @@
       "label": "DonghuaSub",
       "index": "catalog-donghuasub-index.json",
       "series": 220
-    },
-    {
-      "id": "flyflix",
-      "label": "Flyflix",
-      "index": "catalog-flyflix-index.json",
-      "series": 4239
     }
   ]
 }
