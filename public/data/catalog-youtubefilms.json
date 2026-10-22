@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-22T12:01:57.951Z",
+    "syncedAt": "2026-10-22T17:17:19.132Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1518,
-      "newInThisSync": 0,
-      "scanned": 45,
-      "ignoredByDuration": 45,
+      "movies": 1522,
+      "newInThisSync": 4,
+      "scanned": 50,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,87 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona",
+      "slug": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona",
+      "title": "Huérfano adoptado por Comerciante Pobre, con lo aprendido 18 años después Millonario",
+      "image": "https://i.ytimg.com/vi/RdPr85AdXLE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-22T15:30:24Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=RdPr85AdXLE",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Huérfano adoptado por Comerciante Pobre, con lo aprendido 18 años después Millonario",
+      "duration": 9255,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b",
+      "slug": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b",
+      "title": "Para rescatar a la Empleada Secuestrada el Jefe llega solo al Territorio de la Banda",
+      "image": "https://i.ytimg.com/vi/w3I160qwaRA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-22T15:00:18Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=w3I160qwaRA",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Para rescatar a la Empleada Secuestrada el Jefe llega solo al Territorio de la Banda",
+      "duration": 4046,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di",
+      "slug": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di",
+      "title": "Audio Latino - Maestro asesino enfrenta solo a los enemigos para proteger a sus discípulos",
+      "image": "https://i.ytimg.com/vi/0N9pIjz0atM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-22T14:30:27Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=0N9pIjz0atM",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Maestro asesino enfrenta solo a los enemigos para proteger a sus discípulos.",
+      "duration": 4348,
+      "genres": [
+        "Artes Marciales",
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga",
+      "slug": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga",
+      "title": "Mujer vuelve antes a casa para sorprender al marido, pero él Está con su Amiga",
+      "image": "https://i.ytimg.com/vi/28BP6BRS6_A/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-22T14:30:02Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=28BP6BRS6_A",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Mujer vuelve antes a casa para sorprender al marido, pero él Está con su Amiga...",
+      "duration": 8218,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
       "slug": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
@@ -30925,6 +31006,30 @@
   ],
   "seasons": [
     {
+      "id": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona-s1",
+      "seriesId": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b-s1",
+      "seriesId": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di-s1",
+      "seriesId": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga-s1",
+      "seriesId": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-s1",
       "seriesId": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
       "number": 1,
@@ -40034,6 +40139,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona-ep-1",
+      "slug": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona-ep-1",
+      "seriesId": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona",
+      "seasonId": "huerfano-adoptado-por-comerciante-pobre-con-lo-aprendido-18-anos-despues-millona-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/RdPr85AdXLE"
+        }
+      ],
+      "updatedAt": "2026-10-22T15:30:24Z"
+    },
+    {
+      "id": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b-ep-1",
+      "slug": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b-ep-1",
+      "seriesId": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b",
+      "seasonId": "para-rescatar-a-la-empleada-secuestrada-el-jefe-llega-solo-al-territorio-de-la-b-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/w3I160qwaRA"
+        }
+      ],
+      "updatedAt": "2026-10-22T15:00:18Z"
+    },
+    {
+      "id": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di-ep-1",
+      "slug": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di-ep-1",
+      "seriesId": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di",
+      "seasonId": "audio-latino-maestro-asesino-enfrenta-solo-a-los-enemigos-para-proteger-a-sus-di-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/0N9pIjz0atM"
+        }
+      ],
+      "updatedAt": "2026-10-22T14:30:27Z"
+    },
+    {
+      "id": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga-ep-1",
+      "slug": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga-ep-1",
+      "seriesId": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga",
+      "seasonId": "mujer-vuelve-antes-a-casa-para-sorprender-al-marido-pero-el-esta-con-su-amiga-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/28BP6BRS6_A"
+        }
+      ],
+      "updatedAt": "2026-10-22T14:30:02Z"
+    },
     {
       "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-ep-1",
       "slug": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-ep-1",
