@@ -10,14 +10,14 @@ const CATALOGS = [
   { id: 'dramasyt',      file: './public/data/catalog-dramasyt.json',      index: './public/data/catalog-dramasyt-index.json',      label: 'DramasYT' },
   { id: 'doramas',   file: './public/data/catalog-doramas.json',    index: './public/data/catalog-doramas-index.json',    label: 'Doramas' },
   { id: 'youtubefilms', file: './public/data/catalog-youtubefilms.json', index: './public/data/catalog-youtubefilms-index.json', label: 'YouTube Films' },
-  { id: 'flyflix', file: './public/data/catalog-flyflix.json', index: './public/data/catalog-flyflix-index.json', label: 'Flyflix' }
+    { id: 'pelispedia', file: './public/data/catalog-pelispedia.json', index: './public/data/catalog-pelispedia-index.json', label: 'PelisPedia' },
 ];
 
 /* Catálogos cuyas portadas se muestran en horizontal (16:9) */
 const FILM_CATS = ['youtubefilms', 'dramasyt'];
 
 /* Catálogos cuyas fichas van agrupadas en shards (límite de 20.000 archivos de Cloudflare Pages) */
-const SHARDED_CATS = ['youtubefilms', 'flyflix'];
+const SHARDED_CATS = ['youtubefilms', 'pelispedia'];
 const SHARD_COUNT = 64;
 function shardIndexOf(key) {
   let h = 0;
@@ -31,7 +31,7 @@ const SRC_LABEL = {
   dramasflix: 'DramasFlix',
   doramas: 'Doramas',
   youtubefilms: 'YouTube Films',
-  flyflix: 'Flyflix'
+  pelispedia: 'PelisPedia',
 };
 
 /* Carpeta de fichas del catálogo activo (se rellena al cargar el índice) */
