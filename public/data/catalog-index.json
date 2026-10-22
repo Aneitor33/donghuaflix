@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-22T21:43:09.612Z",
+  "generatedAt": "2026-10-22T21:54:52.108Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -32,6 +32,12 @@
       "label": "DonghuaSub",
       "index": "catalog-donghuasub-index.json",
       "series": 220
+    },
+    {
+      "id": "pelispedia",
+      "label": "PelisPedia",
+      "index": "catalog-pelispedia-index.json",
+      "series": 1500
     }
   ]
 }
