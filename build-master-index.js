@@ -14,7 +14,7 @@ const CATALOGS = [
   { id: 'youtubefilms', label: 'YouTube Films', index: 'catalog-youtubefilms-index.json' },
   { id: 'donghualife', label: 'Donghua Life', index: 'catalog-donghualife-index.json' },
   { id: 'donghuasub', label: 'DonghuaSub', index: 'catalog-donghuasub-index.json' },
-  { id: 'flyflix', label: 'Flyflix', index: 'catalog-flyflix-index.json' },
+  { id: 'pelispedia', label: 'PelisPedia', index: 'catalog-pelispedia-index.json' },
 ];
 
 const out = {
