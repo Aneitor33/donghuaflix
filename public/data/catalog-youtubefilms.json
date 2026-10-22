@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-21T21:48:11.958Z",
+    "syncedAt": "2026-10-22T04:59:10.880Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1517,
-      "newInThisSync": 0,
-      "scanned": 45,
+      "movies": 1518,
+      "newInThisSync": 1,
+      "scanned": 46,
       "ignoredByDuration": 45,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
+      "slug": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
+      "title": "【LLENO】Mago de rango E con talento SSS, mis habilidades cobran vida#Cartas #Ascenso",
+      "image": "https://i.ytimg.com/vi/_sz76PT4hcQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Lin Che posee un talento de afinidad elemental de grado SSS en este mundo de despertar de profesiones 🧙‍♂️. Pero en la ceremonia de despertar solo obtiene la clase de mago de rango E....",
+      "year": 2026,
+      "updatedAt": "2026-10-22T04:00:16Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=_sz76PT4hcQ",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Mago de rango E con talento SSS, mis habilidades cobran vida#Cartas #Ascenso",
+      "duration": 7278,
+      "genres": [
+        "Histórico"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban",
       "slug": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban",
@@ -30905,6 +30925,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-s1",
+      "seriesId": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban-s1",
       "seriesId": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban",
       "number": 1,
@@ -40008,6 +40034,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-ep-1",
+      "slug": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-ep-1",
+      "seriesId": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso",
+      "seasonId": "lleno-mago-de-rango-e-con-talento-sss-mis-habilidades-cobran-vida-cartas-ascenso-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_sz76PT4hcQ"
+        }
+      ],
+      "updatedAt": "2026-10-22T04:00:16Z"
+    },
     {
       "id": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban-ep-1",
       "slug": "audio-latino-novato-de-prision-con-punos-conquista-a-los-matones-y-forma-una-ban-ep-1",
