@@ -225,6 +225,8 @@ async function jsPassSeries(db, workers) {
 
 // ───────────── FASE: DISCOVER ─────────────
 const SERVER_HINT = /embed|stream|play|player|m3u8|\.mp4|video|server|servidor|ok\.ru|dood|mixdrop|filemoon|vidmoly|streamtape|voe|mp4upload|uqload/i;
+const esAsset = u => /\.(css|js|mjs|png|jpe?g|gif|svg|webp|woff2?|ico|ttf|map)(\?|#|$)/i.test(u);
+const DISCOVERY_VERSION = 2;
 
 async function extraerServidoresPlaywright(urls, workers) {
   const { chromium } = await import('playwright');
@@ -241,13 +243,13 @@ async function extraerServidoresPlaywright(urls, workers) {
       const url = cola.shift();
       const hits = new Set();
       try {
-        page.on('response', r => { const u = r.url(); if (SERVER_HINT.test(u) && !u.includes('pelispedia.mov')) hits.add(u); });
+        page.on('response', r => { const u = r.url(); if (SERVER_HINT.test(u) && !esAsset(u) && !u.includes('pelispedia.mov')) hits.add(u); });
         await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
         await page.waitForTimeout(4000);
         // iframes
         for (const fr of page.frames()) {
           const u = fr.url();
-          if (u.startsWith('http') && !u.includes('pelispedia.mov')) hits.add(u);
+          if (u.startsWith('http') && !esAsset(u) && !u.includes('pelispedia.mov')) hits.add(u);
         }
         // DOM: enlaces/botones con nombre o URL de servidor
         const domHits = await page.evaluate(() => {
@@ -264,6 +266,36 @@ async function extraerServidoresPlaywright(urls, workers) {
           return out.filter(Boolean);
         });
         domHits.forEach(u => { if (/^https?:/.test(u)) hits.add(u); });
+
+        // ── CLIC en opciones de servidor (el player suele cargar al pulsar) ──
+        const inicial = page.url();
+        const clicables = await page.$$('a,button,li,[role="button"],[class*="server"],[class*="opcion"],[class*="option"],[class*="tab"]');
+        let clics = 0;
+        const recolectar = async () => {
+          for (const fr of page.frames()) { const u = fr.url(); if (u.startsWith('http')) hits.add(u); }
+          const ifs = await page.evaluate(() =>
+            [...document.querySelectorAll('iframe[src]')].map(x => x.getAttribute('src')).filter(Boolean));
+          ifs.forEach(u => { if (/^https?:/.test(u)) hits.add(u); });
+        };
+        for (const el of clicables.slice(0, 80)) {
+          if (clics >= 12) break;
+          let txt = '';
+          try { txt = clean(await el.innerText()); } catch { continue; }
+          if (!txt || txt.length > 40) continue;
+          if (!/embed|server|servidor|lat|cast|sub|español|audio|opc/i.test(txt)) continue;
+          try {
+            await el.click({ timeout: 1200 });
+            clics++;
+            await page.waitForTimeout(2000);
+            if (page.url() !== inicial) {
+              await page.goBack({ waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+              await page.waitForTimeout(800);
+              continue;
+            }
+            await recolectar();
+          } catch { }
+        }
+        console.log(`  👆 ${clics} clics en opciones`);
       } catch (e) {
         console.log(`  ⚠️ muestra ${url}: ${e.message}`);
       }
@@ -316,7 +348,7 @@ async function faseDiscover(db) {
   const plantillas = {};
   for (const r of conCtx) {
     for (const u of r.hits) {
-      if (u.includes('pelispedia.mov')) continue;
+      if (u.includes('pelispedia.mov') && !/\/(embed|player|stream|api|video)\//i.test(u)) continue;
       const t = aPlantilla(u, r);
       const clave = `${r.tipo}`;
       plantillas[clave] = plantillas[clave] || {};
@@ -324,6 +356,7 @@ async function faseDiscover(db) {
     }
   }
   const discovery = {
+    version: DISCOVERY_VERSION,
     fecha: now(),
     muestras: conCtx.map(r => ({ url: r.url, tipo: r.tipo, hits: r.hits.slice(0, 20) })),
     plantillas: Object.fromEntries(Object.entries(plantillas).map(([k, v]) => [k,
@@ -334,40 +367,161 @@ async function faseDiscover(db) {
   console.log(JSON.stringify(discovery.plantillas, null, 2).slice(0, 2000));
 }
 
-// ───────────── LISTADOS: páginas de catálogo (el sitemap está capado a 1000) ─────────────
+// ───────────── LISTADOS: sitemap capado a 1000 → rastreo de páginas ─────────────
+function extraerLinksListado(html) {
+  const $ = cheerio.load(html);
+  const out = { movie: new Set(), series: new Set() };
+  $('a[href*="/pelicula/"], a[href*="/serie/"]').each((_, e) => {
+    const u = abs($(e).attr('href'), SITE);
+    if (!u) return;
+    const limpio = u.split('?')[0].split('#')[0];
+    if (limpio.includes('/pelicula/')) out.movie.add(limpio);
+    else if (limpio.includes('/serie/')) out.series.add(limpio);
+  });
+  return out;
+}
+
 async function urlsDeListados() {
   const out = { movie: new Set(), series: new Set() };
+  const cacheFile = path.join(ROOT, 'resultados', 'pelispedia_listados.json');
+  if (!DESDE_CERO && fs.existsSync(cacheFile)) {
+    console.log('♻️ listados cacheados: ' + cacheFile);
+    return JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+  }
   const secciones = [
     { path: '/peliculas', tipo: 'movie' },
     { path: '/series', tipo: 'series' },
     { path: '/animes', tipo: 'series', alt: '/anime' },
+    { path: '/doramas', tipo: 'series', alt: '/dorama' },
   ];
   for (const sec of secciones) {
-    let base = sec.path, html;
-    try {
-      html = await fetchHtml(`${SITE}${base}?page=1`);
-    } catch (e) {
-      if (!sec.alt) { console.log(`  ⚠️ listado ${base}: ${e.message}`); continue; }
-      base = sec.alt;
-      try { html = await fetchHtml(`${SITE}${base}?page=1`); }
-      catch (e2) { console.log(`  ⚠️ listado ${base}: ${e2.message}`); continue; }
+    let base = sec.path, html1 = null;
+    try { html1 = await fetchHtml(`${SITE}${base}?page=1`); }
+    catch (e) {
+      if (sec.alt) {
+        base = sec.alt;
+        try { html1 = await fetchHtml(`${SITE}${base}?page=1`); } catch (e2) { html1 = null; }
+      }
     }
-    const total = Number((html.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i) || [])[1] || 1);
-    console.log(`  📑 ${base}: ${total} páginas de listado`);
-    const paginas = Array.from({ length: Math.min(total, 600) }, (_, i) => i + 1);
-    await pool(paginas, 8, async p => {
-      const h = p === 1 ? html : await fetchHtml(`${SITE}${base}?page=${p}`);
-      const $ = cheerio.load(h);
-      $('a[href*="/pelicula/"], a[href*="/serie/"]').each((_, e) => {
-        const u = abs($(e).attr('href'), SITE);
-        if (!u) return;
-        const limpio = u.split('?')[0].split('#')[0];
+    const http = html1 ? extraerLinksListado(html1) : { movie: new Set(), series: new Set() };
+    const totalHttp = html1 ? Number((html1.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i) || [])[1] || 0) : 0;
+    const nHttp = http.movie.size + http.series.size;
+    console.log(`  📑 ${base}: HTTP ${nHttp} enlaces, ${totalHttp} páginas (regex)`);
+
+    if (nHttp > 5) {
+      // ── vía HTTP rápida ──
+      for (const u of http.movie) out.movie.add(u);
+      for (const u of http.series) out.series.add(u);
+      const total = totalHttp || 1;
+      const paginas = Array.from({ length: Math.min(total, 1) }, (_, i) => i + 2)
+        .concat(Array.from({ length: Math.max(0, Math.min(total, 800) - 1) }, (_, i) => i + 2));
+      const unicas = [...new Set(paginas)].slice(0, 800);
+      await pool(unicas, 8, async p => {
+        const h = await fetchHtml(`${SITE}${base}?page=${p}`);
+        const links = extraerLinksListado(h);
+        for (const u of links.movie) out.movie.add(u);
+        for (const u of links.series) out.series.add(u);
+      });
+      console.log(`  ✔ ${base} (HTTP): ${out.movie.size + out.series.size} acumulados`);
+      continue;
+    }
+
+    // ── vía Playwright (listado renderizado con JS) + detección de API ──
+    console.log(`  🎭 ${base}: listado client-side, abriendo con Playwright...`);
+    const { chromium } = await import('playwright');
+    const browser = await chromium.launch({ headless: true,
+      args: ['--disable-blink-features=AutomationControlled', '--no-sandbox'] });
+    const ctx = await browser.newContext({ userAgent: UA, locale: 'es-ES' });
+    const page = await ctx.newPage();
+    const apiCandidatas = new Set();
+    page.on('response', r => {
+      const u = r.url();
+      if (/\/(api|graphql)\//i.test(u) && r.request().resourceType() === 'xhr') apiCandidatas.add(u);
+    });
+    let total = 1;
+    try {
+      await page.goto(`${SITE}${base}?page=1`, { waitUntil: 'networkidle', timeout: 60000 });
+      await page.waitForTimeout(2500);
+      const info = await page.evaluate(() => {
+        const links = [];
+        document.querySelectorAll('a[href]').forEach(a => {
+          const h = a.getAttribute('href') || '';
+          if (h.includes('/pelicula/') || h.includes('/serie/')) links.push(h);
+        });
+        let total = 1;
+        const pag = document.body.innerText.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i)
+                 || document.body.innerText.match(/(\d+)\s*$/);
+        if (pag) total = Number(pag[1]);
+        const ultima = [...document.querySelectorAll('a[href*="page="]')]
+          .map(a => Number((a.getAttribute('href').match(/page=(\d+)/) || [])[1] || 0));
+        if (ultima.length) total = Math.max(total, ...ultima);
+        return { links, total };
+      });
+      total = Math.min(info.total || 1, 800);
+      for (const h of info.links) {
+        const u = abs(h, SITE);
+        if (!u) continue;
+        const limpio = u.split('?')[0];
         if (limpio.includes('/pelicula/')) out.movie.add(limpio);
         else if (limpio.includes('/serie/')) out.series.add(limpio);
+      }
+      console.log(`  📑 ${base}: página 1 → ${info.links.length} enlaces, ${total} páginas totales`);
+    } catch (e) {
+      console.log(`  ⚠️ PW listado ${base} pág 1: ${e.message}`);
+      await browser.close();
+      continue;
+    }
+    // intentar API directa si se detectó
+    let apiBase = null;
+    for (const u of apiCandidatas) {
+      if (/page=\d+/.test(u)) { apiBase = u.replace(/page=\d+/, 'page={p}'); break; }
+    }
+    if (apiBase) {
+      console.log(`  ⚡ API detectada: ${apiBase.slice(0, 90)}`);
+      await pool(Array.from({ length: total - 1 }, (_, i) => i + 2), 12, async p => {
+        try {
+          const r = await fetch(apiBase.replace('{p}', String(p)), { headers: { 'User-Agent': UA } });
+          const body = await r.text();
+          for (const m of body.matchAll(/\/(?:pelicula|serie)\/[a-z0-9-]+/gi)) {
+            const u = `${SITE}${m[0]}`;
+            if (m[0].includes('/pelicula/')) out.movie.add(u); else out.series.add(u);
+          }
+        } catch { }
       });
-    });
+    } else {
+      // Playwright página a página (limitado por MAX si viene)
+      const hasta = MAX ? Math.min(total, 1 + MAX) : total;
+      const paginas = Array.from({ length: hasta - 1 }, (_, i) => i + 2);
+      await pool(paginas, PW_WORKERS, async p => {
+        try {
+          await page.goto(`${SITE}${base}?page=${p}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+          await page.waitForTimeout(2000);
+          const links = await page.evaluate(() => {
+            const out = [];
+            document.querySelectorAll('a[href]').forEach(a => {
+              const h = a.getAttribute('href') || '';
+              if (h.includes('/pelicula/') || h.includes('/serie/')) out.push(h);
+            });
+            return out;
+          });
+          for (const h of links) {
+            const u = abs(h, SITE);
+            if (!u) continue;
+            const limpio = u.split('?')[0];
+            if (limpio.includes('/pelicula/')) out.movie.add(limpio);
+            else if (limpio.includes('/serie/')) out.series.add(limpio);
+          }
+        } catch { }
+      });
+    }
+    await browser.close();
+    console.log(`  ✔ ${base} (PW): ${(out.movie.size + out.series.size)} acumulados`);
   }
-  return { movie: [...out.movie], series: [...out.series] };
+  const resultado = { movie: [...out.movie], series: [...out.series] };
+  fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+  fs.writeFileSync(cacheFile, JSON.stringify(resultado));
+  console.log(`💾 listados cacheados: ${resultado.movie.length} películas, ${resultado.series.length} series/animes/doramas`);
+  return resultado;
 }
 
 // ───────────── FASE: DATOS (sitemap + detalles) ─────────────
@@ -401,7 +555,9 @@ async function faseDatos(db) {
     ...urls.movie.map(u => ({ url: u, tipo: 'movie' })),
     ...urls.series.map(u => ({ url: u, tipo: 'series' })),
   ].filter(it => !seriesHechas.has(slugOf(it.url)));
-  console.log(`▶ ${pendientes.length} títulos pendientes (${WORKERS} workers HTTP)`);
+  const conteo = { movie: 0, series: 0 };
+  pendientes.forEach(p => conteo[p.tipo]++);
+  console.log(`▶ ${pendientes.length} títulos pendientes: ${conteo.movie} películas, ${conteo.series} series (${WORKERS} workers HTTP)`);
   let hechos = 0, fallos = 0;
   const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
   await pool(lista, WORKERS, async ({ url, tipo }) => {
@@ -450,13 +606,32 @@ async function faseDatos(db) {
 
 // ───────────── FASE: SERVERS ─────────────
 function plantillasDe(tipo, discovery) {
-  return (discovery.plantillas?.[tipo] || []).filter(p => p.veces >= 1).map(p => p.plantilla);
+  return (discovery.plantillas?.[tipo] || [])
+    .filter(p => !esAsset(p.plantilla))
+    .filter(p => p.plantilla.includes('{slug}') || p.plantilla.includes('{e}')
+              || /embed|player|stream|ok\.ru|dood|mixdrop|filemoon|vidmoly|voe|mp4upload|uqload|m3u8|\.mp4/i.test(p.plantilla))
+    .map(p => p.plantilla);
 }
 function aplicarPlantilla(t, { slug, temporada, capitulo }) {
   return t.replaceAll('{slug}', slug).replaceAll('{t}', String(temporada || 1)).replaceAll('{e}', String(capitulo || 1));
 }
 
-async function faseServers(db, discovery) {
+async function faseServers(db, discoveryIn) {
+  let discovery = discoveryIn;
+  if (!discovery || discovery.version < DISCOVERY_VERSION) {
+    console.log('♻️ discovery desactualizado/ausente → redescubriendo con pase de clics...');
+    await faseDiscover(db);
+    discovery = JSON.parse(fs.readFileSync(DISCOVERY_FILE, 'utf8'));
+  }
+  // limpiar servidores falsos (assets) heredados de discoveries viejos
+  let limpios = 0;
+  for (const e of db.episodes) {
+    const antes = (e.servers || []).length;
+    e.servers = (e.servers || []).filter(s => !esAsset(s.url) && /^https?:/.test(s.url));
+    if ((e.servers || []).length < antes) limpios++;
+  }
+  if (limpios) console.log(`🧹 ${limpios} episodios con servidores-asset eliminados`);
+  if (DESDE_CERO) db.episodes.forEach(e => { e.servers = []; });
   const eps = db.episodes.filter(e => !e.servers.length);
   const movies = db.series.filter(s => s.contentType === 'movie');
   console.log(`▶ servers: ${eps.length} episodios sin servidores, ${movies.length} películas`);

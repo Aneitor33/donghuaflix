@@ -56,12 +56,14 @@ jobs:
       - name: Instalar dependencias
         run: |
           npm install --no-audit --no-fund
+          npm install --no-save playwright
           npx playwright install --with-deps chromium
 
       - name: Configurar git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p resultados
 
       - name: 1/5 Fase datos (catálogo + temporadas JS, checkpoints)
         if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
