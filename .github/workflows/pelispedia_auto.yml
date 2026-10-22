@@ -2,7 +2,7 @@ name: Pelispedia Scraper
 
 on:
   schedule:
-    - cron: "0 5 * * *"        # 05:00 UTC diario (antes que flyflix, 1 solo catálogo pesado)
+    - cron: "0 5 * * *"
   workflow_dispatch:
     inputs:
       fase:
@@ -18,17 +18,17 @@ on:
       workers:
         description: "Workers HTTP (fase datos)"
         required: true
-        default: "16"
+        default: "20"
         type: string
       pw_workers:
-        description: "Workers Playwright (discover / servers modo lento)"
+        description: "Workers Playwright (jsPass / discover / servers modo lento)"
         required: true
-        default: "4"
+        default: "5"
         type: string
       chunk:
         description: "Títulos por chunk (checkpoint)"
         required: true
-        default: "400"
+        default: "500"
         type: string
       solo_empaquetar:
         description: "SALTAR scraper - solo índice + shards del catalog existente"
@@ -63,38 +63,40 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: 1/5 Descubrir plantillas de servidor (si no hay discovery)
+      - name: 1/5 Fase datos (catálogo + temporadas JS, checkpoints)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
+        run: |
+          for i in $(seq 1 200); do
+            OUT=$(node pelispedia_scraper.js --fase=datos \
+                    --workers=${{ github.event.inputs.workers || '20' }} \
+                    --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
+                    --max=${{ github.event.inputs.chunk || '500' }} 2>&1)
+            echo "$OUT" | grep -E "sitemap|PENDIENTES|CHUNK|COMPLETO|jsPass|💾|⚠" | tail -12
+            git add -A resultados public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial 2>/dev/null || true
+            git commit -m "checkpoint datos pelispedia $i" || true
+            for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
+            echo "$OUT" | grep -q "PENDIENTES_DATOS:0" && break
+          done
+
+      - name: 2/5 Descubrir plantillas de servidor
         if: ${{ github.event.inputs.solo_empaquetar != 'si' && github.event.inputs.fase != 'servers' }}
         run: |
           if [ ! -f pelispedia_discovery.json ]; then
-            node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '4' }}
-            git add pelispedia_discovery.json && git commit -m "discovery pelispedia" || true
-            git pull --rebase --autostash && git push || true
+            node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '5' }}
+            git add -A pelispedia_discovery.json && git commit -m "discovery pelispedia" || true
+            for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
           fi
 
-      - name: 2/5 Fase datos (catálogo, checkpoints)
-        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
-        run: |
-          for i in $(seq 1 100); do
-            OUT=$(node pelispedia_scraper.js --fase=datos \
-                    --workers=${{ github.event.inputs.workers || '16' }} \
-                    --max=${{ github.event.inputs.chunk || '400' }} 2>&1)
-            echo "$OUT" | tail -8
-            git add -A resultados public/data/catalog-pelispedia.json.partial 2>/dev/null || true
-            git commit -m "checkpoint datos pelispedia $i" || true
-            for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
-            echo "$OUT" | grep -q "PENDIENTES:0" && break
-          done
-
       - name: 3/5 Fase servers (patrón o Playwright, checkpoints)
-        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'servers' || github.event.inputs.fase == 'datos') }}
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'servers') }}
         run: |
-          for i in $(seq 1 300); do
+          [ -f pelispedia_discovery.json ] || node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '5' }}
+          for i in $(seq 1 400); do
             OUT=$(node pelispedia_scraper.js --fase=servers \
-                    --pw-workers=${{ github.event.inputs.pw_workers || '4' }} \
-                    --max=${{ github.event.inputs.chunk || '400' }} 2>&1)
+                    --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
+                    --max=${{ github.event.inputs.chunk || '500' }} 2>&1)
             echo "$OUT" | grep -E "PENDIENTES|CHUNK|COMPLETO|⚡|🐢|💾|⚠" | tail -10
-            git add -A public/data/catalog-pelispedia.json.partial pelispedia_discovery.json 2>/dev/null || true
+            git add -A public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial pelispedia_discovery.json 2>/dev/null || true
             git commit -m "checkpoint servers pelispedia $i" || true
             for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
             echo "$OUT" | grep -q "PENDIENTES:0" && break
