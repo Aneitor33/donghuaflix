@@ -8,6 +8,7 @@
 // ══════════════════════════════════════════════════════════
 (function () {
   'use strict';
+  (function(){if(typeof document==='undefined'||document.getElementById('dfxThemeJs'))return;var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=1';document.head.appendChild(s);})();
 
   /* ---------- acceso a los globales de app.js ---------- */
   function glb(name) {
@@ -469,7 +470,7 @@
     showTyping();
 
     var ctrl = ('AbortController' in window) ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 26000) : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 50000) : null;
 
     fetch('/api/ai', {
       method: 'POST',
