@@ -1,0 +1,118 @@
+name: Pelispedia Scraper
+
+on:
+  schedule:
+    - cron: "0 5 * * *"        # 05:00 UTC diario (antes que flyflix, 1 solo catálogo pesado)
+  workflow_dispatch:
+    inputs:
+      fase:
+        description: "Fase a ejecutar (auto = todo en orden)"
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - datos
+          - discover
+          - servers
+      workers:
+        description: "Workers HTTP (fase datos)"
+        required: true
+        default: "16"
+        type: string
+      pw_workers:
+        description: "Workers Playwright (discover / servers modo lento)"
+        required: true
+        default: "4"
+        type: string
+      chunk:
+        description: "Títulos por chunk (checkpoint)"
+        required: true
+        default: "400"
+        type: string
+      solo_empaquetar:
+        description: "SALTAR scraper - solo índice + shards del catalog existente"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "no"
+          - "si"
+
+concurrency:
+  group: pelispedia-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Configurar git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: 1/5 Descubrir plantillas de servidor (si no hay discovery)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && github.event.inputs.fase != 'servers' }}
+        run: |
+          if [ ! -f pelispedia_discovery.json ]; then
+            node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '4' }}
+            git add pelispedia_discovery.json && git commit -m "discovery pelispedia" || true
+            git pull --rebase --autostash && git push || true
+          fi
+
+      - name: 2/5 Fase datos (catálogo, checkpoints)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
+        run: |
+          for i in $(seq 1 100); do
+            OUT=$(node pelispedia_scraper.js --fase=datos \
+                    --workers=${{ github.event.inputs.workers || '16' }} \
+                    --max=${{ github.event.inputs.chunk || '400' }} 2>&1)
+            echo "$OUT" | tail -8
+            git add -A resultados public/data/catalog-pelispedia.json.partial 2>/dev/null || true
+            git commit -m "checkpoint datos pelispedia $i" || true
+            for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
+            echo "$OUT" | grep -q "PENDIENTES:0" && break
+          done
+
+      - name: 3/5 Fase servers (patrón o Playwright, checkpoints)
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'servers' || github.event.inputs.fase == 'datos') }}
+        run: |
+          for i in $(seq 1 300); do
+            OUT=$(node pelispedia_scraper.js --fase=servers \
+                    --pw-workers=${{ github.event.inputs.pw_workers || '4' }} \
+                    --max=${{ github.event.inputs.chunk || '400' }} 2>&1)
+            echo "$OUT" | grep -E "PENDIENTES|CHUNK|COMPLETO|⚡|🐢|💾|⚠" | tail -10
+            git add -A public/data/catalog-pelispedia.json.partial pelispedia_discovery.json 2>/dev/null || true
+            git commit -m "checkpoint servers pelispedia $i" || true
+            for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
+            echo "$OUT" | grep -q "PENDIENTES:0" && break
+          done
+
+      - name: 4/5 Índice lite + shards
+        run: |
+          node split-catalog.js public/data/catalog-pelispedia.json
+          node shard-pack.js catalog-pelispedia
+
+      - name: 5/5 Índice maestro
+        run: node build-master-index.js
+
+      - name: Commit final
+        run: |
+          git add -A resultados public/data/catalog-pelispedia.json \
+                  public/data/catalog-pelispedia-index.json \
+                  public/data/catalog-pelispedia-details \
+                  public/data/catalog-index.json pelispedia_discovery.json
+          git commit -m "Scraping pelispedia ${{ github.run_number }} (completo)" || true
+          for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || echo "reintento push" && sleep 10; done
