@@ -162,6 +162,67 @@ function guardar(db) {
 }
 const porId = (arr) => new Map(arr.map(x => [x.id, x]));
 
+// ───────────── JS PASS: enlaces de temporada/capitulo renderizados ─────────────
+async function jsPassSeries(db, workers) {
+  const pend = db.series.filter(s => s.contentType === 'series'
+    && !db.seasons.some(x => x.seriesId === s.id));
+  if (!pend.length) return 0;
+  console.log(`▶ JS PASS: ${pend.length} series sin temporadas (Playwright, ${workers} workers)`);
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch({ headless: true,
+    args: ['--disable-blink-features=AutomationControlled', '--no-sandbox'] });
+  const cola = [...pend];
+  let hechos = 0;
+  await Promise.all(Array.from({ length: Math.min(workers, cola.length) }, async () => {
+    const ctx = await browser.newContext({ userAgent: UA, locale: 'es-ES' });
+    const page = await ctx.newPage();
+    while (cola.length) {
+      const s = cola.shift();
+      try {
+        await page.goto(s.sourceUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
+        await page.waitForTimeout(2500);
+        const enlaces = await page.evaluate(() =>
+          [...document.querySelectorAll('a[href]')]
+            .map(a => a.getAttribute('href'))
+            .filter(h => /\/temporada\/\d+/.test(h)));
+        const seasons = new Map();
+        for (const h of enlaces) {
+          const m = h.match(/\/temporada\/(\d+)(?:\/capitulo\/(\d+))?/);
+          if (!m) continue;
+          const sn = Number(m[1]);
+          if (!seasons.has(sn)) seasons.set(sn, new Map());
+          if (m[2]) {
+            const en = Number(m[2]);
+            seasons.get(sn).set(en, { url: new URL(h, location.href).href, number: en, title: `Capítulo ${en}` });
+          }
+        }
+        // si hay temporadas sin capítulos visibles, registrar la temporada con su URL base
+        for (const [sn] of seasons) {
+          const sid = `${s.id}-${sn}`;
+          if (!db.seasons.some(x => x.id === sid)) {
+            const baseUrl = enlaces.find(h => new RegExp(`\\/temporada\\/${sn}($|[^0-9])`).test(h));
+            db.seasons.push({ id: sid, slug: sid, seriesId: s.id,
+              sourceUrl: baseUrl ? new URL(baseUrl, s.sourceUrl).href : s.sourceUrl,
+              number: sn, image: s.image, episodeCount: seasons.get(sn).size,
+              initialSyncComplete: true, updatedAt: now() });
+          }
+          for (const [en, cap] of seasons.get(sn)) {
+            const eid = `${s.id}-${sn}x${en}`;
+            if (!db.episodes.some(e => e.id === eid))
+              db.episodes.push({ id: eid, slug: eid, title: cap.title, sourceUrl: cap.url,
+                                 servers: [], seriesId: s.id, seasonId: sid, number: en, updatedAt: now() });
+          }
+        }
+        if (seasons.size) hechos++;
+      } catch (e) { console.log(`  ⚠️ jsPass ${s.slug}: ${e.message}`); }
+    }
+    await ctx.close();
+  }));
+  await browser.close();
+  console.log(`✔ jsPass: ${hechos} series con temporadas detectadas`);
+  return hechos;
+}
+
 // ───────────── FASE: DISCOVER ─────────────
 const SERVER_HINT = /embed|stream|play|player|m3u8|\.mp4|video|server|servidor|ok\.ru|dood|mixdrop|filemoon|vidmoly|streamtape|voe|mp4upload|uqload/i;
 
@@ -240,7 +301,13 @@ async function faseDiscover(db) {
                temporada: m ? m[1] : null, capitulo: m ? m[2] : null };
     }),
   ];
-  if (!muestras.length) { console.log('⚠️ No hay catálogo aún: ejecuta --fase=datos primero'); return; }
+  if (!muestras.length) {
+    console.log('⚠️ catálogo vacío: usando URLs de muestra conocidas');
+    muestras.push(
+      { url: `${SITE}/pelicula/clayface-tZ92Wp`, tipo: 'movie', slug: 'clayface-tZ92Wp' },
+      { url: `${SITE}/serie/the-new-stanford-prison-experi-nzmr6U/temporada/1/capitulo/1`,
+        tipo: 'episode', slug: 'the-new-stanford-prison-experi-nzmr6U', temporada: '1', capitulo: '1' });
+  }
   const res = await extraerServidoresPlaywright(muestras.map(m => m.url), PW_WORKERS);
   // adjuntar ctx a cada resultado
   const conCtx = res.map((r, i) => ({ ...r, ...muestras[i] }));
@@ -301,6 +368,15 @@ async function faseDatos(db) {
     seriesHechas.set(base.id, base);
     const idx = db.series.findIndex(s => s.id === base.id);
     if (idx === -1) db.series.push(base); else db.series[idx] = base;
+    if (tipo === 'movie') {
+      const sid = `${base.id}-1`, eid = `${base.id}-pelicula`;
+      if (!db.seasons.some(s => s.id === sid))
+        db.seasons.push({ id: sid, slug: sid, seriesId: base.id, sourceUrl: url, number: 1,
+                          image: base.image, episodeCount: 1, initialSyncComplete: true, updatedAt: now() });
+      if (!db.episodes.some(e => e.id === eid))
+        db.episodes.push({ id: eid, slug: eid, title: base.title, sourceUrl: url,
+                           servers: [], seriesId: base.id, seasonId: sid, number: 1, updatedAt: now() });
+    }
     if (tipo === 'series') {
       for (const g of base.genres) if (!db.genres.includes(g)) db.genres.push(g);
       // temporada principal: recoge capítulos de su propia página si no salieron
@@ -324,6 +400,10 @@ async function faseDatos(db) {
   });
   fallos = lista.length - hechos;
   console.log(`✔ datos: ${hechos} procesados, ${fallos} fallos`);
+  await jsPassSeries(db, PW_WORKERS);
+  const restantes = pendientes.length - lista.length;
+  db.meta._restantesDatos = restantes;
+  console.log(`PENDIENTES_DATOS:${restantes}`);
 }
 
 // ───────────── FASE: SERVERS ─────────────
@@ -406,11 +486,11 @@ async function main() {
     await faseServers(db, discovery);
   } else { console.log('Fase desconocida: ' + FASE); process.exit(1); }
 
-  const quedanSeries = 0; // fase datos consume la lista completa del sitemap en cada corrida
+  const restantesDatos = db.meta._restantesDatos ?? null;
   const epsSinServers = db.episodes.filter(e => !e.servers.length).length;
-  const pendDatos = 0;
   guardar(db);
-  if (epsSinServers === 0 && db.series.length > 0) {
+  const datosListos = restantesDatos === null ? db.series.length > 0 : restantesDatos === 0;
+  if (datosListos && epsSinServers === 0 && db.series.length > 0) {
     db.meta = { version: 1, source: SITE, catalogTag: 'pelispedia',
                 syncedAt: now(), lastSync: { status: 'success', startedAt: now(), finishedAt: now(), error: null },
                 items: db.series.length };
@@ -421,8 +501,10 @@ async function main() {
     console.log(`   series: ${db.series.length} | seasons: ${db.seasons.length} | episodes: ${db.episodes.length}`);
     console.log('PENDIENTES:0');
   } else {
-    console.log(`⏸️  CHUNK PAUSADO: ${epsSinServers} episodios sin servidores (reanudable)`);
-    console.log(`PENDIENTES:${epsSinServers}`);
+    const falta = !datosListos ? `faltan ${restantesDatos} títulos del sitemap`
+                               : `${epsSinServers} episodios sin servidores`;
+    console.log(`⏸️  CHUNK PAUSADO: ${falta} (reanudable)`);
+    console.log(`PENDIENTES:${!datosListos ? restantesDatos : epsSinServers}`);
   }
 }
 
