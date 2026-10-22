@@ -1,13 +1,14 @@
-// flyflix-shard-pack.js — Empaqueta las fichas de catalog-flyflix en shards
-// compatibles con SHARDED_CATS de app.js (mismo hash que shardIndexOf).
-// Reduce ~3.000-6.000 archivos individuales a 64 shards → bajo el límite
-// de 20.000 archivos de Cloudflare Pages.
+// shard-pack.js — Empaqueta fichas de CUALQUIER catalog-*.json en shards
+// compatibles con SHARDED_CATS de app.js. Uso:
+//   node shard-pack.js catalog-pelispedia            (solo el índice lite)
+//   node shard-pack.js catalog-pelispedia full       (también genera el -index.json via split-catalog si existe)
 import fs from 'node:fs';
 import path from 'node:path';
 
+const NAME = process.argv[2] || 'catalog-pelispedia';
 const ROOT = process.cwd();
 const DATA = path.join(ROOT, 'public', 'data');
-const INPUT = process.argv[2] || path.join(DATA, 'catalog-flyflix.json');
+const INPUT = path.join(DATA, `${NAME}.json`);
 const SHARD_COUNT = 64;
 
 function shardIndexOf(key) {
@@ -16,8 +17,9 @@ function shardIndexOf(key) {
   return Math.abs(h) % SHARD_COUNT;
 }
 
+if (!fs.existsSync(INPUT)) { console.error(`No existe ${INPUT}`); process.exit(1); }
 const db = JSON.parse(fs.readFileSync(INPUT, 'utf8'));
-const dir = path.join(DATA, 'catalog-flyflix-details');
+const dir = path.join(DATA, `${NAME}-details`);
 fs.mkdirSync(dir, { recursive: true });
 
 const seasonsBy = {}, episodesBy = {};
@@ -36,19 +38,11 @@ for (const s of db.series || []) {
 let escritos = 0, eliminados = 0;
 for (let i = 0; i < SHARD_COUNT; i++) {
   const f = path.join(dir, `shard-${i}.json`);
-  if (buckets[i].series.length) {
-    fs.writeFileSync(f, JSON.stringify(buckets[i]));
-    escritos++;
-  } else if (fs.existsSync(f)) {
-    fs.rmSync(f);
-  }
+  if (buckets[i].series.length) { fs.writeFileSync(f, JSON.stringify(buckets[i])); escritos++; }
+  else if (fs.existsSync(f)) fs.rmSync(f);
 }
-// eliminar fichas individuales del despliegue anterior (>20k archivos)
 for (const f of fs.readdirSync(dir)) {
-  if (!/^shard-\d+\.json$/.test(f)) {
-    fs.rmSync(path.join(dir, f));
-    eliminados++;
-  }
+  if (!/^shard-\d+\.json$/.test(f)) { fs.rmSync(path.join(dir, f)); eliminados++; }
 }
 console.log(`✅ ${escritos} shards escritos | ${eliminados} fichas sueltas eliminadas`);
 console.log(`   series: ${db.series?.length ?? 0} | seasons: ${db.seasons?.length ?? 0} | episodes: ${db.episodes?.length ?? 0}`);
