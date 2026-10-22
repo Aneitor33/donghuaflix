@@ -334,6 +334,42 @@ async function faseDiscover(db) {
   console.log(JSON.stringify(discovery.plantillas, null, 2).slice(0, 2000));
 }
 
+// ───────────── LISTADOS: páginas de catálogo (el sitemap está capado a 1000) ─────────────
+async function urlsDeListados() {
+  const out = { movie: new Set(), series: new Set() };
+  const secciones = [
+    { path: '/peliculas', tipo: 'movie' },
+    { path: '/series', tipo: 'series' },
+    { path: '/animes', tipo: 'series', alt: '/anime' },
+  ];
+  for (const sec of secciones) {
+    let base = sec.path, html;
+    try {
+      html = await fetchHtml(`${SITE}${base}?page=1`);
+    } catch (e) {
+      if (!sec.alt) { console.log(`  ⚠️ listado ${base}: ${e.message}`); continue; }
+      base = sec.alt;
+      try { html = await fetchHtml(`${SITE}${base}?page=1`); }
+      catch (e2) { console.log(`  ⚠️ listado ${base}: ${e2.message}`); continue; }
+    }
+    const total = Number((html.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i) || [])[1] || 1);
+    console.log(`  📑 ${base}: ${total} páginas de listado`);
+    const paginas = Array.from({ length: Math.min(total, 600) }, (_, i) => i + 1);
+    await pool(paginas, 8, async p => {
+      const h = p === 1 ? html : await fetchHtml(`${SITE}${base}?page=${p}`);
+      const $ = cheerio.load(h);
+      $('a[href*="/pelicula/"], a[href*="/serie/"]').each((_, e) => {
+        const u = abs($(e).attr('href'), SITE);
+        if (!u) return;
+        const limpio = u.split('?')[0].split('#')[0];
+        if (limpio.includes('/pelicula/')) out.movie.add(limpio);
+        else if (limpio.includes('/serie/')) out.series.add(limpio);
+      });
+    });
+  }
+  return { movie: [...out.movie], series: [...out.series] };
+}
+
 // ───────────── FASE: DATOS (sitemap + detalles) ─────────────
 async function urlsDeSitemap(tipo) {
   const xml = await fetchHtml(`${SITE}/sitemap/${tipo}`);
@@ -355,6 +391,12 @@ async function faseDatos(db) {
     } catch (e) { console.log(`  ⚠️ sitemap/${t}: ${e.message}`); }
   }
   urls.series = [...new Set(urls.series)]; urls.movie = [...new Set(urls.movie)];
+  console.log('▶ Rastreando páginas de listado (sitemaps capados a 1000)...');
+  const listados = await urlsDeListados();
+  const antes = { movie: urls.movie.length, series: urls.series.length };
+  urls.movie = [...new Set([...urls.movie, ...listados.movie])];
+  urls.series = [...new Set([...urls.series, ...listados.series])];
+  console.log(`  ✔ listados: +${urls.movie.length - antes.movie} películas, +${urls.series.length - antes.series} series`);
   const pendientes = [
     ...urls.movie.map(u => ({ url: u, tipo: 'movie' })),
     ...urls.series.map(u => ({ url: u, tipo: 'series' })),
