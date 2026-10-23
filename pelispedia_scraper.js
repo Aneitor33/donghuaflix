@@ -27,8 +27,13 @@ const WORKERS = Number((args.find(a => a.startsWith('--workers=')) || '').split(
 const PW_WORKERS = Number((args.find(a => a.startsWith('--pw-workers=')) || '').split('=')[1] || 4);
 const DESDE_CERO = args.includes('--desde-cero');
 // --secciones=series,animes,dorama,peliculas  (subconjunto; vacío = todas)
+// tolerante: mayúsculas, tildes, singular/plural, separadores , ; espacio
+const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().trim();
 const SECCIONES = ((args.find(a => a.startsWith('--secciones=')) || '').split('=')[1] || '')
-  .split(',').map(s => s.trim()).filter(Boolean);
+  .split(/[,;\s]+/).map(norm).filter(Boolean);
+const coincideSeccion = (clave, candidatos) =>
+  SECCIONES.some(x => candidatos.some(c => c.startsWith(x.slice(0, 4)) || x.startsWith(c.slice(0, 4))));
 // --max-titulos=N  (tope de títulos NUEVOS por corrida; reanudable)
 const MAX_TITULOS = Math.max(0, Number((args.find(a => a.startsWith('--max-titulos=')) || '').split('=')[1] || 0));
 const MUESTRA = Number((args.find(a => a.startsWith('--muestra=')) || '').split('=')[1] || 3);
@@ -249,6 +254,11 @@ async function extraerServidoresPlaywright(urls, workers) {
   await Promise.all(Array.from({ length: Math.min(workers, cola.length) }, async () => {
     const ctx = await browser.newContext({ userAgent: UA, locale: 'es-ES' });
     const page = await ctx.newPage();
+    const apiHits = new Set();
+    page.on('response', r => {
+      const u = r.url();
+      if (/\/(api|ajax|graphql)\//i.test(u) || /\.(json)(\?|$)/i.test(u)) apiHits.add(u);
+    });
     while (cola.length) {
       const url = cola.shift();
       const hits = new Set();
@@ -310,7 +320,7 @@ async function extraerServidoresPlaywright(urls, workers) {
         console.log(`  ⚠️ muestra ${url}: ${e.message}`);
       }
       resultados.push({ url, hits: [...hits] });
-      console.log(`  🔍 ${slugOf(url)}: ${hits.size} candidatos`);
+      console.log(`  🔍 ${slugOf(url)}: ${hits.size} candidatos` + (apiHits.size ? ` | API: ${apiHits.size}` : ''));
     }
     await ctx.close();
   }));
@@ -368,6 +378,7 @@ async function faseDiscover(db) {
   const discovery = {
     version: DISCOVERY_VERSION,
     fecha: now(),
+    apiCandidates: [...apiHits].slice(0, 30),
     muestras: conCtx.map(r => ({ url: r.url, tipo: r.tipo, hits: r.hits.slice(0, 20) })),
     plantillas: Object.fromEntries(Object.entries(plantillas).map(([k, v]) => [k,
       Object.entries(v).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([t, n]) => ({ plantilla: t, veces: n }))])),
@@ -394,16 +405,23 @@ function extraerLinksListado(html) {
 async function urlsDeListados() {
   const out = { movie: new Set(), series: new Set() };
   const cacheFile = path.join(ROOT, 'resultados', 'pelispedia_listados.json');
-  if (!DESDE_CERO && fs.existsSync(cacheFile)) {
-    console.log('♻️ listados cacheados: ' + cacheFile);
-    return JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+  if (!SECCIONES.length && !DESDE_CERO && fs.existsSync(cacheFile)) {
+    try {
+      const cache = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+      if ((cache.movie?.length || 0) + (cache.series?.length || 0) > 500) {
+        console.log(`♻️ listados cacheados: ${cache.movie.length} películas, ${cache.series.length} series`);
+        return cache;
+      }
+      console.log('⚠️ caché de listados vacío/inválido — se regenera');
+    } catch { }
   }
   const secciones = [
     { path: '/peliculas', tipo: 'movie', clave: 'peliculas' },
     { path: '/series', tipo: 'series', clave: 'series' },
     { path: '/animes', tipo: 'series', alt: '/anime', clave: 'animes' },
     { path: '/generos/dorama', tipo: 'series', clave: 'dorama' },
-  ].filter(s => !SECCIONES.length || SECCIONES.some(x => s.clave.startsWith(x) || x.startsWith(s.clave)));
+  ].filter(s => !SECCIONES.length || coincideSeccion(s.clave,
+    [s.clave, s.clave.replace(/s$/, ''), s.clave + 's']));
   for (const sec of secciones) {
     let base = sec.path, html1 = null;
     try { html1 = await fetchHtml(`${SITE}${base}?page=1`); }
@@ -536,9 +554,11 @@ async function urlsDeListados() {
     console.log(`  ✔ ${base} (PW): ${(out.movie.size + out.series.size)} acumulados`);
   }
   const resultado = { movie: [...out.movie], series: [...out.series] };
-  fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
-  fs.writeFileSync(cacheFile, JSON.stringify(resultado));
-  console.log(`💾 listados cacheados: ${resultado.movie.length} películas, ${resultado.series.length} series/animes/doramas`);
+  if (!SECCIONES.length) {
+    fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+    fs.writeFileSync(cacheFile, JSON.stringify(resultado));
+  }
+  console.log(`💾 listados: ${resultado.movie.length} películas, ${resultado.series.length} series/animes/doramas${SECCIONES.length ? ' (sin cachear: filtro activo)' : ''}`);
   return resultado;
 }
 
@@ -554,13 +574,10 @@ async function faseDatos(db) {
   const seriesHechas = porId(db.series);
   console.log('▶ Descargando sitemaps...');
   const urls = { movie: [], series: [], anime: [] };
-  const quiere = s => !SECCIONES.length || SECCIONES.some(x =>
-    (x === 'peliculas' && (s === 'movies' || s === 'peliculas' || s === 'pelicula')) ||
-    (x === 'series' && (s === 'series' || s === 'series')) ||
-    (x === 'animes' && s.includes('anime')) ||
-    (x === 'dorama' && s.includes('dorama')));
+  const quiere = s => !SECCIONES.length || coincideSeccion(s, [
+    s === 'movies' ? 'peliculas' : s === 'series' ? 'series' : 'animes']);
   for (const t of ['movies', 'series', 'animes']) {
-    if (!quiere(t)) { console.log(`  ⏭️ sitemap/${t} omitido (filtro)`); continue; }
+    if (!quiere(t)) { console.log(`  ⏭️ sitemap/${t} omitido (filtro: ${SECCIONES.join(',') || 'todas'})`); continue; }
     try {
       const us = await urlsDeSitemap(t);
       const clave = t === 'movies' ? 'movie' : 'series';
