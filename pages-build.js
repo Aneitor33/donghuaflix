@@ -40,8 +40,13 @@ function copyRecursive(src, dst, rel = '') {
     console.log('[pages-build] omitido:', relPath);
     return;
   }
-  // Cualquier otro JSON de datos que supere 24 MiB tampoco se despliega
-  if (relPath.startsWith('public/data/') && relPath.endsWith('.json') && st.size > 24 * 1024 * 1024) {
+  // Temporales de scraper (.partial, .tmp, .part): nunca se despliegan
+  if (/\.(partial|tmp|part|download)$/i.test(relPath)) {
+    console.log('[pages-build] omitido (temporal):', relPath);
+    return;
+  }
+  // Cualquier archivo de datos que supere 24 MiB tampoco se despliega (cualquier extensión)
+  if (relPath.startsWith('public/data/') && st.size > 24 * 1024 * 1024) {
     console.log('[pages-build] omitido (>24MiB):', relPath);
     return;
   }
