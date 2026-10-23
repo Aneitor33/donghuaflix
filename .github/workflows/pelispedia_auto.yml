@@ -95,7 +95,7 @@ jobs:
         if: ${{ github.event.inputs.solo_empaquetar != 'si' && github.event.inputs.fase != 'servers' }}
         run: |
           if [ ! -f pelispedia_discovery.json ] || [ "${{ github.event.inputs.fase }}" = "discover" ]; then
-            node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '5' }}
+            node pelispedia_scraper.js --discover --pw-workers=${{ github.event.inputs.pw_workers || '5' }} || echo "⚠️ discover falló (la fase servers lo reintentará)" 
             git add -A pelispedia_discovery.json && git commit -m "discovery pelispedia" || true
             for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
           fi
