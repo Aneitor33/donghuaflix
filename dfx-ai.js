@@ -8,7 +8,7 @@
 // ══════════════════════════════════════════════════════════
 (function () {
   'use strict';
-(function(){if(typeof document==='undefined')return;if(!document.getElementById('dfxThemeJs')){var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=2';document.head.appendChild(s);}var c=document.createElement('script');c.src='dfx-cine.js?v=5';document.head.appendChild(c);})();
+(function(){if(typeof document==='undefined')return;if(!document.getElementById('dfxThemeJs')){var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=2';document.head.appendChild(s);}var c=document.createElement('script');c.src='dfx-cine.js?v=6';document.head.appendChild(c);})();
 
   /* ---------- acceso a los globales de app.js ---------- */
   function glb(name) {
