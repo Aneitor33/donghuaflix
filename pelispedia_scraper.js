@@ -382,10 +382,12 @@ async function faseDiscover(db) {
       plantillas[clave][t] = (plantillas[clave][t] || 0) + 1;
     }
   }
+  const apis = [...new Set(conCtx.flatMap(r =>
+    (r.raw || []).filter(u => /\/(api|ajax|graphql)\//i.test(u))))];
   const discovery = {
     version: DISCOVERY_VERSION,
     fecha: now(),
-    apiCandidates: [...apiHits].slice(0, 30),
+    apiCandidates: apis.slice(0, 30),
     muestras: conCtx.map(r => ({ url: r.url, tipo: r.tipo, hits: r.hits.slice(0, 20) })),
     plantillas: Object.fromEntries(Object.entries(plantillas).map(([k, v]) => [k,
       Object.entries(v).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([t, n]) => ({ plantilla: t, veces: n }))])),
