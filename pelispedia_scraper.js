@@ -186,10 +186,25 @@ function nuevoDb() {
   return { meta: {}, series: [], seasons: [], episodes: [], genres: [] };
 }
 function cargarDb() {
-  if (DESDE_CERO && fs.existsSync(PARTIAL)) fs.rmSync(PARTIAL);
-  if (fs.existsSync(PARTIAL)) {
-    try { return JSON.parse(fs.readFileSync(PARTIAL, 'utf8')); } catch { }
+  if (DESDE_CERO) {
+    if (fs.existsSync(PARTIAL)) fs.rmSync(PARTIAL);
+    return nuevoDb();
   }
+  if (fs.existsSync(PARTIAL)) {
+    try {
+      const db = JSON.parse(fs.readFileSync(PARTIAL, 'utf8'));
+      console.log(`♻️ partial cargado: ${db.series.length} series | ${db.seasons.length} seasons | ${db.episodes.length} episodes`);
+      return db;
+    } catch { }
+  }
+  if (fs.existsSync(OUT)) {
+    try {
+      const db = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+      console.log(`♻️ CATÁLOGO FINAL cargado: ${db.series.length} series | ${db.seasons.length} seasons | ${db.episodes.length} episodes`);
+      return db;
+    } catch { }
+  }
+  console.log('▶ catálogo vacío — se empieza de cero');
   return nuevoDb();
 }
 function guardar(db) {
@@ -863,6 +878,9 @@ async function faseServers(db, discoveryIn) {
 async function faseGeneros(db) {
   const GEN_FIX_VERSION = 2;
   // reparar si: nunca reparado (versión vieja) O los géneros parecen la nube del footer (>7)
+  const sinFlag = db.series.filter(s => (s._genFixV || 0) < GEN_FIX_VERSION).length;
+  const nube = db.series.filter(s => (s.genres || []).length > 7).length;
+  console.log(`🔎 diagnóstico: ${db.series.length} series | sin _genFixV: ${sinFlag} | con >7 géneros: ${nube}`);
   const pendientes = db.series.filter(s =>
     (s._genFixV || 0) < GEN_FIX_VERSION || (s.genres || []).length > 7);
   const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
