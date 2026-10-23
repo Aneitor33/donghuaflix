@@ -255,9 +255,14 @@ async function extraerServidoresPlaywright(urls, workers) {
     const ctx = await browser.newContext({ userAgent: UA, locale: 'es-ES' });
     const page = await ctx.newPage();
     const apiHits = new Set();
+    const raw = [];
     page.on('response', r => {
       const u = r.url();
       if (/\/(api|ajax|graphql)\//i.test(u) || /\.(json)(\?|$)/i.test(u)) apiHits.add(u);
+      if (raw.length < 500 && /^https?:/.test(u)) raw.push(u);
+    });
+    ctx.on('page', async p => {
+      try { await p.waitForLoadState('domcontentloaded', { timeout: 9000 }); raw.push('POPUP:' + p.url()); } catch { }
     });
     while (cola.length) {
       const url = cola.shift();
@@ -297,16 +302,18 @@ async function extraerServidoresPlaywright(urls, workers) {
             [...document.querySelectorAll('iframe[src]')].map(x => x.getAttribute('src')).filter(Boolean));
           ifs.forEach(u => { if (/^https?:/.test(u)) hits.add(u); });
         };
-        for (const el of clicables.slice(0, 80)) {
-          if (clics >= 12) break;
+        const amplio = await page.$$('[class*="serv"],[class*="opt"],[class*="tab"],[id*="serv"],[id*="play"],button,[role="button"]');
+        for (const el of [...clicables, ...amplio].slice(0, 140)) {
+          if (clics >= 20) break;
           let txt = '';
           try { txt = clean(await el.innerText()); } catch { continue; }
-          if (!txt || txt.length > 40) continue;
-          if (!/embed|server|servidor|lat|cast|sub|español|audio|opc/i.test(txt)) continue;
+          if (txt && txt.length > 40) continue;
+          if (txt && !/embed|server|servidor|lat|cast|sub|español|audio|opc|ver|play|ver/i.test(txt)) continue;
           try {
-            await el.click({ timeout: 1200 });
+            await el.evaluate(e => { try { e.scrollIntoView({ block: 'center' }); } catch { } e.click(); }).catch(() => {});
+            await el.click({ timeout: 800 }).catch(() => {});
             clics++;
-            await page.waitForTimeout(2000);
+            await page.waitForTimeout(2500);
             if (page.url() !== inicial) {
               await page.goBack({ waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
               await page.waitForTimeout(800);
@@ -319,8 +326,8 @@ async function extraerServidoresPlaywright(urls, workers) {
       } catch (e) {
         console.log(`  ⚠️ muestra ${url}: ${e.message}`);
       }
-      resultados.push({ url, hits: [...hits] });
-      console.log(`  🔍 ${slugOf(url)}: ${hits.size} candidatos` + (apiHits.size ? ` | API: ${apiHits.size}` : ''));
+      resultados.push({ url, hits: [...hits], raw: raw.splice(0, 500) });
+      console.log(`  🔍 ${slugOf(url)}: ${hits.size} candidatos | raw: 500 grabadas` + (apiHits.size ? ` | API: ${apiHits.size}` : ''));
     }
     await ctx.close();
   }));
@@ -399,8 +406,18 @@ function extraerLinksListado(html) {
     if (limpio.includes('/pelicula/')) out.movie.add(limpio);
     else if (limpio.includes('/serie/')) out.series.add(limpio);
   });
+  // JSON embebido (Nuxt/Next payload): las rutas aparecen como strings sueltos
+  for (const m of html.matchAll(/\/(pelicula|serie)\/[a-z0-9][a-z0-9-]{2,120}/gi)) {
+    const u = `${SITE}${m[0]}`;
+    if (m[1].toLowerCase() === 'pelicula') out.movie.add(u);
+    else out.series.add(u);
+  }
   return out;
 }
+
+// totales conocidos (verificados renderizando la web) como respaldo
+const TOTALES_CONOCIDOS = { '/peliculas': 665, '/series': 147, '/animes': 200,
+  '/anime': 200, '/generos/dorama': 60, '/doramas': 60 };
 
 async function urlsDeListados() {
   const out = { movie: new Set(), series: new Set() };
@@ -432,7 +449,12 @@ async function urlsDeListados() {
       }
     }
     const http = html1 ? extraerLinksListado(html1) : { movie: new Set(), series: new Set() };
-    const totalHttp = html1 ? Number((html1.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i) || [])[1] || 0) : 0;
+    let totalHttp = html1 ? Number((html1.match(/P[aá]gina\s*1\s*(?:de|of)\s*(\d+)/i) || [])[1] || 0) : 0;
+    if (!totalHttp && html1) {
+      const paginas = [...html1.matchAll(/[?&]page=(\d+)/g)].map(m => Number(m[1]));
+      if (paginas.length) totalHttp = Math.max(...paginas);
+    }
+    if (!totalHttp) totalHttp = TOTALES_CONOCIDOS[base] || 1;
     const nHttp = http.movie.size + http.series.size;
     console.log(`  📑 ${base}: HTTP ${nHttp} enlaces, ${totalHttp} páginas (regex)`);
 
