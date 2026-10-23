@@ -133,16 +133,24 @@ function parseDetalle(html, url, tipo) {
   const genres = [];
   const seenG = new Set();
   $('a[href*="/genero"]').each((_, e) => {
-    const g = clean($(e).text());
-    const href = $(e).attr('href') || '';
+    const node = $(e);
+    // descartar menú, cabecera y footer (ahí vive la nube completa de géneros)
+    if (node.closest('footer, nav, header, [class*="footer"], [id*="footer"], [class*="menu"], [class*="nav"]').length) return;
+    const g = clean(node.text());
+    const href = node.attr('href') || '';
     if (!g || g.length < 2 || g.length > 25) return;
     if (!/\/generos?(\/|$)/i.test(href)) return;
-    // descartar la nube de géneros del menú/footer: contenedores con >8 enlaces
-    try {
-      if ($(e).parent().find('a[href*="/genero"]').length > 8) return;
-    } catch { }
     if (!seenG.has(g)) { seenG.add(g); genres.push(g); }
   });
+  // último recurso: línea meta del título ("PELÍCULA · 2026 · Acción · Drama")
+  if (!genres.length) {
+    const txt = clean($('body').text()).slice(0, 400);
+    const partes = txt.split(/\s*·\s*|\s*\|\s*|\s{2,}/).map(p => p.trim()).filter(Boolean);
+    const VOCAB = /^(acción|animación|anime|aventura|bélica|ciencia ficción|comedia|crimen|documental|dorama|doramas|drama|familia|fantasía|guerra|historia|misterio|música|romance|suspenso|terror|western|reality|kids|infantil|soap|talk|action & adventure|sci-fi & fantasy|war & politics)$/i;
+    for (const p of partes.slice(0, 12)) {
+      if (VOCAB.test(p) && !seenG.has(p)) { seenG.add(p); genres.push(p); }
+    }
+  }
   if (!genres.length && json.genre) {
     const gs = Array.isArray(json.genre) ? json.genre : [json.genre];
     gs.forEach(g => { const t = typeof g === 'string' ? g : g.name; if (t && !seenG.has(t)) { seenG.add(t); genres.push(t); } });
@@ -853,7 +861,8 @@ async function faseServers(db, discoveryIn) {
 
 // ───────────── FASE: GENEROS (reparación de títulos ya scrapeados) ─────────────
 async function faseGeneros(db) {
-  const pendientes = db.series.filter(s => !s._genFix);
+  const GEN_FIX_VERSION = 2;
+  const pendientes = db.series.filter(s => (s._genFixV || 0) < GEN_FIX_VERSION);
   const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
   console.log(`▶ reparando géneros/años: ${pendientes.length} pendientes (${lista.length} este chunk)`);
   let hechos = 0;
@@ -865,9 +874,10 @@ async function faseGeneros(db) {
       const { base } = parseDetalle(html, s.sourceUrl, s.contentType === 'movie' ? 'movie' : 'series');
       s.genres = base.genres;
       s.year = base.year;
-      s._genFix = true;
+      s._genFixV = 2;
       s.updatedAt = now();
       base.genres.forEach(g => todos.add(g));
+      if (hechos < 4) console.log(`  🧪 ${s.title} → [${base.genres.join(', ') || 'SIN GÉNEROS'}] · ${base.year}`);
     } catch { }
     if (++hechos % 200 === 0) {
       guardar(db);
