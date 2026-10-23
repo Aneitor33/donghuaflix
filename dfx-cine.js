@@ -94,6 +94,10 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
 #app .cx5-tbtn{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#d4d4d8;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px}
 #app .cx5-wrap{width:100%;max-width:560px;padding:12px 12px 120px}
 #app .cx5-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#app .cx5-sheet{position:fixed;top:56px;right:10px;z-index:70;background:rgba(14,14,18,.97);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;display:none;flex-direction:column;min-width:190px;box-shadow:0 16px 40px rgba(0,0,0,.6)}
+#app .cx5-sheet.open{display:flex}
+#app .cx5-sheet a{display:block;padding:11px 14px;font-size:13px;color:#e4e4e7;text-decoration:none;border-radius:9px}
+#app .cx5-sheet a:hover{background:rgba(255,255,255,.07)}
 @media (prefers-reduced-motion:reduce){#app .cx5-chip-live .dot{animation:none}}
 `;
   if (!document.getElementById('dfxCineStyle')) {
@@ -142,8 +146,18 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
     var html = '<div class="cx5-topbar">' +
       '<a class="cx5-mark2" href="#/cine">DF</a>' +
       '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
+      '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
-      '<a class="cx5-tbtn" href="#/" aria-label="Salir"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
+      '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
+      '<a class="cx5-tbtn" href="#/" aria-label="Salir del modo cine"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
+      '</div>' +
+      '<div class="cx5-sheet" id="cx5Sheet">' +
+      '<a href="#/descubrir">Descubrir</a>' +
+      '<a href="#/genres">Géneros</a>' +
+      '<a href="#/airing">En emisión</a>' +
+      '<a href="#/movies">Películas</a>' +
+      '<a href="#/mi-donghua">Mi Donghua</a>' +
+      '<a href="#/" style="color:#ff5c5c">Salir del modo cine</a>' +
       '</div><div class="cx5-wrap">';
 
     /* HERO */
@@ -226,12 +240,25 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
     html += '<nav class="cx5-bnav">' +
       '<a href="#/cine" class="on"><i class="fa-solid fa-house"></i><span>Inicio</span></a>' +
       '<a href="#/series"><i class="fa-solid fa-tv"></i><span>Series</span></a>' +
-      '<a href="#/descubrir"><i class="fa-solid fa-compass"></i><span>Explorar</span></a>' +
-      '<a href="#/mylist"><i class="fa-solid fa-heart"></i><span>Mi Lista</span></a>' +
+      '<a href="#/movies"><i class="fa-solid fa-film"></i><span>Películas</span></a>' +
+      '<a href="#/search"><i class="fa-solid fa-magnifying-glass"></i><span>Buscar</span></a>' +
+      '<a href="#/mylist"><i class="fa-solid fa-heart"></i><span>Mi lista</span></a>' +
+      '<a href="#" id="cx5More2"><i class="fa-solid fa-ellipsis"></i><span>Más</span></a>' +
       '</nav>';
 
     app.innerHTML = html;
 
+    var sheet = document.getElementById('cx5Sheet');
+    function toggleSheet(force){ if(!sheet) return; var show = force!==undefined?force:!sheet.classList.contains('open'); sheet.classList.toggle('open',show); }
+    var m2 = document.getElementById('cx5More2');
+    if (m2) m2.addEventListener('click', function(e){ e.preventDefault(); toggleSheet(); });
+    if (sheet) sheet.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleSheet(false); }); });
+    var sy = document.getElementById('cx5Sync');
+    if (sy) sy.addEventListener('click', function () {
+      var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
+      try { if (typeof f === 'function') { f(); return; } } catch (e) {}
+      location.reload();
+    });
     app.querySelectorAll('.cx5-pill').forEach(function (c) {
       c.addEventListener('click', function () { GENRE = c.getAttribute('data-g') || null; SHOW = 18; renderCine(); });
     });
