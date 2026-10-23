@@ -268,6 +268,7 @@ async function extraerServidoresPlaywright(urls, workers) {
       const url = cola.shift();
       const hits = new Set();
       try {
+        page.removeAllListeners('response');
         page.on('response', r => { const u = r.url(); if (SERVER_HINT.test(u) && !esAsset(u) && !u.includes('pelispedia.mov')) hits.add(u); });
         await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
         await page.waitForTimeout(4000);
