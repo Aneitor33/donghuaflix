@@ -28,7 +28,15 @@ on:
       chunk:
         description: "Títulos por chunk (checkpoint)"
         required: true
-        default: "500"
+        default: "2000"
+        type: string
+      secciones:
+        description: "Secciones (vacío = todas): peliculas,series,animes,dorama"
+        required: false
+        type: string
+      max_titulos:
+        description: "Tope de títulos por run (vacío = sin tope)"
+        required: false
         type: string
       solo_empaquetar:
         description: "SALTAR scraper - solo índice + shards del catalog existente"
@@ -69,10 +77,13 @@ jobs:
         if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
         run: |
           for i in $(seq 1 200); do
+            EXTRA=""
+            [ -n "${{ github.event.inputs.secciones }}" ] && EXTRA="$EXTRA --secciones=${{ github.event.inputs.secciones }}"
+            [ -n "${{ github.event.inputs.max_titulos }}" ] && EXTRA="$EXTRA --max-titulos=${{ github.event.inputs.max_titulos }}"
             OUT=$(node pelispedia_scraper.js --fase=datos \
                     --workers=${{ github.event.inputs.workers || '20' }} \
                     --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
-                    --max=${{ github.event.inputs.chunk || '500' }} 2>&1)
+                    --max=${{ github.event.inputs.chunk || '2000' }} $EXTRA 2>&1)
             echo "$OUT" | grep -E "sitemap|PENDIENTES|CHUNK|COMPLETO|jsPass|💾|⚠" | tail -12
             git add -A resultados public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial 2>/dev/null || true
             git commit -m "checkpoint datos pelispedia $i" || true
@@ -96,7 +107,7 @@ jobs:
           for i in $(seq 1 400); do
             OUT=$(node pelispedia_scraper.js --fase=servers \
                     --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
-                    --max=${{ github.event.inputs.chunk || '500' }} 2>&1)
+                    --max=${{ github.event.inputs.chunk || '2000' }} 2>&1)
             echo "$OUT" | grep -E "PENDIENTES|CHUNK|COMPLETO|⚡|🐢|💾|⚠" | tail -10
             git add -A public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial pelispedia_discovery.json 2>/dev/null || true
             git commit -m "checkpoint servers pelispedia $i" || true
