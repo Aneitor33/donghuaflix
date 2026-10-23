@@ -862,7 +862,9 @@ async function faseServers(db, discoveryIn) {
 // ───────────── FASE: GENEROS (reparación de títulos ya scrapeados) ─────────────
 async function faseGeneros(db) {
   const GEN_FIX_VERSION = 2;
-  const pendientes = db.series.filter(s => (s._genFixV || 0) < GEN_FIX_VERSION);
+  // reparar si: nunca reparado (versión vieja) O los géneros parecen la nube del footer (>7)
+  const pendientes = db.series.filter(s =>
+    (s._genFixV || 0) < GEN_FIX_VERSION || (s.genres || []).length > 7);
   const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
   console.log(`▶ reparando géneros/años: ${pendientes.length} pendientes (${lista.length} este chunk)`);
   let hechos = 0;
