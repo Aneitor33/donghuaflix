@@ -39,6 +39,30 @@ let DETAILS_BASE = {};
 const DETAIL_CACHE = {};
 
 let DB_CACHE = {};
+
+/* Índices rápidos O(1): evitan escanear 100k+ episodios en cada tarjeta.
+   Se marcan "sucios" al cargar shards/fichas y se reconstruyen una sola vez. */
+let IDX = { epSeries: new Map(), epSeason: new Map(), seasSeries: new Map() };
+let IDX_DIRTY = true;
+function rebuildIdx() {
+  IDX = { epSeries: new Map(), epSeason: new Map(), seasSeries: new Map() };
+  for (const s of DB.seasons) {
+    if (!IDX.seasSeries.has(s.seriesId)) IDX.seasSeries.set(s.seriesId, []);
+    IDX.seasSeries.get(s.seriesId).push(s);
+  }
+  for (const e of DB.episodes) {
+    if (!IDX.epSeries.has(e.seriesId)) IDX.epSeries.set(e.seriesId, []);
+    IDX.epSeries.get(e.seriesId).push(e);
+    if (!IDX.epSeason.has(e.seasonId)) IDX.epSeason.set(e.seasonId, []);
+    IDX.epSeason.get(e.seasonId).push(e);
+  }
+  IDX_DIRTY = false;
+}
+function idxGuard() { if (IDX_DIRTY) rebuildIdx(); }
+const epsOf = sid => (idxGuard(), IDX.epSeries.get(sid) || []);
+const seasonsOf = sid => (idxGuard(), IDX.seasSeries.get(sid) || []);
+const seasonEpsOf = sid => (idxGuard(), IDX.epSeason.get(sid) || []);
+
 let currentCatalog = localStorage.getItem('donghuaflix_catalog') || 'donghualife';
 if (!CATALOGS.some(c => c.id === currentCatalog)) currentCatalog = 'donghualife';
 const CATALOG_AVAILABLE = { donghua: true };
@@ -133,6 +157,11 @@ async function ensureCatalog(id) {
             }))
           : lite.series;
 
+        /* Portadas ligeras para el grid (w185 ≈ 3x menos peso que w300) */
+        for (const r of rows) {
+          if (typeof r.image === 'string') r.image = r.image.replace(/t\/p\/w\d+\//, 't/p/w185/');
+        }
+
         const db = {
           meta: lite.meta || {},
           series: rows,
@@ -168,33 +197,14 @@ async function ensureCatalog(id) {
 }
 
 async function probeCatalogs() {
-  for (const c of CATALOGS) {
-    if (DB_CACHE[c.id]) {
-      CATALOG_AVAILABLE[c.id] = true;
-      continue;
-    }
-
+  await Promise.all(CATALOGS.map(async c => {
+    if (DB_CACHE[c.id]) { CATALOG_AVAILABLE[c.id] = true; return; }
     try {
-      /* Sondeo por el ÍNDICE LIGERO (~80 KB) en vez del JSON completo
-         (15-30 MB): el selector de catálogos aparece en segundos,
-         también en móvil. */
-      const r = await fetch(c.index || c.file, {
-        cache: 'default'
-      });
-
-      if (!r.ok) {
-        CATALOG_AVAILABLE[c.id] = false;
-        continue;
-      }
-
-      const parsed = await r.json().catch(() => null);
-      CATALOG_AVAILABLE[c.id] =
-        Boolean(parsed && (Array.isArray(parsed.series) || (parsed.sharded && Array.isArray(parsed.parts) && parsed.parts.length > 0)));
-    } catch {
-      CATALOG_AVAILABLE[c.id] = false;
-    }
-  }
-
+      /* Solo cabecera: sondear no debe descargar índices de varios MB */
+      const r = await fetch(c.index || c.file, { method: 'HEAD', cache: 'default' });
+      CATALOG_AVAILABLE[c.id] = r.ok;
+    } catch { CATALOG_AVAILABLE[c.id] = false; }
+  }));
   renderCatBar();
 }
 
@@ -506,9 +516,7 @@ const getSeriesImage = s => {
     return s.image;
   }
 
-  const seasons = DB.seasons.filter(
-    seas => seas.seriesId === s.id
-  );
+  const seasons = seasonsOf(s.id);
 
   for (const seas of seasons) {
     if (
@@ -681,9 +689,7 @@ function toggleWatched(
     const seasons =
       orderSeasons(
         s,
-        DB.seasons.filter(
-          x => x.seriesId === s.id
-        )
+        seasonsOf(s.id)
       );
 
     if (
@@ -703,19 +709,14 @@ function seriesProgress(s) {
     getWatched();
 
   const seasons =
-    DB.seasons.filter(
-      x => x.seriesId === s.id
-    );
+    seasonsOf(s.id);
 
   let total = 0;
   let seen = 0;
 
   for (const seas of seasons) {
     const eps =
-      DB.episodes.filter(
-        e =>
-          e.seasonId === seas.id
-      );
+      seasonEpsOf(seas.id);
 
     total += eps.length;
 
@@ -735,9 +736,7 @@ function seriesProgress(s) {
 }
 
 function seriesEpisodeCount(s) {
-  return DB.episodes.filter(
-    e => e.seriesId === s.id
-  ).length;
+  return epsOf(s.id).length;
 }
 
 /* ---------- TOAST ---------- */
@@ -901,19 +900,12 @@ function lastWatchedEpisode(s) {
   const seasons =
     orderSeasons(
       s,
-      DB.seasons.filter(
-        x => x.seriesId === s.id
-      )
+      seasonsOf(s.id)
     );
 
   for (const seas of seasons) {
     const eps =
-      dedupeEps(
-        DB.episodes.filter(
-          e =>
-            e.seasonId === seas.id
-        )
-      );
+      dedupeEps(seasonEpsOf(seas.id));
 
     if (eps.length) {
       return eps[0];
@@ -1071,13 +1063,7 @@ function autoNext() {
   }
 
   const seasonEps =
-    dedupeEps(
-      DB.episodes.filter(
-        x =>
-          x.seasonId ===
-          currentEpisode.seasonId
-      )
-    );
+    dedupeEps(seasonEpsOf(currentEpisode.seasonId));
 
   const idx =
     seasonEps.findIndex(
@@ -2725,19 +2711,7 @@ function listByStatus(
 function listMovies() {
   const movies =
     DB.series.filter(
-      s =>
-        (
-          s.type || ''
-        )
-          .toLowerCase() ===
-          'movie' ||
-        (
-          s.title || ''
-        )
-          .toLowerCase()
-          .includes(
-            'película'
-          )
+      s => contentTypeOf(s) === 'movie'
     );
 
   app.innerHTML = `
@@ -3319,6 +3293,7 @@ async function ensureDetail(slug) {
     } catch (e) {
       console.warn('No se pudo cargar el shard', slug, e);
     }
+    IDX_DIRTY = true;
     return;
   }
 
@@ -3336,8 +3311,9 @@ async function ensureDetail(slug) {
     const haveEp = new Set(DB.episodes.map(x => x.id));
     (d.episodes || []).forEach(x => { if (!haveEp.has(x.id)) DB.episodes.push(x); });
 
+    IDX_DIRTY = true;
     DETAIL_CACHE[cacheKey] = true;
-  } catch (e) {
+  } catch {
     console.warn('No se pudo cargar la ficha', slug, e);
   }
 }
@@ -3494,11 +3470,7 @@ function detailSync(
   const seasons =
     orderSeasons(
       s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
+      seasonsOf(s.id)
     );
 
   if (
@@ -3582,21 +3554,10 @@ function detailSync(
 
   const singleEps =
     singleSeason
-      ? dedupeEps(
-          DB.episodes.filter(
-            e =>
-              e.seasonId ===
-              singleSeason.id
-          )
-        )
+      ? dedupeEps(seasonEpsOf(singleSeason.id))
       : [];
 
-  const allEpsCount =
-    DB.episodes.filter(
-      e =>
-        e.seriesId ===
-        s.id
-    ).length;
+  const allEpsCount = epsOf(s.id).length;
 
   const isMovieEntry =
     s.contentType ===
@@ -3809,13 +3770,7 @@ const EP_TILE_RANGE = 24;
 
 function seasonStats(season) {
   const eps =
-    dedupeEps(
-      DB.episodes.filter(
-        e =>
-          e.seasonId ===
-          season.id
-      )
-    );
+    dedupeEps(seasonEpsOf(season.id));
   const w =
     getWatched()[
       season.id
@@ -4013,13 +3968,7 @@ function renderEpisodePage(
   if (!area) return;
 
   const eps =
-    dedupeEps(
-      DB.episodes.filter(
-        e =>
-          e.seasonId ===
-          season.id
-      )
-    );
+    dedupeEps(seasonEpsOf(season.id));
 
   if (!eps.length) {
     area.innerHTML =
@@ -4241,11 +4190,7 @@ function selectSeason(i) {
   const seasons =
     orderSeasons(
       s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
+      seasonsOf(s.id)
     );
 
   renderEpisodePage(
@@ -4266,13 +4211,7 @@ function renderEpisodePage(
   if (!area) return;
 
   const eps =
-    dedupeEps(
-      DB.episodes.filter(
-        e =>
-          e.seasonId ===
-          season.id
-      )
-    );
+    dedupeEps(seasonEpsOf(season.id));
 
   if (!eps.length) {
     area.innerHTML =
@@ -4485,11 +4424,7 @@ function gotoPage(p) {
   const seasons =
     orderSeasons(
       s,
-      DB.seasons.filter(
-        x =>
-          x.seriesId ===
-          s.id
-      )
+      seasonsOf(s.id)
     );
 
   renderEpisodePage(
@@ -4538,13 +4473,7 @@ function episode(slug) {
   );
 
   const seasonEps =
-    dedupeEps(
-      DB.episodes.filter(
-        x =>
-          x.seasonId ===
-          e.seasonId
-      )
-    );
+    dedupeEps(seasonEpsOf(e.seasonId));
 
   const idx =
     seasonEps.findIndex(
@@ -4876,12 +4805,7 @@ function episode(slug) {
 
     <div class="eyebrow">
       ${(() => {
-        const epsSerie =
-          DB.episodes.filter(
-            x =>
-              x.seriesId ===
-              e.seriesId
-          ).length;
+        const epsSerie = epsOf(e.seriesId).length;
 
         const esPeli =
           serie &&
