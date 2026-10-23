@@ -86,10 +86,68 @@
 #app .cx-foot{max-width:1080px;margin:36px auto 0;padding:22px 24px 30px;border-top:1px solid rgba(255,255,255,.07);color:#7d828c;font-size:11.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){#app .cx-cw .poster,#app .cx-gc .poster,#app .cx-btn{transition:none}}
 `;
+  var SKIN = `
+/* REDISEÑO DE IMPACTO — DonghuaFlix (corregido y mapeado a clases reales) */
+body.dfx-cine-skin{background-color:#08080a!important;color:#f4f4f5!important;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif!important}
+/* glassmorphism nav */
+body.dfx-cine-skin .nav,body.dfx-cine-skin .nav.scrolled{
+  background:rgba(8,8,10,.85)!important;
+  backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important}
+/* móvil: menos botones en cabecera */
+@media (max-width:640px){
+  body.dfx-cine-skin .nav nav a:not(:first-child):not(:nth-child(2)){display:none!important}
+}
+/* píldora activa roja */
+body.dfx-cine-skin .nav nav a.active{background:#ff2e2e!important;color:#fff!important;border-color:#ff2e2e!important;
+  box-shadow:0 6px 20px rgba(255,46,46,.35)!important;border-radius:999px!important}
+/* badges glass sutiles */
+body.dfx-cine-skin .badge{
+  background:rgba(0,0,0,.65)!important;backdrop-filter:blur(8px)!important;
+  border:1px solid rgba(255,255,255,.15)!important;color:#e4e4e7!important;
+  border-radius:6px!important;font-size:9px!important;font-weight:600!important;
+  letter-spacing:.5px!important;padding:3px 7px!important;text-transform:uppercase!important}
+/* tarjetas hover */
+body.dfx-cine-skin .card{border-radius:14px!important;overflow:hidden!important;
+  transition:transform .25s cubic-bezier(.4,0,.2,1),box-shadow .25s ease!important}
+@media(hover:hover){
+  body.dfx-cine-skin .card:hover{transform:translateY(-4px) scale(1.02)!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.15)!important}
+}
+/* top 10 */
+body.dfx-cine-skin .top10-num{font-size:4.5rem!important;font-weight:900!important;
+  -webkit-text-stroke:1.5px rgba(255,255,255,.7)!important;color:transparent!important;
+  text-shadow:0 4px 12px rgba(0,0,0,.8)!important}
+/* botones acción */
+body.dfx-cine-skin .btn-x.play,body.dfx-cine-skin .cine-play{
+  background:#ff2e2e!important;color:#fff!important;border-radius:10px!important;font-weight:600!important;
+  border:none!important;box-shadow:0 6px 20px rgba(255,46,46,.35)!important;transition:all .2s ease!important}
+body.dfx-cine-skin .btn-x.play:hover,body.dfx-cine-skin .cine-play:hover{
+  background:#e02424!important;box-shadow:0 8px 25px rgba(255,46,46,.5)!important;transform:scale(1.03)!important}
+/* panel episodios + servidores */
+body.dfx-cine-skin .ep-side,body.dfx-cine-skin .ep-main{
+  background:#0f0f14!important;border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:16px!important;padding:12px!important}
+body.dfx-cine-skin .ep{border-radius:10px!important;margin-bottom:4px!important;transition:background .15s ease!important}
+body.dfx-cine-skin .ep:hover{background:rgba(255,255,255,.05)!important}
+body.dfx-cine-skin .ep-num{color:#ff2e2e!important;font-weight:700!important}
+/* progreso + chips */
+body.dfx-cine-skin .progress span,body.dfx-cine-skin [class*="prog"] i{background:#ff2e2e!important}
+body.dfx-cine-skin .chip{border-radius:999px!important}
+body.dfx-cine-skin .chip.on,body.dfx-cine-skin .chip.active{background:#ff2e2e!important;border-color:#ff2e2e!important;color:#fff!important}
+`;
+  function applySkin() {
+    var on = false;
+    try { on = localStorage.getItem('dfx-cine-mode') === 'on'; } catch (e) {}
+    document.body.classList.toggle('dfx-cine-skin', on);
+  }
   if (!document.getElementById('dfxCineStyle')) {
     var style = document.createElement('style');
-    style.id = 'dfxCineStyle'; style.textContent = CSS;
+    style.id = 'dfxCineStyle'; style.textContent = CSS + SKIN;
     document.head.appendChild(style);
+    applySkin();
+    window.addEventListener('hashchange', applySkin);
   }
 
   var GENRE = null, SHOW = 24;
@@ -131,7 +189,7 @@
 
     var html = '<div class="cx-nav"><span class="cx-logo">DONGHUA<b>FLIX</b><em>MODO CINE</em></span>' +
       '<nav><a href="#/cine" class="on">Inicio</a><a href="#/">Versión clásica</a></nav>' +
-      '<a class="x" href="#/">✕ Salir</a></div>';
+      '<a class="x" href="#/" id="cxOff">✕ Salir</a></div>';
 
     /* HERO */
     var h = feat[0];
@@ -211,6 +269,8 @@
     html += '<div class="cx-foot"><span>© 2026 DonghuaFlix · Modo cine (experimental)</span><span>' + series.length + ' títulos en este catálogo</span></div>';
     app.innerHTML = html;
 
+    var off = document.getElementById('cxOff');
+    if (off) off.addEventListener('click', function () { try { localStorage.setItem('dfx-cine-mode', 'off'); } catch (e) {} document.body.classList.remove('dfx-cine-skin'); });
     app.querySelectorAll('.cx-pill').forEach(function (c) {
       c.addEventListener('click', function () { GENRE = c.getAttribute('data-g') || null; SHOW = 24; renderCine(); });
     });
@@ -230,7 +290,10 @@
     var r = glb('route');
     if (typeof r !== 'function' || r.__cine3) return;
     var w = function () {
-      if (location.hash.indexOf('#/cine') === 0) { renderCine(); return; }
+      if (location.hash.indexOf('#/cine') === 0) {
+        try { localStorage.setItem('dfx-cine-mode', 'on'); } catch (e) {}
+        applySkin(); renderCine(); return;
+      }
       return r.apply(this, arguments);
     };
     w.__cine3 = true; window.route = w;
