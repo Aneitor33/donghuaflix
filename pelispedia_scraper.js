@@ -124,15 +124,28 @@ function parseDetalle(html, url, tipo) {
               || clean(json.description) || '';
   synopsis = synopsis.replace(/^Disfruta de (esta|la) (serie|película)[^.\n]*\.\s*/i, '').trim();
   const text = clean($('body').text());
-  const year = (text.match(/\b(19|20)\d{2}(?:-\d{2}-\d{2})?\b/) || [])[0]?.slice(0, 4) || null;
+  // año: preferir fecha tipo 2021-03-15, luego JSON-LD; evitar el © del footer
+  let year = (text.match(/\b((?:19|20)\d{2})-\d{2}-\d{2}\b/) || [])[1] || null;
+  if (!year && json.datePublished) year = String(json.datePublished).slice(0, 4);
+  if (!year && typeof json.year === 'number') year = String(json.year);
+  if (!year && typeof json.year === 'string') year = json.year.slice(0, 4);
   const rating = (text.match(/(\d{1,2}(?:[.,]\d+)?)\s*\/\s*10/) || [])[1]?.replace(',', '.') || null;
   const genres = [];
-  $('a[href*="/genero"], a[href*="/genre"], [class*="genre"] a').each((_, e) => {
-    const g = clean($(e).text()); if (g && g.length < 30 && !genres.includes(g)) genres.push(g);
+  const seenG = new Set();
+  $('a[href*="/genero"]').each((_, e) => {
+    const g = clean($(e).text());
+    const href = $(e).attr('href') || '';
+    if (!g || g.length < 2 || g.length > 25) return;
+    if (!/\/generos?(\/|$)/i.test(href)) return;
+    // descartar la nube de géneros del menú/footer: contenedores con >8 enlaces
+    try {
+      if ($(e).parent().find('a[href*="/genero"]').length > 8) return;
+    } catch { }
+    if (!seenG.has(g)) { seenG.add(g); genres.push(g); }
   });
   if (!genres.length && json.genre) {
     const gs = Array.isArray(json.genre) ? json.genre : [json.genre];
-    gs.forEach(g => { const t = typeof g === 'string' ? g : g.name; if (t) genres.push(t); });
+    gs.forEach(g => { const t = typeof g === 'string' ? g : g.name; if (t && !seenG.has(t)) { seenG.add(t); genres.push(t); } });
   }
   const poster = posterOf($, url) || clean(json.image) || null;
   const slug = slugOf(url);
@@ -838,6 +851,36 @@ async function faseServers(db, discoveryIn) {
   console.log(`✔ servers: HTTP ${hechos - conPlantilla - conPW} · plantilla ${conPlantilla} · PW ${conPW}`);
 }
 
+// ───────────── FASE: GENEROS (reparación de títulos ya scrapeados) ─────────────
+async function faseGeneros(db) {
+  const pendientes = db.series.filter(s => !s._genFix);
+  const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
+  console.log(`▶ reparando géneros/años: ${pendientes.length} pendientes (${lista.length} este chunk)`);
+  let hechos = 0;
+  const todos = new Set(db.genres || []);
+  await pool(lista, WORKERS, async s => {
+    if (timeUp()) return;
+    try {
+      const html = await fetchHtml(s.sourceUrl);
+      const { base } = parseDetalle(html, s.sourceUrl, s.contentType === 'movie' ? 'movie' : 'series');
+      s.genres = base.genres;
+      s.year = base.year;
+      s._genFix = true;
+      s.updatedAt = now();
+      base.genres.forEach(g => todos.add(g));
+    } catch { }
+    if (++hechos % 200 === 0) {
+      guardar(db);
+      console.log(`  💾 ${hechos}/${lista.length} reparados`);
+    }
+  }, timeUp);
+  db.genres = [...todos].sort((a, b) => a.localeCompare(b, 'es'));
+  const restantes = pendientes.length - hechos;
+  db.meta._restantesDatos = restantes;
+  console.log(`✔ géneros reparados: ${hechos} (quedan ${restantes})`);
+  console.log(`PENDIENTES_DATOS:${restantes}`);
+}
+
 // ───────────── main ─────────────
 async function main() {
   if (!FASE) {
@@ -848,6 +891,7 @@ async function main() {
   console.log(`♻️  catálogo parcial: ${db.series.length} series | ${db.seasons.length} seasons | ${db.episodes.length} episodes`);
 
   if (FASE === 'discover') { await faseDiscover(db); }
+  else if (FASE === 'generos') { await faseGeneros(db); }
   else if (FASE === 'datos') { await faseDatos(db); }
   else if (FASE === 'servers') {
     const discovery = fs.existsSync(DISCOVERY_FILE) ? JSON.parse(fs.readFileSync(DISCOVERY_FILE, 'utf8')) : null;
