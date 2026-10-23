@@ -13,6 +13,7 @@ on:
         options:
           - auto
           - datos
+          - generos
           - discover
           - servers
       workers:
@@ -74,19 +75,21 @@ jobs:
           mkdir -p resultados
 
       - name: 1/5 Fase datos (catálogo + temporadas JS, checkpoints)
-        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos') }}
+        if: ${{ github.event.inputs.solo_empaquetar != 'si' && (github.event.inputs.fase == 'auto' || github.event.inputs.fase == 'datos' || github.event.inputs.fase == 'generos') }}
         run: |
           for i in $(seq 1 200); do
             EXTRA=""
             [ -n "${{ github.event.inputs.secciones }}" ] && EXTRA="$EXTRA --secciones=${{ github.event.inputs.secciones }}"
             [ -n "${{ github.event.inputs.max_titulos }}" ] && EXTRA="$EXTRA --max-titulos=${{ github.event.inputs.max_titulos }}"
-            OUT=$(node pelispedia_scraper.js --fase=datos \
+            FASE_CMD="--fase=${{ github.event.inputs.fase || 'datos' }}"
+            [ "${{ github.event.inputs.fase }}" = "auto" ] && FASE_CMD="--fase=datos"
+            OUT=$(node pelispedia_scraper.js $FASE_CMD \
                     --workers=${{ github.event.inputs.workers || '20' }} \
                     --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
                     --max=${{ github.event.inputs.chunk || '2000' }} $EXTRA 2>&1)
             echo "$OUT" | grep -E "sitemap|PENDIENTES|CHUNK|COMPLETO|jsPass|💾|⚠" | tail -12
             git add -A resultados public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial 2>/dev/null || true
-            git commit -m "checkpoint datos pelispedia $i" || true
+            git commit -m "[skip ci] checkpoint datos pelispedia $i" || true
             for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
             echo "$OUT" | grep -q "PENDIENTES_DATOS:0" && break
           done
@@ -110,7 +113,7 @@ jobs:
                     --max=${{ github.event.inputs.chunk || '2000' }} 2>&1)
             echo "$OUT" | grep -E "PENDIENTES|CHUNK|COMPLETO|⚡|🐢|💾|⚠" | tail -10
             git add -A public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial pelispedia_discovery.json 2>/dev/null || true
-            git commit -m "checkpoint servers pelispedia $i" || true
+            git commit -m "[skip ci] checkpoint servers pelispedia $i" || true
             for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
             echo "$OUT" | grep -q "PENDIENTES:0" && break
           done
