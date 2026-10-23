@@ -98,6 +98,25 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
 #app .cx5-sheet.open{display:flex}
 #app .cx5-sheet a{display:block;padding:11px 14px;font-size:13px;color:#e4e4e7;text-decoration:none;border-radius:9px}
 #app .cx5-sheet a:hover{background:rgba(255,255,255,.07)}
+#app .cx5-catpill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#d4d4d8;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;max-width:132px;overflow:hidden;text-overflow:ellipsis}
+body.dfx-cine-skin .cx5-catmenu{display:none;position:fixed;top:56px;left:10px;z-index:85;background:rgba(14,14,18,.97);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;min-width:220px;box-shadow:0 16px 40px rgba(0,0,0,.65);max-height:70vh;overflow:auto}
+body.dfx-cine-skin .cx5-catmenu.cx5-open{display:block}
+body.dfx-cine-skin .cx5-catmenu button,body.dfx-cine-skin .cx5-catmenu a{display:flex;width:100%;text-align:left;align-items:center;gap:9px;padding:11px 12px;border:0;background:none;color:#e4e4e7;border-radius:9px;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:none}
+body.dfx-cine-skin .cx5-catmenu button:hover,body.dfx-cine-skin .cx5-catmenu a:hover{background:rgba(255,255,255,.08)}
+body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
+/* ── ESCRITORIO ── */
+@media(min-width:768px){
+  #app .cx5-wrap{max-width:1120px;padding:20px 28px 130px}
+  #app .cx5-hero{min-height:460px;padding:30px}
+  #app .cx5-title{font-size:42px}
+  #app .cx5-grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))!important;gap:16px}
+  #app .cx5-top{width:172px}
+  #app .cx5-tc{width:124px;height:186px}
+  #app .cx5-tn{font-size:84px}
+  #app .cx5-row a.cx5-card,#app .cx5-row .cx5-card{width:158px!important}
+  #app .cx5-bnav{left:50%;transform:translateX(-50%);right:auto;bottom:14px;width:520px;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:10px 18px}
+  #app .cx5-sheet{top:64px}
+}
 @media (prefers-reduced-motion:reduce){#app .cx5-chip-live .dot{animation:none}}
 `;
   if (!document.getElementById('dfxCineStyle')) {
@@ -106,7 +125,18 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
     document.head.appendChild(style);
   }
 
-  var GENRE = null, SHOW = 18;
+  var GENRE = null, SHOW = 18, CAT_MOVED = false;
+  function catLabel() {
+    var cur = glb('currentCatalog') || '';
+    var cats = glb('CATALOGS') || [];
+    for (var i = 0; i < cats.length; i++) if (cats[i].key === cur) return cats[i].name || cats[i].label || cur;
+    return cur || 'Catálogo';
+  }
+  function moveCatMenu() {
+    if (CAT_MOVED) return; CAT_MOVED = true;
+    var m = document.querySelector('.catalog-wrap .catalog-menu') || document.querySelector('.catalog-menu');
+    if (m) { document.body.appendChild(m); m.classList.add('cx5-catmenu'); }
+  }
   function getDB() { return glb('DB') || { series: [], genres: [] }; }
   function findS(ref) { var f = glb('findSeries'); return f ? f(ref) : null; }
   function imgOf(x) { var f = glb('getSeriesImage'); return f ? f(x) : (x && x.image) || ''; }
@@ -130,6 +160,7 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
     var app = document.getElementById('app');
     if (!app) return;
     loadLibs();
+    moveCatMenu();
     document.body.classList.add('dfx-cine-skin');
     var DB = getDB();
     var series = DB.series || [];
@@ -145,6 +176,7 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
 
     var html = '<div class="cx5-topbar">' +
       '<a class="cx5-mark2" href="#/cine">DF</a>' +
+      '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
       '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
       '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
@@ -253,6 +285,20 @@ body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!
     var m2 = document.getElementById('cx5More2');
     if (m2) m2.addEventListener('click', function(e){ e.preventDefault(); toggleSheet(); });
     if (sheet) sheet.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleSheet(false); }); });
+    var catBtn = document.getElementById('cx5Cat');
+    var catMenu = document.querySelector('.cx5-catmenu');
+    if (catBtn && catMenu) {
+      catBtn.addEventListener('click', function(e){ e.stopPropagation(); catMenu.classList.toggle('cx5-open'); });
+      catMenu.addEventListener('click', function(e){
+        var b = e.target.closest('button,a');
+        if (!b) return;
+        catMenu.classList.remove('cx5-open');
+        setTimeout(function(){ if (location.hash.indexOf('#/cine') !== 0) location.hash = '#/cine'; }, 600);
+      });
+      document.addEventListener('click', function(e){
+        if (catMenu.classList.contains('cx5-open') && !e.target.closest('.cx5-catmenu') && !e.target.closest('#cx5Cat')) catMenu.classList.remove('cx5-open');
+      });
+    }
     var sy = document.getElementById('cx5Sync');
     if (sy) sy.addEventListener('click', function () {
       var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
