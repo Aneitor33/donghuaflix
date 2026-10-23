@@ -81,6 +81,19 @@
 #app .cx5-bnav a i{font-size:16px}
 #app .cx5-wrap{max-width:520px;margin:0 auto;padding:12px 14px 110px}
 #app .cx5-hero-btns{display:flex;gap:8px;align-items:center;position:relative;z-index:1}
+/* ocultar interfaz clásica dentro del modo cine */
+body.dfx-cine-skin .nav,body.dfx-cine-skin .bottom-nav,body.dfx-cine-skin footer,
+body.dfx-cine-skin #dfxThemeToggle,body.dfx-cine-skin .catalog-wrap{display:none!important}
+body.dfx-cine-skin #app{padding:0!important;max-width:none!important;width:100%!important}
+/* cabecera slim estilo mockup */
+#app .cx5-topbar{position:sticky;top:0;z-index:55;display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(8,8,10,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
+#app .cx5-mark2{width:28px;height:28px;border-radius:8px;background:#ff2e2e;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;box-shadow:0 4px 14px rgba(255,46,46,.4);text-decoration:none;flex:none}
+#app .cx5-brand{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.01em}
+#app .cx5-brand b{color:#ff2e2e}
+#app .cx5-tbtn{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#d4d4d8;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px}
+#app .cx5-wrap{width:100%;max-width:560px;padding:12px 12px 120px}
+#app .cx5-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 @media (prefers-reduced-motion:reduce){#app .cx5-chip-live .dot{animation:none}}
 `;
   if (!document.getElementById('dfxCineStyle')) {
@@ -126,7 +139,12 @@
       .filter(function (s) { return seen[s.id] ? false : (seen[s.id] = 1); });
     var top10 = pool.filter(isAiring).concat(pool).filter(function (s, i, a) { return a.indexOf(s) === i; }).slice(0, 10);
 
-    var html = '<div class="cx5-wrap">';
+    var html = '<div class="cx5-topbar">' +
+      '<a class="cx5-mark2" href="#/cine">DF</a>' +
+      '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
+      '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
+      '<a class="cx5-tbtn" href="#/" aria-label="Salir"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
+      '</div><div class="cx5-wrap">';
 
     /* HERO */
     var h = feat[0];
