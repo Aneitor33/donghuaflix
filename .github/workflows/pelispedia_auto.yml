@@ -87,7 +87,7 @@ jobs:
                     --workers=${{ github.event.inputs.workers || '20' }} \
                     --pw-workers=${{ github.event.inputs.pw_workers || '5' }} \
                     --max=${{ github.event.inputs.chunk || '2000' }} $EXTRA 2>&1)
-            echo "$OUT" | grep -E "sitemap|PENDIENTES|CHUNK|COMPLETO|jsPass|💾|⚠" | tail -12
+            echo "$OUT" | grep -E "sitemap|PENDIENTES|CHUNK|COMPLETO|jsPass|💾|⚠|🧪|reparando|reparados" | tail -14
             git add -A resultados public/data/catalog-pelispedia.json public/data/catalog-pelispedia.json.partial 2>/dev/null || true
             git commit -m "[skip ci] checkpoint datos pelispedia $i" || true
             for t in 1 2 3 4 5; do git pull --rebase --autostash && git push && break || sleep 10; done
