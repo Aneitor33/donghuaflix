@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=980, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="DonghuaFlix — Donghuas, películas y series en alta calidad.">
   <title>DonghuaFlix</title>
@@ -35,6 +35,20 @@
     @media (max-width: 900px){
       .rail{gap:10px}
       .rail-item{width:calc((100% - 40px)/ 5);flex:0 0 auto}
+    }
+  </style>
+  <style>
+    /* Forzar barra inferior móvil (blindaje) */
+    @media (max-width:900px){
+      .bottom-nav{display:flex !important;position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;z-index:70 !important;
+        background:rgba(8,9,12,.92) !important;border-top:1px solid rgba(255,255,255,.12) !important;
+        backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+        padding:8px 2px calc(8px + env(safe-area-inset-bottom)) !important}
+      .bottom-nav a,.bottom-nav button{display:flex !important;flex-direction:column;align-items:center;gap:4px;flex:1;
+        color:#c9ccd2 !important;font-size:10px;font-weight:600;text-decoration:none;background:none;border:0;padding:4px 0}
+      .bottom-nav svg{width:19px;height:19px}
+      .bottom-nav a.active,.bottom-nav button.active{color:#fff !important}
+      body{padding-bottom:64px !important}
     }
   </style>
 </head>
