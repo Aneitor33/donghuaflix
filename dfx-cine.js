@@ -181,7 +181,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
-      '<a class="cx5-tbtn" href="#/" aria-label="Salir del modo cine"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
+      '<a class="cx5-tbtn" href="#/classic" aria-label="Versión clásica"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
       '</div>' +
       '<div class="cx5-sheet" id="cx5Sheet">' +
       '<a href="#/descubrir">Descubrir</a>' +
@@ -189,7 +189,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<a href="#/airing">En emisión</a>' +
       '<a href="#/movies">Películas</a>' +
       '<a href="#/mi-donghua">Mi Donghua</a>' +
-      '<a href="#/" style="color:#ff5c5c">Salir del modo cine</a>' +
+      '<a href="#/classic" style="color:#ff5c5c">Versión clásica</a>' +
       '</div><div class="cx5-wrap">';
 
     /* HERO */
@@ -324,8 +324,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   function patch() {
     var r = glb('route');
     if (typeof r !== 'function' || r.__cine5) return;
+    function isCineHash(h) { h = h || location.hash || '#/'; return h === '#/' || h === '' || h.indexOf('#/cine') === 0 || h === '#/home'; }
     var w = function () {
-      if (location.hash.indexOf('#/cine') === 0) {
+      if (isCineHash()) {
         document.body.classList.add('dfx-cine-skin');
         renderCine(); return;
       }
@@ -333,11 +334,15 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       return r.apply(this, arguments);
     };
     w.__cine5 = true; window.route = w;
+    setTimeout(function () {
+      if (isCineHash()) { document.body.classList.add('dfx-cine-skin'); renderCine(); }
+    }, 500);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(patch, 300); });
   else setTimeout(patch, 300);
   window.addEventListener('hashchange', function () {
-    if (location.hash.indexOf('#/cine') === 0) { document.body.classList.add('dfx-cine-skin'); renderCine(); }
+    var h = location.hash || '#/';
+    if (h === '#/' || h === '' || h.indexOf('#/cine') === 0 || h === '#/home') { document.body.classList.add('dfx-cine-skin'); renderCine(); }
     else document.body.classList.remove('dfx-cine-skin');
   });
 })();
