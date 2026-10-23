@@ -382,6 +382,20 @@ async function faseDiscover(db) {
       plantillas[clave][t] = (plantillas[clave][t] || 0) + 1;
     }
   }
+  // segundo nivel: cada vidurl es la página del reproductor → extraer el embed real
+  for (const r of conCtx) {
+    for (const u of (r.hits || []).filter(x => x.includes('/vidurl/'))) {
+      try {
+        const html = await fetchHtml(u);
+        const sv = parseServidoresHtml(html, u);
+        const reales = sv.filter(s => !s.url.includes('pelispedia.mov'));
+        if (reales.length) {
+          r.vidurlServers = reales;
+          console.log(`  📺 vidurl ${u.split('/').pop()} → ${reales.length} servidor(es) real(es)`);
+        }
+      } catch (e) { console.log(`  ⚠️ vidurl ${u}: ${e.message}`); }
+    }
+  }
   const apis = [...new Set(conCtx.flatMap(r =>
     (r.raw || []).filter(u => /\/(api|ajax|graphql)\//i.test(u))))];
   const discovery = {
@@ -687,7 +701,7 @@ function aplicarPlantilla(t, { slug, temporada, capitulo }) {
 // ───────────── SERVIDORES vía HTTP (método syncdoramas) ─────────────
 const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn|byse|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|doodstream|streamsb|vudeo|vidoza|fembed|netu|hqq|waaw|playerwish|vidhide|luluvdo|fastream|mp4upload|filelions|lulustream|streamtape|streamhg|earnvids|ibra\.lat|multijugadora|embed69|oxserver|pkaa\.top)/i;
 const DIRECT_MEDIA_RE = /\.(?:mp4|webm|m3u8)(\?|#|$)/i;
-const PLAYER_PATH_RX = /\/(?:embed|player|play|stream|e|video|reproductor|goto)[\/.]/i;
+const PLAYER_PATH_RX = /\/(?:embed|player|play|stream|e|video|reproductor|goto|vidurl)[\/.]/i;
 
 function addServidor(lista, seen, name, raw, base, embed = false, lang = null) {
   const u = abs(raw, base);
@@ -768,7 +782,15 @@ async function faseServers(db, discoveryIn) {
     if (timeUp()) return;
     try {
       const html = await fetchHtml(e.sourceUrl);
-      const sv = parseServidoresHtml(html, e.sourceUrl);
+      let sv = parseServidoresHtml(html, e.sourceUrl);
+      const em = e.sourceUrl.match(/\/temporada\/(\d+)\/capitulo\/(\d+)/);
+      if (em && sv.length > 1) {
+        const bien = sv.filter(s => {
+          const vm = s.url.match(/\/vidurl\/tt[\w-]+?-(\d+)x(\d{1,4})/);
+          return vm && Number(vm[1]) === Number(em[1]) && Number(vm[2]) === Number(em[2]);
+        });
+        if (bien.length) sv = bien;
+      }
       if (sv.length) { e.servers = sv; e.updatedAt = now(); hechos++; }
       else quedan.push(e);
     } catch { quedan.push(e); }
