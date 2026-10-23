@@ -26,6 +26,11 @@ const MAX = Number((args.find(a => a.startsWith('--max=')) || '').split('=')[1] 
 const WORKERS = Number((args.find(a => a.startsWith('--workers=')) || '').split('=')[1] || 12);
 const PW_WORKERS = Number((args.find(a => a.startsWith('--pw-workers=')) || '').split('=')[1] || 4);
 const DESDE_CERO = args.includes('--desde-cero');
+// --secciones=series,animes,dorama,peliculas  (subconjunto; vacío = todas)
+const SECCIONES = ((args.find(a => a.startsWith('--secciones=')) || '').split('=')[1] || '')
+  .split(',').map(s => s.trim()).filter(Boolean);
+// --max-titulos=N  (tope de títulos NUEVOS por corrida; reanudable)
+const MAX_TITULOS = Math.max(0, Number((args.find(a => a.startsWith('--max-titulos=')) || '').split('=')[1] || 0));
 const MUESTRA = Number((args.find(a => a.startsWith('--muestra=')) || '').split('=')[1] || 3);
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
@@ -51,11 +56,16 @@ async function fetchHtml(url, intentos = 4) {
 }
 
 // pool de concurrencia simple
-async function pool(items, n, fn) {
+const T0 = Date.now();
+const MAX_RUNTIME_MS = Math.max(30, Number((args.find(a => a.startsWith('--runtime=')) || '').split('=')[1]
+  || process.env.MAX_RUNTIME_MINUTES || 330)) * 60000;
+const timeUp = () => Date.now() - T0 > MAX_RUNTIME_MS;
+
+async function pool(items, n, fn, shouldStop = () => false) {
   const cola = [...items];
   const errs = [];
   await Promise.all(Array.from({ length: Math.min(n, cola.length) }, async () => {
-    while (cola.length) {
+    while (cola.length && !shouldStop()) {
       const it = cola.shift();
       try { await fn(it); } catch (e) { errs.push(`${it}: ${e.message}`); }
     }
@@ -389,11 +399,11 @@ async function urlsDeListados() {
     return JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
   }
   const secciones = [
-    { path: '/peliculas', tipo: 'movie' },
-    { path: '/series', tipo: 'series' },
-    { path: '/animes', tipo: 'series', alt: '/anime' },
-    { path: '/doramas', tipo: 'series', alt: '/dorama' },
-  ];
+    { path: '/peliculas', tipo: 'movie', clave: 'peliculas' },
+    { path: '/series', tipo: 'series', clave: 'series' },
+    { path: '/animes', tipo: 'series', alt: '/anime', clave: 'animes' },
+    { path: '/generos/dorama', tipo: 'series', clave: 'dorama' },
+  ].filter(s => !SECCIONES.length || SECCIONES.some(x => s.clave.startsWith(x) || x.startsWith(s.clave)));
   for (const sec of secciones) {
     let base = sec.path, html1 = null;
     try { html1 = await fetchHtml(`${SITE}${base}?page=1`); }
@@ -439,6 +449,11 @@ async function urlsDeListados() {
       if (/\/(api|graphql)\//i.test(u) && r.request().resourceType() === 'xhr') apiCandidatas.add(u);
     });
     let total = 1;
+    let cerrado = false;
+    const nuevaPagina = async () => {
+      const ctx2 = await browser.newContext({ userAgent: UA, locale: 'es-ES' });
+      return ctx2.newPage();
+    };
     try {
       await page.goto(`${SITE}${base}?page=1`, { waitUntil: 'networkidle', timeout: 60000 });
       await page.waitForTimeout(2500);
@@ -468,7 +483,7 @@ async function urlsDeListados() {
       console.log(`  📑 ${base}: página 1 → ${info.links.length} enlaces, ${total} páginas totales`);
     } catch (e) {
       console.log(`  ⚠️ PW listado ${base} pág 1: ${e.message}`);
-      await browser.close();
+      await browser.close(); cerrado = true;
       continue;
     }
     // intentar API directa si se detectó
@@ -493,10 +508,12 @@ async function urlsDeListados() {
       const hasta = MAX ? Math.min(total, 1 + MAX) : total;
       const paginas = Array.from({ length: hasta - 1 }, (_, i) => i + 2);
       await pool(paginas, PW_WORKERS, async p => {
+        let pg = null;
         try {
-          await page.goto(`${SITE}${base}?page=${p}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-          await page.waitForTimeout(2000);
-          const links = await page.evaluate(() => {
+          pg = await nuevaPagina();
+          await pg.goto(`${SITE}${base}?page=${p}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+          await pg.waitForTimeout(2000);
+          const links = await pg.evaluate(() => {
             const out = [];
             document.querySelectorAll('a[href]').forEach(a => {
               const h = a.getAttribute('href') || '';
@@ -512,9 +529,10 @@ async function urlsDeListados() {
             else if (limpio.includes('/serie/')) out.series.add(limpio);
           }
         } catch { }
-      });
+        if (pg) await pg.close().catch(() => {});
+      }, timeUp);
     }
-    await browser.close();
+    if (!cerrado) await browser.close();
     console.log(`  ✔ ${base} (PW): ${(out.movie.size + out.series.size)} acumulados`);
   }
   const resultado = { movie: [...out.movie], series: [...out.series] };
@@ -536,7 +554,13 @@ async function faseDatos(db) {
   const seriesHechas = porId(db.series);
   console.log('▶ Descargando sitemaps...');
   const urls = { movie: [], series: [], anime: [] };
+  const quiere = s => !SECCIONES.length || SECCIONES.some(x =>
+    (x === 'peliculas' && (s === 'movies' || s === 'peliculas' || s === 'pelicula')) ||
+    (x === 'series' && (s === 'series' || s === 'series')) ||
+    (x === 'animes' && s.includes('anime')) ||
+    (x === 'dorama' && s.includes('dorama')));
   for (const t of ['movies', 'series', 'animes']) {
+    if (!quiere(t)) { console.log(`  ⏭️ sitemap/${t} omitido (filtro)`); continue; }
     try {
       const us = await urlsDeSitemap(t);
       const clave = t === 'movies' ? 'movie' : 'series';
@@ -557,10 +581,12 @@ async function faseDatos(db) {
   ].filter(it => !seriesHechas.has(slugOf(it.url)));
   const conteo = { movie: 0, series: 0 };
   pendientes.forEach(p => conteo[p.tipo]++);
-  console.log(`▶ ${pendientes.length} títulos pendientes: ${conteo.movie} películas, ${conteo.series} series (${WORKERS} workers HTTP)`);
+  const limiteTxt = MAX_TITULOS ? ` (tope este run: ${MAX_TITULOS})` : '';
+  console.log(`▶ ${pendientes.length} títulos pendientes: ${conteo.movie} películas, ${conteo.series} series (${WORKERS} workers HTTP)${limiteTxt}`);
   let hechos = 0, fallos = 0;
   const lista = MAX ? pendientes.slice(0, MAX) : pendientes;
   await pool(lista, WORKERS, async ({ url, tipo }) => {
+    if (timeUp()) return;
     const html = await fetchHtml(url);
     const { base, seasons } = parseDetalle(html, url, tipo);
     seriesHechas.set(base.id, base);
@@ -595,7 +621,8 @@ async function faseDatos(db) {
       }
     }
     if (++hechos % 25 === 0) { guardar(db); console.log(`  💾 ${hechos}/${lista.length} (parcial)`); }
-  });
+  }, () => timeUp() || (MAX_TITULOS && hechos >= MAX_TITULOS));
+  if (MAX_TITULOS && hechos >= MAX_TITULOS) console.log(`🏁 tope de títulos alcanzado (${MAX_TITULOS})`);
   fallos = lista.length - hechos;
   console.log(`✔ datos: ${hechos} procesados, ${fallos} fallos`);
   await jsPassSeries(db, PW_WORKERS);
@@ -616,6 +643,63 @@ function aplicarPlantilla(t, { slug, temporada, capitulo }) {
   return t.replaceAll('{slug}', slug).replaceAll('{t}', String(temporada || 1)).replaceAll('{e}', String(capitulo || 1));
 }
 
+// ───────────── SERVIDORES vía HTTP (método syncdoramas) ─────────────
+const KNOWN_VIDEO_HOST = /(?:ok\.ru|okcdn|byse|voe|vidmoly|dailymotion|rumble|mixdrop|uqload|filemoon|streamwish|yourupload|mega\.nz|embedsue|dood\.|doodstream|streamsb|vudeo|vidoza|fembed|netu|hqq|waaw|playerwish|vidhide|luluvdo|fastream|mp4upload|filelions|lulustream|streamtape|streamhg|earnvids|ibra\.lat|multijugadora|embed69|oxserver|pkaa\.top)/i;
+const DIRECT_MEDIA_RE = /\.(?:mp4|webm|m3u8)(\?|#|$)/i;
+const PLAYER_PATH_RX = /\/(?:embed|player|play|stream|e|video|reproductor|goto)[\/.]/i;
+
+function addServidor(lista, seen, name, raw, base, embed = false, lang = null) {
+  const u = abs(raw, base);
+  if (!u || esAsset(u) || seen.has(u) || !/^https?:/.test(u)) return;
+  let pathname = '';
+  try { pathname = new URL(u).pathname; } catch { return; }
+  if (!(KNOWN_VIDEO_HOST.test(u) || DIRECT_MEDIA_RE.test(u) || PLAYER_PATH_RX.test(pathname))) return;
+  seen.add(u);
+  let host = name;
+  try { host = new URL(u).hostname.replace(/^www\./, ''); } catch { }
+  const s = { name: clean(name) || host || 'Servidor', url: u, embed: Boolean(embed) };
+  if (lang) s.lang = lang;
+  lista.push(s);
+}
+
+function parseServidoresHtml(html, url) {
+  const $ = cheerio.load(html);
+  const servers = [];
+  const seen = new Set();
+  $('iframe[src]').each((_, el) => addServidor(servers, seen, '', $(el).attr('src'), url, true));
+  let lang = null;
+  $('[data-url],[data-embed],[data-src],[data-link],[data-player],[data-href],[data-server],[data-iframe],option,button,a').each((_, el) => {
+    const node = $(el);
+    const txt = clean(node.text());
+    if (txt && txt.length < 40) {
+      if (/^latino$|audio\s*latino|espa[nñ]ol\s*latino/i.test(txt)) lang = 'latino';
+      else if (/castellano/i.test(txt)) lang = 'castellano';
+      else if (/subtitulad|sub\s*espa/i.test(txt)) lang = 'subtitulado';
+    }
+    if (el.tagName === 'img') return;
+    const raw = node.attr('data-url') || node.attr('data-embed') || node.attr('data-link') ||
+                node.attr('data-player') || node.attr('data-href') || node.attr('data-server') ||
+                node.attr('data-iframe') ||
+                (el.tagName === 'option' ? node.attr('value') : null);
+    if (raw && String(raw).startsWith('http')) {
+      addServidor(servers, seen, txt && txt.length < 30 ? txt : '', raw, url, true, lang);
+    }
+  });
+  for (const m of html.matchAll(/https?:\/\/[^\s"'<>\\]+/gi)) {
+    if (KNOWN_VIDEO_HOST.test(m[0]) || DIRECT_MEDIA_RE.test(m[0])) {
+      addServidor(servers, seen, '', m[0], url, true);
+    }
+  }
+  for (const json of [$('#__NUXT_DATA__').html(), $('#__NEXT_DATA__').html(), $('#__NUXT__').html()].filter(Boolean)) {
+    try {
+      for (const u of walkStrings(JSON.parse(json))) {
+        if (KNOWN_VIDEO_HOST.test(u) || DIRECT_MEDIA_RE.test(u)) addServidor(servers, seen, '', u, url, true);
+      }
+    } catch { }
+  }
+  return servers;
+}
+
 async function faseServers(db, discoveryIn) {
   let discovery = discoveryIn;
   if (!discovery || discovery.version < DISCOVERY_VERSION) {
@@ -623,7 +707,6 @@ async function faseServers(db, discoveryIn) {
     await faseDiscover(db);
     discovery = JSON.parse(fs.readFileSync(DISCOVERY_FILE, 'utf8'));
   }
-  // limpiar servidores falsos (assets) heredados de discoveries viejos
   let limpios = 0;
   for (const e of db.episodes) {
     const antes = (e.servers || []).length;
@@ -632,58 +715,63 @@ async function faseServers(db, discoveryIn) {
   }
   if (limpios) console.log(`🧹 ${limpios} episodios con servidores-asset eliminados`);
   if (DESDE_CERO) db.episodes.forEach(e => { e.servers = []; });
-  const eps = db.episodes.filter(e => !e.servers.length);
-  const movies = db.series.filter(s => s.contentType === 'movie');
-  console.log(`▶ servers: ${eps.length} episodios sin servidores, ${movies.length} películas`);
-  const pMovie = plantillasDe('movie', discovery);
-  const pEp = plantillasDe('episode', discovery);
+
+  const pendientes = db.episodes.filter(e => !e.servers.length);
+  const objetivo = MAX ? pendientes.slice(0, MAX) : pendientes;
+  console.log(`▶ servers: ${pendientes.length} pendientes (${objetivo.length} este chunk)`);
   let hechos = 0;
 
-  if (pMovie.length) {
-    console.log('  ⚡ modo plantilla (películas): ' + pMovie[0]);
-    for (const m of movies) {
-      const sid = `${m.id}-pelicula`;
-      const ep = { id: sid, slug: sid, title: m.title, sourceUrl: m.sourceUrl,
-                   servers: pMovie.map((t, i) => ({ name: `Servidor ${i + 1}`, url: aplicarPlantilla(t, { slug: m.slug }), embed: true })),
-                   seriesId: m.id, seasonId: `${m.id}-1`, number: 1, updatedAt: now() };
-      const idx = db.episodes.findIndex(x => x.id === sid);
-      if (idx === -1) db.episodes.push(ep); else db.episodes[idx] = ep;
-      if (++hechos % 50 === 0) guardar(db);
-    }
-    // seasons ficticia para películas
-    for (const m of movies) {
-      const sid = `${m.id}-1`;
-      if (!db.seasons.some(s => s.id === sid)) {
-        db.seasons.push({ id: sid, slug: sid, seriesId: m.id, sourceUrl: m.sourceUrl, number: 1,
-                          image: m.image, episodeCount: 1, initialSyncComplete: true, updatedAt: now() });
+  // 1) HTTP (método syncdoramas: iframes + data-* + hosts + JSON embebido)
+  let quedan = [];
+  await pool(objetivo, WORKERS, async e => {
+    if (timeUp()) return;
+    try {
+      const html = await fetchHtml(e.sourceUrl);
+      const sv = parseServidoresHtml(html, e.sourceUrl);
+      if (sv.length) { e.servers = sv; e.updatedAt = now(); hechos++; }
+      else quedan.push(e);
+    } catch { quedan.push(e); }
+    if (hechos % 100 === 0) { guardar(db); console.log(`  💾 ${hechos} con servidores (HTTP)`); }
+  });
+  console.log(`  ⚡ HTTP: ${hechos} con servidores | ${quedan.length} sin (plantilla/PW)`);
+
+  // 2) plantillas del discovery
+  const pEp = plantillasDe('episode', discovery);
+  const pMovie = plantillasDe('movie', discovery);
+  let conPlantilla = 0;
+  const sinPatron = [];
+  for (const e of quedan) {
+    const serie = db.series.find(x => x.id === e.seriesId);
+    const isMovie = serie && serie.contentType === 'movie';
+    const pats = isMovie ? pMovie : pEp;
+    const m = e.sourceUrl.match(/\/temporada\/(\d+)\/capitulo\/(\d+)/);
+    if (pats.length) {
+      e.servers = pats.map((t, i) => ({ name: `Servidor ${i + 1}`,
+        url: aplicarPlantilla(t, { slug: serie ? serie.slug : '', temporada: m ? m[1] : 1, capitulo: m ? m[2] : 1 }), embed: true }));
+      e.updatedAt = now();
+      conPlantilla++; hechos++;
+    } else sinPatron.push(e);
+  }
+  quedan = sinPatron;
+  if (conPlantilla) console.log(`  🔧 plantilla: ${conPlantilla} más`);
+
+  // 3) Playwright residual (solo lo que ni HTTP ni plantilla resolvieron)
+  let conPW = 0;
+  if (quedan.length) {
+    console.log(`  🐢 Playwright residual: ${quedan.length} páginas`);
+    const res = await extraerServidoresPlaywright(quedan.map(e => e.sourceUrl), PW_WORKERS);
+    for (let i = 0; i < quedan.length; i++) {
+      const hits = res[i].hits.filter(u => esAsset(u) === false &&
+        (!u.includes('pelispedia.mov') || /\/(embed|player|stream|api)\//i.test(u)));
+      if (hits.length) {
+        quedan[i].servers = hits.map((u, k) => ({ name: `Servidor ${k + 1}`, url: u, embed: true }));
+        quedan[i].updatedAt = now();
+        conPW++; hechos++;
       }
     }
   }
-  if (pEp.length) {
-    console.log('  ⚡ modo plantilla (episodios): ' + pEp[0]);
-    for (const e of eps) {
-      const m = e.sourceUrl.match(/\/temporada\/(\d+)\/capitulo\/(\d+)/);
-      const s = db.series.find(x => x.id === e.seriesId);
-      e.servers = pEp.map((t, i) => ({ name: `Servidor ${i + 1}`,
-        url: aplicarPlantilla(t, { slug: s ? s.slug : '', temporada: m ? m[1] : 1, capitulo: m ? m[2] : 1 }), embed: true }));
-      e.updatedAt = now();
-      if (++hechos % 200 === 0) { guardar(db); console.log(`  💾 ${hechos} episodios servidores`); }
-    }
-  } else {
-    // modo Playwright página a página
-    console.log('  🐢 sin plantilla: Playwright página a página...');
-    const pend = db.episodes.filter(e => !e.servers.length);
-    const lista = MAX ? pend.slice(0, MAX) : pend;
-    const res = await extraerServidoresPlaywright(lista.map(e => e.sourceUrl), PW_WORKERS);
-    for (let i = 0; i < lista.length; i++) {
-      const hits = res[i].hits.filter(u => !u.includes('pelispedia.mov'));
-      lista[i].servers = hits.map((u, k) => ({ name: `Servidor ${k + 1}`, url: u, embed: true }));
-      lista[i].updatedAt = now();
-      if (++hechos % 50 === 0) guardar(db);
-    }
-  }
   guardar(db);
-  console.log(`✔ servers aplicados a ${hechos} entradas`);
+  console.log(`✔ servers: HTTP ${hechos - conPlantilla - conPW} · plantilla ${conPlantilla} · PW ${conPW}`);
 }
 
 // ───────────── main ─────────────
@@ -711,6 +799,8 @@ async function main() {
     db.meta = { version: 1, source: SITE, catalogTag: 'pelispedia',
                 syncedAt: now(), lastSync: { status: 'success', startedAt: now(), finishedAt: now(), error: null },
                 items: db.series.length };
+    const mb = (JSON.stringify(db).length / 1024 / 1024).toFixed(1);
+    if (Number(mb) > 80) console.log(`⚠️ catálogo de ${mb} MB — cerca del límite de 100 MB de GitHub`);
     fs.mkdirSync(DATA, { recursive: true });
     fs.writeFileSync(OUT, JSON.stringify(db));
     fs.rmSync(PARTIAL);
