@@ -1,17 +1,17 @@
 {
   "version": 2,
-  "fecha": "2026-10-23T04:42:52.316Z",
+  "fecha": "2026-10-23T04:47:51.914Z",
   "apiCandidates": [
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
-    "https://pelispedia.mov/api/me",
-    "https://pelispedia.mov/api/watchlist/clayface-tZ92Wp",
-    "https://pelispedia.mov/api/feed/pelicula/clayface-tZ92Wp?page=1",
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2",
     "https://pelispedia.mov/api/feed/serie/sociedade-da-virtude-a-serie-IhGG9N?page=1&temporada=1&episodio=2",
-    "https://pelispedia.mov/api/feed/pelicula/monsters-el-continente-oscuro-cNspXv?page=1",
-    "https://pelispedia.mov/api/watchlist/monsters-el-continente-oscuro-cNspXv",
-    "https://pelispedia.mov/api/watchlist/solterisima-tambien-bHESHU",
+    "https://pelispedia.mov/api/me",
     "https://pelispedia.mov/api/feed/pelicula/solterisima-tambien-bHESHU?page=1",
+    "https://pelispedia.mov/api/watchlist/solterisima-tambien-bHESHU",
+    "https://pelispedia.mov/api/feed/pelicula/clayface-tZ92Wp?page=1",
+    "https://pelispedia.mov/api/watchlist/clayface-tZ92Wp",
+    "https://pelispedia.mov/api/watchlist/monsters-el-continente-oscuro-cNspXv",
+    "https://pelispedia.mov/api/feed/pelicula/monsters-el-continente-oscuro-cNspXv?page=1",
     "https://pelispedia.mov/api/feed/serie/sociedade-da-virtude-a-serie-IhGG9N?page=1&temporada=1&episodio=1",
     "https://pelispedia.mov/api/feed/serie/sociedade-da-virtude-a-serie-IhGG9N?page=1&temporada=1&episodio=3"
   ],
@@ -21,8 +21,8 @@
       "tipo": "movie",
       "hits": [
         "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-        "https://pelispedia.mov/pelicula/clayface-tZ92Wp",
-        "https://pelispedia.mov/vidurl/tt34890576/"
+        "https://pelispedia.mov/serie/sociedade-da-virtude-a-serie-IhGG9N/temporada/1/capitulo/2",
+        "https://pelispedia.mov/vidurl/tt41376877-1x02/"
       ]
     },
     {
@@ -30,8 +30,8 @@
       "tipo": "movie",
       "hits": [
         "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-        "https://pelispedia.mov/serie/sociedade-da-virtude-a-serie-IhGG9N/temporada/1/capitulo/2",
-        "https://pelispedia.mov/vidurl/tt41376877-1x02/"
+        "https://pelispedia.mov/pelicula/solterisima-tambien-bHESHU",
+        "https://pelispedia.mov/vidurl/tt45858039/"
       ]
     },
     {
@@ -39,8 +39,8 @@
       "tipo": "movie",
       "hits": [
         "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-        "https://pelispedia.mov/pelicula/monsters-el-continente-oscuro-cNspXv",
-        "https://pelispedia.mov/vidurl/tt1935302/"
+        "https://pelispedia.mov/pelicula/clayface-tZ92Wp",
+        "https://pelispedia.mov/vidurl/tt34890576/"
       ]
     },
     {
@@ -48,8 +48,8 @@
       "tipo": "episode",
       "hits": [
         "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-        "https://pelispedia.mov/pelicula/solterisima-tambien-bHESHU",
-        "https://pelispedia.mov/vidurl/tt45858039/"
+        "https://pelispedia.mov/pelicula/monsters-el-continente-oscuro-cNspXv",
+        "https://pelispedia.mov/vidurl/tt1935302/"
       ]
     },
     {
