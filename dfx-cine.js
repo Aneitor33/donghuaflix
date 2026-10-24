@@ -150,6 +150,11 @@ body.dfx-cine-skin .filters input,body.dfx-cine-skin input[type="search"]{displa
 /* ajustes tarjetas */
 body.dfx-cine-skin .dfxSetRow,body.dfx-cine-skin .dfxProfileCard{background:rgba(18,18,24,.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.09);border-top:1px solid rgba(255,255,255,.12);border-radius:14px;margin:8px 0;padding:13px 15px}
 body.dfx-cine-skin .dfxSwitch.on{background:#ff2e2e!important;box-shadow:0 0 14px rgba(255,46,46,.4)}
+body.dfx-cine-skin #dfxSheet{background:rgba(14,14,18,.97)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.12)!important;border-radius:20px!important;box-shadow:0 24px 60px rgba(0,0,0,.7)}
+body.dfx-cine-skin #dfxModal{background:rgba(0,0,0,.6)!important;backdrop-filter:blur(6px)}
+body.dfx-cine-skin .dfxSeg button.on{background:#ff2e2e!important}
+body.dfx-cine-skin .dfxSetRow select{background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:10px}
+body.dfx-cine-skin .dfxChip{border-radius:999px}
 /* ══ REPRODUCTOR Y EPISODIOS (PRO STREAMING) ══ */
 body.dfx-cine-skin button[class*="servidor"],body.dfx-cine-skin .server-btn,body.dfx-cine-skin div[class*="servidores"] a{
   background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:20px!important;
@@ -425,7 +430,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
       '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
       '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
-      '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
+      '<button class="cx5-tbtn" id="cx5Auth" aria-label="Iniciar sesión" style="position:relative;cursor:pointer"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></button>' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
       '<a class="cx5-tbtn" href="#/classic" aria-label="Versión clásica"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
@@ -449,7 +454,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<a href="#/descubrir"><i class="fa-solid fa-compass"></i>Descubrir</a>' +
       '<a href="#/genres"><i class="fa-solid fa-layer-group"></i>Géneros</a>' +
       '<a href="#/airing"><i class="fa-solid fa-satellite-dish"></i>En emisión</a>' +
-      '<a href="#/mi-donghua"><i class="fa-solid fa-user"></i>Mi Donghua</a>' +
+      '<a href="#" id="cx5Set2"><i class="fa-solid fa-gear"></i>Ajustes</a>' +
       '<div class="sep"></div>' +
       '<a href="#/classic"><i class="fa-solid fa-arrow-rotate-left"></i>Versión clásica</a>' +
       '</nav><div class="cx5-wrap">';
@@ -627,6 +632,16 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
         if (catMenu.classList.contains('cx5-open') && !e.target.closest('.cx5-catmenu') && !e.target.closest('#cx5Cat')) catMenu.classList.remove('cx5-open');
       });
     }
+    var au = document.getElementById('cx5Auth');
+    if (au) au.addEventListener('click', function () {
+      var om = glb('openModal');
+      try { if (typeof om === 'function') { om(); return; } } catch (e) {}
+      var d2 = glb('DFX');
+      try { if (d2 && typeof d2.openSettings === 'function') d2.openSettings(); } catch (e) {}
+    });
+    function openSet(e){ if(e) e.preventDefault(); var d2 = glb('DFX'); try { if (d2 && typeof d2.openSettings === 'function') { d2.openSettings(); return; } } catch (e2) {} location.hash = '#/mi-donghua'; }
+    var s1 = document.getElementById('cx5Set1'); if (s1) s1.addEventListener('click', openSet);
+    var s2 = document.getElementById('cx5Set2'); if (s2) s2.addEventListener('click', openSet);
     var sy = document.getElementById('cx5Sync');
     if (sy) sy.addEventListener('click', function () {
       var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
@@ -649,6 +664,12 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       }
     }
     var w = function () {
+      if ((location.hash || '') === '#/mi-donghua') {
+        document.body.classList.add('dfx-cine-skin', 'dfx-cine-home');
+        renderCine();
+        setTimeout(function () { var d2 = glb('DFX'); try { if (d2 && typeof d2.openSettings === 'function') d2.openSettings(); } catch (e) {} }, 400);
+        return;
+      }
       if (isCineHash()) {
         document.body.classList.add('dfx-cine-skin', 'dfx-cine-home');
         renderCine(); return;
