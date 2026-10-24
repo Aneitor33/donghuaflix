@@ -13,7 +13,7 @@ const MAX_HISTORY = 8;
 const MAX_CANDIDATES = 24;
 const MAX_CANDIDATE_TITLE = 120;
 const MAX_GENRES = 8;
-const DAILY_LIMIT = 30;            // mensajes / IP / día
+const DAILY_LIMIT = 40;            // mensajes / IP / día
 const MODEL_TIMEOUT_MS = 45000;
 
 const SYSTEM_PROMPT =
@@ -230,8 +230,11 @@ async function handleKnowledge(context, data) {
 }
 
 /* ---------- handler ---------- */
+const MAX_BODY_BYTES = 65536;
 export async function onRequestPost(context) {
   var request = context.request, env = context.env;
+  var len = +request.headers.get('Content-Length') || 0;
+  if (len > MAX_BODY_BYTES) return json({ error: 'payload_too_large' }, 413);
   var body;
   try { body = await request.json(); } catch (e) { return json({ error: 'invalid_json' }, 400); }
   var data = validBody(body);
