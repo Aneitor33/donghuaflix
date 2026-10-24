@@ -4,6 +4,14 @@
 #  Catálogo: public/data/catalog-donghualife.json
 #  Guardado con merge -X ours + reintentos: sin conflictos
 #  aunque otros workflows (portadas, donghuasub) commiteen a la vez.
+#
+#  MODOS (workflow_dispatch → mode):
+#    auto             → incremental si el catálogo está completo;
+#                       full sync si hay temporadas incompletas
+#    fresh            → rebuild TOTAL desde cero (backup .bak automático)
+#    refresh-servers  → re-escanea servidores de episodios YA existentes
+#                       (para catálogos hechos con scrapers viejos que
+#                       guardaron servers: []). Filtros opcionales abajo.
 # ══════════════════════════════════════════════
 name: Sincronizar DonghuaLife
 
@@ -11,6 +19,29 @@ on:
   schedule:
     - cron: '40 */6 * * *'      # cada 6h, minuto 40
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Modo de ejecución'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - fresh
+          - refresh-servers
+      only_series:
+        description: 'Refresh: solo estas series (slugs separados por coma, vacío = todas)'
+        required: false
+        default: ''
+      refresh_empty_only:
+        description: 'Refresh: solo episodios que no tienen servidores'
+        required: false
+        default: true
+        type: boolean
+      max_refresh:
+        description: 'Refresh: tope de episodios a refrescar (prueba piloto)'
+        required: false
+        default: '0'            # 0 = sin tope
 
 concurrency:
   group: sync-donghualife
@@ -36,6 +67,11 @@ jobs:
         env:
           OUT_FILE: 'public/data/catalog-donghualife.json'
           WORKERS: '10'              # ← 10 workers en paralelo
+          FRESH: ${{ inputs.mode == 'fresh' && '1' || '' }}
+          REFRESH_SERVERS: ${{ inputs.mode == 'refresh-servers' && '1' || '' }}
+          ONLY_SERIES: ${{ inputs.only_series }}
+          REFRESH_EMPTY_ONLY: ${{ inputs.refresh_empty_only && '1' || '' }}
+          MAX_REFRESH: ${{ inputs.max_refresh != '0' && inputs.max_refresh || '999999999' }}
         run: node syncdonghualife.js
 
       - name: Generar índice lite y fichas

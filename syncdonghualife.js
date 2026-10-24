@@ -70,10 +70,14 @@ const REFRESH_SERVERS =
     String(process.env.REFRESH_SERVERS || '').toLowerCase()
   );
 
+/*
+   NOTA: no usar clean() aquí — este bloque se evalúa ANTES de que
+   clean esté inicializada (TDZ). La normalización va inline.
+*/
 const ONLY_SERIES = new Set(
-  clean(process.env.ONLY_SERIES || '')
+  String(process.env.ONLY_SERIES || '')
     .split(',')
-    .map(s => s.trim())
+    .map(s => s.replace(/\s+/g, ' ').trim())
     .filter(Boolean)
 );
 
@@ -639,14 +643,20 @@ function looksLikeServerUrl(raw) {
 */
 function extractServerUrlsFromText(text) {
   const found = [];
-  const re = /https?:\/\/[^\s"'<>\\)]+/g;
+  /*
+     Acepta tanto https://... como https:\/\/... (JSON con barras
+     escapadas, típico de __NEXT_DATA__ / estado serializado).
+     La clase de caracteres NO excluye backslash: si no, las URLs
+     escapadas se cortan en el primer \/.
+  */
+  const re = /https?:\\?\/\\?\/[^"'<>\s]+/g;
   let m;
   while ((m = re.exec(String(text || ''))) !== null) {
     let u = m[0]
       .replace(/\\u002f/gi, '/')
       .replace(/\\\//g, '/')
       .replace(/&amp;/g, '&')
-      .replace(/[.,;!\]]+$/, '');
+      .replace(/[.,;!\]}]+$/, '');
     if (looksLikeServerUrl(u)) found.push(u);
   }
   return found;
@@ -712,6 +722,30 @@ function extractServers($, html, episodeUrl) {
       if (!full || !looksLikeServerUrl(full)) continue;
       push(serverNameFromElement($, el, full), full, isEmbedFromElement($, el, full));
       break;
+    }
+  });
+
+  /*
+     1b) BARRIDO GENÉRICO DE ATRIBUTOS: cualquier atributo de cualquier
+     elemento cuyo valor parezca una URL de servidor (data-* exóticos,
+     onclick="play('https://...')", aria-*, etc.). Es la red de seguridad
+     para cuando el player cambia los nombres de los atributos.
+  */
+  $('*').each((_, el) => {
+    for (const attr of el.attributes || []) {
+      const v = attr.value;
+      if (!v || v.length > 4000) continue;
+      // los href/src se procesan en sus pasos dedicados con mejor nombre
+      if (attr.name === 'href' || attr.name === 'src') continue;
+      const full = absolute(v, episodeUrl);
+      if (full && looksLikeServerUrl(full)) {
+        push(serverNameFromElement($, el, full), full, isEmbedFromElement($, el, full));
+        continue; // un atributo por elemento basta
+      }
+      // URLs embebidas dentro del valor (onclick, JSON en data-props...)
+      for (const u of extractServerUrlsFromText(v)) {
+        push(serverNameFromElement($, el, u), u, isEmbedFromElement($, el, u));
+      }
     }
   });
 
@@ -1416,6 +1450,48 @@ function sameServers(a, b) {
   return true;
 }
 
+/*
+   Devuelve la lista de watch links de la ficha de una serie,
+   con caché en memoria (un fetch por serie, no por episodio).
+*/
+async function getSeriesWatchList(db, seriesId, cache) {
+  if (cache.has(seriesId)) return cache.get(seriesId);
+
+  let list = [];
+  const series = db.series.find(s => s.id === seriesId);
+  if (series && series.sourceUrl) {
+    try {
+      const html = await fetchHtml(series.sourceUrl);
+      list = collectWatchLinks(html, series.sourceUrl);
+    } catch (e) {
+      console.log(`   ⚠️ No se pudo leer la ficha de ${seriesId}: ${e.message}`);
+    }
+  }
+  cache.set(seriesId, list);
+  return list;
+}
+
+/*
+   Repara episodios cuya sourceUrl apunta a rutas muertas del sitio
+   (/episode/{slug}-episodio-xN → 404). Busca en la ficha de la serie
+   el watch link del mismo (temporada, episodio) en el formato actual
+   y devuelve la nueva URL, o null si no hay equivalente.
+*/
+async function repairEpisodeUrl(db, episode, cache) {
+  const list = await getSeriesWatchList(db, episode.seriesId, cache);
+
+  const seasonMatch = String(episode.seasonId || '').match(/-(\d+)$/);
+  const seasonNumber = seasonMatch ? Number(seasonMatch[1]) : null;
+  const episodeNumber = Number(episode.number);
+
+  const watch = list.find(w =>
+    w.episode === episodeNumber &&
+    (seasonNumber == null || w.season === seasonNumber)
+  );
+
+  return watch ? watch.url : null;
+}
+
 async function runRefreshServers() {
   console.log('\n🔧 INICIANDO REFRESCO DE SERVIDORES\n');
 
@@ -1444,7 +1520,13 @@ async function runRefreshServers() {
   }
 
   const startedAt = new Date().toISOString();
-  let done = 0, changed = 0, errors = 0, gained = 0;
+  let done = 0, changed = 0, errors = 0, gained = 0, repaired = 0;
+
+  /*
+     Un fetch de ficha de serie por serie (no por episodio): las URLs
+     rotas se re-mapean contra los watch links reales de la ficha.
+  */
+  const seriesWatchCache = new Map();
 
   await runPool(targets, WORKERS, async (episode) => {
     const label = `${episode.seriesId} · T${episode.seasonId} · EP${episode.number ?? '?'}`;
@@ -1477,6 +1559,39 @@ async function runRefreshServers() {
       console.log(`   [${done}/${targets.length}] ${label} — ${has} servidor(es)`);
 
     } catch (error) {
+      /*
+         URL rota (el sitio eliminó las rutas /episode/...): intentamos
+         re-mapearla al watch link actual vía la ficha de la serie, y
+         reintentamos la extracción con la URL nueva.
+      */
+      if (/HTTP 404/.test(error.message)) {
+        try {
+          const fixedUrl = await repairEpisodeUrl(db, episode, seriesWatchCache);
+          if (fixedUrl) {
+            const html = await fetchHtml(fixedUrl);
+            const detail = parseEpisode(html, fixedUrl);
+            const newServers = detail.servers.length ? detail.servers : (episode.servers || []);
+
+            upsert(db.episodes, {
+              ...episode,
+              sourceUrl: fixedUrl,
+              title: detail.title || episode.title,
+              servers: newServers,
+              previousUrl: detail.previousUrl || episode.previousUrl || null,
+              nextUrl: detail.nextUrl || episode.nextUrl || null,
+              updatedAt: new Date().toISOString()
+            }, 'id');
+
+            repaired++;
+            done++;
+            console.log(`   🔧 [${done}/${targets.length}] ${label}: URL reparada → ${fixedUrl} (${newServers.length} servidor(es))`);
+            return;
+          }
+        } catch (repairError) {
+          console.log(`   ⚠️ Reparación fallida ${label}: ${repairError.message}`);
+        }
+      }
+
       errors++;
       done++;
       console.log(`   ⚠️ [${done}/${targets.length}] ${label}: ${error.message}`);
@@ -1501,6 +1616,7 @@ async function runRefreshServers() {
     refreshed: done,
     changed,
     gained,
+    repaired,
     errors
   };
 
@@ -1512,6 +1628,7 @@ async function runRefreshServers() {
   console.log(`🎬 Episodios revisados: ${done}`);
   console.log(`✏️ Episodios modificados: ${changed}`);
   console.log(`➕ Servidores ganados: ${gained}`);
+  console.log(`🔧 URLs reparadas (404 → watch actual): ${repaired}`);
   console.log(`❌ Errores: ${errors}`);
   console.log(`📚 Total catálogo: ${db.series.length} series · ${db.seasons.length} temporadas · ${db.episodes.length} episodios`);
 
