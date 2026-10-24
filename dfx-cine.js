@@ -37,6 +37,16 @@
 .cx5-hero{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0f0f14;box-shadow:0 20px 44px rgba(0,0,0,.45);min-height:380px;display:flex;align-items:flex-end;padding:22px}
 .cx5-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%}
 .cx5-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,10,.05) 30%,rgba(8,8,10,.75) 78%,#08080a 100%)}
+.cx5-slide{position:absolute;inset:0;display:flex;align-items:flex-end;padding:22px;opacity:0;transition:opacity .6s ease;pointer-events:none}
+.cx5-slide.on{opacity:1;pointer-events:auto}
+.cx5-dots{position:absolute;right:14px;bottom:12px;z-index:5;display:flex;gap:6px}
+.cx5-dot{width:22px;height:4px;border-radius:3px;border:none;background:rgba(255,255,255,.3);cursor:pointer;padding:0;transition:all .3s}
+.cx5-dot.on{background:#ff2e2e;width:34px;box-shadow:0 0 10px rgba(255,46,46,.6)}
+.cx5-topbar{background:linear-gradient(180deg,rgba(26,26,34,.78),rgba(12,12,16,.82))!important;backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 30px rgba(0,0,0,.4)}
+.cx5-drawer{background:linear-gradient(200deg,rgba(26,26,34,.92),rgba(10,10,14,.96))!important;backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);box-shadow:inset 1px 0 0 rgba(255,255,255,.1),-20px 0 50px rgba(0,0,0,.5)}
+.cx5-catmenu{background:linear-gradient(200deg,rgba(26,26,34,.94),rgba(12,12,16,.97))!important;backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 22px 55px rgba(0,0,0,.65);border-radius:18px!important}
+.cx5-sheet{background:linear-gradient(200deg,rgba(26,26,34,.95),rgba(12,12,16,.97))!important;backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 22px 55px rgba(0,0,0,.6)}
+.cx5-bnav{background:linear-gradient(180deg,rgba(26,26,34,.85),rgba(10,10,14,.9))!important;backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
 .cx5-chip-ex{position:relative;z-index:1;display:inline-block;background:#ff2e2e;color:#fff;font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:6px}
 .cx5-chip-live{position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border:1px solid rgba(52,211,153,.35);color:#34d399;font-size:9px;font-weight:600;padding:3px 8px;border-radius:6px}
 .cx5-chip-live .dot{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 6px rgba(52,211,153,.9);animation:cx5p 1.6s infinite}
@@ -408,6 +418,74 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   }
   function link(s) { return '#/series/' + encodeURIComponent(slugOf(s)); }
 
+  var HERO_TIMER = null, HERO_SLIDES = [], HERO_IDX = 0;
+  function buildSlides(feat, series) {
+    /* pool puntuado: en emisión + favoritos + recientes + azar; mezcla para que cada carga sea distinta */
+    var favIds = {};
+    try { (glb('getFavs') ? getFavs() : []).forEach(function (id) { favIds[id] = 1; }); } catch (e) {}
+    var pool = (series || []).filter(function (s) { return imgOf(s); }).map(function (s) {
+      var sc = Math.random() * 6;
+      if (isAiring(s)) sc += 5;
+      if (favIds[s.id]) sc += 4;
+      if (s.updatedAt) sc += 1;
+      return { s: s, sc: sc };
+    }).sort(function (a, b) { return b.sc - a.sc; }).slice(0, 40);
+    /* mezcla determinista-aleatoria de la selección */
+    for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+    return pool.slice(0, 7).map(function (x) { return x.s; });
+  }
+  function heroSlideHTML(h, i) {
+    var im = imgOf(h);
+    return '<div class="cx5-slide' + (i === 0 ? ' on' : '') + '" data-i="' + i + '">' +
+      (im ? '<div class="cx5-hero-bg" data-cxslug="' + esc(slugOf(h)) + '" style="background-image:url(' + esc(im) + ')"></div>' : '') +
+      '<div style="position:relative;z-index:1;width:100%">' +
+      '<div style="display:flex;gap:6px;align-items:center">' +
+      '<span class="cx5-chip-ex">EXCLUSIVO</span>' +
+      (isAiring(h) ? '<span class="cx5-chip-live"><span class="dot"></span>EN EMISIÓN</span>' : (isDone(h) ? '<span class="cx5-chip-off">FINALIZADO</span>' : '')) +
+      '</div>' +
+      '<h1 class="cx5-title">' + esc(titleOf(h)) + '</h1>' +
+      '<div class="cx5-meta">' + esc(genresOf(h).slice(0, 3).join(' · ')) + (h.totalEpisodes ? ' · ' + h.totalEpisodes + ' episodios' : '') + '</div>' +
+      '<div class="cx5-hero-btns">' +
+      '<a class="cx5-play" href="#/series/' + encodeURIComponent(slugOf(h)) + '"><i class="fa-solid fa-play" style="font-size:10px"></i>Ver serie</a>' +
+      '<a class="cx5-add" href="#/series/' + encodeURIComponent(slugOf(h)) + '"><i class="fa-solid fa-plus" style="font-size:12px"></i></a>' +
+      '</div></div></div>';
+  }
+  function heroCarouselHTML(slides) {
+    var dots = slides.map(function (s, i) {
+      return '<button class="cx5-dot' + (i === 0 ? ' on' : '') + '" data-i="' + i + '" aria-label="Destacado ' + (i + 1) + '"></button>';
+    }).join('');
+    return '<section class="cx5-hero" id="cx5Hero">' +
+      slides.map(heroSlideHTML).join('') +
+      '<div class="cx5-dots">' + dots + '</div>' +
+      '</section>';
+  }
+  function heroGo(i) {
+    var hero = document.getElementById('cx5Hero');
+    if (!hero) return;
+    var n = HERO_SLIDES.length; if (!n) return;
+    HERO_IDX = ((i % n) + n) % n;
+    hero.querySelectorAll('.cx5-slide').forEach(function (s) { s.classList.toggle('on', +s.getAttribute('data-i') === HERO_IDX); });
+    hero.querySelectorAll('.cx5-dot').forEach(function (d) { d.classList.toggle('on', +d.getAttribute('data-i') === HERO_IDX); });
+  }
+  function heroAuto() {
+    if (HERO_TIMER) clearInterval(HERO_TIMER);
+    HERO_TIMER = setInterval(function () { heroGo(HERO_IDX + 1); }, 4000);
+  }
+  function heroBind() {
+    var hero = document.getElementById('cx5Hero');
+    if (!hero) return;
+    hero.querySelectorAll('.cx5-dot').forEach(function (d) {
+      d.addEventListener('click', function () { heroGo(+d.getAttribute('data-i')); heroAuto(); });
+    });
+    var sx = 0;
+    hero.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    hero.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 42) { heroGo(HERO_IDX + (dx < 0 ? 1 : -1)); heroAuto(); }
+    }, { passive: true });
+    heroAuto();
+  }
+
   function renderCine() {
     var app = document.getElementById('app');
     if (!app) return;
@@ -428,24 +506,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
 
     var html = '<div class="cx5-wrap">';
 
-    /* HERO */
-    var h = feat[0];
-    if (h) {
-      var im = imgOf(h);
-      html += '<section class="cx5-hero">' +
-        (im ? '<div class="cx5-hero-bg" data-cxslug="' + esc(slugOf(h)) + '" style="background-image:url(' + esc(im) + ')"></div>' : '') +
-        '<div style="position:relative;z-index:1;width:100%">' +
-        '<div style="display:flex;gap:6px;align-items:center">' +
-        '<span class="cx5-chip-ex">EXCLUSIVO</span>' +
-        (isAiring(h) ? '<span class="cx5-chip-live"><span class="dot"></span>EN EMISIÓN</span>' : (isDone(h) ? '<span class="cx5-chip-off">FINALIZADO</span>' : '')) +
-        '</div>' +
-        '<h1 class="cx5-title">' + esc(titleOf(h)) + '</h1>' +
-        '<div class="cx5-meta">' + esc(genresOf(h).slice(0, 3).join(' · ')) + (h.totalEpisodes ? ' · ' + h.totalEpisodes + ' episodios' : '') + '</div>' +
-        '<div class="cx5-hero-btns">' +
-        '<a class="cx5-play" href="' + link(h) + '"><i class="fa-solid fa-play" style="font-size:10px"></i>Ver serie</a>' +
-        '<a class="cx5-add" href="' + link(h) + '"><i class="fa-solid fa-plus" style="font-size:12px"></i></a>' +
-        '</div></div></section>';
-    }
+    /* HERO carrusel: 7 destacados rotatorios (cada carga, distintos) */
+    var slides = buildSlides(feat, series);
+    if (slides.length) html += heroCarouselHTML(slides);
 
     /* SIGUE VIENDO */
     try {
@@ -533,7 +596,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       if (SHOW >= grid.length) more.remove(); else more.textContent = 'Cargar más (' + (grid.length - SHOW) + ')';
       hydrateImages();
     });
+    HERO_SLIDES = slides;
     hydrateImages();
+    heroBind();
     window.scrollTo(0, 0);
     startHomeWatch();
   }
@@ -546,14 +611,14 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     bar.id = 'cx5GlobalBar';
     bar.innerHTML =
       '<div class="cx5-topbar">' +
-      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
-      '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
-      '<a class="cx5-brand" href="#/" style="text-decoration:none">Donghua<b>Flix</b></a>' +
+      '<a class="cx5-brand" href="#/" style="text-decoration:none;flex:none">Donghua<b>Flix</b></a>' +
       '<span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex:none">' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
       '<a class="cx5-tbtn" href="#/" aria-label="Inicio"><i class="fa-solid fa-house" style="font-size:13px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Auth" aria-label="Iniciar sesión" style="position:relative;cursor:pointer"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></button>' +
+      '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
+      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
       '</span>' +
       '</div>' +
       '<div class="cx5-sheet" id="cx5Sheet">' +
