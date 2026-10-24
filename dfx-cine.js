@@ -60,6 +60,8 @@
 #app .cx5-po img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 #app .cx5-po2{position:relative;aspect-ratio:2/3;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0f0f14}
 #app .cx5-po2 img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+#app .cx5-ph{width:100%;height:100%;display:grid;place-items:center;font-size:30px;font-weight:800;color:#3c3f47;background:linear-gradient(160deg,#191920,#0d0d12);position:absolute;inset:0}
+#app .cx5-tc .cx5-ph,#app .cx5-po2 .cx5-ph{position:absolute}
 #app .cx5-ct{font-size:10.5px;font-weight:600;color:#fff;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #app .cx5-pr{position:absolute;left:6px;right:6px;bottom:6px;height:3px;border-radius:2px;background:rgba(255,255,255,.25);overflow:hidden;z-index:2}
 #app .cx5-pr i{display:block;height:100%;background:#ff2e2e;box-shadow:0 0 8px rgba(255,46,46,.8)}
@@ -115,6 +117,38 @@ body.dfx-cine-skin input:focus{border-color:#ff2e2e}
 body.dfx-cine-skin ::selection{background:rgba(255,46,46,.35)}
 body.dfx-cine-skin ::-webkit-scrollbar{width:9px;height:9px}
 body.dfx-cine-skin ::-webkit-scrollbar-thumb{background:#1e1e24;border-radius:99px;border:2px solid #08080a}
+/* ══ DESIGN SYSTEM PRO ══ */
+body.dfx-cine-skin::after{content:'';position:fixed;inset:0;z-index:2147483000;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")}
+body.dfx-cine-skin .ep-side,body.dfx-cine-skin .ep-main,body.dfx-cine-skin .catalog-menu,body.dfx-cine-skin .more-menu,body.dfx-cine-skin #toast{
+  background:rgba(18,18,24,.7)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.12)!important}
+/* servidores: segmented control flotante */
+body.dfx-cine-skin .cx5-seg{display:inline-flex;align-items:center;gap:2px;background:rgba(18,18,24,.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px;position:relative;max-width:100%;overflow-x:auto;scrollbar-width:none}
+body.dfx-cine-skin .cx5-seg::-webkit-scrollbar{display:none}
+body.dfx-cine-skin .cx5-seg button{position:relative;z-index:1;border:none!important;background:transparent!important;box-shadow:none!important;border-radius:999px!important;padding:6px 14px!important;font-size:11px!important;font-weight:600!important;color:#d4d4d8!important;white-space:nowrap;cursor:pointer;font-family:inherit}
+body.dfx-cine-skin .cx5-seg button[class*="active"],body.dfx-cine-skin .cx5-seg button.on{color:#fff!important}
+body.dfx-cine-skin .cx5-seg-ind{position:absolute;top:4px;bottom:4px;border-radius:999px;background:#ff2e2e;box-shadow:0 0 20px rgba(255,46,46,.35);transition:left .25s ease,width .25s ease;z-index:0}
+/* ambilight (portada de la serie, no sampling de video) */
+body.dfx-cine-skin .cx5-amb{position:relative}
+body.dfx-cine-skin .cx5-amb-bg{position:absolute;inset:-30px -20px;z-index:-1;border-radius:30px;background-size:cover;background-position:center;filter:blur(60px) saturate(1.4) brightness(.55);opacity:.55;pointer-events:none}
+/* grid de episodios */
+#app .cx5-epmodes{display:flex;gap:6px;margin:0 0 10px}
+#app .cx5-epmodes button{font-size:11px;font-weight:600;color:#d4d4d8;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);border-radius:999px;padding:6px 14px;cursor:pointer;font-family:inherit}
+#app .cx5-epmodes button.on{background:#ff2e2e;border-color:#ff2e2e;color:#fff}
+#app .cx5-epgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;padding:4px 2px 10px}
+#app .cx5-epgrid button{position:relative;aspect-ratio:1;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#d4d4d8;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s}
+#app .cx5-epgrid button:hover{border-color:rgba(255,46,46,.6);color:#fff}
+#app .cx5-epgrid button.seen::after{content:'✓';position:absolute;top:3px;right:5px;font-size:8px;color:#34d399}
+#app .cx5-epgrid button.cur{background:rgba(255,46,46,.14);border-color:#ff2e2e;color:#fff;box-shadow:0 0 14px rgba(255,46,46,.3)}
+#app .cx5-epgrid button.cur::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#ff2e2e;box-shadow:0 0 8px rgba(255,46,46,.9);animation:cx5ping 1.4s infinite}
+@keyframes cx5ping{0%,100%{opacity:1}50%{opacity:.3}}
+#app .cx5-eplist-hidden .ep,#app .cx5-eplist-hidden a.ep,#app .cx5-eplist-hidden .episode-item{display:none!important}
+/* búsqueda limpia */
+body.dfx-cine-skin.cx5-clean .card .badge{display:none!important}
+body.dfx-cine-skin .filters input,body.dfx-cine-skin input[type="search"]{display:block;max-width:560px;margin:8px auto!important;padding:12px 18px!important;font-size:14px!important;border-radius:14px!important;background:rgba(18,18,24,.7)!important;border:1px solid rgba(255,255,255,.14)!important}
+/* ajustes tarjetas */
+body.dfx-cine-skin .dfxSetRow,body.dfx-cine-skin .dfxProfileCard{background:rgba(18,18,24,.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.09);border-top:1px solid rgba(255,255,255,.12);border-radius:14px;margin:8px 0;padding:13px 15px}
+body.dfx-cine-skin .dfxSwitch.on{background:#ff2e2e!important;box-shadow:0 0 14px rgba(255,46,46,.4)}
 /* ══ REPRODUCTOR Y EPISODIOS (PRO STREAMING) ══ */
 body.dfx-cine-skin button[class*="servidor"],body.dfx-cine-skin .server-btn,body.dfx-cine-skin div[class*="servidores"] a{
   background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:20px!important;
@@ -181,17 +215,89 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     document.head.appendChild(style);
   }
 
-  var GENRE = null, SHOW = 18, CAT_MOVED = false;
-  function episodeCleanup() {
+  var GENRE = null, SHOW = 18, CAT_MOVED = false, HOME_TIMER = null, LAST_COUNT = -1;
+  function startHomeWatch() {
+    stopHomeWatch();
+    LAST_COUNT = (getDB().series || []).length;
+    HOME_TIMER = setInterval(function () {
+      if (!document.body.classList.contains('dfx-cine-home')) { stopHomeWatch(); return; }
+      var n = (getDB().series || []).length;
+      if (n !== LAST_COUNT) { LAST_COUNT = n; renderCine(); }
+    }, 900);
+  }
+  function stopHomeWatch() { if (HOME_TIMER) { clearInterval(HOME_TIMER); HOME_TIMER = null; } }
+  function pageEnhance() {
     try {
+      var h = location.hash || '#/';
+      document.body.classList.toggle('cx5-clean', h.indexOf('#/search') === 0 || h.indexOf('#/series') === 0 || h.indexOf('#/movies') === 0);
+      /* ocultar rótulo 'Servidores' */
       document.querySelectorAll('button, .abtn, .tbtn').forEach(function (b) {
         var t = (b.textContent || '').trim();
         if (t === 'Servidores' || t === 'SERVIDORES') b.style.display = 'none';
       });
-      document.querySelectorAll('.ep-side .ep a, .ep-side .ep span, .episode-item span, .episode-item small').forEach(function (s) {
-        var t = (s.textContent || '').trim();
-        if (/\.(com|ru|net|org|tv|io)\b/i.test(t) && t.length < 40) s.style.display = 'none';
-      });
+      /* servidores: segmented control con indicador deslizante + etiquetas limpias */
+      var srv = Array.prototype.slice.call(document.querySelectorAll('button[class*="servidor"], .server-btn, div[class*="servidores"] button, div[class*="servidores"] a'));
+      srv = srv.filter(function (b) { var t = (b.textContent || '').trim(); return t && t !== 'Servidores' && b.offsetParent !== null; });
+      if (srv.length >= 2 && !srv[0].parentNode.classList.contains('cx5-seg')) {
+        srv.forEach(function (b) {
+          var t = (b.textContent || '').trim();
+          var m = t.match(/([a-z0-9-]+)\.(com|ru|net|org|tv|io)/i);
+          if (m) {
+            var host = m[1].charAt(0).toUpperCase() + m[1].slice(1);
+            var q = (t.match(/FHD|4K|HD/i) || ['HD'])[0].toUpperCase();
+            b.textContent = '[' + q + '] ' + host;
+          }
+        });
+        var seg = document.createElement('div'); seg.className = 'cx5-seg';
+        srv[0].parentNode.insertBefore(seg, srv[0]);
+        srv.forEach(function (b) { seg.appendChild(b); });
+        var ind = document.createElement('span'); ind.className = 'cx5-seg-ind'; seg.appendChild(ind);
+        var move = function () {
+          var act = seg.querySelector('.active') || seg.querySelector('[class*="active"]') || srv[0];
+          ind.style.width = act.offsetWidth + 'px';
+          ind.style.left = act.offsetLeft + 'px';
+        };
+        srv.forEach(function (b) { b.addEventListener('click', function () { setTimeout(move, 80); }); });
+        setTimeout(move, 120);
+      }
+      /* grid numérico de episodios + toggle grilla/lista */
+      var side = document.querySelector('.ep-side');
+      if (side && !side.querySelector('.cx5-epmodes')) {
+        var rows = Array.prototype.slice.call(side.querySelectorAll('.ep, a.ep, .episode-item, div[class*="episodio"]'));
+        rows = rows.filter(function (r) { return /\b\d{1,4}\b/.test(r.textContent || ''); });
+        if (rows.length >= 4) {
+          var bar = document.createElement('div'); bar.className = 'cx5-epmodes';
+          var bGrid = document.createElement('button'); bGrid.textContent = '▦ Grilla'; bGrid.className = 'on';
+          var bList = document.createElement('button'); bList.textContent = '☰ Lista';
+          bar.appendChild(bGrid); bar.appendChild(bList);
+          var grid = document.createElement('div'); grid.className = 'cx5-epgrid';
+          rows.forEach(function (r) {
+            var n = ((r.textContent || '').match(/\b\d{1,4}\b/) || ['?'])[0];
+            var g = document.createElement('button');
+            g.textContent = n;
+            if (r.querySelector('.fa-check, [class*="check"], .fa-circle-check') || /visto/i.test(r.textContent || '')) g.classList.add('seen');
+            if (r.classList.contains('active') || r.className.indexOf('active') !== -1 || (r.querySelector('[class*="active"], .fa-volume-high, .fa-play'))) g.classList.add('cur');
+            g.addEventListener('click', function () { r.click(); });
+            grid.appendChild(g);
+          });
+          side.insertBefore(bar, side.firstChild);
+          side.insertBefore(grid, bar.nextSibling);
+          bGrid.addEventListener('click', function () { grid.style.display = 'grid'; side.classList.add('cx5-eplist-hidden'); bGrid.classList.add('on'); bList.classList.remove('on'); });
+          bList.addEventListener('click', function () { grid.style.display = 'none'; side.classList.remove('cx5-eplist-hidden'); bList.classList.add('on'); bGrid.classList.remove('on'); });
+        }
+      }
+      /* ambilight con la portada de la serie */
+      var player = document.querySelector('.ep-main, .player, [class*="player"]');
+      if (player && !player.parentNode.classList.contains('cx5-amb')) {
+        var amb = document.createElement('div'); amb.className = 'cx5-amb';
+        player.parentNode.insertBefore(amb, player);
+        amb.appendChild(player);
+        var bg = document.createElement('div'); bg.className = 'cx5-amb-bg';
+        var poster = document.querySelector('.detail-hero img, .ep-main img, .hero img, .card .poster img');
+        if (poster && poster.src) bg.style.backgroundImage = 'url(' + poster.src + ')';
+        else bg.style.background = 'radial-gradient(60% 60% at 50% 40%, rgba(255,46,46,.35), transparent 70%)';
+        amb.insertBefore(bg, player);
+      }
     } catch (e) {}
   }
   function catLabel() {
@@ -218,9 +324,35 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     if (isDone(s)) return '<span class="cx5-bdg off">FINALIZADO</span>';
     return '';
   }
+  function imgFallbacks(s) {
+    var list = [];
+    var im = imgOf(s); if (im) list.push(im);
+    if (s && s.image && s.image !== im && !/IcoPrueba/.test(s.image)) list.push(s.image);
+    try {
+      var so = glb('seasonsOf') ? seasonsOf(s.id) : [];
+      for (var i = 0; i < so.length && i < 3; i++) if (so[i].image && !/IcoPrueba/.test(so[i].image)) list.push(so[i].image);
+    } catch (e) {}
+    return list.slice(0, 4);
+  }
+  window.dfxImgFb = function (imgEl) {
+    var fb = (imgEl.getAttribute('data-fb') || '').split('|').filter(Boolean);
+    var cur = imgEl.getAttribute('src') || '';
+    var idx = fb.indexOf(cur);
+    if (idx !== -1 && idx + 1 < fb.length) { imgEl.src = fb[idx + 1]; return; }
+    var t = imgEl.getAttribute('data-t') || '?';
+    var d = document.createElement('div');
+    d.className = 'cx5-ph';
+    d.textContent = t.charAt(0).toUpperCase();
+    imgEl.parentNode.insertBefore(d, imgEl);
+    imgEl.remove();
+  };
   function po(s, cls) {
-    var im = imgOf(s);
-    return '<div class="' + cls + '">' + (im ? '<img loading="lazy" src="' + esc(im) + '" alt="" onerror="this.remove()">' : '') + '</div>';
+    var fb = imgFallbacks(s);
+    if (!fb.length) {
+      var t0 = titleOf(s) || '?';
+      return '<div class="' + cls + '"><div class="cx5-ph">' + esc(t0.charAt(0).toUpperCase()) + '</div></div>';
+    }
+    return '<div class="' + cls + '"><img loading="lazy" src="' + esc(fb[0]) + '" data-fb="' + esc(fb.join('|')) + '" data-t="' + esc(titleOf(s)) + '" alt="" onerror="dfxImgFb(this)"></div>';
   }
   function link(s) { return '#/series/' + encodeURIComponent(slugOf(s)); }
 
@@ -306,7 +438,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
         cont.forEach(function (s) {
           var p = prog ? prog(s) : 0;
           html += '<a class="cx5-card" style="flex:none;width:118px" href="' + link(s) + '"><div class="cx5-po2">' +
-            (imgOf(s) ? '<img loading="lazy" src="' + esc(imgOf(s)) + '" alt="" onerror="this.remove()">' : '') +
+            po(s, '') +
             '<div class="cx5-pr"><i style="width:' + Math.round(p) + '%"></i></div></div>' +
             '<div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
         });
@@ -319,7 +451,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       html += '<section style="margin-top:22px"><h2 class="cx5-sech">Top 10 hoy<span class="n">' + esc(glb('currentCatalog') || 'DonghuaFlix') + '</span></h2><div class="cx5-row">';
       top10.forEach(function (s, i) {
         html += '<a class="cx5-top" href="' + link(s) + '"><span class="cx5-tn">' + (i + 1) + '</span>' +
-          '<span class="cx5-tc">' + (imgOf(s) ? '<img loading="lazy" src="' + esc(imgOf(s)) + '" alt="" onerror="this.remove()">' : '') +
+          '<span class="cx5-tc" style="display:block">' + po(s, '') +
           (isAiring(s) ? '<span class="cx5-bdg live" style="top:5px;left:5px">EN EMISIÓN</span>' : '') +
           '</span></a>';
       });
@@ -342,9 +474,8 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     html += '<section style="margin-top:18px"><h2 class="cx5-sech">' + esc(GENRE || 'Recomendados') + '<span class="n">' + grid.length + '</span></h2>' +
       '<div class="cx5-grid" id="cx5Grid">' +
       grid.slice(0, SHOW).map(function (s) {
-        return '<a class="cx5-card" href="' + link(s) + '"><div class="cx5-po">' +
-          (imgOf(s) ? '<img loading="lazy" src="' + esc(imgOf(s)) + '" alt="" onerror="this.remove()">' : '') + bdg(s) +
-          '</div><div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
+        return '<a class="cx5-card" href="' + link(s) + '">' + po(s, 'cx5-po') + bdg(s) +
+          '<div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
       }).join('') + '</div>';
     if (grid.length > SHOW) html += '<button class="cx5-more" id="cx5More">Cargar más (' + (grid.length - SHOW) + ')</button>';
     html += '</section>';
@@ -407,13 +538,13 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     if (more) more.addEventListener('click', function () {
       SHOW += 18;
       document.getElementById('cx5Grid').innerHTML = grid.slice(0, SHOW).map(function (s) {
-        return '<a class="cx5-card" href="' + link(s) + '"><div class="cx5-po">' +
-          (imgOf(s) ? '<img loading="lazy" src="' + esc(imgOf(s)) + '" alt="" onerror="this.remove()">' : '') + bdg(s) +
-          '</div><div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
+        return '<a class="cx5-card" href="' + link(s) + '">' + po(s, 'cx5-po') + bdg(s) +
+          '<div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
       }).join('');
       if (SHOW >= grid.length) more.remove(); else more.textContent = 'Cargar más (' + (grid.length - SHOW) + ')';
     });
     window.scrollTo(0, 0);
+    startHomeWatch();
   }
 
   function patch() {
@@ -437,7 +568,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       document.body.classList.remove('dfx-cine-home');
       document.body.classList.add('dfx-cine-skin');
       var ret = r.apply(this, arguments);
-      setTimeout(episodeCleanup, 250);
+      setTimeout(pageEnhance, 250);
       return ret;
     };
     w.__cine5 = true; window.route = w;
@@ -461,5 +592,6 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     var o5 = document.getElementById('cx5DOverlay');
     if (d5) d5.classList.remove('open');
     if (o5) o5.classList.remove('open');
+    setTimeout(pageEnhance, 300);
   });
 })();
