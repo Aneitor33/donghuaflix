@@ -8,7 +8,7 @@
 // ══════════════════════════════════════════════════════════
 (function () {
   'use strict';
-(function(){if(typeof document==='undefined')return;if(!document.getElementById('dfxThemeJs')){var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=2';document.head.appendChild(s);}var c=document.createElement('script');c.src='dfx-cine.js?v=23';document.head.appendChild(c);})();
+(function(){if(typeof document==='undefined')return;var c=document.createElement('script');c.src='dfx-cine.js?v=23';document.head.appendChild(c);})();
 
   /* ---------- acceso a los globales de app.js ---------- */
   function glb(name) {
@@ -86,15 +86,18 @@
     'cultivación': ['xianxia', 'wuxia', 'inmortal', 'immortal', 'celestial']
   };
 
-  /* Géneros enriquecidos desde public/data/dfx-genres.json (generado por tools/enrich-genres.mjs) */
-  var GENRES_EXTRA = {};
-  if (typeof fetch === 'function' && typeof document !== 'undefined') {
+  /* Géneros enriquecidos: carga perezosa (idle o al abrir el asistente) */
+  var GENRES_EXTRA = {}, GENRES_LOADED = false;
+  function loadGenresExtra() {
+    if (GENRES_LOADED || typeof fetch !== 'function' || typeof document === 'undefined') return;
+    GENRES_LOADED = true;
     fetch('public/data/dfx-genres.json', { cache: 'no-cache' }).then(function (r) {
       return r.ok ? r.json() : null;
     }).then(function (j) {
       if (j && typeof j === 'object' && !Array.isArray(j)) GENRES_EXTRA = j;
     }).catch(function () {});
   }
+  setTimeout(loadGenresExtra, 6000);
   function genresWithExtra(x) {
     var base = seriesGenres(x) || [];
     var key = x && (x.slug || x.id);
@@ -394,6 +397,7 @@
   if (typeof document !== 'undefined') document.addEventListener('keydown', function (e) { if (e.key === 'c' || e.key === 'C') setTimeout(updateFabVisibility, 50); });
 
   function openPanel() {
+    loadGenresExtra();
     updateFabVisibility();
     panelEl.classList.add('open');
     fabEl.style.display = 'none';
