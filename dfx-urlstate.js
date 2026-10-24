@@ -1,39 +1,29 @@
 /* ============================================================
- * DonghuaFlix — dfx-urlstate.js
+ * DonghuaFlix — dfx-urlstate.js  (v2)
  * Todo tiene enlace: catálogo, sección, página y filtros.
- *
- * Formato:  #/c/<catalogo>/<seccion>?pag=3&<filtros...>
- * Ejemplos:
- *   #/c/pelispedia/series?pag=4
- *   #/c/donghualife/genre/accion
- *   #/c/youtubefilms/movies?orden=recientes&anio=2024
- *   #/search/shrouding        (la búsqueda ya era enlazable)
+ * + Deep-links robustos: serie/episodio se resuelven en cualquier
+ *   catálogo y sesión nueva (índice LITE sin episodios).
  *
  * AÑADE EN index.html, DESPUÉS de app.js y dfx-rails.js:
- *   <script src="dfx-urlstate.js"></script>
- *
- * No edita app.js: reemplaza route()/switchCatalog() envolviendo
- * las originales y sincronizando paginación y filtros por delegación.
+ *   <script src="dfx-urlstate.js?v=2"></script>
  * ============================================================ */
 (function () {
   'use strict';
 
-  if (typeof window.route !== 'function') return;
+  if (typeof window.route !== 'function') {
+    console.warn('[dfx-urlstate] no encuentro route() ¿cargado antes que app.js?');
+    return;
+  }
 
-  /* let/const globales (DB, currentCatalog, CATALOGS, ...) no viven en window */
   const g = n => (0, eval)(n);
   function setG(n, v) { window.__dfx_tmp = v; (0, eval)(n + ' = window.__dfx_tmp'); delete window.__dfx_tmp; }
 
-  /* ---------- CONFIG: ajusta estos selectores si tu maqueta cambia ---------- */
   const CFG = {
-    /* Contenedor de la paginación del grid (listAllSeries).
-       Se detecta por clase; el primero que exista gana. */
     pagSelectors: ['.pagination', '.pg', '[class*="pagin"]', '[class*="pager"]'],
-    /* Selects de filtro (Clasificación / Género / Año / Orden...) */
     filterSelector: '#app select',
   };
 
-  /* ---------- Utilidades de hash con parámetros ---------- */
+  /* ---------- hash con parámetros ---------- */
   function parseHash() {
     const raw = location.hash || '#/';
     const qi = raw.indexOf('?');
@@ -41,21 +31,112 @@
     const params = new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
     return { raw, path, params };
   }
-
   function writeHash(path, params) {
     const q = params && params.toString();
     history.replaceState(null, '', q ? path + '?' + q : path);
   }
 
-  /* ---------- Sincronización hacia la URL (clics y filtros) ---------- */
+  /* ---------- ¿existe la serie/episodio en el DB actual? ---------- */
+  function epExists(slug) {
+    const db = g('DB');
+    return !!(db && db.episodes && db.episodes.some(e => (e.slug || e.id) === slug || e.id === slug));
+  }
+  function seriesIn(db, slug) {
+    if (!db || !db.series) return null;
+    let best = null, bestLen = -1;
+    for (const s of db.series) {
+      const ref = s.slug || s.id;
+      if (ref && slug.indexOf(ref) === 0 && ref.length > bestLen) { best = s; bestLen = ref.length; }
+    }
+    return best;
+  }
+
+  /* ---------- Buscar la serie en TODOS los catálogos ---------- */
+  async function resolveCatalog(slug) {
+    const CATALOGS = g('CATALOGS');
+    const AV = g('CATALOG_AVAILABLE') || {};
+    if (!Array.isArray(CATALOGS)) return null;
+
+    if (typeof window.ensureCatalog !== 'function') return null;
+    for (const c of CATALOGS) {
+      if (!AV[c.id]) continue;
+      try {
+        const db = await window.ensureCatalog(c.id);
+        if (seriesIn(db, slug)) {
+          setG('DB', db);
+          setG('currentCatalog', c.id);
+          localStorage.setItem('donghuaflix_catalog', c.id);
+          if (window.renderCatBar) renderCatBar();
+          return db;
+        }
+      } catch (e) { /* siguiente catálogo */ }
+    }
+    return null;
+  }
+
+  /* Cargar la ficha de la serie (dispara la carga perezosa de
+     temporadas/episodios que hace tu propio detail()) y reintentar */
+  function lazyResolve(slug, retry) {
+    const appEl = document.getElementById('app');
+    if (appEl) appEl.innerHTML =
+      '<section class="empty page-top"><h2>Cargando…</h2>' +
+      '<p class="muted" style="margin-top:8px">Buscando el episodio en el catálogo</p></section>';
+
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      if (epExists(slug) || tries > 60) {   /* ~15 s máx. */
+        clearInterval(t);
+        retry();
+      }
+    }, 250);
+
+    const s = window.findSeries ? findSeries((seriesIn(g('DB'), slug) || {}).slug || '') : null;
+    const ref = s ? (s.slug || s.id) : (seriesIn(g('DB'), slug) || {}).slug;
+    if (ref && typeof window.detail === 'function') {
+      try { window.detail(ref); } catch (e) {}
+    }
+  }
+
+  /* ---------- Guardas de episodio y serie ---------- */
+  if (typeof window.episode === 'function') {
+    const _episode = window.episode;
+    window.episode = function (slug) {
+      if (epExists(slug)) return _episode(slug);
+
+      const sNow = seriesIn(g('DB'), slug);
+      if (sNow) { lazyResolve(slug, () => _episode(slug)); return; }
+
+      /* No está en este catálogo: buscar en los demás */
+      resolveCatalog(slug).then(db => {
+        if (!db) return _episode(slug);          /* deja el "No encontrado" de siempre */
+        if (epExists(slug)) return _episode(slug);
+        lazyResolve(slug, () => _episode(slug));
+      });
+    };
+  }
+
+  if (typeof window.detail === 'function') {
+    const _detail = window.detail;
+    window.detail = function (ref, extra) {
+      const db = g('DB');
+      const ok = db && db.series && db.series.some(x => (x.slug || x.id) === ref || x.id === ref);
+      if (ok) return _detail(ref, extra);
+      resolveCatalog(ref).then(db2 => {
+        if (db2) _detail(ref, extra);
+        else _detail(ref, extra);   /* último recurso: comportamiento original */
+      });
+    };
+  }
+
+  /* ---------- Sincronización hacia la URL ---------- */
   function syncOut() {
     document.addEventListener('click', e => {
       const btn = e.target.closest('button, a');
       if (!btn) return;
       const box = document.querySelector(CFG.pagSelectors.join(', '));
       if (!box || !box.contains(btn)) return;
-      /* Página de EPISODIO: usa gotoPage(), que sí vive en window */
-      if (btn.closest('.ep-pagination')) return; // ya lo cubre syncEpisodePag
+      if (btn.closest('.ep-pagination')) return;
       setTimeout(() => {
         const bs = [...box.querySelectorAll('button, a')].filter(b => !b.disabled);
         const act = box.querySelector('.on, .active, [aria-current]') || box.querySelector('button[class*="on"]');
@@ -68,7 +149,6 @@
       }, 60);
     }, true);
 
-    /* Selects de filtro → parámetros */
     document.addEventListener('change', e => {
       const sel = e.target.closest(CFG.filterSelector);
       if (!sel) return;
@@ -79,15 +159,13 @@
     }, true);
   }
 
-  /* La paginación de episodios (gotoPage es global) se refleja sola:
-     reescribimos la URL cada vez que cambia detailState.page */
+  /* Paginación de episodios (detailState.page → ?pag=) */
   function syncEpisodePag() {
     const dp = g('detailState');
     if (!dp) return;
     let last = null;
     setInterval(() => {
-      if (typeof dp.page === 'number' && dp.page !== last &&
-          location.hash.startsWith('#/episode')) {
+      if (typeof dp.page === 'number' && dp.page !== last && location.hash.indexOf('#/episode') === 0) {
         last = dp.page;
         const { path, params } = parseHash();
         if (dp.page > 0) params.set('pag', String(dp.page + 1));
@@ -97,16 +175,15 @@
     }, 400);
   }
 
-  /* ---------- Aplicar parámetros tras pintar la página ---------- */
+  /* ---------- Aplicar parámetros tras pintar ---------- */
   function applyParams(params) {
-    /* Página de episodio: gotoPage() es función global */
     const pEp = parseInt(params.get('pag'), 10);
-    if (location.hash.startsWith('#/episode') && pEp > 0 && typeof window.gotoPage === 'function') {
+
+    if (location.hash.indexOf('#/episode') === 0 && pEp > 0 && typeof window.gotoPage === 'function') {
       window.gotoPage(pEp - 1);
       return;
     }
 
-    /* Paginación del grid: pulsar el botón N (esperamos a que exista) */
     if (pEp > 0) {
       const tryClick = tries => {
         const box = document.querySelector(CFG.pagSelectors.join(', '));
@@ -118,15 +195,13 @@
       tryClick(20);
     }
 
-    /* Filtros: volcar valores en los selects y dispararlos */
     const selects = [...document.querySelectorAll(CFG.filterSelector)];
     for (const [k, v] of params.entries()) {
       if (k === 'pag') continue;
       const sel = selects.find(s =>
         (s.name || '').toLowerCase() === k ||
         (s.id || '').toLowerCase() === k ||
-        ('f' + selects.indexOf(s)) === k
-      );
+        ('f' + selects.indexOf(s)) === k);
       if (sel && sel.value !== v) {
         sel.value = v;
         sel.dispatchEvent(new Event('change', { bubbles: true }));
@@ -134,13 +209,15 @@
     }
   }
 
-  /* ---------- route() con prefijo de catálogo + parámetros ---------- */
+  /* ---------- route() con prefijo de catálogo ---------- */
   const _route = window.route;
 
   window.route = function () {
-    let { raw, path, params } = parseHash();
+    const raw = location.hash || '#/';
+    const qi = raw.indexOf('?');
+    let path = qi >= 0 ? raw.slice(0, qi) : raw;
+    const params = new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
 
-    /* ① Prefijo de catálogo: #/c/<id>/... */
     const cm = path.match(/^#\/c\/([^/]+)\/?(.*)$/);
     if (cm) {
       const cat = cm[1];
@@ -162,26 +239,23 @@
         }
         return;
       }
-      /* Catálogo correcto: dejamos hash limpio para la route original */
       history.replaceState(null, '', '#/' + (rest || ''));
       _route();
       applyParams(params);
-      history.replaceState(null, '', raw);   // el enlace compartible conserva c/<id> y parámetros
+      history.replaceState(null, '', raw);
       return;
     }
 
-    /* ② Hash normal: enrutar y aplicar parámetros si los hay */
     if (params.toString()) history.replaceState(null, '', path);
     _route();
     applyParams(params);
     if (params.toString()) history.replaceState(null, '', raw);
   };
 
-  /* ---------- switchCatalog() que conserva la sección ---------- */
+  /* ---------- switchCatalog() conserva la sección ---------- */
   window.switchCatalog = async function (id) {
     if (id === g('currentCatalog')) return;
 
-    /* Sección actual (sin prefijo ni parámetros) */
     const { path } = parseHash();
     const sec = path.replace(/^#\/?/, '').replace(/^c\/[^/]+\/?/, '');
 
@@ -205,7 +279,7 @@
     }
   };
 
-  /* ---------- Arranque ---------- */
   syncOut();
   syncEpisodePag();
+  console.log('%c dfx-urlstate v2 activo ', 'background:#1a2440;color:#7aa5ff');
 })();
