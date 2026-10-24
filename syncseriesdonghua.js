@@ -231,6 +231,51 @@ async function fetchHtml(url, attempt = 1) {
   }
 }
 
+/*
+   Igual que fetchHtml pero DEVUELVE TAMBIÉN LAS COOKIES de la respuesta.
+   Imprescindible en Laravel: el csrf-token del <meta> solo es válido
+   junto a la sesión (cookie laravel_session) que lo generó. Sin esta
+   cookie la API responde 419 Page Expired.
+*/
+async function fetchPage(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      redirect: 'follow',
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+          '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+        'Referer': `${BASE_URL}/`
+      }
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status} en ${url}`);
+
+    const html = await response.text();
+
+    // capturar cookies de sesión (Node 20: getSetCookie; fallback: header)
+    let cookies = '';
+    try {
+      const arr = typeof response.headers.getSetCookie === 'function'
+        ? response.headers.getSetCookie()
+        : [response.headers.get('set-cookie')].filter(Boolean);
+      cookies = arr
+        .map(c => c.split(';')[0].trim())
+        .filter(Boolean)
+        .join('; ');
+    } catch { /* sin cookies */ }
+
+    return { html, cookies };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function fetchJson(url, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -718,13 +763,15 @@ function extractServerButtons($) {
   return buttons;
 }
 
-async function fetchServerEmbedUrl(csrfToken, videoId, serverIndex) {
+async function fetchServerEmbedUrl(csrfToken, videoId, serverIndex, cookies = '') {
   const data = await fetchJson(`${BASE_URL}/api/player/get-server`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-CSRF-TOKEN': csrfToken,
-      'X-Requested-With': 'XMLHttpRequest'
+      'X-Requested-With': 'XMLHttpRequest',
+      // LA CLAVE: reenviar la sesión que generó el token CSRF
+      ...(cookies ? { 'Cookie': cookies } : {})
     },
     body: JSON.stringify({ video_id: videoId, server_index: serverIndex })
   });
@@ -739,7 +786,7 @@ async function fetchServerEmbedUrl(csrfToken, videoId, serverIndex) {
    EPISODIO
 ========================================================= */
 
-async function parseEpisode(html, episodeUrl) {
+async function parseEpisode(html, episodeUrl, cookies = '') {
   const $ = cheerio.load(html);
 
   const rawTitle =
@@ -779,7 +826,7 @@ async function parseEpisode(html, episodeUrl) {
     }
     for (const btn of serverButtons) {
       try {
-        const embedUrl = await fetchServerEmbedUrl(csrfToken, btn.videoId, btn.serverIndex);
+        const embedUrl = await fetchServerEmbedUrl(csrfToken, btn.videoId, btn.serverIndex, cookies);
         addServer(servers, btn.name, embedUrl, episodeUrl, true);
         console.log(`      🔗 ${btn.name}: ${embedUrl.slice(0, 90)}`);
       } catch (error) {
@@ -866,8 +913,8 @@ async function crawlEpisodes(seriesItem, seasonItem, episodeList, previousEpisod
     console.log(`      ▶ Episodio ${episode}`);
 
     try {
-      const html = await fetchHtml(url);
-      const detail = await parseEpisode(html, url);
+      const { html, cookies } = await fetchPage(url);
+      const detail = await parseEpisode(html, url, cookies);
 
       const episodeId = slugFromUrl(url);
       const old = oldMap.get(episode) || {};
@@ -1184,8 +1231,8 @@ async function runRefreshServers() {
     const label = `${episode.seriesId} · EP${episode.number ?? '?'}`;
 
     try {
-      const html = await fetchHtml(episode.sourceUrl);
-      const detail = await parseEpisode(html, episode.sourceUrl);
+      const { html, cookies } = await fetchPage(episode.sourceUrl);
+      const detail = await parseEpisode(html, episode.sourceUrl, cookies);
 
       const oldServers = episode.servers || [];
       const newServers = detail.servers.length ? detail.servers : oldServers;
