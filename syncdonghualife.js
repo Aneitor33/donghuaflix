@@ -35,6 +35,21 @@ const SEEDS = ['/series', '/'];
    y reconstruye TODO desde cero, descartando las temporadas y
    episodios basura acumulados (p. ej. "Temporada 151" vacías
    creadas por el scraper anterior).
+
+   🔧 REFRESCO DE SERVIDORES (para catálogos hechos con scrapers viejos):
+     node syncdonghualife.js --refresh-servers
+     node syncdonghualife.js --servers          (alias)
+     REFRESH_SERVERS=1 node syncdonghualife.js
+
+   Re-escanea las páginas /watch/ de los episodios YA EXISTENTES en el
+   catálogo y reconstruye sus servidores con el extractor actual. No
+   espera a que haya episodios nuevos: útil cuando el scraper anterior
+   guardó episodes con servers: [] porque el player había cambiado.
+
+   Filtros opcionales:
+     ONLY_SERIES=slug1,slug2  → solo esas series
+     REFRESH_EMPTY_ONLY=1     → solo episodios sin servidores (servers: [])
+     MAX_REFRESH=500          → tope de episodios a refrescar (prueba piloto)
 */
 const REBUILD =
   process.argv.includes('--fresh') ||
@@ -42,6 +57,35 @@ const REBUILD =
   ['1', 'true', 'yes'].includes(
     String(process.env.FRESH || process.env.REBUILD || '').toLowerCase()
   );
+
+/*
+   🔧 REFRESCO DE SERVIDORES: re-extrae servidores de episodios ya
+   existentes. Ver cabecera arriba para los filtros de alcance.
+*/
+const REFRESH_SERVERS =
+  process.argv.includes('--refresh-servers') ||
+  process.argv.includes('--servers') ||
+  process.argv.includes('--fix-servers') ||
+  ['1', 'true', 'yes'].includes(
+    String(process.env.REFRESH_SERVERS || '').toLowerCase()
+  );
+
+const ONLY_SERIES = new Set(
+  clean(process.env.ONLY_SERIES || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean)
+);
+
+const REFRESH_EMPTY_ONLY =
+  ['1', 'true', 'yes'].includes(
+    String(process.env.REFRESH_EMPTY_ONLY || '').toLowerCase()
+  );
+
+const MAX_REFRESH = Math.max(
+  1,
+  Number(process.env.MAX_REFRESH || Number.MAX_SAFE_INTEGER)
+);
 
 const MAX_DISCOVERY_PAGES = 200;
 const FETCH_TIMEOUT_MS = 30000;
@@ -557,7 +601,25 @@ function addServer(servers, name, raw, base, embed = false) {
    =========================================================
 */
 
-const SERVER_URL_RE = /dailymotion|rumble\.com|streamtape|ok\.ru|odysee\.com|voe\.|vidmoly|mega\.|youtube\.com|youtu\.be|yourupload|mixdrop|filemoon|mp4upload|vidoza|sibnet|uqload|netu|wolfstream|vudeo|emturbovid|hydrax|kvid|streamvid|playtube|streamhub|r2-media|videos\.donghualife/i;
+const SERVER_URL_RE = new RegExp([
+  // alojamientos de video clásicos y actuales
+  'dailymotion', 'rumble\\.com', 'streamtape', 'ok\\.ru', 'odysee\\.com',
+  'voe\\.', 'vidmoly', 'mega\\.', 'youtube\\.com', 'youtu\\.be',
+  'yourupload', 'mixdrop', 'mixdro', 'filemoon', 'moonplayer', 'mp4upload',
+  'vidoza', 'sibnet', 'uqload', 'netu', 'wolfstream', 'vudeo', 'emturbovid',
+  'hydrax', 'kvid', 'streamvid', 'playtube', 'streamhub',
+  // doodstream y clones
+  'dood(?:stream)?\\.(?:com|wf|pm|re|to|li|sh|cx|la|tv|ws|one|uk|in|org|cc)',
+  // streamwish / filelions y familia
+  'streamwish', 'hlswish', 'wishonly', 'filelions', 'alions', 'lionshare',
+  // otros hosts frecuentes en embeds
+  'wupload', 'upstream', 'krakenfiles', 'streamruby', 'fembed', 'feurl',
+  'vimeo', 'bitchute', 'archive\\.org', 'googlevideo',
+  'blogger\\.com', 'vk\\.com', 'vkvideo', 'sendvid', 'peertube',
+  'tapecontent', 'strcloud', 'keremiya',
+  // infra propia de DonghuaLife
+  'r2-media', 'videos\\.donghualife'
+].join('|'), 'i');
 
 const TRACKER_RE = /google-analytics|googletagmanager|facebook|disqus|addthis|doubleclick|cdn-cgi|recaptcha|hcaptcha|clarity\.|hotjar/i;
 
@@ -1331,6 +1393,132 @@ async function runIncrementalSync() {
 }
 
 /* =========================================================
+   🔧 REFRESCO DE SERVIDORES DE EPISODIOS YA EXISTENTES
+   ------------------------------------------------------------
+   Re-fetch de cada página /watch/ del catálogo y re-extracción
+   de servidores con el extractor actual. Pensado para catálogos
+   construidos con scrapers antiguos que guardaron servers: [].
+
+   Filtros: ONLY_SERIES (slugs), REFRESH_EMPTY_ONLY=1, MAX_REFRESH.
+========================================================= */
+
+function serverKeySet(servers) {
+  return new Set(
+    (servers || []).map(s => `${s.name}|${s.url}|${s.embed ? 1 : 0}`.toLowerCase())
+  );
+}
+
+function sameServers(a, b) {
+  const ka = serverKeySet(a);
+  const kb = serverKeySet(b);
+  if (ka.size !== kb.size) return false;
+  for (const k of ka) if (!kb.has(k)) return false;
+  return true;
+}
+
+async function runRefreshServers() {
+  console.log('\n🔧 INICIANDO REFRESCO DE SERVIDORES\n');
+
+  const db = await loadCatalog();
+
+  let targets = [...db.episodes];
+
+  if (ONLY_SERIES.size) {
+    targets = targets.filter(e => ONLY_SERIES.has(e.seriesId));
+    console.log(`🎯 Filtro ONLY_SERIES: ${[...ONLY_SERIES].join(', ')}`);
+  }
+
+  if (REFRESH_EMPTY_ONLY) {
+    const before = targets.length;
+    targets = targets.filter(e => !e.servers || !e.servers.length);
+    console.log(`🎯 Filtro REFRESH_EMPTY_ONLY: ${before} → ${targets.length} episodios sin servidores`);
+  }
+
+  targets = targets.slice(0, MAX_REFRESH);
+  console.log(`🎬 Episodios a refrescar: ${targets.length}`);
+  console.log(`👷 Workers: ${WORKERS}\n`);
+
+  if (!targets.length) {
+    console.log('✅ Nada que refrescar.');
+    return db;
+  }
+
+  const startedAt = new Date().toISOString();
+  let done = 0, changed = 0, errors = 0, gained = 0;
+
+  await runPool(targets, WORKERS, async (episode) => {
+    const label = `${episode.seriesId} · T${episode.seasonId} · EP${episode.number ?? '?'}`;
+
+    try {
+      const html = await fetchHtml(episode.sourceUrl);
+      const detail = parseEpisode(html, episode.sourceUrl);
+
+      const oldServers = episode.servers || [];
+      const newServers = detail.servers.length ? detail.servers : oldServers;
+
+      const had = oldServers.length;
+      const has = newServers.length;
+
+      if (!sameServers(oldServers, newServers)) {
+        changed++;
+        if (has > had) gained += has - had;
+      }
+
+      upsert(db.episodes, {
+        ...episode,
+        title: detail.title || episode.title,
+        servers: newServers,
+        previousUrl: detail.previousUrl || episode.previousUrl || null,
+        nextUrl: detail.nextUrl || episode.nextUrl || null,
+        updatedAt: new Date().toISOString()
+      }, 'id');
+
+      done++;
+      console.log(`   [${done}/${targets.length}] ${label} — ${has} servidor(es)`);
+
+    } catch (error) {
+      errors++;
+      done++;
+      console.log(`   ⚠️ [${done}/${targets.length}] ${label}: ${error.message}`);
+    }
+
+    if (done % 100 === 0) {
+      await enqueueSave(db);
+      console.log(`💾 Checkpoint refresh: ${done}/${targets.length} · cambios: ${changed} · errores: ${errors}`);
+    }
+  });
+
+  const finishedAt = new Date().toISOString();
+
+  db.meta = db.meta || {};
+  db.meta.syncedAt = finishedAt;
+  db.meta.lastSync = {
+    status: errors ? 'partial' : 'success',
+    type: 'refresh-servers',
+    startedAt,
+    finishedAt,
+    error: errors ? `${errors} episodios no se pudieron refrescar` : null,
+    refreshed: done,
+    changed,
+    gained,
+    errors
+  };
+
+  await saveCatalog(db);
+
+  console.log('\n====================================================');
+  console.log('🔧 REFRESCO DE SERVIDORES TERMINADO');
+  console.log('====================================================');
+  console.log(`🎬 Episodios revisados: ${done}`);
+  console.log(`✏️ Episodios modificados: ${changed}`);
+  console.log(`➕ Servidores ganados: ${gained}`);
+  console.log(`❌ Errores: ${errors}`);
+  console.log(`📚 Total catálogo: ${db.series.length} series · ${db.seasons.length} temporadas · ${db.episodes.length} episodios`);
+
+  return db;
+}
+
+/* =========================================================
    MAIN
 ========================================================= */
 
@@ -1347,9 +1535,22 @@ async function main() {
     console.log(`🚀 DONGHUAFLIX SYNC — DonghuaLife /watch/${REBUILD ? '  [REBUILD ♻️]' : ''}`);
     console.log('==============================================\n');
 
+    /*
+       🔧 Refresco de servidores: tiene prioridad sobre el modo
+       incremental (que es justo lo que el usuario quiere evitar
+       cuando el catálogo ya existe pero los servers están vacíos).
+       --fresh sigue teniendo prioridad total.
+    */
+    if (REFRESH_SERVERS && !REBUILD) {
+      console.log('🔧 Modo REFRESCO DE SERVIDORES activado.');
+      await runRefreshServers();
+      return;
+    }
+
     const existing = await loadCatalog();
 
     const needsFullSync =
+      REBUILD ||
       !existing.series.length ||
       catalogHasIncompleteSeasons(existing);
 
