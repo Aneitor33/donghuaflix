@@ -325,7 +325,11 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   }
   function getDB() { return glb('DB') || { series: [], genres: [] }; }
   function findS(ref) { var f = glb('findSeries'); return f ? f(ref) : null; }
-  function imgOf(x) { var f = glb('getSeriesImage'); return f ? f(x) : (x && x.image) || ''; }
+  function proxImg(im) {
+    /* igual que la página Series: usar la URL tal cual la da getSeriesImage */
+    return im;
+  }
+  function imgOf(x) { var f = glb('getSeriesImage'); return proxImg(f ? f(x) : (x && x.image) || ''); }
   function titleOf(x) { var f = glb('cleanTitle'); return f ? f(x) : (x && x.title) || ''; }
   function genresOf(x) { var f = glb('seriesGenres'); return f ? f(x) : (x && x.genres) || []; }
   function slugOf(x) { return (x && (x.slug || x.id)) || ''; }
@@ -339,10 +343,10 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   function imgFallbacks(s) {
     var list = [];
     var im = imgOf(s); if (im) list.push(im);
-    if (s && s.image && s.image !== im && !/IcoPrueba/.test(s.image)) list.push(s.image);
+    if (s && s.image && s.image !== im && !/IcoPrueba/.test(s.image)) list.push(proxImg(s.image));
     try {
       var so = glb('seasonsOf') ? seasonsOf(s.id) : [];
-      for (var i = 0; i < so.length && i < 3; i++) if (so[i].image && !/IcoPrueba/.test(so[i].image)) list.push(so[i].image);
+      for (var i = 0; i < so.length && i < 3; i++) if (so[i].image && !/IcoPrueba/.test(so[i].image)) list.push(proxImg(so[i].image));
     } catch (e) {}
     return list.slice(0, 4);
   }
