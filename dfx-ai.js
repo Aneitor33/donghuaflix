@@ -470,9 +470,12 @@
   /* "búscame X [y dame similares]" — respuesta local 100% fiable */
   function handleDirectSearch(text) {
     var m = text.match(/busca\w*\s+(?:me\s+)?(?:la\s+serie\s+|la\s+pel[ií]cula\s+|el\s+donghua\s+)?[«"']([^«"»]+)[»"']/i) ||
-            text.match(/(?:busca\w*|encuentra\w*|localiza\w*)\s+(?:me\s+)?(?:la\s+serie\s+|la\s+pel[ií]cula\s+|el\s+donghua\s+|algo\s+)?([^«»\n]+?)(?:\s+y\s+(?:dame|dime|darme)\s+similares)?[.?!]?$/i);
+            text.match(/(?:busca\w*|encuentra\w*|localiza\w*|tienes|tienen|hay|existe|existe\w*|está|esta|veis|quiero\s+ver)\s+(?:me\s+)?(?:la\s+serie\s+|la\s+pel[ií]cula\s+|el\s+donghua\s+|algo\s+)?([^«"»\n]+?)(?:\s+y\s+(?:dame|dime|darme)\s+similares)?[.?!]?$/i) ||
+            text.match(/[«"']([^«"»]{2,60})[»"']/);
     if (!m) return false;
     var term = m[1].trim().replace(/^[«"'\s]+|[»"'\s]+$/g, '');
+    if (/^(series?|pel[ií]culas?|donghuas?|animes?|documentales?)\s+(de|sobre|acerca)/i.test(term)) return false;
+    term = term.replace(/^(la|el|los|las)\s+(serie|pel[ií]cula|donghua)\s+(de\s+)?/i, '').replace(/^de\s+/i, '');
     if (term.length < 2 || /recomiend|sorprend|favorito|historial/i.test(term)) return false;
     var found = searchTitles(term);
     if (found.length) {
