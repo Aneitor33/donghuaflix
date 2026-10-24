@@ -217,6 +217,28 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   }
 
   var GENRE = null, SHOW = 18, CAT_MOVED = false, HOME_TIMER = null, LAST_COUNT = -1;
+  function hydrateImages() {
+    var f = glb('ensureDetail');
+    if (!f) return;
+    document.querySelectorAll('[data-cxslug]').forEach(function (el) {
+      var slug = el.getAttribute('data-cxslug');
+      if (!slug || el.getAttribute('data-cxh')) return;
+      el.setAttribute('data-cxh', '1');
+      try {
+        Promise.resolve(f(slug)).then(function () {
+          var s = findS(slug);
+          if (!s) return;
+          var im = imgOf(s);
+          if (!im) return;
+          if (el.tagName === 'IMG') {
+            if (el.src !== im && !el.getAttribute('data-cxdone')) { el.removeAttribute('data-cxh'); el.setAttribute('data-cxdone','1'); el.src = im; }
+          } else if (el.classList.contains('cx5-hero-bg')) {
+            el.style.backgroundImage = 'url(' + im + ')';
+          }
+        }).catch(function () {});
+      } catch (e) {}
+    });
+  }
   function posterSig() {
     var series = getDB().series || [];
     var n = series.length, loc = 0;
@@ -368,7 +390,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       var t0 = titleOf(s) || '?';
       return '<div class="' + cls + '"><div class="cx5-ph">' + esc(t0.charAt(0).toUpperCase()) + '</div></div>';
     }
-    return '<div class="' + cls + '"><img loading="lazy" src="' + esc(fb[0]) + '" data-fb="' + esc(fb.join('|')) + '" data-t="' + esc(titleOf(s)) + '" alt="" onerror="dfxImgFb(this)"></div>';
+    return '<div class="' + cls + '"><img loading="lazy" src="' + esc(fb[0]) + '" data-fb="' + esc(fb.join('|')) + '" data-t="' + esc(titleOf(s)) + '" data-cxslug="' + esc(slugOf(s)) + '" alt="" onerror="dfxImgFb(this)"></div>';
   }
   function link(s) { return '#/series/' + encodeURIComponent(slugOf(s)); }
 
@@ -428,7 +450,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     if (h) {
       var im = imgOf(h);
       html += '<section class="cx5-hero">' +
-        (im ? '<div class="cx5-hero-bg" style="background-image:url(' + esc(im) + ')"></div>' : '') +
+        (im ? '<div class="cx5-hero-bg" data-cxslug="' + esc(slugOf(h)) + '" style="background-image:url(' + esc(im) + ')"></div>' : '') +
         '<div style="position:relative;z-index:1;width:100%">' +
         '<div style="display:flex;gap:6px;align-items:center">' +
         '<span class="cx5-chip-ex">EXCLUSIVO</span>' +
@@ -526,7 +548,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
           '<div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
       }).join('');
       if (SHOW >= grid.length) more.remove(); else more.textContent = 'Cargar más (' + (grid.length - SHOW) + ')';
+      hydrateImages();
     });
+    hydrateImages();
     window.scrollTo(0, 0);
     startHomeWatch();
   }
