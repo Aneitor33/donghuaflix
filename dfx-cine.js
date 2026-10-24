@@ -40,6 +40,19 @@
 .cx5-slide{position:absolute;inset:0;display:flex;align-items:flex-end;padding:22px;opacity:0;transition:opacity .6s ease;pointer-events:none}
 .cx5-slide.on{opacity:1;pointer-events:auto}
 .cx5-dots{position:absolute;right:14px;bottom:12px;z-index:5;display:flex;gap:6px}
+.cx5-rail{margin:22px 0 4px}
+.cx5-railhead{display:flex;align-items:baseline;justify-content:space-between;padding:0 2px;margin-bottom:10px}
+.cx5-railhead h2{font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.cx5-railhead h2::before{content:'';width:4px;height:13px;background:#ff2e2e;border-radius:99px}
+.cx5-railhead a{font-size:11px;color:#a1a1aa;text-decoration:none;white-space:nowrap}
+.cx5-railwrap{position:relative}
+.cx5-railtrack{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.cx5-railtrack::-webkit-scrollbar{display:none}
+.cx5-railtrack>*{scroll-snap-align:start}
+.cx5-railnav{position:absolute;top:38%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(10,10,14,.85);color:#fff;font-size:16px;cursor:pointer;z-index:5;backdrop-filter:blur(10px)}
+.cx5-railnav:hover{border-color:rgba(255,46,46,.7)}
+.cx5-railnav.prev{left:2px}.cx5-railnav.next{right:2px}
+@media(min-width:768px){.cx5-railtrack .cx5-card{width:148px!important}}
 .cx5-dot{width:22px;height:4px;border-radius:3px;border:none;background:rgba(255,255,255,.3);cursor:pointer;padding:0;transition:all .3s}
 .cx5-dot.on{background:#ff2e2e;width:34px;box-shadow:0 0 10px rgba(255,46,46,.6)}
 .cx5-topbar{background:linear-gradient(180deg,rgba(26,26,34,.78),rgba(12,12,16,.82))!important;backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 30px rgba(0,0,0,.4)}
@@ -486,6 +499,61 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     heroAuto();
   }
 
+  function railSection(title, items, href) {
+    if (!items.length) return '';
+    var cards = items.map(function (s) {
+      return '<a class="cx5-card" style="flex:none;width:118px;text-decoration:none" href="#/series/' + encodeURIComponent(slugOf(s)) + '">' +
+        po(s, 'cx5-po2') + bdg(s) +
+        '<div class="cx5-ct">' + esc(titleOf(s)) + '</div></a>';
+    }).join('');
+    return '<section class="cx5-rail">' +
+      '<div class="cx5-railhead"><h2>' + esc(title) + '</h2>' + (href ? '<a href="' + href + '">Ver todo →</a>' : '') + '</div>' +
+      '<div class="cx5-railwrap"><div class="cx5-railtrack">' + cards + '</div>' +
+      '<button class="cx5-railnav prev" aria-label="Anterior">\u2039</button>' +
+      '<button class="cx5-railnav next" aria-label="Siguiente">\u203a</button></div></section>';
+  }
+  function buildRails(series) {
+    var rails = [];
+    var used = {};
+    var yearNow = new Date().getFullYear();
+    function take(list, n) {
+      var out = [];
+      for (var i = 0; i < list.length && out.length < n; i++) {
+        if (used[list[i].id]) continue;
+        used[list[i].id] = 1; out.push(list[i]);
+      }
+      return out;
+    }
+    var rec = take(series.slice().sort(function (a, b) {
+      return (Date.parse(b.updatedAt || 0) || 0) - (Date.parse(a.updatedAt || 0) || 0);
+    }), 15);
+    if (rec.length) rails.push({ t: 'Recién actualizados', items: rec, href: '#/series' });
+    var est = take(series.filter(function (s) { return (parseInt(s.year, 10) || 0) === yearNow; }), 15);
+    if (est.length) rails.push({ t: 'Estrenos ' + yearNow, items: est, href: '#/series' });
+    /* películas por género (si el catálogo tiene cine) */
+    var isMovieS = function (s) { return /movie|pelicula/i.test(s.type || ''); };
+    var pelis = series.filter(isMovieS);
+    if (pelis.length) {
+      var byGP = {};
+      pelis.forEach(function (s) { genresOf(s).forEach(function (gg) { (byGP[gg] = byGP[gg] || []).push(s); }); });
+      Object.keys(byGP).sort(function (a, b) { return byGP[b].length - byGP[a].length; }).slice(0, 3).forEach(function (gg) {
+        var items = take(byGP[gg], 14);
+        if (items.length >= 4) rails.push({ t: 'Películas de ' + gg, items: items, href: '#/movies' });
+      });
+    }
+    /* filas por género */
+    var byG = {};
+    series.forEach(function (s) {
+      if (isMovieS(s) && pelis.length > 30) return;
+      genresOf(s).forEach(function (gg) { (byG[gg] = byG[gg] || []).push(s); });
+    });
+    Object.keys(byG).sort(function (a, b) { return byG[b].length - byG[a].length; }).slice(0, 6).forEach(function (gg) {
+      var items = take(byG[gg], 14);
+      if (items.length >= 4) rails.push({ t: gg, items: items, href: '#/genres' });
+    });
+    return rails;
+  }
+
   function renderCine() {
     var app = document.getElementById('app');
     if (!app) return;
@@ -542,6 +610,11 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       html += '</div></section>';
     }
 
+    /* FILAS DE EXPLORACIÓN (recién actualizados, estrenos, géneros) */
+    buildRails(series).forEach(function (r) {
+      html += railSection(r.t, r.items, r.href);
+    });
+
     /* GÉNEROS pills */
     var genres = [];
     try { (DB.genres || []).forEach(function (g) { genres.push(g.name || g); }); } catch (e) {}
@@ -595,6 +668,12 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       }).join('');
       if (SHOW >= grid.length) more.remove(); else more.textContent = 'Cargar más (' + (grid.length - SHOW) + ')';
       hydrateImages();
+    });
+    document.querySelectorAll('.cx5-railwrap').forEach(function (w) {
+      var track = w.querySelector('.cx5-railtrack');
+      var pv = w.querySelector('.prev'), nx = w.querySelector('.next');
+      if (pv) pv.addEventListener('click', function () { track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' }); });
+      if (nx) nx.addEventListener('click', function () { track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' }); });
     });
     HERO_SLIDES = slides;
     hydrateImages();
