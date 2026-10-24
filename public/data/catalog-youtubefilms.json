@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-23T21:29:29.443Z",
+    "syncedAt": "2026-10-24T04:45:32.954Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1526,
-      "newInThisSync": 0,
-      "scanned": 45,
+      "movies": 1527,
+      "newInThisSync": 1,
+      "scanned": 46,
       "ignoredByDuration": 45,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino",
+      "slug": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino",
+      "title": "【LLENO】Sistema divino de oscuridad cambia mi destino",
+      "image": "https://i.ytimg.com/vi/BG5QpnaWZ2A/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】¿Ser sacerdote significa ser solo un apoyo del equipo y ser manipulado por todos? En esta era competitiva de cambio de clase global, los sacerdotes están en el rango más bajo por su dé...",
+      "year": 2026,
+      "updatedAt": "2026-10-24T04:00:14Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=BG5QpnaWZ2A",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Sistema divino de oscuridad cambia mi destino",
+      "duration": 8532,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo",
       "slug": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo",
@@ -31088,6 +31108,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino-s1",
+      "seriesId": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo-s1",
       "seriesId": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo",
       "number": 1,
@@ -40245,6 +40271,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino-ep-1",
+      "slug": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino-ep-1",
+      "seriesId": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino",
+      "seasonId": "lleno-sistema-divino-de-oscuridad-cambia-mi-destino-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/BG5QpnaWZ2A"
+        }
+      ],
+      "updatedAt": "2026-10-24T04:00:14Z"
+    },
     {
       "id": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo-ep-1",
       "slug": "audio-latino-18-anos-despues-chico-que-aprendio-todas-las-artes-de-matar-se-hizo-ep-1",
