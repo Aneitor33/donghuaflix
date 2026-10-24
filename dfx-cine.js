@@ -115,20 +115,32 @@ body.dfx-cine-skin input:focus{border-color:#ff2e2e}
 body.dfx-cine-skin ::selection{background:rgba(255,46,46,.35)}
 body.dfx-cine-skin ::-webkit-scrollbar{width:9px;height:9px}
 body.dfx-cine-skin ::-webkit-scrollbar-thumb{background:#1e1e24;border-radius:99px;border:2px solid #08080a}
+/* ══ REPRODUCTOR Y EPISODIOS (PRO STREAMING) ══ */
+body.dfx-cine-skin button[class*="servidor"],body.dfx-cine-skin .server-btn,body.dfx-cine-skin div[class*="servidores"] a{
+  background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:20px!important;
+  color:#e4e4e7!important;font-size:11px!important;font-weight:600!important;padding:6px 14px!important;text-transform:capitalize!important}
+body.dfx-cine-skin button[class*="servidor"][class*="active"],body.dfx-cine-skin .server-btn.active{
+  background:#ff2e2e!important;border-color:#ff2e2e!important;color:#fff!important;box-shadow:0 4px 15px rgba(255,46,46,.4)!important}
+body.dfx-cine-skin .ep-side .ep,body.dfx-cine-skin div[class*="episodio"],body.dfx-cine-skin .episode-item{
+  background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:12px!important;padding:10px 14px!important;margin-bottom:6px!important}
+body.dfx-cine-skin .ep-side .ep [class*="sub"],body.dfx-cine-skin .ep-side .ep small{
+  display:none!important}
+body.dfx-cine-skin .ep-side .ep[class*="active"],body.dfx-cine-skin div[class*="episodio"][class*="active"],body.dfx-cine-skin .episode-item.active{
+  background:rgba(255,46,46,.13)!important;border-color:#ff2e2e!important;box-shadow:0 0 12px rgba(255,46,46,.28)!important}
+body.dfx-cine-skin .ep-side .ep[class*="active"] [class*="n"],body.dfx-cine-skin .ep-side .ep[class*="active"] .ep-num{color:#ff2e2e!important}
+body.dfx-cine-skin .player,body.dfx-cine-skin .ep-player,body.dfx-cine-skin [class*="player"]{border-radius:16px!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.1)!important;box-shadow:0 20px 44px rgba(0,0,0,.5)!important}
 /* hamburguesa + drawer (solo escritorio) */
-#app .cx5-ham{display:none}
 #app .cx5-drawer{position:fixed;top:0;right:-300px;height:100vh;width:280px;z-index:95;background:rgba(10,10,14,.98);border-left:1px solid rgba(255,255,255,.1);transition:right .25s ease;padding:64px 14px 20px;display:flex;flex-direction:column;gap:2px;backdrop-filter:blur(20px)}
 #app .cx5-drawer.open{right:0}
 #app .cx5-drawer a{display:flex;align-items:center;gap:12px;padding:13px 14px;font-size:14px;font-weight:600;color:#e4e4e7;text-decoration:none;border-radius:11px}
 #app .cx5-drawer a:hover{background:rgba(255,255,255,.07)}
 #app .cx5-drawer a i{width:20px;text-align:center;color:#9a9ea7}
 #app .cx5-drawer .sep{height:1px;background:rgba(255,255,255,.09);margin:8px 6px}
-#app .cx5-doverlay{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s}
-#app .cx5-doverlay.open{opacity:1;pointer-events:auto}
+#app .cx5-doverlay{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.42);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s}
+#app .cx5-doverlay.open{opacity:1;visibility:visible;pointer-events:auto}
 @media(min-width:768px){
   #dfxAiFab{display:none!important}
   #app .cx5-bnav{display:none!important}
-  #app .cx5-ham{display:flex}
 }
 /* cabecera slim estilo mockup */
 #app .cx5-topbar{position:sticky;top:0;z-index:55;display:flex;align-items:center;gap:10px;padding:10px 14px;
@@ -170,6 +182,18 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   }
 
   var GENRE = null, SHOW = 18, CAT_MOVED = false;
+  function episodeCleanup() {
+    try {
+      document.querySelectorAll('button, .abtn, .tbtn').forEach(function (b) {
+        var t = (b.textContent || '').trim();
+        if (t === 'Servidores' || t === 'SERVIDORES') b.style.display = 'none';
+      });
+      document.querySelectorAll('.ep-side .ep a, .ep-side .ep span, .episode-item span, .episode-item small').forEach(function (s) {
+        var t = (s.textContent || '').trim();
+        if (/\.(com|ru|net|org|tv|io)\b/i.test(t) && t.length < 40) s.style.display = 'none';
+      });
+    } catch (e) {}
+  }
   function catLabel() {
     var cur = glb('currentCatalog') || '';
     var cats = glb('CATALOGS') || [];
@@ -219,14 +243,13 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     var top10 = pool.filter(isAiring).concat(pool).filter(function (s, i, a) { return a.indexOf(s) === i; }).slice(0, 10);
 
     var html = '<div class="cx5-topbar">' +
-      '<a class="cx5-mark2" href="#/cine">DF</a>' +
+      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
       '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
       '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
       '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
       '<a class="cx5-tbtn" href="#/classic" aria-label="Versión clásica"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
-      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú"><i class="fa-solid fa-bars" style="font-size:13px"></i></button>' +
       '</div>' +
       '<div class="cx5-sheet" id="cx5Sheet">' +
       '<a href="#/descubrir">Descubrir</a>' +
@@ -413,7 +436,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       }
       document.body.classList.remove('dfx-cine-home');
       document.body.classList.add('dfx-cine-skin');
-      return r.apply(this, arguments);
+      var ret = r.apply(this, arguments);
+      setTimeout(episodeCleanup, 250);
+      return ret;
     };
     w.__cine5 = true; window.route = w;
     setTimeout(function () {
@@ -432,5 +457,9 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       document.body.classList.remove('dfx-cine-home');
       document.body.classList.add('dfx-cine-skin');
     }
+    var d5 = document.getElementById('cx5Drawer');
+    var o5 = document.getElementById('cx5DOverlay');
+    if (d5) d5.classList.remove('open');
+    if (o5) o5.classList.remove('open');
   });
 })();
