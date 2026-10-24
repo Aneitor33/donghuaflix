@@ -426,38 +426,7 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       .filter(function (s) { return seen[s.id] ? false : (seen[s.id] = 1); });
     var top10 = pool.filter(isAiring).concat(pool).filter(function (s, i, a) { return a.indexOf(s) === i; }).slice(0, 10);
 
-    var html = '<div class="cx5-topbar">' +
-      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
-      '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
-      '<span class="cx5-brand">Donghua<b>Flix</b></span>' +
-      '<button class="cx5-tbtn" id="cx5Auth" aria-label="Iniciar sesión" style="position:relative;cursor:pointer"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></button>' +
-      '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
-      '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
-      '<a class="cx5-tbtn" href="#/classic" aria-label="Versión clásica"><i class="fa-solid fa-xmark" style="font-size:14px"></i></a>' +
-      '</div>' +
-      '<div class="cx5-sheet" id="cx5Sheet">' +
-      '<a href="#/descubrir">Descubrir</a>' +
-      '<a href="#/genres">Géneros</a>' +
-      '<a href="#/airing">En emisión</a>' +
-      '<a href="#/movies">Películas</a>' +
-      '<a href="#/mi-donghua">Mi Donghua</a>' +
-      '<a href="#/classic" style="color:#ff5c5c">Versión clásica</a>' +
-      '</div>' +
-      '<div class="cx5-doverlay" id="cx5DOverlay"></div>' +
-      '<nav class="cx5-drawer" id="cx5Drawer">' +
-      '<a href="#/cine"><i class="fa-solid fa-house"></i>Inicio</a>' +
-      '<a href="#/series"><i class="fa-solid fa-tv"></i>Series</a>' +
-      '<a href="#/movies"><i class="fa-solid fa-film"></i>Películas</a>' +
-      '<a href="#/search"><i class="fa-solid fa-magnifying-glass"></i>Buscar</a>' +
-      '<a href="#/mylist"><i class="fa-solid fa-heart"></i>Mi lista</a>' +
-      '<div class="sep"></div>' +
-      '<a href="#/descubrir"><i class="fa-solid fa-compass"></i>Descubrir</a>' +
-      '<a href="#/genres"><i class="fa-solid fa-layer-group"></i>Géneros</a>' +
-      '<a href="#/airing"><i class="fa-solid fa-satellite-dish"></i>En emisión</a>' +
-      '<a href="#" id="cx5Set2"><i class="fa-solid fa-gear"></i>Ajustes</a>' +
-      '<div class="sep"></div>' +
-      '<a href="#/classic"><i class="fa-solid fa-arrow-rotate-left"></i>Versión clásica</a>' +
-      '</nav><div class="cx5-wrap">';
+    var html = '<div class="cx5-wrap">';
 
     /* HERO */
     var h = feat[0];
@@ -580,14 +549,16 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
       '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
       '<a class="cx5-brand" href="#/" style="text-decoration:none">Donghua<b>Flix</b></a>' +
-      '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
+      '<span style="margin-left:auto;display:flex;gap:8px;align-items:center;flex:none">' +
       '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
       '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
       '<a class="cx5-tbtn" href="#/" aria-label="Inicio"><i class="fa-solid fa-house" style="font-size:13px"></i></a>' +
+      '<button class="cx5-tbtn" id="cx5Auth" aria-label="Iniciar sesión" style="position:relative;cursor:pointer"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></button>' +
+      '</span>' +
       '</div>' +
       '<div class="cx5-sheet" id="cx5Sheet">' +
       '<a href="#/descubrir">Descubrir</a><a href="#/genres">Géneros</a><a href="#/airing">En emisión</a>' +
-      '<a href="#/movies">Películas</a><a href="#/mi-donghua">Mi Donghua</a>' +
+      '<a href="#/movies">Películas</a>' +
       '<a href="#/classic" style="color:#ff5c5c">Versión clásica</a></div>' +
       '<div class="cx5-doverlay" id="cx5DOverlay"></div>' +
       '<nav class="cx5-drawer" id="cx5Drawer">' +
@@ -600,7 +571,6 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       '<a href="#/descubrir"><i class="fa-solid fa-compass"></i>Descubrir</a>' +
       '<a href="#/genres"><i class="fa-solid fa-layer-group"></i>Géneros</a>' +
       '<a href="#/airing"><i class="fa-solid fa-satellite-dish"></i>En emisión</a>' +
-      '<a href="#/mi-donghua"><i class="fa-solid fa-user"></i>Mi Donghua</a>' +
       '<div class="sep"></div>' +
       '<a href="#/classic"><i class="fa-solid fa-arrow-rotate-left"></i>Versión clásica</a>' +
       '</nav>';
@@ -639,9 +609,6 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       var d2 = glb('DFX');
       try { if (d2 && typeof d2.openSettings === 'function') d2.openSettings(); } catch (e) {}
     });
-    function openSet(e){ if(e) e.preventDefault(); var d2 = glb('DFX'); try { if (d2 && typeof d2.openSettings === 'function') { d2.openSettings(); return; } } catch (e2) {} location.hash = '#/mi-donghua'; }
-    var s1 = document.getElementById('cx5Set1'); if (s1) s1.addEventListener('click', openSet);
-    var s2 = document.getElementById('cx5Set2'); if (s2) s2.addEventListener('click', openSet);
     var sy = document.getElementById('cx5Sync');
     if (sy) sy.addEventListener('click', function () {
       var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
