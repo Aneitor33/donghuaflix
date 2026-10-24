@@ -70,10 +70,14 @@ const REFRESH_SERVERS =
     String(process.env.REFRESH_SERVERS || '').toLowerCase()
   );
 
+/*
+   NOTA: no usar clean() aquí — este bloque se evalúa ANTES de que
+   clean esté inicializada (TDZ). La normalización va inline.
+*/
 const ONLY_SERIES = new Set(
-  clean(process.env.ONLY_SERIES || '')
+  String(process.env.ONLY_SERIES || '')
     .split(',')
-    .map(s => s.trim())
+    .map(s => s.replace(/\s+/g, ' ').trim())
     .filter(Boolean)
 );
 
