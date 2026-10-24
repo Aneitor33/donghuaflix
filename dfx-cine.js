@@ -84,8 +84,9 @@
 #app .cx5-wrap{max-width:520px;margin:0 auto;padding:12px 14px 110px}
 #app .cx5-hero-btns{display:flex;gap:8px;align-items:center;position:relative;z-index:1}
 /* ocultar interfaz clásica dentro del modo cine */
-body.dfx-cine-home .nav,body.dfx-cine-home .bottom-nav,body.dfx-cine-home footer,
-body.dfx-cine-home .catalog-wrap{display:none!important}
+body.dfx-cine-skin header.nav,body.dfx-cine-skin .nav{display:none!important}
+body.dfx-cine-skin{padding-top:57px!important}
+body.dfx-cine-home .bottom-nav,body.dfx-cine-home footer,body.dfx-cine-home .catalog-wrap{display:none!important}
 body.dfx-cine-home #app{padding:0!important;max-width:none!important;width:100%!important}
 #dfxThemeToggle{display:none!important}
 /* ══ SKIN GLOBAL (todas las páginas clásicas con lenguaje nuevo) ══ */
@@ -164,20 +165,20 @@ body.dfx-cine-skin .ep-side .ep[class*="active"],body.dfx-cine-skin div[class*="
 body.dfx-cine-skin .ep-side .ep[class*="active"] [class*="n"],body.dfx-cine-skin .ep-side .ep[class*="active"] .ep-num{color:#ff2e2e!important}
 body.dfx-cine-skin .player,body.dfx-cine-skin .ep-player,body.dfx-cine-skin [class*="player"]{border-radius:16px!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.1)!important;box-shadow:0 20px 44px rgba(0,0,0,.5)!important}
 /* hamburguesa + drawer (solo escritorio) */
-#app .cx5-drawer{position:fixed;top:0;right:-300px;height:100vh;width:280px;z-index:95;background:rgba(10,10,14,.98);border-left:1px solid rgba(255,255,255,.1);transition:right .25s ease;padding:64px 14px 20px;display:flex;flex-direction:column;gap:2px;backdrop-filter:blur(20px)}
+.cx5-drawer{position:fixed;top:0;right:-300px;height:100vh;width:280px;z-index:95;background:rgba(10,10,14,.98);border-left:1px solid rgba(255,255,255,.1);transition:right .25s ease;padding:64px 14px 20px;display:flex;flex-direction:column;gap:2px;backdrop-filter:blur(20px)}
 #app .cx5-drawer.open{right:0}
 #app .cx5-drawer a{display:flex;align-items:center;gap:12px;padding:13px 14px;font-size:14px;font-weight:600;color:#e4e4e7;text-decoration:none;border-radius:11px}
 #app .cx5-drawer a:hover{background:rgba(255,255,255,.07)}
 #app .cx5-drawer a i{width:20px;text-align:center;color:#9a9ea7}
 #app .cx5-drawer .sep{height:1px;background:rgba(255,255,255,.09);margin:8px 6px}
-#app .cx5-doverlay{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.42);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s}
+.cx5-doverlay{position:fixed;inset:0;z-index:92;background:rgba(0,0,0,.42);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s}
 #app .cx5-doverlay.open{opacity:1;visibility:visible;pointer-events:auto}
 @media(min-width:768px){
   #dfxAiFab{display:none!important}
   #app .cx5-bnav{display:none!important}
 }
 /* cabecera slim estilo mockup */
-#app .cx5-topbar{position:sticky;top:0;z-index:55;display:flex;align-items:center;gap:10px;padding:10px 14px;
+.cx5-topbar{position:fixed;top:0;left:0;right:0;z-index:55;display:flex;align-items:center;gap:10px;padding:10px 14px;
   background:rgba(8,8,10,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
 #app .cx5-mark2{width:28px;height:28px;border-radius:8px;background:#ff2e2e;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;box-shadow:0 4px 14px rgba(255,46,46,.4);text-decoration:none;flex:none}
 #app .cx5-brand{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.01em}
@@ -185,7 +186,7 @@ body.dfx-cine-skin .player,body.dfx-cine-skin .ep-player,body.dfx-cine-skin [cla
 #app .cx5-tbtn{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#d4d4d8;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px}
 #app .cx5-wrap{width:100%;max-width:560px;padding:12px 12px 120px}
 #app .cx5-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-#app .cx5-sheet{position:fixed;top:56px;right:10px;z-index:70;background:rgba(14,14,18,.97);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;display:none;flex-direction:column;min-width:190px;box-shadow:0 16px 40px rgba(0,0,0,.6)}
+.cx5-sheet{position:fixed;top:56px;right:10px;z-index:70;background:rgba(14,14,18,.97);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px;display:none;flex-direction:column;min-width:190px;box-shadow:0 16px 40px rgba(0,0,0,.6)}
 #app .cx5-sheet.open{display:flex}
 #app .cx5-sheet a{display:block;padding:11px 14px;font-size:13px;color:#e4e4e7;text-decoration:none;border-radius:9px}
 #app .cx5-sheet a:hover{background:rgba(255,255,255,.07)}
@@ -216,18 +217,29 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
   }
 
   var GENRE = null, SHOW = 18, CAT_MOVED = false, HOME_TIMER = null, LAST_COUNT = -1;
+  function posterSig() {
+    var series = getDB().series || [];
+    var n = series.length, loc = 0;
+    for (var i = 0; i < Math.min(n, 500); i++) {
+      var im = imgOf(series[i]);
+      if (im && (im.indexOf('/img/') !== -1 || im.indexOf('public/img') !== -1)) loc++;
+    }
+    return n + ':' + loc;
+  }
   function startHomeWatch() {
     stopHomeWatch();
-    LAST_COUNT = (getDB().series || []).length;
+    LAST_COUNT = posterSig();
     HOME_TIMER = setInterval(function () {
       if (!document.body.classList.contains('dfx-cine-home')) { stopHomeWatch(); return; }
-      var n = (getDB().series || []).length;
-      if (n !== LAST_COUNT) { LAST_COUNT = n; renderCine(); }
-    }, 900);
+      var sig = posterSig();
+      if (sig !== LAST_COUNT) { LAST_COUNT = sig; renderCine(); }
+    }, 1100);
   }
   function stopHomeWatch() { if (HOME_TIMER) { clearInterval(HOME_TIMER); HOME_TIMER = null; } }
   function pageEnhance() {
     try {
+      var cb = document.getElementById('cx5Cat');
+      if (cb) cb.innerHTML = '<i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾';
       var h = location.hash || '#/';
       document.body.classList.toggle('cx5-clean', h.indexOf('#/search') === 0 || h.indexOf('#/series') === 0 || h.indexOf('#/movies') === 0);
       /* ocultar rótulo 'Servidores' */
@@ -499,38 +511,6 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     var m2 = document.getElementById('cx5More2');
     if (m2) m2.addEventListener('click', function(e){ e.preventDefault(); toggleSheet(); });
     if (sheet) sheet.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleSheet(false); }); });
-    var ham = document.getElementById('cx5Ham');
-    var drawer = document.getElementById('cx5Drawer');
-    var doverlay = document.getElementById('cx5DOverlay');
-    function toggleDrawer(force){
-      if(!drawer) return;
-      var show = force!==undefined?force:!drawer.classList.contains('open');
-      drawer.classList.toggle('open',show);
-      if(doverlay) doverlay.classList.toggle('open',show);
-    }
-    if (ham) ham.addEventListener('click', function(e){ e.stopPropagation(); toggleDrawer(); });
-    if (doverlay) doverlay.addEventListener('click', function(){ toggleDrawer(false); });
-    if (drawer) drawer.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleDrawer(false); }); });
-    var catBtn = document.getElementById('cx5Cat');
-    var catMenu = document.querySelector('.cx5-catmenu');
-    if (catBtn && catMenu) {
-      catBtn.addEventListener('click', function(e){ e.stopPropagation(); catMenu.classList.toggle('cx5-open'); });
-      catMenu.addEventListener('click', function(e){
-        var b = e.target.closest('button,a');
-        if (!b) return;
-        catMenu.classList.remove('cx5-open');
-        setTimeout(function(){ if (location.hash.indexOf('#/cine') !== 0) location.hash = '#/cine'; }, 600);
-      });
-      document.addEventListener('click', function(e){
-        if (catMenu.classList.contains('cx5-open') && !e.target.closest('.cx5-catmenu') && !e.target.closest('#cx5Cat')) catMenu.classList.remove('cx5-open');
-      });
-    }
-    var sy = document.getElementById('cx5Sync');
-    if (sy) sy.addEventListener('click', function () {
-      var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
-      try { if (typeof f === 'function') { f(); return; } } catch (e) {}
-      location.reload();
-    });
     app.querySelectorAll('.cx5-pill').forEach(function (c) {
       c.addEventListener('click', function () { GENRE = c.getAttribute('data-g') || null; SHOW = 18; renderCine(); });
     });
@@ -547,7 +527,77 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     startHomeWatch();
   }
 
+  function ensureGlobalChrome() {
+    if (document.getElementById('cx5GlobalBar')) return;
+    moveCatMenu();
+    var bar = document.createElement('div');
+    bar.id = 'cx5GlobalBar';
+    bar.innerHTML =
+      '<div class="cx5-topbar">' +
+      '<button class="cx5-tbtn cx5-ham" id="cx5Ham" aria-label="Menú" style="flex:none"><i class="fa-solid fa-bars" style="font-size:14px"></i></button>' +
+      '<button class="cx5-catpill" id="cx5Cat" aria-label="Cambiar catálogo"><i class="fa-solid fa-table-cells" style="font-size:10px"></i>' + esc(catLabel()) + ' ▾</button>' +
+      '<a class="cx5-brand" href="#/" style="text-decoration:none">Donghua<b>Flix</b></a>' +
+      '<a class="cx5-tbtn" href="#/mi-donghua" aria-label="Cuenta" style="position:relative"><i class="fa-solid fa-user" style="font-size:12px"></i><span style="position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#ff2e2e;border:2px solid #08080a"></span></a>' +
+      '<a class="cx5-tbtn" href="#/search" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="font-size:12px"></i></a>' +
+      '<button class="cx5-tbtn" id="cx5Sync" aria-label="Sincronizar" style="cursor:pointer"><i class="fa-solid fa-rotate" style="font-size:12px"></i></button>' +
+      '<a class="cx5-tbtn" href="#/" aria-label="Inicio"><i class="fa-solid fa-house" style="font-size:13px"></i></a>' +
+      '</div>' +
+      '<div class="cx5-sheet" id="cx5Sheet">' +
+      '<a href="#/descubrir">Descubrir</a><a href="#/genres">Géneros</a><a href="#/airing">En emisión</a>' +
+      '<a href="#/movies">Películas</a><a href="#/mi-donghua">Mi Donghua</a>' +
+      '<a href="#/classic" style="color:#ff5c5c">Versión clásica</a></div>' +
+      '<div class="cx5-doverlay" id="cx5DOverlay"></div>' +
+      '<nav class="cx5-drawer" id="cx5Drawer">' +
+      '<a href="#/"><i class="fa-solid fa-house"></i>Inicio</a>' +
+      '<a href="#/series"><i class="fa-solid fa-tv"></i>Series</a>' +
+      '<a href="#/movies"><i class="fa-solid fa-film"></i>Películas</a>' +
+      '<a href="#/search"><i class="fa-solid fa-magnifying-glass"></i>Buscar</a>' +
+      '<a href="#/mylist"><i class="fa-solid fa-heart"></i>Mi lista</a>' +
+      '<div class="sep"></div>' +
+      '<a href="#/descubrir"><i class="fa-solid fa-compass"></i>Descubrir</a>' +
+      '<a href="#/genres"><i class="fa-solid fa-layer-group"></i>Géneros</a>' +
+      '<a href="#/airing"><i class="fa-solid fa-satellite-dish"></i>En emisión</a>' +
+      '<a href="#/mi-donghua"><i class="fa-solid fa-user"></i>Mi Donghua</a>' +
+      '<div class="sep"></div>' +
+      '<a href="#/classic"><i class="fa-solid fa-arrow-rotate-left"></i>Versión clásica</a>' +
+      '</nav>';
+    document.body.appendChild(bar);
+    var sheet = document.getElementById('cx5Sheet');
+    var drawer = document.getElementById('cx5Drawer');
+    var doverlay = document.getElementById('cx5DOverlay');
+    var ham = document.getElementById('cx5Ham');
+    function toggleSheet(force){ if(!sheet) return; var show = force!==undefined?force:!sheet.classList.contains('open'); sheet.classList.toggle('open',show); }
+    function toggleDrawer(force){
+      if(!drawer) return;
+      var show = force!==undefined?force:!drawer.classList.contains('open');
+      drawer.classList.toggle('open',show);
+      if(doverlay) doverlay.classList.toggle('open',show);
+    }
+    if (ham) ham.addEventListener('click', function(e){ e.stopPropagation(); toggleDrawer(); });
+    if (doverlay) doverlay.addEventListener('click', function(){ toggleDrawer(false); });
+    if (drawer) drawer.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleDrawer(false); }); });
+    if (sheet) sheet.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleSheet(false); }); });
+    var catBtn = document.getElementById('cx5Cat');
+    var catMenu = document.querySelector('.cx5-catmenu');
+    if (catBtn && catMenu) {
+      catBtn.addEventListener('click', function(e){ e.stopPropagation(); catMenu.classList.toggle('cx5-open'); });
+      catMenu.addEventListener('click', function(e){
+        if (!e.target.closest('button,a')) return;
+        catMenu.classList.remove('cx5-open');
+      });
+      document.addEventListener('click', function(e){
+        if (catMenu.classList.contains('cx5-open') && !e.target.closest('.cx5-catmenu') && !e.target.closest('#cx5Cat')) catMenu.classList.remove('cx5-open');
+      });
+    }
+    var sy = document.getElementById('cx5Sync');
+    if (sy) sy.addEventListener('click', function () {
+      var f = glb('syncAll') || glb('forceSync') || glb('refreshCatalog') || glb('syncCatalog') || glb('reloadCatalog');
+      try { if (typeof f === 'function') { f(); return; } } catch (e) {}
+      location.reload();
+    });
+  }
   function patch() {
+    ensureGlobalChrome();
     var r = glb('route');
     if (typeof r !== 'function' || r.__cine5) return;
     function isCineHash(h) { h = h || location.hash || '#/'; return h === '#/' || h === '' || h.indexOf('#/cine') === 0 || h === '#/home'; }
