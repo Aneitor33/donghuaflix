@@ -231,7 +231,13 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
           var im = imgOf(s);
           if (!im) return;
           if (el.tagName === 'IMG') {
-            if (el.src !== im && !el.getAttribute('data-cxdone')) { el.removeAttribute('data-cxh'); el.setAttribute('data-cxdone','1'); el.src = im; }
+            if (el.src !== im && !el.getAttribute('data-cxdone')) {
+              el.removeAttribute('data-cxh'); el.setAttribute('data-cxdone', '1');
+              el.style.display = '';
+              var ph = el.parentNode.querySelector('.cx5-ph');
+              if (ph) ph.remove();
+              el.src = im;
+            }
           } else if (el.classList.contains('cx5-hero-bg')) {
             el.style.backgroundImage = 'url(' + im + ')';
           }
@@ -377,12 +383,15 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
     var cur = imgEl.getAttribute('src') || '';
     var idx = fb.indexOf(cur);
     if (idx !== -1 && idx + 1 < fb.length) { imgEl.src = fb[idx + 1]; return; }
+    /* mantener la img en el DOM (oculta) para que hydrateImages pueda revivirla */
     var t = imgEl.getAttribute('data-t') || '?';
-    var d = document.createElement('div');
-    d.className = 'cx5-ph';
-    d.textContent = t.charAt(0).toUpperCase();
-    imgEl.parentNode.insertBefore(d, imgEl);
-    imgEl.remove();
+    if (!imgEl.parentNode.querySelector('.cx5-ph')) {
+      var d = document.createElement('div');
+      d.className = 'cx5-ph';
+      d.textContent = t.charAt(0).toUpperCase();
+      imgEl.parentNode.insertBefore(d, imgEl);
+    }
+    imgEl.style.display = 'none';
   };
   function po(s, cls) {
     var fb = imgFallbacks(s);
