@@ -49,6 +49,16 @@
       .bottom-nav svg{width:19px;height:19px}
       .bottom-nav a.active,.bottom-nav button.active{color:#fff !important}
       body{padding-bottom:64px !important}
+      /* raíles: tarjetas grandes con scroll horizontal (no se comprimen) */
+      .rail>*{flex:0 0 auto !important;width:138px !important;min-width:138px !important;scroll-snap-align:start}
+      .rail .card h3,.rail h3{font-size:11.5px !important;margin-top:7px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important}
+      .rail .poster{border-radius:10px !important}
+      /* grid: 3 columnas con aire */
+      .grid{gap:12px !important}
+      /* etiquetas pequeñas, una línea, sin tapar */
+      .badge{font-size:7.5px !important;padding:3px 6px !important;letter-spacing:.02em !important;
+        white-space:nowrap !important;max-width:72% !important;overflow:hidden !important;text-overflow:ellipsis !important;
+        left:6px !important;top:6px !important;border-radius:5px !important}
     }
   </style>
 </head>
@@ -129,7 +139,7 @@
   <script src="app.js?v=34"></script>
   <script type="module" src="firebase-sync.js"></script>
   <script src="dfx-core.js"></script>
-  <script src="dfx-ai.js?v=3"></script>
+  <script src="dfx-ai.js?v=4"></script>
   <script src="dfx-pwa.js"></script>
 </body>
 </html>
