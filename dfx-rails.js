@@ -13,6 +13,9 @@
 
   if (typeof window.home !== 'function') return;
 
+  /* let/const del ámbito global NO viven en window: accedemos con eval indirecto */
+  const g = n => (0, eval)(n);
+
   /* ---------- CONFIG ---------- */
   const CFG = {
     seguirViendo: 12,     // máx. tarjetas en "Seguir viendo"
@@ -107,7 +110,7 @@
 
   /* ---------- Construcción de filas ---------- */
   function buildRails() {
-    const series = (window.DB && DB.series) || [];
+    const series = (g('DB') && g('DB').series) || [];
     if (!series.length) return [];
 
     const yearNow = new Date().getFullYear();
@@ -243,10 +246,11 @@
 
   /* Franja para saltar entre catálogos (Donghua, Doramas, PelisPedia...) */
   function catalogStrip() {
-    if (!Array.isArray(window.CATALOGS)) return '';
+    const CATALOGS = g('CATALOGS'); if (!Array.isArray(CATALOGS)) return '';
+    const AV = g('CATALOG_AVAILABLE') || {};
+    const CUR = g('currentCatalog');
     const others = CATALOGS.filter(c =>
-      c.id !== window.currentCatalog &&
-      (window.CATALOG_AVAILABLE ? CATALOG_AVAILABLE[c.id] : true)
+      c.id !== CUR && AV[c.id]
     );
     if (!others.length) return '';
     return `
@@ -254,7 +258,7 @@
         <div class="dfx-rail-head"><h2>Explorar catálogos</h2></div>
         <div class="dfx-cats">
           ${CATALOGS.map(c => `
-            <button class="dfx-cat ${c.id === window.currentCatalog ? 'on' : ''}"
+            <button class="dfx-cat ${c.id === CUR ? 'on' : ''}"
                     data-goto="${c.id}">${c.label}</button>`).join('')}
         </div>
       </section>`;
