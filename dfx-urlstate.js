@@ -1,17 +1,17 @@
 /* ============================================================
- * DonghuaFlix — dfx-urlstate.js  (v2)
+ * DonghuaFlix — dfx-urlstate.js  (v3 · compatible con Modo Cine)
  * Todo tiene enlace: catálogo, sección, página y filtros.
- * + Deep-links robustos: serie/episodio se resuelven en cualquier
- *   catálogo y sesión nueva (índice LITE sin episodios).
+ * + Deep-links de serie/episodio en sesión nueva.
+ * + Género de la portada Modo Cine sincronizado con la URL.
  *
- * AÑADE EN index.html, DESPUÉS de app.js y dfx-rails.js:
- *   <script src="dfx-urlstate.js?v=2"></script>
+ * ORDEN EN index.html (importante):
+ *   app.js → dfx-cine.js → dfx-urlstate.js → dfx-rails.js
  * ============================================================ */
 (function () {
   'use strict';
 
   if (typeof window.route !== 'function') {
-    console.warn('[dfx-urlstate] no encuentro route() ¿cargado antes que app.js?');
+    console.warn('[dfx-urlstate] no encuentro route()');
     return;
   }
 
@@ -36,7 +36,7 @@
     history.replaceState(null, '', q ? path + '?' + q : path);
   }
 
-  /* ---------- ¿existe la serie/episodio en el DB actual? ---------- */
+  /* ---------- existencia y resolución ---------- */
   function epExists(slug) {
     const db = g('DB');
     return !!(db && db.episodes && db.episodes.some(e => (e.slug || e.id) === slug || e.id === slug));
@@ -50,14 +50,10 @@
     }
     return best;
   }
-
-  /* ---------- Buscar la serie en TODOS los catálogos ---------- */
   async function resolveCatalog(slug) {
     const CATALOGS = g('CATALOGS');
     const AV = g('CATALOG_AVAILABLE') || {};
-    if (!Array.isArray(CATALOGS)) return null;
-
-    if (typeof window.ensureCatalog !== 'function') return null;
+    if (!Array.isArray(CATALOGS) || typeof window.ensureCatalog !== 'function') return null;
     for (const c of CATALOGS) {
       if (!AV[c.id]) continue;
       try {
@@ -69,30 +65,22 @@
           if (window.renderCatBar) renderCatBar();
           return db;
         }
-      } catch (e) { /* siguiente catálogo */ }
+      } catch (e) {}
     }
     return null;
   }
-
-  /* Cargar la ficha de la serie (dispara la carga perezosa de
-     temporadas/episodios que hace tu propio detail()) y reintentar */
   function lazyResolve(slug, retry) {
     const appEl = document.getElementById('app');
     if (appEl) appEl.innerHTML =
       '<section class="empty page-top"><h2>Cargando…</h2>' +
       '<p class="muted" style="margin-top:8px">Buscando el episodio en el catálogo</p></section>';
-
     let tries = 0;
     const t = setInterval(() => {
       tries++;
-      if (epExists(slug) || tries > 60) {   /* ~15 s máx. */
-        clearInterval(t);
-        retry();
-      }
+      if (epExists(slug) || tries > 60) { clearInterval(t); retry(); }
     }, 250);
-
-    const s = window.findSeries ? findSeries((seriesIn(g('DB'), slug) || {}).slug || '') : null;
-    const ref = s ? (s.slug || s.id) : (seriesIn(g('DB'), slug) || {}).slug;
+    const match = seriesIn(g('DB'), slug);
+    const ref = match ? (match.slug || match.id) : null;
     if (ref && typeof window.detail === 'function') {
       try { window.detail(ref); } catch (e) {}
     }
@@ -103,34 +91,28 @@
     const _episode = window.episode;
     window.episode = function (slug) {
       if (epExists(slug)) return _episode(slug);
-
       const sNow = seriesIn(g('DB'), slug);
       if (sNow) { lazyResolve(slug, () => _episode(slug)); return; }
-
-      /* No está en este catálogo: buscar en los demás */
       resolveCatalog(slug).then(db => {
-        if (!db) return _episode(slug);          /* deja el "No encontrado" de siempre */
+        if (!db) return _episode(slug);
         if (epExists(slug)) return _episode(slug);
         lazyResolve(slug, () => _episode(slug));
       });
     };
   }
-
   if (typeof window.detail === 'function') {
     const _detail = window.detail;
     window.detail = function (ref, extra) {
       const db = g('DB');
       const ok = db && db.series && db.series.some(x => (x.slug || x.id) === ref || x.id === ref);
       if (ok) return _detail(ref, extra);
-      resolveCatalog(ref).then(db2 => {
-        if (db2) _detail(ref, extra);
-        else _detail(ref, extra);   /* último recurso: comportamiento original */
-      });
+      resolveCatalog(ref).then(() => _detail(ref, extra));
     };
   }
 
   /* ---------- Sincronización hacia la URL ---------- */
   function syncOut() {
+    /* Paginación del grid */
     document.addEventListener('click', e => {
       const btn = e.target.closest('button, a');
       if (!btn) return;
@@ -149,6 +131,7 @@
       }, 60);
     }, true);
 
+    /* Selects de filtro */
     document.addEventListener('change', e => {
       const sel = e.target.closest(CFG.filterSelector);
       if (!sel) return;
@@ -156,6 +139,16 @@
       const key = (sel.name || sel.id || ('f' + [...document.querySelectorAll(CFG.filterSelector)].indexOf(sel))).toLowerCase();
       if (sel.value) params.set(key, sel.value); else params.delete(key);
       writeHash(path, params);
+    }, true);
+
+    /* Pills de género del Modo Cine → ?g= en la URL */
+    document.addEventListener('click', e => {
+      const pill = e.target.closest('.cx5-pill');
+      if (!pill) return;
+      const val = pill.getAttribute('data-g') || '';
+      const { path, params } = parseHash();
+      if (val) params.set('g', val); else params.delete('g');
+      writeHash(path === '#/' ? '#/cine' : path, params);
     }, true);
   }
 
@@ -168,8 +161,7 @@
       if (typeof dp.page === 'number' && dp.page !== last && location.hash.indexOf('#/episode') === 0) {
         last = dp.page;
         const { path, params } = parseHash();
-        if (dp.page > 0) params.set('pag', String(dp.page + 1));
-        else params.delete('pag');
+        if (dp.page > 0) params.set('pag', String(dp.page + 1)); else params.delete('pag');
         writeHash(path, params);
       }
     }, 400);
@@ -195,9 +187,20 @@
       tryClick(20);
     }
 
+    /* Género del Modo Cine: pulsar el pill que toca (solo si no está activo) */
+    const gen = params.get('g');
+    if (gen && document.body.classList.contains('dfx-cine-home')) {
+      const tryPill = tries => {
+        const pill = [...document.querySelectorAll('.cx5-pill')].find(p => !p.classList.contains('on') && (p.getAttribute('data-g') || '') === gen);
+        if (pill) pill.click();
+        else if (tries > 0) setTimeout(() => tryPill(tries - 1), 200);
+      };
+      tryPill(15);
+    }
+
     const selects = [...document.querySelectorAll(CFG.filterSelector)];
     for (const [k, v] of params.entries()) {
-      if (k === 'pag') continue;
+      if (k === 'pag' || k === 'g') continue;
       const sel = selects.find(s =>
         (s.name || '').toLowerCase() === k ||
         (s.id || '').toLowerCase() === k ||
@@ -209,19 +212,19 @@
     }
   }
 
-  /* ---------- route() con prefijo de catálogo ---------- */
+  /* ---------- route() con prefijo de catálogo (envuelve a la del Modo Cine) ---------- */
   const _route = window.route;
 
   window.route = function () {
     const raw = location.hash || '#/';
     const qi = raw.indexOf('?');
-    let path = qi >= 0 ? raw.slice(0, qi) : raw;
+    const path = qi >= 0 ? raw.slice(0, qi) : raw;
     const params = new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
 
     const cm = path.match(/^#\/c\/([^/]+)\/?(.*)$/);
     if (cm) {
       const cat = cm[1];
-      const rest = cm[2];
+      let rest = cm[2] || '';
       if (cat !== g('currentCatalog')) {
         const AV = g('CATALOG_AVAILABLE') || {};
         if (AV[cat] && typeof window.ensureCatalog === 'function') {
@@ -234,12 +237,14 @@
             window.route();
           }).catch(() => { location.hash = '#/'; });
         } else {
-          history.replaceState(null, '', '#/' + (rest || ''));
+          history.replaceState(null, '', '#/' + rest);
           window.route();
         }
         return;
       }
-      history.replaceState(null, '', '#/' + (rest || ''));
+      /* Portada del catálogo: el Modo Cine vive en #/ y #/cine */
+      if (rest === '' || rest === 'cine' || rest === 'home') rest = '';
+      history.replaceState(null, '', '#/' + rest);
       _route();
       applyParams(params);
       history.replaceState(null, '', raw);
@@ -257,7 +262,8 @@
     if (id === g('currentCatalog')) return;
 
     const { path } = parseHash();
-    const sec = path.replace(/^#\/?/, '').replace(/^c\/[^/]+\/?/, '');
+    let sec = path.replace(/^#\/?/, '').replace(/^c\/[^/]+\/?/, '');
+    if (sec === 'cine' || sec === 'home') sec = '';
 
     const appEl = document.getElementById('app');
     if (appEl) {
@@ -281,5 +287,5 @@
 
   syncOut();
   syncEpisodePag();
-  console.log('%c dfx-urlstate v2 activo ', 'background:#1a2440;color:#7aa5ff');
+  console.log('%c dfx-urlstate v3 activo ', 'background:#1a2440;color:#7aa5ff');
 })();
