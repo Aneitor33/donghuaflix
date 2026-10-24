@@ -760,6 +760,54 @@ body.dfx-cine-skin .cx5-catmenu .on{color:#ff2e2e;font-weight:700}
       location.reload();
     });
   }
+  /* ── Historial del navegador para paginación ──
+     Cada cambio de página empuja una entrada; al retroceder/avanzar
+     se restaura la página y la posición del scroll. */
+  function currentPageNum() {
+    var act = document.querySelector('.pg-btn.on, .pg-btn.active, [class*="pag"] .on, [class*="pag"] .active, [class*="pages"] .on');
+    if (!act) return null;
+    var t = (act.textContent || '').trim();
+    return /^\d+$/.test(t) ? parseInt(t, 10) : null;
+  }
+  function pushHist(page) {
+    try {
+      history.pushState({ dfx: { page: page, scroll: window.scrollY } }, document.title, location.href);
+    } catch (e) {}
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button, a');
+    if (!b) return;
+    var inPag = b.classList.contains('pg-btn') ||
+      (b.closest('[class*="pag"]') && /pag/i.test(b.closest('[class*="pag"]').className));
+    if (!inPag) return;
+    var t = (b.textContent || '').trim();
+    var cur = currentPageNum();
+    setTimeout(function () {
+      var page = null;
+      if (/^\d+$/.test(t)) page = parseInt(t, 10);
+      else if (/^(‹|❮|<|Anterior|Prev)/i.test(t) && cur) page = cur - 1;
+      else if (/^(›|❯|>|Siguiente|Next)/i.test(t) && cur) page = cur + 1;
+      else if (/^Ir$/i.test(t)) {
+        var inp = b.parentNode.querySelector('input');
+        if (inp && /^\d+$/.test(inp.value.trim())) page = parseInt(inp.value.trim(), 10);
+      }
+      if (page == null) page = currentPageNum();
+      if (page != null) pushHist(page);
+    }, 120);
+  }, true);
+  window.addEventListener('popstate', function (ev) {
+    var st = ev.state && ev.state.dfx;
+    if (!st) return;
+    setTimeout(function () {
+      if (st.page != null) {
+        var btns = Array.prototype.slice.call(document.querySelectorAll('.pg-btn, [class*="pag"] button'));
+        var target = btns.find(function (b) { return (b.textContent || '').trim() === String(st.page); });
+        if (target) { target.click(); return; }
+      }
+      if (typeof st.scroll === 'number') setTimeout(function () { window.scrollTo(0, st.scroll); }, 300);
+    }, 80);
+  });
+
   function patch() {
     ensureGlobalChrome();
     var r = glb('route');
