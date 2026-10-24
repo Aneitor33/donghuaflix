@@ -284,6 +284,7 @@ function setMode(mode) {
   document.getElementById('dfsErr').textContent = '';
 }
 
+window.openModal = openModal; // expuesto para la barra global del nuevo diseño
 function openModal() {
   injectModal();
   const u = auth.currentUser;

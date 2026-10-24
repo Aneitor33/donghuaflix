@@ -14,7 +14,7 @@ const MAX_CANDIDATES = 24;
 const MAX_CANDIDATE_TITLE = 120;
 const MAX_GENRES = 8;
 const DAILY_LIMIT = 30;            // mensajes / IP / día
-const MODEL_TIMEOUT_MS = 20000;
+const MODEL_TIMEOUT_MS = 45000;
 
 const SYSTEM_PROMPT =
   'Eres el asistente de DonghuaFlix, una web de streaming de donghuas, doramas y películas. ' +
@@ -96,7 +96,7 @@ function parseModelJSON(text, candidateIds) {
 }
 
 /* ---------- proveedores ---------- */
-async function callGemini(key, model, prompt) {
+async function callGemini(key, model, prompt, sysPrompt) {
   var ctrl = new AbortController();
   var t = setTimeout(function () { ctrl.abort(); }, MODEL_TIMEOUT_MS);
   try {
@@ -107,7 +107,7 @@ async function callGemini(key, model, prompt) {
         headers: { 'Content-Type': 'application/json' },
         signal: ctrl.signal,
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          systemInstruction: { parts: [{ text: sysPrompt || SYSTEM_PROMPT }] },
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: { maxOutputTokens: 320, temperature: 0.4 }
         })
@@ -121,7 +121,7 @@ async function callGemini(key, model, prompt) {
   } finally { clearTimeout(t); }
 }
 
-async function callGroq(key, model, prompt) {
+async function callGroq(key, model, prompt, sysPrompt) {
   var ctrl = new AbortController();
   var t = setTimeout(function () { ctrl.abort(); }, MODEL_TIMEOUT_MS);
   try {
@@ -134,7 +134,7 @@ async function callGroq(key, model, prompt) {
         max_tokens: 320,
         temperature: 0.4,
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: sysPrompt || SYSTEM_PROMPT },
           { role: 'user', content: prompt }
         ]
       })
@@ -169,11 +169,11 @@ async function resolveGeminiModel(key, requested) {
   return geminiModelCache;
 }
 
-async function callWorkersAI(AI, prompt) {
+async function callWorkersAI(AI, prompt, sysPrompt) {
   var out = await AI.run('@cf/meta/llama-3.2-3b-instruct', {
     max_tokens: 320,
     messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: sysPrompt || SYSTEM_PROMPT },
       { role: 'user', content: prompt }
     ]
   });
@@ -187,6 +187,48 @@ function buildPrompt(d) {
     '\nMENSAJE DEL USUARIO: ' + d.message;
 }
 
+/* ---------- modo conocimiento: la IA usa su saber y el cliente verifica en el catálogo ---------- */
+const KNOWLEDGE_PROMPT =
+  'Eres un experto en series de televisión, películas, donghuas y anime. El usuario pide contenido sobre un tema. ' +
+  'Responde SOLO con JSON válido: {"reply":"una frase breve en español","titles":["Título 1","Título 2","Título 3","Título 4"]} ' +
+  'con 4 a 6 títulos REALES y conocidos relacionados con el tema. No inventes títulos: solo obras reales que existen.';
+
+function parseKnowledge(text) {
+  if (typeof text !== 'string') return null;
+  var m = text.trim().match(/\{[\s\S]*\}/);
+  if (!m) return null;
+  try {
+    var obj = JSON.parse(m[0]);
+    var reply = cleanStr(obj.reply, 400) || 'Esto es lo que conozco sobre ese tema.';
+    var seen = {}, titles = [];
+    (Array.isArray(obj.titles) ? obj.titles : []).forEach(function (t) {
+      t = cleanStr(t, 80);
+      if (t && !seen[t]) { seen[t] = 1; titles.push(t); }
+    });
+    return { reply: reply, titles: titles.slice(0, 8) };
+  } catch (e) { return null; }
+}
+
+async function handleKnowledge(context, data) {
+  var prompt = 'TEMA PEDIDO POR EL USUARIO: ' + data.message;
+  var calls = [
+    { name: 'gemini', call: function () { return callGemini(context.env.GEMINI_API_KEY, context.env.GEMINI_MODEL || 'gemini-2.5-flash-lite', prompt, KNOWLEDGE_PROMPT); } },
+    { name: 'groq', call: function () { return callGroq(context.env.GROQ_API_KEY, context.env.GROQ_MODEL || 'gpt-oss-20b', prompt, KNOWLEDGE_PROMPT); } }
+  ].filter(function (c) { return true; });
+  var providers = [];
+  if (context.env.GEMINI_API_KEY) providers.push(calls[0]);
+  if (context.env.GROQ_API_KEY) providers.push(calls[1]);
+  if (context.env.AI) providers.push({ name: 'workers-ai', call: function () { return callWorkersAI(context.env.AI, prompt, KNOWLEDGE_PROMPT); } });
+  if (!providers.length) return json({ error: 'ai_not_configured' }, 503);
+  for (var i = 0; i < providers.length; i++) {
+    try {
+      var parsed = parseKnowledge(await providers[i].call());
+      if (parsed) return json({ reply: parsed.reply, titles: parsed.titles, provider: providers[i].name });
+    } catch (e) {}
+  }
+  return json({ error: 'ai_unavailable' }, 503);
+}
+
 /* ---------- handler ---------- */
 export async function onRequestPost(context) {
   var request = context.request, env = context.env;
@@ -198,6 +240,8 @@ export async function onRequestPost(context) {
   var ip = cleanStr(request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown', 60);
   var rl = await rateLimit(env, ip).catch(function () { return { commit: function () {} }; });
   if (rl === false) return json({ error: 'rate_limited' }, 429);
+
+  if (body.mode === 'knowledge') return handleKnowledge(context, data);
 
   var candidateIds = new Set(data.candidates.map(function (c) { return c.id; }));
   var prompt = buildPrompt(data);

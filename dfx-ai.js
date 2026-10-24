@@ -8,7 +8,7 @@
 // ══════════════════════════════════════════════════════════
 (function () {
   'use strict';
-(function(){if(typeof document==='undefined')return;if(!document.getElementById('dfxThemeJs')){var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=2';document.head.appendChild(s);}var c=document.createElement('script');c.src='dfx-cine.js?v=20';document.head.appendChild(c);})();
+(function(){if(typeof document==='undefined')return;if(!document.getElementById('dfxThemeJs')){var s=document.createElement('script');s.id='dfxThemeJs';s.src='dfx-theme.js?v=2';document.head.appendChild(s);}var c=document.createElement('script');c.src='dfx-cine.js?v=23';document.head.appendChild(c);})();
 
   /* ---------- acceso a los globales de app.js ---------- */
   function glb(name) {
@@ -439,6 +439,94 @@
     return html;
   }
 
+  /* búsqueda difusa de títulos en TODO el catálogo activo */
+  function searchTitles(q) {
+    var f = fold2(q).trim();
+    if (!f) return [];
+    var words = f.split(/\s+/).filter(function (w) { return w.length > 2; });
+    var series = getDB().series || [];
+    return series.map(function (s) {
+      var t = fold2(titleOf(s));
+      var sc = 0;
+      if (t === f) sc = 100;
+      else if (t.indexOf(f) !== -1 || (t.length > 4 && f.indexOf(t) !== -1)) sc = 70;
+      else if (words.length) {
+        var ov = words.filter(function (w) { return t.indexOf(w) !== -1; }).length;
+        sc = Math.round(55 * ov / words.length);
+      }
+      return { s: s, sc: sc };
+    }).filter(function (x) { return x.sc >= 40; })
+      .sort(function (a, b) { return b.sc - a.sc; })
+      .slice(0, 5).map(function (x) { return x.s; });
+  }
+
+  function catName() {
+    var cur = curCat();
+    var cats = glb('CATALOGS') || [];
+    for (var i = 0; i < cats.length; i++) if (cats[i].key === cur) return cats[i].name || cats[i].label || cur;
+    return cur;
+  }
+
+  /* "búscame X [y dame similares]" — respuesta local 100% fiable */
+  function handleDirectSearch(text) {
+    var m = text.match(/busca\w*\s+(?:me\s+)?(?:la\s+serie\s+|la\s+pel[ií]cula\s+|el\s+donghua\s+)?[«"']([^«"»]+)[»"']/i) ||
+            text.match(/(?:busca\w*|encuentra\w*|localiza\w*|tienes|tienen|hay|existe|existe\w*|está|esta|veis|quiero\s+ver)\s+(?:me\s+)?(?:la\s+serie\s+|la\s+pel[ií]cula\s+|el\s+donghua\s+|algo\s+)?([^«"»\n]+?)(?:\s+y\s+(?:dame|dime|darme)\s+similares)?[.?!]?$/i) ||
+            text.match(/[«"']([^«"»]{2,60})[»"']/);
+    if (!m) return false;
+    var term = m[1].trim().replace(/^[«"'\s]+|[»"'\s]+$/g, '');
+    if (/^(series?|pel[ií]culas?|donghuas?|animes?|documentales?)\s+(de|sobre|acerca)/i.test(term)) return false;
+    term = term.replace(/^(la|el|los|las)\s+(serie|pel[ií]cula|donghua)\s+(de\s+)?/i, '').replace(/^de\s+/i, '');
+    if (term.length < 2 || /recomiend|sorprend|favorito|historial/i.test(term)) return false;
+    var found = searchTitles(term);
+    if (found.length) {
+      var html = 'Sí la tenemos: <b>' + esc2(titleOf(found[0])) + '</b> está en ' + esc2(catName()) + '.' + cardHTML(found[0], 'Encontrada en tu catálogo');
+      if (/similar/i.test(text)) {
+        var sims = DFXAI.engine.recommend({ kind: 'seed', seed: found[0].id }, 2);
+        sims.forEach(function (sm) { html += cardHTML(sm, 'Similar a ' + titleOf(found[0])); });
+      }
+      addMsg('ai', html);
+    } else {
+      addMsg('ai', 'He buscado <b>' + esc2(term) + '</b> en todo el catálogo ' + esc2(catName()) + ' (' + ((getDB().series || []).length) + ' títulos) y no está. Pruébalo en otro catálogo o dime un tema y te sugiero opciones.');
+    }
+    return true;
+  }
+
+  /* "series sobre narcotráfico" — la IA aporta títulos reales y se verifican en el catálogo */
+  function handleKnowledgeQuery(text) {
+    var m = text.match(/(?:series?|donghuas?|pel[ií]culas?|animes?|documentales?)\s+(?:sobre|de|acerca de)\s+(.+)|algo\s+(?:sobre|de)\s+(.+)/i);
+    if (!m) return false;
+    showTyping();
+    fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'knowledge', message: text.slice(0, 500), history: chatHistory.slice(-6) })
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        hideTyping();
+        if (!res.ok || !res.j || !res.j.titles) throw new Error('fail');
+        var html = esc2(res.j.reply) + '<br>';
+        var noDisponibles = [];
+        res.j.titles.forEach(function (t) {
+          var local = searchTitles(t);
+          if (local.length) {
+            html += cardHTML(local[0], '\u2713 Disponible en ' + catName());
+          } else {
+            noDisponibles.push(t);
+          }
+        });
+        if (noDisponibles.length) {
+          html += '<div style="margin-top:8px;font-size:11.5px;color:var(--muted)">Sin disponibilidad en ' + esc2(catName()) + ': ' + noDisponibles.map(function (t) { return '<i>' + esc2(t) + '</i>'; }).join(' · ') + '</div>';
+        }
+        chatHistory.push({ role: 'assistant', content: res.j.reply.slice(0, 500) });
+        addMsg('ai', html);
+      })
+      .catch(function () {
+        hideTyping();
+        fallbackLocal({ kind: 'foryou' });
+      });
+    return true;
+  }
+
   var typingEl = null;
   function showTyping() {
     typingEl = document.createElement('div');
@@ -459,6 +547,8 @@
     chatHistory.push({ role: 'user', content: text.slice(0, 500) });
     if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
 
+    if (handleDirectSearch(text)) return;
+    if (handleKnowledgeQuery(text)) return;
     var intent = parseIntent(text);
     var candidates = candidatesForAI(intent, 20);
     lastPayload = {
