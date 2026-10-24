@@ -755,6 +755,24 @@ async function parseEpisode(html, episodeUrl) {
   const csrfToken = extractCsrfToken(html);
   const serverButtons = extractServerButtons($);
 
+  /*
+     🔍 DIAGNÓSTICO: si no hay ni pastillas ni URLs, imprimimos qué
+     es lo que el scraper realmente está recibiendo (puede ser una
+     página de Cloudflare, un redirect, una versión lite, etc.)
+  */
+  if (!serverButtons.length && !servers.length) {
+    const title = ($('title').first().text() || '').trim();
+    console.log(`      🔍 DIAG html=${html.length}B title="${title.slice(0, 60)}"`);
+    console.log(`      🔍 tiene server-tab-btn: ${html.includes('server-tab-btn')}`);
+    console.log(`      🔍 tiene csrf-token: ${html.includes('csrf-token')}`);
+    console.log(`      🔍 tiene cloudflare/just-a-moment: ${/just a moment|cf-chl|challenge-platform/i.test(html)}`);
+    const vid = html.match(/data-video-id=["'](\d+)["']/);
+    console.log(`      🔍 data-video-id: ${vid ? vid[1] : 'no'}`);
+    if (process.env.DEBUG_DUMP === '1') {
+      await fs.writeFile(`debug-episode-${Date.now()}.html`, html).catch(() => {});
+    }
+  }
+
   if (serverButtons.length) {
     if (!csrfToken) {
       console.log('      ⚠️ No se encontró el csrf-token en la página');
