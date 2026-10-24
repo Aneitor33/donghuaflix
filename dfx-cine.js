@@ -15,14 +15,6 @@
   function loadLibs() {
     if (LIBS_DONE) return;
     LIBS_DONE = true;
-    if (!document.getElementById('dfxTw')) {
-      var tw = document.createElement('script');
-      tw.id = 'dfxTw'; tw.src = 'https://cdn.tailwindcss.com';
-      tw.onload = function () {
-        if (window.tailwind) tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { DEFAULT: '#ff2e2e', hover: '#e02424' }, dark: { bg: '#08080a', card: '#0f0f14' } } } } };
-      };
-      document.head.appendChild(tw);
-    }
     if (!document.getElementById('dfxFa')) {
       var fa = document.createElement('link');
       fa.id = 'dfxFa'; fa.rel = 'stylesheet';
