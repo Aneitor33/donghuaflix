@@ -661,74 +661,78 @@ function extractServers($, html, episodeUrl) {
 }
 
 /* =========================================================
-   🔑 API DE TOKENS (mismo esquema que donghualife, por si aplica)
+   🔑 SERVIDORES VÍA API INTERNA (descubierto en el JS de la página)
+   ------------------------------------------------------------
+   Las pastillas de servidor son <button class="server-tab-btn"
+   data-video-id="10750" data-server-index="0..3"> sin URL: la URL
+   del embed se pide al servidor al hacer clic:
+
+     POST /api/player/get-server
+     headers: Content-Type: application/json
+              X-CSRF-TOKEN: <meta name="csrf-token">
+              X-Requested-With: XMLHttpRequest
+     body:    {video_id: 10750, server_index: 0}
+     →        {success: true, embed_url: "https://..."}
 ========================================================= */
 
-function decodeScriptText(txt) {
-  return String(txt || '')
-    .replace(/&#34;|&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/\\"/g, '"')
-    .replace(/\\\//g, '/');
+function extractCsrfToken(html) {
+  const m = String(html).match(/<meta[^>]+name=["']csrf-token["'][^>]+content=["']([^"']+)["']/i)
+        || String(html).match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']csrf-token["']/i);
+  return m ? m[1] : null;
 }
 
-function extractFlightSources(html) {
-  const sources = [];
-  const seen = new Set();
-  const decoded = decodeScriptText(html);
-  const re = /"sources":\[(\{.*\})\],"title"/gs;
-  let m;
+/*
+   Lee las pastillas .server-tab-btn del episodio y devuelve
+   [{name, videoId, serverIndex}].
+*/
+function extractServerButtons($) {
+  const buttons = [];
 
-  while ((m = re.exec(decoded)) !== null) {
-    try {
-      const arr = JSON.parse(`[${m[1]}]`);
-      for (const s of arr) {
-        if (!s || typeof s.token !== 'string' || !s.token) continue;
-        const name = clean(s.label || s.name || s.provider || 'Fuente');
-        const key = `${name}|${s.token.slice(-24)}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        sources.push({ name, type: s.type === 'embed' ? 'embed' : 'video', token: s.token });
+  $('.server-tab-btn').each((_, el) => {
+    const $el = $(el);
+    const videoId = $el.attr('data-video-id');
+    const serverIndex = $el.attr('data-server-index');
+    if (videoId == null || serverIndex == null) return;
+
+    // nombre: primer span corto (el primero es el nombre; los otros
+    // son badges tipo "Sub ES" / "1080p")
+    let name = null;
+    $el.find('span').each((__, span) => {
+      if (name) return;
+      const t = clean($(span).text());
+      if (t && t.length <= 25 &&
+          !/^(sub|dub|es|en|jp|lat|castellano|\d{3,4}p|hd|full hd)$/i.test(t)) {
+        name = t;
       }
-    } catch { /* ignorar chunk malformado */ }
-  }
+    });
+    if (!name) name = clean($el.text()).split(/\s+/).slice(0, 2).join(' ');
+    if (!name) name = `Servidor ${serverIndex}`;
 
-  return sources;
+    buttons.push({
+      name,
+      videoId: Number(videoId),
+      serverIndex: Number(serverIndex)
+    });
+  });
+
+  return buttons;
 }
 
-async function refreshSourceToken(token) {
-  try {
-    const data = await fetchJson(`${BASE_URL}/api/player/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token })
-    });
-    return typeof data.token === 'string' && data.token ? data.token : null;
-  } catch {
-    return null;
-  }
-}
+async function fetchServerEmbedUrl(csrfToken, videoId, serverIndex) {
+  const data = await fetchJson(`${BASE_URL}/api/player/get-server`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': csrfToken,
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({ video_id: videoId, server_index: serverIndex })
+  });
 
-async function resolveSourceToken(token, attempt = 1) {
-  try {
-    const data = await fetchJson(`${BASE_URL}/api/player/source`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token })
-    });
-    if (typeof data.url === 'string' && data.url) {
-      return { url: data.url, qualities: Array.isArray(data.qualities) ? data.qualities : [] };
-    }
-    throw new Error(data.error || 'API respondió sin url');
-  } catch (error) {
-    const expired = error.status && [401, 403, 410].includes(error.status);
-    if (expired && attempt === 1) {
-      const fresh = await refreshSourceToken(token);
-      if (fresh) return resolveSourceToken(fresh, 2);
-    }
-    throw error;
+  if (data && data.success && typeof data.embed_url === 'string' && data.embed_url) {
+    return data.embed_url;
   }
+  throw new Error(data?.message || data?.error || 'API respondió sin embed_url');
 }
 
 /* =========================================================
@@ -747,16 +751,24 @@ async function parseEpisode(html, episodeUrl) {
 
   const servers = extractServers($, html, episodeUrl);
 
-  // resolución de tokens si el sitio usa el esquema React Flight
-  const flightSources = extractFlightSources(html);
-  for (const s of flightSources) {
-    try {
-      const resolved = await resolveSourceToken(s.token);
-      addServer(servers, s.name, resolved.url, episodeUrl, s.type === 'embed');
-    } catch (error) {
-      console.log(`      ⚠️ Fuente ${s.name}: ${error.message}`);
+  // resolución vía API interna: pastillas .server-tab-btn
+  const csrfToken = extractCsrfToken(html);
+  const serverButtons = extractServerButtons($);
+
+  if (serverButtons.length) {
+    if (!csrfToken) {
+      console.log('      ⚠️ No se encontró el csrf-token en la página');
     }
-    await sleep(POLITENESS_MS);
+    for (const btn of serverButtons) {
+      try {
+        const embedUrl = await fetchServerEmbedUrl(csrfToken, btn.videoId, btn.serverIndex);
+        addServer(servers, btn.name, embedUrl, episodeUrl, true);
+        console.log(`      🔗 ${btn.name}: ${embedUrl.slice(0, 90)}`);
+      } catch (error) {
+        console.log(`      ⚠️ Servidor ${btn.name}: ${error.message}`);
+      }
+      await sleep(POLITENESS_MS);
+    }
   }
 
   function navLink(patterns) {
