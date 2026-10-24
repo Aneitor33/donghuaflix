@@ -143,12 +143,26 @@ function parseWatchUrl(raw) {
          soul-land-2-1-5         -> base "soul-land-2",         t=1, ep=5
          supreme-god-emperor-2-114 -> base "supreme-god-emperor-2", t=1, ep=114
     */
-    const match = slug.match(/^(.*)-(\d+)-(\d+)$/);
+    /*
+       Dos formatos conviven:
+
+         soul-land-2-1-5                          -> base "soul-land-2",  t=1, ep=5
+         0698ab1b-...-acee-6797913ee528-temporada-1-4
+                                                  -> base "0698ab1b-...-temporada", t=1, ep=4
+
+       En el formato nuevo mantenemos "-temporada" DENTRO de la base para que
+       buildWatchUrl(base, t, ep) reconstruya la URL correcta.
+    */
+    const match =
+      slug.match(/^(.*-temporada)-(\d+)-(\d+)$/) ||
+      slug.match(/^(.*)-(\d+)-(\d+)$/);
     if (!match) return null;
+
+    const base = match[1];
 
     return {
       url,
-      base: match[1],
+      base,
       season: Number(match[2]),
       episode: Number(match[3])
     };
@@ -521,6 +535,168 @@ function addServer(servers, name, raw, base, embed = false) {
   });
 }
 
+/*
+   =========================================================
+   SERVIDORES — rediseño 2026 del player
+   ------------------------------------------------------------
+   La página del episodio ya no lista los servidores como
+   enlaces <a> a hosts externos. Ahora son botones/tarjetas:
+
+       "R2"          Video directo • Con subtítulos
+       "Rumble 1"    Embed • Con subtítulos
+       "Odysee 1"    Embed • Con subtítulos
+
+   cuyas URLs reales pueden venir en:
+     - atributos data-* (data-url, data-embed, data-src, ...)
+     - href (p. ej. https://odysee.com/@dlife:3/...:c)
+     - /api/r2-media?u=<m3u8> (proxy R2 → videos.donghualife.com/.../index.m3u8)
+     - iframes / <video>/<source>
+     - JSON inline dentro de <script> (estado del player)
+
+   Estrategia: barrer TODO lo anterior y deduplicar por name|url.
+   =========================================================
+*/
+
+const SERVER_URL_RE = /dailymotion|rumble\.com|streamtape|ok\.ru|odysee\.com|voe\.|vidmoly|mega\.|youtube\.com|youtu\.be|yourupload|mixdrop|filemoon|mp4upload|vidoza|sibnet|uqload|netu|wolfstream|vudeo|emturbovid|hydrax|kvid|streamvid|playtube|streamhub|r2-media|videos\.donghualife/i;
+
+const TRACKER_RE = /google-analytics|googletagmanager|facebook|disqus|addthis|doubleclick|cdn-cgi|recaptcha|hcaptcha|clarity\.|hotjar/i;
+
+function looksLikeServerUrl(raw) {
+  if (!raw) return false;
+  const lower = String(raw).toLowerCase();
+  if (TRACKER_RE.test(lower)) return false;
+  return (
+    SERVER_URL_RE.test(lower) ||
+    /\.(m3u8|mp4|webm|mkv)(\?|#|$)/i.test(lower)
+  );
+}
+
+/*
+   Saca URLs de servidores embebidas en texto (JSON inline, scripts,
+   atributos onclick, etc.). Normaliza escapes comunes (\u002F, \/).
+*/
+function extractServerUrlsFromText(text) {
+  const found = [];
+  const re = /https?:\/\/[^\s"'<>\\)]+/g;
+  let m;
+  while ((m = re.exec(String(text || ''))) !== null) {
+    let u = m[0]
+      .replace(/\\u002f/gi, '/')
+      .replace(/\\\//g, '/')
+      .replace(/&amp;/g, '&')
+      .replace(/[.,;!\]]+$/, '');
+    if (looksLikeServerUrl(u)) found.push(u);
+  }
+  return found;
+}
+
+/*
+   Nombre legible del servidor a partir del elemento botón/tarjeta:
+   "R2", "Rumble 1", "Odysee 1", o el host como fallback.
+*/
+function serverNameFromElement($, el, fallbackUrl) {
+  const $el = $(el);
+  const name = clean(
+    $el.attr('data-server') ||
+    $el.attr('data-name') ||
+    $el.attr('data-title') ||
+    $el.text()
+  );
+
+  // quitar sufijos tipo "Video directo • Con subtítulos" quedándonos
+  // con la primera línea / palabras cortas (R2, Rumble 1, Odysee 1)
+  const short = clean(String(name).split(/[•|·–—]/)[0]);
+  if (short && short.length <= 30) return short;
+  if (name && name.length <= 30) return name;
+  return hostNameOf(fallbackUrl);
+}
+
+/*
+   ¿Embed o video directo? Se deduce de pistas de texto/estilo:
+   "Embed • ..." -> embed; "Video directo" -> directo.
+*/
+function isEmbedFromElement($, el, url) {
+  const $el = $(el);
+  const hint = clean(
+    ($el.attr('data-type') || '') + ' ' +
+    ($el.attr('data-embed') || '') + ' ' +
+    ($el.attr('class') || '') + ' ' +
+    $el.text()
+  ).toLowerCase();
+
+  if (/embed/.test(hint)) return true;
+  if (/video directo|\bdirecto\b|\bdirect\b|download/.test(hint)) return false;
+  // .m3u8/.mp4 directo => video directo
+  if (/\.(m3u8|mp4|webm|mkv)(\?|#|$)/i.test(url)) return false;
+  return true;
+}
+
+function extractServers($, html, episodeUrl) {
+  const servers = [];
+  const push = (name, raw, embed) => addServer(servers, name, raw, episodeUrl, embed);
+
+  /*
+     1) Atributos data-* (botones R2 / Rumble / Odysee del player).
+  */
+  const DATA_ATTRS = [
+    'data-url', 'data-embed', 'data-src', 'data-video',
+    'data-file', 'data-link', 'data-href', 'data-source', 'data-player'
+  ];
+  $(DATA_ATTRS.map(a => `[${a}]`).join(',')).each((_, el) => {
+    for (const attr of DATA_ATTRS) {
+      const raw = $(el).attr(attr);
+      if (!raw) continue;
+      const full = absolute(raw, episodeUrl);
+      if (!full || !looksLikeServerUrl(full)) continue;
+      push(serverNameFromElement($, el, full), full, isEmbedFromElement($, el, full));
+      break;
+    }
+  });
+
+  /*
+     2) Enlaces <a> a hosts conocidos (odysee, /api/r2-media?u=...,
+        m3u8/mp4, hosts clásicos...). El texto del enlace suele ser
+        el nombre del servidor ("R2", "Rumble 1"...).
+  */
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href');
+    if (!href) return;
+    const full = absolute(href, episodeUrl);
+    if (!full || !looksLikeServerUrl(full)) return;
+    push(serverNameFromElement($, el, full), full, isEmbedFromElement($, el, full));
+  });
+
+  /*
+     3) iframes / <video> / <source> / <embed>.
+  */
+  $('iframe[src], video[src], source[src], embed[src]').each((_, el) => {
+    const src = $(el).attr('src');
+    if (!src) return;
+    const full = absolute(src, episodeUrl);
+    if (!full || !looksLikeServerUrl(full)) return;
+    push(serverNameFromElement($, el, full), full, isEmbedFromElement($, el, full));
+  });
+
+  /*
+     4) JSON inline / scripts: el player suele llevar el estado con
+        las fuentes serializadas (Next data, window.__DATA__, etc.).
+  */
+  $('script').each((_, el) => {
+    const txt = $(el).html();
+    if (!txt || txt.length > 2_000_000) return;
+    for (const u of extractServerUrlsFromText(txt)) {
+      push(hostNameOf(u), u, !/\.(m3u8|mp4|webm|mkv)(\?|#|$)/i.test(u));
+    }
+  });
+
+  // último barrido sobre el HTML crudo por si algo escapó
+  for (const u of extractServerUrlsFromText(html)) {
+    push(hostNameOf(u), u, !/\.(m3u8|mp4|webm|mkv)(\?|#|$)/i.test(u));
+  }
+
+  return servers;
+}
+
 function parseEpisode(html, episodeUrl) {
   const $ = cheerio.load(html);
 
@@ -531,56 +707,7 @@ function parseEpisode(html, episodeUrl) {
 
   const title = clean(rawTitle).replace(/\s*\|\s*DonghuaLife.*$/i, '');
 
-  const servers = [];
-
-  /*
-     1) Enlaces a servidores conocidos (mantenemos el listado
-        del scraper anterior + genéricos de video).
-  */
-  $('a[href]').each((_, el) => {
-    const href = $(el).attr('href');
-    if (!href) return;
-    const lower = href.toLowerCase();
-
-    if (/dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|mega|youtube|yourupload|mixdrop|filemoon|mp4upload|vidoza|sibnet|uqload|netu|wolfstream|vudeo|mixdro|emturbovid|hydrax|kvid|streamvid|playtube|voe\.sx|streamhub|gamma|delta/i.test(lower)) {
-      addServer(servers, clean($(el).text()) || hostNameOf(href), href, episodeUrl, false);
-    }
-  });
-
-  /*
-     2) iframes / video / source: en la web nueva el player va
-        aquí. Aceptamos mismo origen (p. ej. /player/...).
-  */
-  $('iframe[src], video[src], source[src], embed[src]').each((_, el) => {
-    const src = $(el).attr('src');
-    if (!src) return;
-    const full = absolute(src, episodeUrl);
-    if (!full) return;
-    const lower = full.toLowerCase();
-
-    // descartar trackers / widgets sociales
-    if (/google-analytics|googletagmanager|facebook|disqus|addthis|doubleclick|cdn-cgi|recaptcha|hcaptcha|clarity\.|hotjar|/i.test(lower) && /analytics|tagmanager|disqus|doubleclick|recaptcha|hcaptcha/i.test(lower)) return;
-
-    addServer(servers, hostNameOf(full), full, episodeUrl, true);
-  });
-
-  /*
-     3) data-attributes.
-  */
-  $('[data-src], [data-embed], [data-url], [data-video], [data-file]').each((_, el) => {
-    const raw =
-      $(el).attr('data-src') ||
-      $(el).attr('data-embed') ||
-      $(el).attr('data-url') ||
-      $(el).attr('data-video') ||
-      $(el).attr('data-file');
-    if (!raw) return;
-    const full = absolute(raw, episodeUrl);
-    if (!full) return;
-    if (/dailymotion|rumble|streamtape|ok\.ru|voe|vidmoly|youtube|mixdrop|filemoon|mp4upload|vidoza|sibnet|\.m3u8|\.mp4/i.test(full)) {
-      addServer(servers, hostNameOf(full), full, episodeUrl, true);
-    }
-  });
+  const servers = extractServers($, html, episodeUrl);
 
   /*
      4) Anterior / Siguiente: ahora son enlaces /watch/.
