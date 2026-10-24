@@ -46,6 +46,13 @@ const SEEDS = ['/series', '/'];
    espera a que haya episodios nuevos: útil cuando el scraper anterior
    guardó episodes con servers: [] porque el player había cambiado.
 
+   Cascada de resolución por episodio:
+     1. sourceUrl original
+     2. old.donghualife.com/episode/{serie}-{t}-episodio-x{N}
+        (las rutas clásicas viven ahí, con embebidos Rumble/odysee/
+        Dailymotion en el HTML — es lo que ve el log como '(old)')
+     3. re-mapeo vía la ficha /series/ de la serie (watch links nuevos)
+
    Filtros opcionales:
      ONLY_SERIES=slug1,slug2  → solo esas series
      REFRESH_EMPTY_ONLY=1     → solo episodios sin servidores (servers: [])
@@ -793,7 +800,132 @@ function extractServers($, html, episodeUrl) {
   return servers;
 }
 
-function parseEpisode(html, episodeUrl) {
+/* =========================================================
+   🔑 FUENTES DEL PLAYER (React Flight data)
+   ------------------------------------------------------------
+   Las fuentes (R2, Rumble 1, Odysee 1...) viajan en los
+   self.__next_f.push de Next.js con un `token` cifrado cada
+   una. La URL real se obtiene de la API interna:
+
+     POST /api/player/source      {token} → {url, qualities[]}
+     POST /api/player/refresh     {token} → {token}  (si caducó)
+   ========================================================= */
+
+function decodeScriptText(txt) {
+  return String(txt || '')
+    .replace(/&#34;|&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/\\"/g, '"')
+    .replace(/\\\//g, '/');
+}
+
+/*
+   Extrae [{name, type, token}] del HTML. Los tokens salen en el
+   payload de React (scripts __next_f), escapados como \" — por
+   eso el extractor clásico de URLs nunca los veía.
+*/
+function extractFlightSources(html) {
+  const sources = [];
+  const seen = new Set();
+
+  /*
+     Se decodifica TODO el HTML primero: en el fuente servido las
+     comillas del payload React van escapadas (\"), y si el HTML se
+     copió desde el DOM pueden venir como entidades (&#34;).
+  */
+  const decoded = decodeScriptText(html);
+  const re = /"sources":\[(\{.*\})\],"title"/gs;
+  let m;
+
+  while ((m = re.exec(decoded)) !== null) {
+    try {
+      const arr = JSON.parse(`[${m[1]}]`);
+      for (const s of arr) {
+        if (!s || typeof s.token !== 'string' || !s.token) continue;
+        const name = clean(s.label || s.name || s.provider || 'Fuente');
+        const key = `${name}|${s.token.slice(-24)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        sources.push({ name, type: s.type === 'embed' ? 'embed' : 'video', token: s.token });
+      }
+    } catch { /* chunk malformado: se ignora */ }
+  }
+
+  return sources;
+}
+
+async function fetchJson(url, options = {}, attempt = 1) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      redirect: 'follow',
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+          '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'application/json, */*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.9',
+        'Origin': BASE_URL,
+        'Referer': `${BASE_URL}/`,
+        ...(options.headers || {})
+      },
+      ...(options.method ? { method: options.method } : {}),
+      ...(options.body ? { body: options.body } : {})
+    });
+
+    if (!response.ok) {
+      const error = new Error(`HTTP ${response.status} en ${url}`);
+      error.status = response.status;
+      throw error;
+    }
+    return await response.json().catch(() => ({}));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function refreshSourceToken(token) {
+  try {
+    const data = await fetchJson(`${BASE_URL}/api/player/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    return typeof data.token === 'string' && data.token ? data.token : null;
+  } catch {
+    return null;
+  }
+}
+
+/*
+   Resuelve un token → URL real. Reintenta con token renovado si
+   la API lo rechaza (401/403/410 = caducado).
+*/
+async function resolveSourceToken(token, attempt = 1) {
+  try {
+    const data = await fetchJson(`${BASE_URL}/api/player/source`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    if (typeof data.url === 'string' && data.url) {
+      return { url: data.url, qualities: Array.isArray(data.qualities) ? data.qualities : [] };
+    }
+    throw new Error(data.error || 'API respondió sin url');
+  } catch (error) {
+    const expired = error.status && [401, 403, 410].includes(error.status);
+    if (expired && attempt === 1) {
+      const fresh = await refreshSourceToken(token);
+      if (fresh) return resolveSourceToken(fresh, 2);
+    }
+    throw error;
+  }
+}
+
+async function parseEpisode(html, episodeUrl) {
   const $ = cheerio.load(html);
 
   const rawTitle =
@@ -834,6 +966,25 @@ function parseEpisode(html, episodeUrl) {
     $('[class*="fecha"]').first().text() || ''
   ) || null;
 
+  /*
+     5) FUENTES DEL PLAYER NUEVO (React Flight → API de tokens).
+        Solo aplica a las páginas /watch/ del dominio principal;
+        las páginas old.donghualife.com no llevan tokens y aquí
+        no se añade nada.
+  */
+  if (sameOrigin(episodeUrl) && !episodeUrl.startsWith(OLD_BASE_URL)) {
+    const flightSources = extractFlightSources(html);
+    for (const s of flightSources) {
+      try {
+        const resolved = await resolveSourceToken(s.token);
+        addServer(servers, s.name, resolved.url, episodeUrl, s.type === 'embed');
+      } catch (error) {
+        console.log(`      ⚠️ Fuente ${s.name}: ${error.message}`);
+      }
+      await sleep(POLITENESS_MS);
+    }
+  }
+
   return {
     title: title || slugFromUrl(episodeUrl),
     servers,
@@ -872,7 +1023,7 @@ async function crawlEpisodes(season, watchList, previousEpisodes) {
 
     try {
       const html = await fetchHtml(currentUrl);
-      const detail = parseEpisode(html, currentUrl);
+      const detail = await parseEpisode(html, currentUrl);
 
       const episodeId = slugFromUrl(currentUrl);
       const old = oldMap.get(episodeId) || {};
@@ -1451,6 +1602,23 @@ function sameServers(a, b) {
 }
 
 /*
+   El sitio movió las rutas clásicas /episode/{slug}-{t}-episodio-x{N}
+   al subdominio old.donghualife.com (el dominio principal devuelve 404).
+   Esas páginas conservan el player clásico con iframes/embebidos de
+   Rumble / odysee / Dailymotion — justo lo que el extractor original
+   sabía leer. Reconstruimos la URL old desde seriesId+temporada+episodio.
+*/
+const OLD_BASE_URL = 'https://old.donghualife.com';
+
+function buildOldEpisodeUrl(episode) {
+  const seasonMatch = String(episode.seasonId || '').match(/-(\d+)$/);
+  const season = seasonMatch ? seasonMatch[1] : '1';
+  const num = Number(episode.number);
+  if (!episode.seriesId || !Number.isFinite(num)) return null;
+  return `${OLD_BASE_URL}/episode/${episode.seriesId}-${season}-episodio-x${num}`;
+}
+
+/*
    Devuelve la lista de watch links de la ficha de una serie,
    con caché en memoria (un fetch por serie, no por episodio).
 */
@@ -1520,7 +1688,7 @@ async function runRefreshServers() {
   }
 
   const startedAt = new Date().toISOString();
-  let done = 0, changed = 0, errors = 0, gained = 0, repaired = 0;
+  let done = 0, changed = 0, errors = 0, gained = 0, repaired = 0, oldHits = 0;
 
   /*
      Un fetch de ficha de serie por serie (no por episodio): las URLs
@@ -1528,12 +1696,65 @@ async function runRefreshServers() {
   */
   const seriesWatchCache = new Map();
 
+  /*
+     Intenta leer un episodio. Estrategia en cascada:
+       1. sourceUrl original
+       2. si 404 o 0 servidores → old.donghualife.com (mismo contenido,
+          player clásico con embebidos)
+       3. si sigue 404 → re-mapeo vía ficha de la serie (watch links)
+     Devuelve { html, url } o lanza el error original.
+  */
+  async function fetchEpisodeWithFallback(episode) {
+    let html = null;
+
+    try {
+      html = await fetchHtml(episode.sourceUrl);
+    } catch (error) {
+      const oldUrl = buildOldEpisodeUrl(episode);
+      if (oldUrl && !episode.sourceUrl.startsWith(OLD_BASE_URL)) {
+        try {
+          html = await fetchHtml(oldUrl);
+          episode.__resolvedUrl = oldUrl;
+        } catch {
+          throw error; // conservamos el error original
+        }
+      } else {
+        throw error;
+      }
+    }
+
+    let detail = await parseEpisode(html, episode.__resolvedUrl || episode.sourceUrl);
+
+    /*
+       La página respondió pero sin servidores (player client-side).
+       El old suele tener el mismo episodio con embebidos clásicos.
+    */
+    if (!detail.servers.length) {
+      const oldUrl = buildOldEpisodeUrl(episode);
+      if (oldUrl && !(episode.__resolvedUrl || episode.sourceUrl).startsWith(OLD_BASE_URL)) {
+        try {
+          const oldHtml = await fetchHtml(oldUrl);
+          const oldDetail = parseEpisode(oldHtml, oldUrl);
+          if (oldDetail.servers.length) {
+            episode.__resolvedUrl = oldUrl;
+            detail = oldDetail;
+          }
+        } catch {
+          /* el old tampoco lo tiene */
+        }
+      }
+    }
+
+    return { detail, url: episode.__resolvedUrl || episode.sourceUrl };
+  }
+
   await runPool(targets, WORKERS, async (episode) => {
     const label = `${episode.seriesId} · T${episode.seasonId} · EP${episode.number ?? '?'}`;
 
     try {
-      const html = await fetchHtml(episode.sourceUrl);
-      const detail = parseEpisode(html, episode.sourceUrl);
+      const { detail, url } = await fetchEpisodeWithFallback(episode);
+      const usedOld = url.startsWith(OLD_BASE_URL) && url !== episode.sourceUrl;
+      if (usedOld) oldHits++;
 
       const oldServers = episode.servers || [];
       const newServers = detail.servers.length ? detail.servers : oldServers;
@@ -1548,6 +1769,7 @@ async function runRefreshServers() {
 
       upsert(db.episodes, {
         ...episode,
+        sourceUrl: url,
         title: detail.title || episode.title,
         servers: newServers,
         previousUrl: detail.previousUrl || episode.previousUrl || null,
@@ -1556,7 +1778,7 @@ async function runRefreshServers() {
       }, 'id');
 
       done++;
-      console.log(`   [${done}/${targets.length}] ${label} — ${has} servidor(es)`);
+      console.log(`   [${done}/${targets.length}] ${label} — ${has} servidor(es)${usedOld ? ' (old)' : ''}`);
 
     } catch (error) {
       /*
@@ -1569,7 +1791,7 @@ async function runRefreshServers() {
           const fixedUrl = await repairEpisodeUrl(db, episode, seriesWatchCache);
           if (fixedUrl) {
             const html = await fetchHtml(fixedUrl);
-            const detail = parseEpisode(html, fixedUrl);
+            const detail = await parseEpisode(html, fixedUrl);
             const newServers = detail.servers.length ? detail.servers : (episode.servers || []);
 
             upsert(db.episodes, {
@@ -1617,6 +1839,7 @@ async function runRefreshServers() {
     changed,
     gained,
     repaired,
+    oldHits,
     errors
   };
 
@@ -1629,6 +1852,7 @@ async function runRefreshServers() {
   console.log(`✏️ Episodios modificados: ${changed}`);
   console.log(`➕ Servidores ganados: ${gained}`);
   console.log(`🔧 URLs reparadas (404 → watch actual): ${repaired}`);
+  console.log(`🏛️ Resueltos vía old.donghualife.com: ${oldHits}`);
   console.log(`❌ Errores: ${errors}`);
   console.log(`📚 Total catálogo: ${db.series.length} series · ${db.seasons.length} temporadas · ${db.episodes.length} episodios`);
 
