@@ -2,14 +2,13 @@
   "meta": {
     "version": 5,
     "source": "https://donghualife.com/",
-    "syncedAt": "2026-10-24T20:44:59.117Z",
+    "syncedAt": "2026-10-24T21:14:51.810Z",
     "lastSync": {
-      "status": "success",
+      "status": "running",
       "type": "full",
-      "startedAt": "2026-10-24T20:40:53.841Z",
-      "finishedAt": "2026-10-24T20:44:59.117Z",
-      "error": null,
-      "catalogComplete": false
+      "startedAt": "2026-10-24T21:14:51.810Z",
+      "finishedAt": null,
+      "error": null
     }
   },
   "series": [
@@ -34,7 +33,7 @@
         "https://donghualife.com/season/espada-ven-2"
       ],
       "sourceUrl": "https://donghualife.com/series/espada-ven",
-      "updatedAt": "2026-10-24T20:41:12.764Z",
+      "updatedAt": "2026-10-24T21:15:13.460Z",
       "posterLocal": "./public/img/posters/espada-ven.jpg"
     },
     {
@@ -54,7 +53,7 @@
         "https://donghualife.com/season/sistema-de-dios-de-la-guerra-cuento-contigo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/sistema-de-dios-de-la-guerra-cuento-contigo",
-      "updatedAt": "2026-10-24T20:41:56.689Z",
+      "updatedAt": "2026-10-24T21:15:46.107Z",
       "posterLocal": "./public/img/posters/sistema-de-dios-de-la-guerra-cuento-contigo.jpg"
     },
     {
@@ -74,7 +73,7 @@
         "https://donghualife.com/season/1er-beso-1"
       ],
       "sourceUrl": "https://donghualife.com/series/1er-beso",
-      "updatedAt": "2026-10-24T20:42:15.188Z",
+      "updatedAt": "2026-10-24T21:16:00.622Z",
       "posterLocal": "./public/img/posters/1er-beso.jpg"
     },
     {
@@ -89,7 +88,7 @@
         "Artes marciales"
       ],
       "sourceUrl": "https://donghualife.com/series/a-heaven-cleaving-sword",
-      "updatedAt": "2026-10-24T20:41:49.770Z",
+      "updatedAt": "2026-10-24T21:15:40.139Z",
       "posterLocal": "./public/img/posters/a-heaven-cleaving-sword.jpg"
     },
     {
@@ -111,7 +110,7 @@
         "https://donghualife.com/season/moment-forever-1"
       ],
       "sourceUrl": "https://donghualife.com/series/moment-forever",
-      "updatedAt": "2026-10-24T20:41:50.739Z",
+      "updatedAt": "2026-10-24T21:15:41.160Z",
       "posterLocal": "./public/img/posters/moment-forever.jpg"
     },
     {
@@ -138,7 +137,7 @@
         "https://donghualife.com/season/record-mortals-journey-immortality-6"
       ],
       "sourceUrl": "https://donghualife.com/series/record-mortals-journey-immortality",
-      "updatedAt": "2026-10-24T20:40:59.627Z",
+      "updatedAt": "2026-10-24T21:14:56.996Z",
       "posterLocal": "./public/img/posters/record-mortals-journey-immortality.jpg"
     },
     {
@@ -164,7 +163,7 @@
         "https://donghualife.com/season/will-eternal-4"
       ],
       "sourceUrl": "https://donghualife.com/series/will-eternal",
-      "updatedAt": "2026-10-24T20:41:01.740Z",
+      "updatedAt": "2026-10-24T21:14:58.624Z",
       "posterLocal": "./public/img/posters/will-eternal.jpg"
     },
     {
@@ -186,7 +185,7 @@
         "https://donghualife.com/season/above-ten-thousand-people-1"
       ],
       "sourceUrl": "https://donghualife.com/series/above-ten-thousand-people",
-      "updatedAt": "2026-10-24T20:41:49.800Z",
+      "updatedAt": "2026-10-24T21:15:40.589Z",
       "posterLocal": "./public/img/posters/above-ten-thousand-people.jpg"
     },
     {
@@ -210,7 +209,7 @@
         "https://donghualife.com/season/adventures-subduing-demons-1"
       ],
       "sourceUrl": "https://donghualife.com/series/adventures-subduing-demons",
-      "updatedAt": "2026-10-24T20:41:25.617Z",
+      "updatedAt": "2026-10-24T21:15:23.564Z",
       "posterLocal": "./public/img/posters/adventures-subduing-demons.jpg"
     },
     {
@@ -236,7 +235,7 @@
         "https://donghualife.com/season/against-god-2"
       ],
       "sourceUrl": "https://donghualife.com/series/against-god",
-      "updatedAt": "2026-10-24T20:41:12.090Z",
+      "updatedAt": "2026-10-24T21:15:12.606Z",
       "posterLocal": "./public/img/posters/against-god.jpg"
     },
     {
@@ -811,7 +810,7 @@
         "https://donghualife.com/watch/against-sky-supreme-1-551"
       ],
       "sourceUrl": "https://donghualife.com/series/against-sky-supreme",
-      "updatedAt": "2026-10-24T20:40:56.945Z",
+      "updatedAt": "2026-10-24T21:14:53.907Z",
       "posterLocal": "./public/img/posters/against-sky-supreme.jpg"
     },
     {
@@ -833,7 +832,7 @@
         "https://donghualife.com/season/alas-del-mundo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/alas-del-mundo",
-      "updatedAt": "2026-10-24T20:41:56.613Z",
+      "updatedAt": "2026-10-24T21:15:45.976Z",
       "posterLocal": "./public/img/posters/alas-del-mundo.jpg"
     },
     {
@@ -855,7 +854,7 @@
         "https://donghualife.com/season/aliens-among-immortals-1"
       ],
       "sourceUrl": "https://donghualife.com/series/aliens-among-immortals",
-      "updatedAt": "2026-10-24T20:41:10.160Z",
+      "updatedAt": "2026-10-24T21:15:10.685Z",
       "posterLocal": "./public/img/posters/aliens-among-immortals.jpg"
     },
     {
@@ -879,7 +878,7 @@
         "https://donghualife.com/season/alquimia-suprema-2"
       ],
       "sourceUrl": "https://donghualife.com/series/alquimia-suprema",
-      "updatedAt": "2026-10-24T20:41:01.013Z",
+      "updatedAt": "2026-10-24T21:14:57.790Z",
       "posterLocal": "./public/img/posters/alquimia-suprema.jpg"
     },
     {
@@ -900,7 +899,7 @@
         "https://donghualife.com/season/amor-entre-hada-y-demonio-2"
       ],
       "sourceUrl": "https://donghualife.com/series/amor-entre-hada-y-demonio",
-      "updatedAt": "2026-10-24T20:41:14.241Z",
+      "updatedAt": "2026-10-24T21:15:14.374Z",
       "posterLocal": "./public/img/posters/amor-entre-hada-y-demonio.jpg"
     },
     {
@@ -924,7 +923,7 @@
         "https://donghualife.com/season/ancient-god-sovereign-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ancient-god-sovereign",
-      "updatedAt": "2026-10-24T20:41:42.028Z",
+      "updatedAt": "2026-10-24T21:15:34.147Z",
       "posterLocal": "./public/img/posters/ancient-god-sovereign.jpg"
     },
     {
@@ -947,7 +946,7 @@
         "https://donghualife.com/season/ancient-lords-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ancient-lords",
-      "updatedAt": "2026-10-24T20:42:16.183Z",
+      "updatedAt": "2026-10-24T21:16:00.701Z",
       "posterLocal": "./public/img/posters/ancient-lords.jpg"
     },
     {
@@ -1252,7 +1251,7 @@
         "https://donghualife.com/watch/ancient-myth-1-279"
       ],
       "sourceUrl": "https://donghualife.com/series/ancient-myth",
-      "updatedAt": "2026-10-24T20:40:55.922Z",
+      "updatedAt": "2026-10-24T21:14:53.603Z",
       "posterLocal": "./public/img/posters/ancient-myth.jpg"
     },
     {
@@ -1275,7 +1274,7 @@
         "https://donghualife.com/season/ancient-soul-war-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ancient-soul-war",
-      "updatedAt": "2026-10-24T20:41:20.100Z",
+      "updatedAt": "2026-10-24T21:15:20.208Z",
       "posterLocal": "./public/img/posters/ancient-soul-war.jpg"
     },
     {
@@ -1296,7 +1295,7 @@
         "https://donghualife.com/season/especiales-de-donghualife"
       ],
       "sourceUrl": "https://donghualife.com/series/anuncios-de-la-web",
-      "updatedAt": "2026-10-24T20:41:26.044Z",
+      "updatedAt": "2026-10-24T21:15:23.818Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:24:23.739Z"
     },
@@ -1323,7 +1322,7 @@
         "https://donghualife.com/season/apotheosis-3"
       ],
       "sourceUrl": "https://donghualife.com/series/apotheosis",
-      "updatedAt": "2026-10-24T20:41:04.971Z",
+      "updatedAt": "2026-10-24T21:15:03.717Z",
       "posterLocal": "./public/img/posters/apotheosis.jpg"
     },
     {
@@ -1337,7 +1336,7 @@
         "Misterio"
       ],
       "sourceUrl": "https://donghualife.com/series/ascension-on-a-chosen-day",
-      "updatedAt": "2026-10-24T20:42:12.704Z",
+      "updatedAt": "2026-10-24T21:15:58.439Z",
       "posterLocal": "./public/img/posters/ascension-on-a-chosen-day.jpg"
     },
     {
@@ -1359,7 +1358,7 @@
         "https://donghualife.com/season/awakening-soul-1"
       ],
       "sourceUrl": "https://donghualife.com/series/awakening-soul",
-      "updatedAt": "2026-10-24T20:41:26.708Z",
+      "updatedAt": "2026-10-24T21:15:24.413Z",
       "posterLocal": "./public/img/posters/awakening-soul.png"
     },
     {
@@ -1382,7 +1381,7 @@
         "https://donghualife.com/season/bking-1"
       ],
       "sourceUrl": "https://donghualife.com/series/bking",
-      "updatedAt": "2026-10-24T20:42:09.920Z",
+      "updatedAt": "2026-10-24T21:15:55.517Z",
       "posterLocal": "./public/img/posters/bking.jpg"
     },
     {
@@ -1407,7 +1406,7 @@
         "https://donghualife.com/season/beyond-timescape-2-0"
       ],
       "sourceUrl": "https://donghualife.com/series/beyond-timescape",
-      "updatedAt": "2026-10-24T20:41:16.833Z",
+      "updatedAt": "2026-10-24T21:15:17.003Z",
       "posterLocal": "./public/img/posters/beyond-timescape.jpg"
     },
     {
@@ -1437,7 +1436,7 @@
         "https://donghualife.com/season/big-brother-3"
       ],
       "sourceUrl": "https://donghualife.com/series/big-brother",
-      "updatedAt": "2026-10-24T20:41:02.407Z",
+      "updatedAt": "2026-10-24T21:14:59.250Z",
       "posterLocal": "./public/img/posters/big-brother.jpg"
     },
     {
@@ -1459,7 +1458,7 @@
         "https://donghualife.com/season/blader-soul-1"
       ],
       "sourceUrl": "https://donghualife.com/series/blader-soul",
-      "updatedAt": "2026-10-24T20:42:10.986Z",
+      "updatedAt": "2026-10-24T21:15:57.300Z",
       "posterLocal": "./public/img/posters/blader-soul.jpg"
     },
     {
@@ -1478,7 +1477,7 @@
         "https://donghualife.com/season/blades-guardians-2"
       ],
       "sourceUrl": "https://donghualife.com/series/blades-guardians",
-      "updatedAt": "2026-10-24T20:42:04.277Z",
+      "updatedAt": "2026-10-24T21:15:51.600Z",
       "posterLocal": "./public/img/posters/blades-guardians.jpg"
     },
     {
@@ -1500,7 +1499,7 @@
         "https://donghualife.com/season/caminantes-del-purgatorio-1"
       ],
       "sourceUrl": "https://donghualife.com/series/caminantes-del-purgatorio",
-      "updatedAt": "2026-10-24T20:42:15.708Z",
+      "updatedAt": "2026-10-24T21:16:00.683Z",
       "posterLocal": "./public/img/posters/caminantes-del-purgatorio.jpg"
     },
     {
@@ -1520,7 +1519,7 @@
         "https://donghualife.com/season/cazadores-fantasmas-1"
       ],
       "sourceUrl": "https://donghualife.com/series/cazadores-fantasmas",
-      "updatedAt": "2026-10-24T20:41:31.766Z",
+      "updatedAt": "2026-10-24T21:15:27.396Z",
       "posterLocal": "./public/img/posters/cazadores-fantasmas.jpg"
     },
     {
@@ -1542,7 +1541,7 @@
         "https://donghualife.com/season/celestial-bonds-1"
       ],
       "sourceUrl": "https://donghualife.com/series/celestial-bonds",
-      "updatedAt": "2026-10-24T20:42:09.953Z",
+      "updatedAt": "2026-10-24T21:15:55.676Z",
       "posterLocal": "./public/img/posters/celestial-bonds.jpg"
     },
     {
@@ -1565,7 +1564,7 @@
         "https://donghualife.com/season/charm-soul-pets-1"
       ],
       "sourceUrl": "https://donghualife.com/series/charm-soul-pets",
-      "updatedAt": "2026-10-24T20:41:55.714Z",
+      "updatedAt": "2026-10-24T21:15:44.861Z",
       "posterLocal": "./public/img/posters/charm-soul-pets.jpg"
     },
     {
@@ -1589,7 +1588,7 @@
         "https://donghualife.com/season/cheng-he-ti-tong-2"
       ],
       "sourceUrl": "https://donghualife.com/series/cheng-he-ti-tong",
-      "updatedAt": "2026-10-24T20:41:15.916Z",
+      "updatedAt": "2026-10-24T21:15:15.922Z",
       "posterLocal": "./public/img/posters/cheng-he-ti-tong.jpg"
     },
     {
@@ -1613,7 +1612,7 @@
         "https://donghualife.com/season/chinese-paladin-3-1"
       ],
       "sourceUrl": "https://donghualife.com/series/chinese-paladin-3",
-      "updatedAt": "2026-10-24T20:41:43.021Z",
+      "updatedAt": "2026-10-24T21:15:35.808Z",
       "posterLocal": "./public/img/posters/chinese-paladin-3.jpg"
     },
     {
@@ -1636,7 +1635,7 @@
         "https://donghualife.com/season/chronicles-ancient-grudges-1"
       ],
       "sourceUrl": "https://donghualife.com/series/chronicles-ancient-grudges",
-      "updatedAt": "2026-10-24T20:41:18.131Z",
+      "updatedAt": "2026-10-24T21:15:18.252Z",
       "posterLocal": "./public/img/posters/chronicles-ancient-grudges.jpg"
     },
     {
@@ -1658,7 +1657,7 @@
         "https://donghualife.com/season/chunqiu-feng-shen-1"
       ],
       "sourceUrl": "https://donghualife.com/series/chunqiu-feng-shen",
-      "updatedAt": "2026-10-24T20:42:04.247Z",
+      "updatedAt": "2026-10-24T21:15:51.275Z",
       "posterLocal": "./public/img/posters/chunqiu-feng-shen.png"
     },
     {
@@ -2055,7 +2054,7 @@
         "https://donghualife.com/watch/cien-mil-anos-en-refinacion-de-qi-1-379"
       ],
       "sourceUrl": "https://donghualife.com/series/cien-mil-anos-en-refinacion-de-qi",
-      "updatedAt": "2026-10-24T20:40:57.229Z",
+      "updatedAt": "2026-10-24T21:14:54.267Z",
       "posterLocal": "./public/img/posters/cien-mil-anos-en-refinacion-de-qi.jpg"
     },
     {
@@ -2082,7 +2081,7 @@
         "https://donghualife.com/season/cinderella-chef-3"
       ],
       "sourceUrl": "https://donghualife.com/series/cinderella-chef",
-      "updatedAt": "2026-10-24T20:41:36.569Z",
+      "updatedAt": "2026-10-24T21:15:30.116Z",
       "posterLocal": "./public/img/posters/cinderella-chef.jpg"
     },
     {
@@ -2100,7 +2099,7 @@
         "https://donghualife.com/season/city-gods-record-1"
       ],
       "sourceUrl": "https://donghualife.com/series/city-gods-record",
-      "updatedAt": "2026-10-24T20:41:25.636Z",
+      "updatedAt": "2026-10-24T21:15:23.833Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:22:59.523Z"
     },
@@ -2125,7 +2124,7 @@
         "https://donghualife.com/season/coiling-dragon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/coiling-dragon",
-      "updatedAt": "2026-10-24T20:42:05.308Z",
+      "updatedAt": "2026-10-24T21:15:52.506Z",
       "posterLocal": "./public/img/posters/coiling-dragon.jpg"
     },
     {
@@ -2149,7 +2148,7 @@
         "https://donghualife.com/season/combat-continent-2-la-inigualable-secta-tang-1"
       ],
       "sourceUrl": "https://donghualife.com/series/combat-continent-2-la-inigualable-secta-tang",
-      "updatedAt": "2026-10-24T20:41:02.223Z",
+      "updatedAt": "2026-10-24T21:14:58.736Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:23:15.342Z"
     },
@@ -2173,7 +2172,7 @@
         "https://donghualife.com/season/corazon-de-galaxia-1"
       ],
       "sourceUrl": "https://donghualife.com/series/corazon-de-galaxia",
-      "updatedAt": "2026-10-24T20:41:21.708Z",
+      "updatedAt": "2026-10-24T21:15:21.400Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:28:26.878Z"
     },
@@ -2196,7 +2195,7 @@
         "https://donghualife.com/season/country-rare-treasure-1"
       ],
       "sourceUrl": "https://donghualife.com/series/country-rare-treasure",
-      "updatedAt": "2026-10-24T20:41:23.476Z",
+      "updatedAt": "2026-10-24T21:15:22.462Z",
       "posterLocal": "./public/img/posters/country-rare-treasure.jpg"
     },
     {
@@ -2218,7 +2217,7 @@
         "https://donghualife.com/season/cronicas-de-la-dinastia-tang-1"
       ],
       "sourceUrl": "https://donghualife.com/series/cronicas-de-la-dinastia-tang",
-      "updatedAt": "2026-10-24T20:41:44.062Z",
+      "updatedAt": "2026-10-24T21:15:35.886Z",
       "posterLocal": "./public/img/posters/cronicas-de-la-dinastia-tang.jpg"
     },
     {
@@ -2229,7 +2228,7 @@
       "synopsis": "Un segundo atrás, el restaurante estaba lleno de alegría y camaradería; al siguiente, se convirtió en un baño de sangre. Aquel rey, que amaba a su pueblo como a un hijo, se transformó de repente en una bestia sedienta de venganza. Ming lo ha perdido todo; ¡ese rey es un ser despreciable y voy a vengarme! Pero, espera ¿me estás diciendo que este alma frente a mí, a la que solo le quedan 100 días de vida, es el verdadero Lie? Muy bien. 100 días ¡hagámoslo! Coronémonos reyes juntos.",
       "genres": [],
       "sourceUrl": "https://donghualife.com/series/crowned-in-hundreds-days",
-      "updatedAt": "2026-10-24T20:41:59.922Z",
+      "updatedAt": "2026-10-24T21:15:48.436Z",
       "posterFailed": true,
       "posterFailedAt": "2026-10-04T09:20:55.375Z"
     },
@@ -2253,7 +2252,7 @@
         "https://donghualife.com/season/cupid-chocolats-1"
       ],
       "sourceUrl": "https://donghualife.com/series/cupid-chocolats",
-      "updatedAt": "2026-10-24T20:41:11.940Z",
+      "updatedAt": "2026-10-24T21:15:12.721Z",
       "posterLocal": "./public/img/posters/cupid-chocolats.jpg"
     },
     {
@@ -2274,7 +2273,7 @@
         "https://donghualife.com/season/dahua-zhi-shaonian-you-1"
       ],
       "sourceUrl": "https://donghualife.com/series/dahua-zhi-shaonian-you",
-      "updatedAt": "2026-10-24T20:41:58.187Z",
+      "updatedAt": "2026-10-24T21:15:47.148Z",
       "posterLocal": "./public/img/posters/dahua-zhi-shaonian-you.jpg"
     },
     {
@@ -2295,7 +2294,7 @@
         "https://donghualife.com/season/de-una-manera-u-otra-1"
       ],
       "sourceUrl": "https://donghualife.com/series/de-una-manera-u-otra",
-      "updatedAt": "2026-10-24T20:41:46.186Z",
+      "updatedAt": "2026-10-24T21:15:37.425Z",
       "posterLocal": "./public/img/posters/de-una-manera-u-otra.jpg"
     },
     {
@@ -2318,7 +2317,7 @@
         "https://donghualife.com/season/deep-spaces-other-shore-1"
       ],
       "sourceUrl": "https://donghualife.com/series/deep-spaces-other-shore",
-      "updatedAt": "2026-10-24T20:41:42.827Z",
+      "updatedAt": "2026-10-24T21:15:35.292Z",
       "posterLocal": "./public/img/posters/deep-spaces-other-shore.jpg"
     },
     {
@@ -2340,7 +2339,7 @@
         "https://donghualife.com/season/defense-fully-open-1"
       ],
       "sourceUrl": "https://donghualife.com/series/defense-fully-open",
-      "updatedAt": "2026-10-24T20:41:10.887Z",
+      "updatedAt": "2026-10-24T21:15:11.415Z",
       "posterLocal": "./public/img/posters/defense-fully-open.jpg"
     },
     {
@@ -2362,7 +2361,7 @@
         "https://donghualife.com/season/demons-ascension-1"
       ],
       "sourceUrl": "https://donghualife.com/series/demons-ascension",
-      "updatedAt": "2026-10-24T20:42:14.025Z",
+      "updatedAt": "2026-10-24T21:15:59.070Z",
       "posterLocal": "./public/img/posters/demons-ascension.jpg"
     },
     {
@@ -2382,7 +2381,7 @@
         "https://donghualife.com/season/desde-la-luna-roja-1"
       ],
       "sourceUrl": "https://donghualife.com/series/desde-la-luna-roja",
-      "updatedAt": "2026-10-24T20:41:52.438Z",
+      "updatedAt": "2026-10-24T21:15:42.085Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:28:06.767Z"
     },
@@ -2409,7 +2408,7 @@
         "https://donghualife.com/season/dinastia-de-jade-4"
       ],
       "sourceUrl": "https://donghualife.com/series/dinastia-de-jade",
-      "updatedAt": "2026-10-24T20:41:07.343Z",
+      "updatedAt": "2026-10-24T21:15:07.006Z",
       "posterLocal": "./public/img/posters/dinastia-de-jade.jpg"
     },
     {
@@ -2432,7 +2431,7 @@
         "https://donghualife.com/season/dios-eterno-de-la-espada-1"
       ],
       "sourceUrl": "https://donghualife.com/series/dios-eterno-de-la-espada",
-      "updatedAt": "2026-10-24T20:41:35.411Z",
+      "updatedAt": "2026-10-24T21:15:29.912Z",
       "posterLocal": "./public/img/posters/dios-eterno-de-la-espada.jpg"
     },
     {
@@ -2453,7 +2452,7 @@
         "https://donghualife.com/season/dios-eterno-de-la-espada-3d-1"
       ],
       "sourceUrl": "https://donghualife.com/series/dios-eterno-de-la-espada-3d",
-      "updatedAt": "2026-10-24T20:41:59.567Z",
+      "updatedAt": "2026-10-24T21:15:48.415Z",
       "posterLocal": "./public/img/posters/dios-eterno-de-la-espada-3d.jpg"
     },
     {
@@ -2478,7 +2477,7 @@
         "https://donghualife.com/season/dios-marcial-asura-2"
       ],
       "sourceUrl": "https://donghualife.com/series/dios-marcial-asura",
-      "updatedAt": "2026-10-24T20:41:38.169Z",
+      "updatedAt": "2026-10-24T21:15:31.336Z",
       "posterLocal": "./public/img/posters/dios-marcial-asura.jpg"
     },
     {
@@ -2501,7 +2500,7 @@
         "https://donghualife.com/season/divine-love-deep-blue-1"
       ],
       "sourceUrl": "https://donghualife.com/series/divine-love-deep-blue",
-      "updatedAt": "2026-10-24T20:42:05.278Z",
+      "updatedAt": "2026-10-24T21:15:52.799Z",
       "posterLocal": "./public/img/posters/divine-love-deep-blue.jpg"
     },
     {
@@ -2525,7 +2524,7 @@
         "https://donghualife.com/season/dominio-divino-sin-limites-1"
       ],
       "sourceUrl": "https://donghualife.com/series/dominio-divino-sin-limites",
-      "updatedAt": "2026-10-24T20:41:08.703Z",
+      "updatedAt": "2026-10-24T21:15:09.023Z",
       "posterLocal": "./public/img/posters/dominio-divino-sin-limites.jpg"
     },
     {
@@ -2563,7 +2562,7 @@
         "https://donghualife.com/watch/doupo-cangqiong-1-13"
       ],
       "sourceUrl": "https://donghualife.com/series/doupo-cangqiong",
-      "updatedAt": "2026-10-24T20:40:55.274Z",
+      "updatedAt": "2026-10-24T21:14:52.975Z",
       "posterLocal": "./public/img/posters/doupo-cangqiong.jpg"
     },
     {
@@ -2586,7 +2585,7 @@
         "https://donghualife.com/season/dragon-raja-2"
       ],
       "sourceUrl": "https://donghualife.com/series/dragon-raja",
-      "updatedAt": "2026-10-24T20:41:17.364Z",
+      "updatedAt": "2026-10-24T21:15:17.327Z",
       "posterLocal": "./public/img/posters/dragon-raja.jpg"
     },
     {
@@ -2609,7 +2608,7 @@
         "https://donghualife.com/season/dragon-shattering-nine-heavens-1"
       ],
       "sourceUrl": "https://donghualife.com/series/dragon-shattering-nine-heavens",
-      "updatedAt": "2026-10-24T20:41:35.202Z",
+      "updatedAt": "2026-10-24T21:15:29.302Z",
       "posterLocal": "./public/img/posters/dragon-shattering-nine-heavens.jpg"
     },
     {
@@ -2632,7 +2631,7 @@
         "https://donghualife.com/season/eclipse-illusion-1"
       ],
       "sourceUrl": "https://donghualife.com/series/eclipse-illusion",
-      "updatedAt": "2026-10-24T20:41:39.817Z",
+      "updatedAt": "2026-10-24T21:15:31.009Z",
       "posterLocal": "./public/img/posters/eclipse-illusion.jpg"
     },
     {
@@ -2653,7 +2652,7 @@
         "https://donghualife.com/season/el-alma-del-maestro-soldado-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-alma-del-maestro-soldado",
-      "updatedAt": "2026-10-24T20:42:04.191Z",
+      "updatedAt": "2026-10-24T21:15:51.175Z",
       "posterLocal": "./public/img/posters/el-alma-del-maestro-soldado.jpg"
     },
     {
@@ -2674,7 +2673,7 @@
         "https://donghualife.com/season/el-artesano-asesino-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-artesano-asesino",
-      "updatedAt": "2026-10-24T20:41:51.843Z",
+      "updatedAt": "2026-10-24T21:15:41.752Z",
       "posterLocal": "./public/img/posters/el-artesano-asesino.jpg"
     },
     {
@@ -2695,7 +2694,7 @@
         "https://donghualife.com/season/el-ascenso-de-los-debiles-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-ascenso-de-los-debiles",
-      "updatedAt": "2026-10-24T20:42:06.990Z",
+      "updatedAt": "2026-10-24T21:15:53.796Z",
       "posterLocal": "./public/img/posters/el-ascenso-de-los-debiles.jpg"
     },
     {
@@ -2718,7 +2717,7 @@
         "https://donghualife.com/season/el-ascenso-del-dragon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-ascenso-del-dragon",
-      "updatedAt": "2026-10-24T20:41:34.093Z",
+      "updatedAt": "2026-10-24T21:15:28.300Z",
       "posterLocal": "./public/img/posters/el-ascenso-del-dragon.jpg"
     },
     {
@@ -2743,7 +2742,7 @@
         "https://donghualife.com/season/el-ascenso-del-soberano-2"
       ],
       "sourceUrl": "https://donghualife.com/series/el-ascenso-del-soberano",
-      "updatedAt": "2026-10-24T20:41:02.267Z",
+      "updatedAt": "2026-10-24T21:14:58.889Z",
       "posterLocal": "./public/img/posters/el-ascenso-del-soberano.jpg"
     },
     {
@@ -2765,7 +2764,7 @@
         "https://donghualife.com/season/el-avatar-del-rey-2"
       ],
       "sourceUrl": "https://donghualife.com/series/el-avatar-del-rey",
-      "updatedAt": "2026-10-24T20:42:04.456Z",
+      "updatedAt": "2026-10-24T21:15:52.612Z",
       "posterLocal": "./public/img/posters/el-avatar-del-rey.jpg"
     },
     {
@@ -2792,7 +2791,7 @@
         "https://donghualife.com/season/el-cazador-de-demonios-3"
       ],
       "sourceUrl": "https://donghualife.com/series/el-cazador-de-demonios",
-      "updatedAt": "2026-10-24T20:41:06.246Z",
+      "updatedAt": "2026-10-24T21:15:05.717Z",
       "posterLocal": "./public/img/posters/el-cazador-de-demonios.jpg"
     },
     {
@@ -2820,7 +2819,7 @@
         "https://donghualife.com/season/el-contraataque-del-discipulo-desterrado-3"
       ],
       "sourceUrl": "https://donghualife.com/series/el-contraataque-del-discipulo-desterrado",
-      "updatedAt": "2026-10-24T20:41:02.066Z",
+      "updatedAt": "2026-10-24T21:14:58.851Z",
       "posterLocal": "./public/img/posters/el-contraataque-del-discipulo-desterrado.jpg"
     },
     {
@@ -2844,7 +2843,7 @@
         "https://donghualife.com/season/el-dios-de-la-guerra-de-los-5-elementos-2"
       ],
       "sourceUrl": "https://donghualife.com/series/el-dios-de-la-guerra-de-los-5-elementos",
-      "updatedAt": "2026-10-24T20:41:08.749Z",
+      "updatedAt": "2026-10-24T21:15:09.219Z",
       "posterLocal": "./public/img/posters/el-dios-de-la-guerra-de-los-5-elementos.jpg"
     },
     {
@@ -2866,7 +2865,7 @@
         "https://donghualife.com/season/el-gobernante-del-destino-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-gobernante-del-destino",
-      "updatedAt": "2026-10-24T20:41:21.074Z",
+      "updatedAt": "2026-10-24T21:15:20.628Z",
       "posterLocal": "./public/img/posters/el-gobernante-del-destino.jpg"
     },
     {
@@ -2888,7 +2887,7 @@
         "https://donghualife.com/season/el-gusano-de-seda-dorado-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-gusano-de-seda-dorado",
-      "updatedAt": "2026-10-24T20:42:01.404Z",
+      "updatedAt": "2026-10-24T21:15:49.730Z",
       "posterLocal": "./public/img/posters/el-gusano-de-seda-dorado.jpg"
     },
     {
@@ -2911,7 +2910,7 @@
         "https://donghualife.com/season/el-inmortal-renegado-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-inmortal-renegado",
-      "updatedAt": "2026-10-24T20:41:03.189Z",
+      "updatedAt": "2026-10-24T21:14:59.807Z",
       "posterLocal": "./public/img/posters/el-inmortal-renegado.png"
     },
     {
@@ -2931,7 +2930,7 @@
         "https://donghualife.com/season/el-invencible-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-invencible",
-      "updatedAt": "2026-10-24T20:42:15.001Z",
+      "updatedAt": "2026-10-24T21:15:59.779Z",
       "posterLocal": "./public/img/posters/el-invencible.jpg"
     },
     {
@@ -2951,7 +2950,7 @@
         "https://donghualife.com/season/el-juego-del-abismo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-juego-del-abismo",
-      "updatedAt": "2026-10-24T20:42:15.210Z",
+      "updatedAt": "2026-10-24T21:16:00.659Z",
       "posterLocal": "./public/img/posters/el-juego-del-abismo.jpg"
     },
     {
@@ -2976,7 +2975,7 @@
         "https://donghualife.com/season/el-maestro-caido-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-maestro-caido",
-      "updatedAt": "2026-10-24T20:41:53.671Z",
+      "updatedAt": "2026-10-24T21:15:43.330Z",
       "posterLocal": "./public/img/posters/el-maestro-caido.jpg"
     },
     {
@@ -2999,7 +2998,7 @@
         "https://donghualife.com/season/el-orgulloso-emperador-de-la-eternidad-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-orgulloso-emperador-de-la-eternidad",
-      "updatedAt": "2026-10-24T20:42:06.188Z",
+      "updatedAt": "2026-10-24T21:15:52.818Z",
       "posterLocal": "./public/img/posters/el-orgulloso-emperador-de-la-eternidad.jpg"
     },
     {
@@ -3025,7 +3024,7 @@
         "https://donghualife.com/season/el-primer-inmortal-del-kendo-2"
       ],
       "sourceUrl": "https://donghualife.com/series/el-primer-inmortal-del-kendo",
-      "updatedAt": "2026-10-24T20:41:04.338Z",
+      "updatedAt": "2026-10-24T21:15:01.413Z",
       "posterLocal": "./public/img/posters/el-primer-inmortal-del-kendo.jpg"
     },
     {
@@ -3047,7 +3046,7 @@
         "https://donghualife.com/season/el-problema-de-los-3-cuerpos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-problema-de-los-3-cuerpos",
-      "updatedAt": "2026-10-24T20:41:48.055Z",
+      "updatedAt": "2026-10-24T21:15:39.291Z",
       "posterLocal": "./public/img/posters/el-problema-de-los-3-cuerpos.jpg"
     },
     {
@@ -3068,7 +3067,7 @@
         "https://donghualife.com/season/el-renacimiento-del-villano-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-renacimiento-del-villano",
-      "updatedAt": "2026-10-24T20:41:54.125Z",
+      "updatedAt": "2026-10-24T21:15:43.545Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:21.933Z"
     },
@@ -3092,7 +3091,7 @@
         "https://donghualife.com/season/el-rey-de-los-cultivadores-casuales-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-rey-de-los-cultivadores-casuales",
-      "updatedAt": "2026-10-24T20:41:13.595Z",
+      "updatedAt": "2026-10-24T21:15:14.113Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:22.924Z"
     },
@@ -3114,7 +3113,7 @@
         "https://donghualife.com/season/el-rey-de-todos-los-reinos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-rey-de-todos-los-reinos",
-      "updatedAt": "2026-10-24T20:42:03.226Z",
+      "updatedAt": "2026-10-24T21:15:50.871Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:04.802Z"
     },
@@ -3137,7 +3136,7 @@
         "https://donghualife.com/season/el-rey-dios-inmortal-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-rey-dios-inmortal",
-      "updatedAt": "2026-10-24T20:42:09.530Z",
+      "updatedAt": "2026-10-24T21:15:55.576Z",
       "posterLocal": "./public/img/posters/el-rey-dios-inmortal.jpg"
     },
     {
@@ -3161,7 +3160,7 @@
         "https://donghualife.com/season/el-santo-de-la-espada-de-los-10-reinos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-santo-de-la-espada-de-los-10-reinos",
-      "updatedAt": "2026-10-24T20:42:11.827Z",
+      "updatedAt": "2026-10-24T21:15:57.389Z",
       "posterLocal": "./public/img/posters/el-santo-de-la-espada-de-los-10-reinos.jpg"
     },
     {
@@ -3183,7 +3182,7 @@
         "https://donghualife.com/season/el-ultimo-invocador-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-ultimo-invocador",
-      "updatedAt": "2026-10-24T20:41:22.125Z",
+      "updatedAt": "2026-10-24T21:15:21.608Z",
       "posterLocal": "./public/img/posters/el-ultimo-invocador.jpg"
     },
     {
@@ -3206,7 +3205,7 @@
         "https://donghualife.com/season/el-viento-de-la-guardia-de-honor-se-levanta-en-jinling-1"
       ],
       "sourceUrl": "https://donghualife.com/series/el-viento-de-la-guardia-de-honor-se-levanta-en-jinling",
-      "updatedAt": "2026-10-24T20:41:55.021Z",
+      "updatedAt": "2026-10-24T21:15:44.702Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:57.459Z"
     },
@@ -3228,7 +3227,7 @@
         "https://donghualife.com/season/embers-1"
       ],
       "sourceUrl": "https://donghualife.com/series/embers",
-      "updatedAt": "2026-10-24T20:41:48.006Z",
+      "updatedAt": "2026-10-24T21:15:38.965Z",
       "posterLocal": "./public/img/posters/embers.jpg"
     },
     {
@@ -3251,7 +3250,7 @@
         "https://donghualife.com/season/emperador-de-la-galaxia-1"
       ],
       "sourceUrl": "https://donghualife.com/series/emperador-de-la-galaxia",
-      "updatedAt": "2026-10-24T20:41:13.550Z",
+      "updatedAt": "2026-10-24T21:15:13.991Z",
       "posterLocal": "./public/img/posters/emperador-de-la-galaxia.jpg"
     },
     {
@@ -3274,7 +3273,7 @@
         "https://donghualife.com/season/emperador-supremo-del-dao-divino-1"
       ],
       "sourceUrl": "https://donghualife.com/series/emperador-supremo-del-dao-divino",
-      "updatedAt": "2026-10-24T20:41:16.320Z",
+      "updatedAt": "2026-10-24T21:15:16.234Z",
       "posterLocal": "./public/img/posters/emperador-supremo-del-dao-divino.jpg"
     },
     {
@@ -3296,7 +3295,7 @@
         "https://donghualife.com/season/empieza-ser-una-estrella-hoy-2"
       ],
       "sourceUrl": "https://donghualife.com/series/empieza-ser-una-estrella-hoy",
-      "updatedAt": "2026-10-24T20:42:04.149Z",
+      "updatedAt": "2026-10-24T21:15:51.379Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:24:59.768Z"
     },
@@ -3322,7 +3321,7 @@
         "https://donghualife.com/season/epic-divinity-light-1"
       ],
       "sourceUrl": "https://donghualife.com/series/epic-divinity-light",
-      "updatedAt": "2026-10-24T20:41:30.240Z",
+      "updatedAt": "2026-10-24T21:15:26.675Z",
       "posterLocal": "./public/img/posters/epic-divinity-light.jpg"
     },
     {
@@ -3346,7 +3345,7 @@
         "https://donghualife.com/season/era-de-pistoleros-1"
       ],
       "sourceUrl": "https://donghualife.com/series/era-de-pistoleros",
-      "updatedAt": "2026-10-24T20:41:11.685Z",
+      "updatedAt": "2026-10-24T21:15:12.170Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:00.351Z"
     },
@@ -3370,7 +3369,7 @@
         "https://donghualife.com/season/eres-un-genio-1"
       ],
       "sourceUrl": "https://donghualife.com/series/eres-un-genio",
-      "updatedAt": "2026-10-24T20:42:02.943Z",
+      "updatedAt": "2026-10-24T21:15:50.359Z",
       "posterLocal": "./public/img/posters/eres-un-genio.jpg"
     },
     {
@@ -3392,7 +3391,7 @@
         "https://donghualife.com/season/espiritus-en-pinceles-chinos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/espiritus-en-pinceles-chinos",
-      "updatedAt": "2026-10-24T20:41:30.002Z",
+      "updatedAt": "2026-10-24T21:15:25.866Z",
       "posterLocal": "./public/img/posters/espiritus-en-pinceles-chinos.jpg"
     },
     {
@@ -3406,7 +3405,7 @@
         "Venganza"
       ],
       "sourceUrl": "https://donghualife.com/series/eternal-god-emperor",
-      "updatedAt": "2026-10-24T20:41:41.425Z",
+      "updatedAt": "2026-10-24T21:15:33.464Z",
       "posterLocal": "./public/img/posters/eternal-god-emperor.jpg"
     },
     {
@@ -3429,7 +3428,7 @@
         "https://donghualife.com/season/eternal-strife-1"
       ],
       "sourceUrl": "https://donghualife.com/series/eternal-strife",
-      "updatedAt": "2026-10-24T20:41:51.003Z",
+      "updatedAt": "2026-10-24T21:15:41.246Z",
       "posterLocal": "./public/img/posters/eternal-strife.jpg"
     },
     {
@@ -3450,7 +3449,7 @@
         "https://donghualife.com/season/eternal-sword-emperor-1"
       ],
       "sourceUrl": "https://donghualife.com/series/eternal-sword-emperor",
-      "updatedAt": "2026-10-24T20:41:18.942Z",
+      "updatedAt": "2026-10-24T21:15:19.279Z",
       "posterLocal": "./public/img/posters/eternal-sword-emperor.jpg"
     },
     {
@@ -3473,7 +3472,7 @@
         "https://donghualife.com/season/ever-night-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ever-night",
-      "updatedAt": "2026-10-24T20:42:09.096Z",
+      "updatedAt": "2026-10-24T21:15:54.926Z",
       "posterLocal": "./public/img/posters/ever-night.jpg"
     },
     {
@@ -3494,7 +3493,7 @@
         "https://donghualife.com/season/everything-fine-emperor-1"
       ],
       "sourceUrl": "https://donghualife.com/series/everything-fine-emperor",
-      "updatedAt": "2026-10-24T20:41:52.649Z",
+      "updatedAt": "2026-10-24T21:15:42.703Z",
       "posterLocal": "./public/img/posters/everything-fine-emperor.jpg"
     },
     {
@@ -3514,7 +3513,7 @@
         "https://donghualife.com/season/face-lie-1"
       ],
       "sourceUrl": "https://donghualife.com/series/face-lie",
-      "updatedAt": "2026-10-24T20:41:57.951Z",
+      "updatedAt": "2026-10-24T21:15:46.818Z",
       "posterLocal": "./public/img/posters/face-lie.jpg"
     },
     {
@@ -3537,7 +3536,7 @@
         "https://donghualife.com/season/fairy-mountain-1"
       ],
       "sourceUrl": "https://donghualife.com/series/fairy-mountain",
-      "updatedAt": "2026-10-24T20:42:12.105Z",
+      "updatedAt": "2026-10-24T21:15:58.033Z",
       "posterLocal": "./public/img/posters/fairy-mountain.jpg"
     },
     {
@@ -3561,7 +3560,7 @@
         "https://donghualife.com/season/feng-qi-luo-yang-zhi-shen-ji-shao-nian-1"
       ],
       "sourceUrl": "https://donghualife.com/series/feng-qi-luo-yang-zhi-shen-ji-shao-nian",
-      "updatedAt": "2026-10-24T20:41:46.528Z",
+      "updatedAt": "2026-10-24T21:15:38.169Z",
       "posterLocal": "./public/img/posters/feng-qi-luo-yang-zhi-shen-ji-shao-nian.jpg"
     },
     {
@@ -3584,7 +3583,7 @@
         "https://donghualife.com/season/fengzi-wuyu-yinhe-pian-1"
       ],
       "sourceUrl": "https://donghualife.com/series/fengzi-wuyu-yinhe-pian",
-      "updatedAt": "2026-10-24T20:42:09.017Z",
+      "updatedAt": "2026-10-24T21:15:54.713Z",
       "posterLocal": "./public/img/posters/fengzi-wuyu-yinhe-pian.png"
     },
     {
@@ -3608,7 +3607,7 @@
         "https://donghualife.com/season/fight-throne-1"
       ],
       "sourceUrl": "https://donghualife.com/series/fight-throne",
-      "updatedAt": "2026-10-24T20:41:14.616Z",
+      "updatedAt": "2026-10-24T21:15:14.935Z",
       "posterLocal": "./public/img/posters/fight-throne.jpg"
     },
     {
@@ -3633,7 +3632,7 @@
         "https://donghualife.com/season/fighter-destiny-3d-1"
       ],
       "sourceUrl": "https://donghualife.com/series/fighter-destiny-3d",
-      "updatedAt": "2026-10-24T20:41:42.471Z",
+      "updatedAt": "2026-10-24T21:15:35.313Z",
       "posterLocal": "./public/img/posters/fighter-destiny-3d.jpg"
     },
     {
@@ -3656,7 +3655,7 @@
         "https://donghualife.com/season/fog-hill-five-elements-2"
       ],
       "sourceUrl": "https://donghualife.com/series/fog-hill-five-elements",
-      "updatedAt": "2026-10-24T20:41:25.602Z",
+      "updatedAt": "2026-10-24T21:15:23.549Z",
       "posterLocal": "./public/img/posters/fog-hill-five-elements.jpg"
     },
     {
@@ -3677,7 +3676,7 @@
         "https://donghualife.com/season/frontera-del-vacio-1"
       ],
       "sourceUrl": "https://donghualife.com/series/frontera-del-vacio",
-      "updatedAt": "2026-10-24T20:41:51.433Z",
+      "updatedAt": "2026-10-24T21:15:41.734Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:42.666Z"
     },
@@ -3693,7 +3692,7 @@
         "Reencarnación"
       ],
       "sourceUrl": "https://donghualife.com/series/god-of-fortune-dou-zhanlong",
-      "updatedAt": "2026-10-24T20:41:28.038Z",
+      "updatedAt": "2026-10-24T21:15:25.003Z",
       "posterLocal": "./public/img/posters/god-of-fortune-dou-zhanlong.jpg"
     },
     {
@@ -3717,7 +3716,7 @@
         "https://donghualife.com/season/god-road-1"
       ],
       "sourceUrl": "https://donghualife.com/series/god-road",
-      "updatedAt": "2026-10-24T20:41:17.924Z",
+      "updatedAt": "2026-10-24T21:15:18.187Z",
       "posterLocal": "./public/img/posters/god-road.jpg"
     },
     {
@@ -3741,7 +3740,7 @@
         "https://donghualife.com/season/great-doctor-miss-nine-2"
       ],
       "sourceUrl": "https://donghualife.com/series/great-doctor-miss-nine",
-      "updatedAt": "2026-10-24T20:41:08.638Z",
+      "updatedAt": "2026-10-24T21:15:08.227Z",
       "posterLocal": "./public/img/posters/great-doctor-miss-nine.jpg"
     },
     {
@@ -3769,7 +3768,7 @@
         "https://donghualife.com/season/great-journey-teenagers-4"
       ],
       "sourceUrl": "https://donghualife.com/series/great-journey-teenagers",
-      "updatedAt": "2026-10-24T20:41:05.743Z",
+      "updatedAt": "2026-10-24T21:15:03.744Z",
       "posterLocal": "./public/img/posters/great-journey-teenagers.jpg"
     },
     {
@@ -3790,7 +3789,7 @@
         "https://donghualife.com/season/grid-braves-1"
       ],
       "sourceUrl": "https://donghualife.com/series/grid-braves",
-      "updatedAt": "2026-10-24T20:41:23.592Z",
+      "updatedAt": "2026-10-24T21:15:22.444Z",
       "posterLocal": "./public/img/posters/grid-braves.jpg"
     },
     {
@@ -3812,7 +3811,7 @@
         "https://donghualife.com/season/hace-muchos-anos-que-no-es-una-heroina-1"
       ],
       "sourceUrl": "https://donghualife.com/series/hace-muchos-anos-que-no-es-una-heroina",
-      "updatedAt": "2026-10-24T20:41:55.748Z",
+      "updatedAt": "2026-10-24T21:15:45.275Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:31:09.207Z"
     },
@@ -3836,7 +3835,7 @@
         "https://donghualife.com/season/heavenly-brick-knight-1"
       ],
       "sourceUrl": "https://donghualife.com/series/heavenly-brick-knight",
-      "updatedAt": "2026-10-24T20:42:10.726Z",
+      "updatedAt": "2026-10-24T21:15:57.093Z",
       "posterLocal": "./public/img/posters/heavenly-brick-knight.jpg"
     },
     {
@@ -3857,7 +3856,7 @@
         "https://donghualife.com/season/hei-men-1"
       ],
       "sourceUrl": "https://donghualife.com/series/hei-men",
-      "updatedAt": "2026-10-24T20:41:30.839Z",
+      "updatedAt": "2026-10-24T21:15:26.651Z",
       "posterLocal": "./public/img/posters/hei-men.jpg"
     },
     {
@@ -3879,7 +3878,7 @@
         "https://donghualife.com/season/hero-return-1"
       ],
       "sourceUrl": "https://donghualife.com/series/hero-return",
-      "updatedAt": "2026-10-24T20:41:30.219Z",
+      "updatedAt": "2026-10-24T21:15:26.545Z",
       "posterLocal": "./public/img/posters/hero-return.jpg"
     },
     {
@@ -3902,7 +3901,7 @@
         "https://donghualife.com/season/historia-de-amor-del-gato-espiritual-1"
       ],
       "sourceUrl": "https://donghualife.com/series/historia-de-amor-del-gato-espiritual",
-      "updatedAt": "2026-10-24T20:42:06.427Z",
+      "updatedAt": "2026-10-24T21:15:53.395Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:29.909Z"
     },
@@ -3926,7 +3925,7 @@
         "https://donghualife.com/season/hoja-del-alba-1"
       ],
       "sourceUrl": "https://donghualife.com/series/hoja-del-alba",
-      "updatedAt": "2026-10-24T20:41:57.121Z",
+      "updatedAt": "2026-10-24T21:15:46.299Z",
       "posterLocal": "./public/img/posters/hoja-del-alba.jpg"
     },
     {
@@ -3947,7 +3946,7 @@
         "https://donghualife.com/season/honor-de-reyes-2"
       ],
       "sourceUrl": "https://donghualife.com/series/honor-de-reyes",
-      "updatedAt": "2026-10-24T20:41:25.452Z",
+      "updatedAt": "2026-10-24T21:15:23.208Z",
       "posterLocal": "./public/img/posters/honor-de-reyes.jpg"
     },
     {
@@ -3976,7 +3975,7 @@
         "https://donghualife.com/season/hua-jianghu-bu-liang-ren-7"
       ],
       "sourceUrl": "https://donghualife.com/series/hua-jianghu-bu-liang-ren",
-      "updatedAt": "2026-10-24T20:41:01.342Z",
+      "updatedAt": "2026-10-24T21:14:58.036Z",
       "posterLocal": "./public/img/posters/hua-jianghu-bu-liang-ren.jpg"
     },
     {
@@ -4003,7 +4002,7 @@
         "https://donghualife.com/season/hundred-refining-ascension-records-2"
       ],
       "sourceUrl": "https://donghualife.com/series/hundred-refining-ascension-records",
-      "updatedAt": "2026-10-24T20:41:06.176Z",
+      "updatedAt": "2026-10-24T21:15:06.324Z",
       "posterLocal": "./public/img/posters/hundred-refining-ascension-records.jpg"
     },
     {
@@ -4025,7 +4024,7 @@
         "https://donghualife.com/season/i-am-yingtai-1"
       ],
       "sourceUrl": "https://donghualife.com/series/i-am-yingtai",
-      "updatedAt": "2026-10-24T20:41:29.081Z",
+      "updatedAt": "2026-10-24T21:15:25.725Z",
       "posterLocal": "./public/img/posters/i-am-yingtai.jpg"
     },
     {
@@ -4040,7 +4039,7 @@
         "Fantasía"
       ],
       "sourceUrl": "https://donghualife.com/series/i-am-the-fated-villain",
-      "updatedAt": "2026-10-24T20:41:38.392Z",
+      "updatedAt": "2026-10-24T21:15:32.090Z",
       "posterLocal": "./public/img/posters/i-am-the-fated-villain.jpg"
     },
     {
@@ -4064,7 +4063,7 @@
         "https://donghualife.com/season/i-annoyed-millions-cultivators-2"
       ],
       "sourceUrl": "https://donghualife.com/series/i-annoyed-millions-cultivators",
-      "updatedAt": "2026-10-24T20:41:01.141Z",
+      "updatedAt": "2026-10-24T21:14:57.880Z",
       "posterLocal": "./public/img/posters/i-annoyed-millions-cultivators.jpg"
     },
     {
@@ -4087,7 +4086,7 @@
         "https://donghualife.com/season/i-picked-attribute-collection-1"
       ],
       "sourceUrl": "https://donghualife.com/series/i-picked-attribute-collection",
-      "updatedAt": "2026-10-24T20:41:55.937Z",
+      "updatedAt": "2026-10-24T21:15:46.130Z",
       "posterLocal": "./public/img/posters/i-picked-attribute-collection.jpg"
     },
     {
@@ -4114,7 +4113,7 @@
         "https://donghualife.com/season/immortality-5"
       ],
       "sourceUrl": "https://donghualife.com/series/immortality",
-      "updatedAt": "2026-10-24T20:41:08.212Z",
+      "updatedAt": "2026-10-24T21:15:08.185Z",
       "posterLocal": "./public/img/posters/immortality.jpg"
     },
     {
@@ -4136,7 +4135,7 @@
         "https://donghualife.com/season/imperio-xiling-1"
       ],
       "sourceUrl": "https://donghualife.com/series/imperio-xiling",
-      "updatedAt": "2026-10-24T20:41:54.366Z",
+      "updatedAt": "2026-10-24T21:15:43.612Z",
       "posterLocal": "./public/img/posters/imperio-xiling.jpg"
     },
     {
@@ -4159,7 +4158,7 @@
         "https://donghualife.com/season/search-gods-1"
       ],
       "sourceUrl": "https://donghualife.com/series/search-gods",
-      "updatedAt": "2026-10-24T20:42:00.817Z",
+      "updatedAt": "2026-10-24T21:15:48.526Z",
       "posterLocal": "./public/img/posters/search-gods.jpg"
     },
     {
@@ -4183,7 +4182,7 @@
         "https://donghualife.com/season/incarnation-2"
       ],
       "sourceUrl": "https://donghualife.com/series/incarnation",
-      "updatedAt": "2026-10-24T20:41:42.435Z",
+      "updatedAt": "2026-10-24T21:15:34.684Z",
       "posterLocal": "./public/img/posters/incarnation.jpg"
     },
     {
@@ -4203,7 +4202,7 @@
         "https://donghualife.com/season/inmortal-tomb-1"
       ],
       "sourceUrl": "https://donghualife.com/series/inmortal-tomb",
-      "updatedAt": "2026-10-24T20:41:12.209Z",
+      "updatedAt": "2026-10-24T21:15:12.826Z",
       "posterLocal": "./public/img/posters/inmortal-tomb.jpg"
     },
     {
@@ -4225,7 +4224,7 @@
         "https://donghualife.com/season/jiangu-espada-de-hueso-1"
       ],
       "sourceUrl": "https://donghualife.com/series/jiangu-espada-de-hueso",
-      "updatedAt": "2026-10-24T20:41:12.160Z",
+      "updatedAt": "2026-10-24T21:15:12.789Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:28:59.340Z"
     },
@@ -4249,7 +4248,7 @@
         "https://donghualife.com/season/jing-cui-2"
       ],
       "sourceUrl": "https://donghualife.com/series/jing-cui",
-      "updatedAt": "2026-10-24T20:41:40.180Z",
+      "updatedAt": "2026-10-24T21:15:32.926Z",
       "posterLocal": "./public/img/posters/jing-cui.jpg"
     },
     {
@@ -4272,7 +4271,7 @@
         "https://donghualife.com/season/keyboard-immortal-1"
       ],
       "sourceUrl": "https://donghualife.com/series/keyboard-immortal",
-      "updatedAt": "2026-10-24T20:41:04.073Z",
+      "updatedAt": "2026-10-24T21:15:01.008Z",
       "posterLocal": "./public/img/posters/keyboard-immortal.jpg"
     },
     {
@@ -4293,7 +4292,7 @@
         "https://donghualife.com/season/knights-debris-1"
       ],
       "sourceUrl": "https://donghualife.com/series/knights-debris",
-      "updatedAt": "2026-10-24T20:41:48.783Z",
+      "updatedAt": "2026-10-24T21:15:39.517Z",
       "posterLocal": "./public/img/posters/knights-debris.jpg"
     },
     {
@@ -4313,7 +4312,7 @@
         "https://donghualife.com/season/la-chica-electrica-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-chica-electrica",
-      "updatedAt": "2026-10-24T20:41:21.343Z",
+      "updatedAt": "2026-10-24T21:15:20.905Z",
       "posterLocal": "./public/img/posters/la-chica-electrica.jpg"
     },
     {
@@ -4333,7 +4332,7 @@
         "https://donghualife.com/season/la-era-de-la-exploracion-del-cosmos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-era-de-la-exploracion-del-cosmos",
-      "updatedAt": "2026-10-24T20:41:33.193Z",
+      "updatedAt": "2026-10-24T21:15:28.254Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:18.491Z"
     },
@@ -4357,7 +4356,7 @@
         "https://donghualife.com/season/la-gloriosa-venganza-de-ye-feng-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-gloriosa-venganza-de-ye-feng",
-      "updatedAt": "2026-10-24T20:41:05.351Z",
+      "updatedAt": "2026-10-24T21:15:03.822Z",
       "posterLocal": "./public/img/posters/la-gloriosa-venganza-de-ye-feng.jpg"
     },
     {
@@ -4380,7 +4379,7 @@
         "https://donghualife.com/season/la-grieta-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-grieta",
-      "updatedAt": "2026-10-24T20:41:27.836Z",
+      "updatedAt": "2026-10-24T21:15:24.735Z",
       "posterLocal": "./public/img/posters/la-grieta.jpg"
     },
     {
@@ -4402,7 +4401,7 @@
         "https://donghualife.com/season/la-guardia-imperial-de-la-llama-roja-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-guardia-imperial-de-la-llama-roja",
-      "updatedAt": "2026-10-24T20:42:02.917Z",
+      "updatedAt": "2026-10-24T21:15:49.866Z",
       "posterLocal": "./public/img/posters/la-guardia-imperial-de-la-llama-roja.jpg"
     },
     {
@@ -4423,7 +4422,7 @@
         "https://donghualife.com/season/la-habitacion-secreta-de-aiyou-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-habitacion-secreta-de-aiyou",
-      "updatedAt": "2026-10-24T20:41:54.825Z",
+      "updatedAt": "2026-10-24T21:15:44.333Z",
       "posterLocal": "./public/img/posters/la-habitacion-secreta-de-aiyou.jpg"
     },
     {
@@ -4446,7 +4445,7 @@
         "https://donghualife.com/season/la-ley-del-demonio-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-ley-del-demonio",
-      "updatedAt": "2026-10-24T20:42:01.365Z",
+      "updatedAt": "2026-10-24T21:15:49.703Z",
       "posterLocal": "./public/img/posters/la-ley-del-demonio.jpg"
     },
     {
@@ -4469,7 +4468,7 @@
         "https://donghualife.com/season/la-leyenda-de-la-espada-de-jade-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-de-la-espada-de-jade",
-      "updatedAt": "2026-10-24T20:42:09.452Z",
+      "updatedAt": "2026-10-24T21:15:54.988Z",
       "posterLocal": "./public/img/posters/la-leyenda-de-la-espada-de-jade.jpg"
     },
     {
@@ -4491,7 +4490,7 @@
         "https://donghualife.com/season/la-leyenda-de-la-espada-inmortal-del-loto-cian-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-de-la-espada-inmortal-del-loto-cian",
-      "updatedAt": "2026-10-24T20:41:12.563Z",
+      "updatedAt": "2026-10-24T21:15:13.000Z",
       "posterLocal": "./public/img/posters/la-leyenda-de-la-espada-inmortal-del-loto-cian.jpg"
     },
     {
@@ -4514,7 +4513,7 @@
         "https://donghualife.com/season/la-leyenda-de-yang-chen-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-de-yang-chen",
-      "updatedAt": "2026-10-24T20:41:20.404Z",
+      "updatedAt": "2026-10-24T21:15:20.262Z",
       "posterLocal": "./public/img/posters/la-leyenda-de-yang-chen.jpg"
     },
     {
@@ -4537,7 +4536,7 @@
         "https://donghualife.com/season/la-leyenda-del-asesino-historias-del-rio-oscuro-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-asesino-historias-del-rio-oscuro",
-      "updatedAt": "2026-10-24T20:41:44.997Z",
+      "updatedAt": "2026-10-24T21:15:37.293Z",
       "posterLocal": "./public/img/posters/la-leyenda-del-asesino-historias-del-rio-oscuro.jpg"
     },
     {
@@ -4561,7 +4560,7 @@
         "https://donghualife.com/season/la-leyenda-del-inmortal-de-la-espada-taiyi-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-inmortal-de-la-espada-taiyi",
-      "updatedAt": "2026-10-24T20:42:06.462Z",
+      "updatedAt": "2026-10-24T21:15:53.254Z",
       "posterLocal": "./public/img/posters/la-leyenda-del-inmortal-de-la-espada-taiyi.jpg"
     },
     {
@@ -4828,7 +4827,7 @@
         "https://donghualife.com/watch/la-leyenda-del-lord-celestial-1-244"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-lord-celestial",
-      "updatedAt": "2026-10-24T20:40:58.474Z",
+      "updatedAt": "2026-10-24T21:14:55.630Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:25:30.548Z"
     },
@@ -4853,7 +4852,7 @@
         "https://donghualife.com/season/la-leyenda-del-lord-celestial-3d-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-lord-celestial-3d",
-      "updatedAt": "2026-10-24T20:42:03.192Z",
+      "updatedAt": "2026-10-24T21:15:50.753Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:46.464Z"
     },
@@ -4877,7 +4876,7 @@
         "https://donghualife.com/season/la-leyenda-del-soldado-dragon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-soldado-dragon",
-      "updatedAt": "2026-10-24T20:41:58.335Z",
+      "updatedAt": "2026-10-24T21:15:47.360Z",
       "posterLocal": "./public/img/posters/la-leyenda-del-soldado-dragon.jpg"
     },
     {
@@ -4901,7 +4900,7 @@
         "https://donghualife.com/season/la-leyenda-del-traje-magico-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-leyenda-del-traje-magico",
-      "updatedAt": "2026-10-24T20:41:38.426Z",
+      "updatedAt": "2026-10-24T21:15:31.888Z",
       "posterLocal": "./public/img/posters/la-leyenda-del-traje-magico.jpg"
     },
     {
@@ -4924,7 +4923,7 @@
         "https://donghualife.com/season/la-mejor-vida-del-joven-maestro-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-mejor-vida-del-joven-maestro",
-      "updatedAt": "2026-10-24T20:41:31.952Z",
+      "updatedAt": "2026-10-24T21:15:27.680Z",
       "posterLocal": "./public/img/posters/la-mejor-vida-del-joven-maestro.jpg"
     },
     {
@@ -4947,7 +4946,7 @@
         "https://donghualife.com/season/la-pequena-hada-del-jade-1"
       ],
       "sourceUrl": "https://donghualife.com/series/la-pequena-hada-del-jade",
-      "updatedAt": "2026-10-24T20:41:20.057Z",
+      "updatedAt": "2026-10-24T21:15:20.237Z",
       "posterLocal": "./public/img/posters/la-pequena-hada-del-jade.jpg"
     },
     {
@@ -4962,7 +4961,7 @@
         "Comedia"
       ],
       "sourceUrl": "https://donghualife.com/series/la-secta-ms-fuete-de-todos-los-tiempos",
-      "updatedAt": "2026-10-24T20:41:36.372Z",
+      "updatedAt": "2026-10-24T21:15:29.882Z",
       "posterLocal": "./public/img/posters/la-secta-ms-fuete-de-todos-los-tiempos.jpg"
     },
     {
@@ -4989,7 +4988,7 @@
         "https://donghualife.com/season/la-vida-diaria-del-rey-inmortal-5"
       ],
       "sourceUrl": "https://donghualife.com/series/la-vida-diaria-del-rey-inmortal",
-      "updatedAt": "2026-10-24T20:41:10.102Z",
+      "updatedAt": "2026-10-24T21:15:10.230Z",
       "posterLocal": "./public/img/posters/la-vida-diaria-del-rey-inmortal.jpg"
     },
     {
@@ -5011,7 +5010,7 @@
         "https://donghualife.com/season/left-hand-layup-2"
       ],
       "sourceUrl": "https://donghualife.com/series/left-hand-layup",
-      "updatedAt": "2026-10-24T20:42:12.078Z",
+      "updatedAt": "2026-10-24T21:15:58.050Z",
       "posterLocal": "./public/img/posters/left-hand-layup.jpg"
     },
     {
@@ -5034,7 +5033,7 @@
         "https://donghualife.com/season/legend-nine-nights-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-nine-nights",
-      "updatedAt": "2026-10-24T20:41:27.879Z",
+      "updatedAt": "2026-10-24T21:15:24.854Z",
       "posterLocal": "./public/img/posters/legend-nine-nights.jpg"
     },
     {
@@ -5056,7 +5055,7 @@
         "https://donghualife.com/season/legend-qinnine-songs-sky-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-qinnine-songs-sky",
-      "updatedAt": "2026-10-24T20:41:07.022Z",
+      "updatedAt": "2026-10-24T21:15:06.800Z",
       "posterLocal": "./public/img/posters/legend-qinnine-songs-sky.jpg"
     },
     {
@@ -5079,7 +5078,7 @@
         "https://donghualife.com/season/legend-sho-2"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-sho",
-      "updatedAt": "2026-10-24T20:42:08.245Z",
+      "updatedAt": "2026-10-24T21:15:54.393Z",
       "posterLocal": "./public/img/posters/legend-sho.jpg"
     },
     {
@@ -5102,7 +5101,7 @@
         "https://donghualife.com/season/legend-soldier-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-soldier",
-      "updatedAt": "2026-10-24T20:41:45.174Z",
+      "updatedAt": "2026-10-24T21:15:37.265Z",
       "posterLocal": "./public/img/posters/legend-soldier.jpg"
     },
     {
@@ -5125,7 +5124,7 @@
         "https://donghualife.com/season/legend-misty-sword-immortal-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-misty-sword-immortal",
-      "updatedAt": "2026-10-24T20:41:19.325Z",
+      "updatedAt": "2026-10-24T21:15:19.453Z",
       "posterLocal": "./public/img/posters/legend-misty-sword-immortal.jpg"
     },
     {
@@ -5148,7 +5147,7 @@
         "https://donghualife.com/season/legendary-twins-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legendary-twins",
-      "updatedAt": "2026-10-24T20:42:11.865Z",
+      "updatedAt": "2026-10-24T21:15:57.407Z",
       "posterLocal": "./public/img/posters/legendary-twins.jpg"
     },
     {
@@ -5171,7 +5170,7 @@
         "https://donghualife.com/season/leveando-en-un-mundo-de-fantasia-1"
       ],
       "sourceUrl": "https://donghualife.com/series/leveando-en-un-mundo-de-fantasia",
-      "updatedAt": "2026-10-24T20:41:21.037Z",
+      "updatedAt": "2026-10-24T21:15:20.665Z",
       "posterLocal": "./public/img/posters/leveando-en-un-mundo-de-fantasia.jpg"
     },
     {
@@ -5193,7 +5192,7 @@
         "https://donghualife.com/season/li-xiongmao-1"
       ],
       "sourceUrl": "https://donghualife.com/series/li-xiongmao",
-      "updatedAt": "2026-10-24T20:41:47.497Z",
+      "updatedAt": "2026-10-24T21:15:38.360Z",
       "posterLocal": "./public/img/posters/li-xiongmao.jpg"
     },
     {
@@ -5216,7 +5215,7 @@
         "https://donghualife.com/season/lider-de-la-secta-oculta-1"
       ],
       "sourceUrl": "https://donghualife.com/series/lider-de-la-secta-oculta",
-      "updatedAt": "2026-10-24T20:41:13.348Z",
+      "updatedAt": "2026-10-24T21:15:13.615Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:18.815Z"
     },
@@ -5241,7 +5240,7 @@
         "https://donghualife.com/season/ling-tian-du-zun-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ling-tian-du-zun",
-      "updatedAt": "2026-10-24T20:41:10.494Z",
+      "updatedAt": "2026-10-24T21:15:11.270Z",
       "posterLocal": "./public/img/posters/ling-tian-du-zun.jpg"
     },
     {
@@ -5264,7 +5263,7 @@
         "https://donghualife.com/season/lingwu-dalu-1"
       ],
       "sourceUrl": "https://donghualife.com/series/lingwu-dalu",
-      "updatedAt": "2026-10-24T20:40:58.753Z",
+      "updatedAt": "2026-10-24T21:14:56.077Z",
       "posterLocal": "./public/img/posters/lingwu-dalu.jpg"
     },
     {
@@ -5288,7 +5287,7 @@
         "https://donghualife.com/season/link-click-3"
       ],
       "sourceUrl": "https://donghualife.com/series/link-click",
-      "updatedAt": "2026-10-24T20:41:37.579Z",
+      "updatedAt": "2026-10-24T21:15:30.689Z",
       "posterLocal": "./public/img/posters/link-click.jpg"
     },
     {
@@ -5310,7 +5309,7 @@
         "https://donghualife.com/season/link-click-arco-de-bridon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/link-click-arco-de-bridon",
-      "updatedAt": "2026-10-24T20:41:26.687Z",
+      "updatedAt": "2026-10-24T21:15:23.943Z",
       "posterLocal": "./public/img/posters/link-click-arco-de-bridon.jpg"
     },
     {
@@ -5332,7 +5331,7 @@
         "https://donghualife.com/season/lonely-hero-1"
       ],
       "sourceUrl": "https://donghualife.com/series/lonely-hero",
-      "updatedAt": "2026-10-24T20:41:23.699Z",
+      "updatedAt": "2026-10-24T21:15:22.599Z",
       "posterLocal": "./public/img/posters/lonely-hero.jpg"
     },
     {
@@ -5353,7 +5352,7 @@
         "https://donghualife.com/season/long-she-yanyi-1"
       ],
       "sourceUrl": "https://donghualife.com/series/long-she-yanyi",
-      "updatedAt": "2026-10-24T20:41:46.804Z",
+      "updatedAt": "2026-10-24T21:15:38.224Z",
       "posterLocal": "./public/img/posters/long-she-yanyi.jpg"
     },
     {
@@ -5375,7 +5374,7 @@
         "https://donghualife.com/season/long-sword-2"
       ],
       "sourceUrl": "https://donghualife.com/series/long-sword",
-      "updatedAt": "2026-10-24T20:42:07.286Z",
+      "updatedAt": "2026-10-24T21:15:53.770Z",
       "posterLocal": "./public/img/posters/long-sword.jpg"
     },
     {
@@ -5399,7 +5398,7 @@
         "https://donghualife.com/season/lord-espiritual-del-caos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/lord-espiritual-del-caos",
-      "updatedAt": "2026-10-24T20:41:11.277Z",
+      "updatedAt": "2026-10-24T21:15:12.045Z",
       "posterLocal": "./public/img/posters/lord-espiritual-del-caos.jpg"
     },
     {
@@ -5419,7 +5418,7 @@
         "https://donghualife.com/season/lord-all-realms-1"
       ],
       "sourceUrl": "https://donghualife.com/series/lord-all-realms",
-      "updatedAt": "2026-10-24T20:41:38.206Z",
+      "updatedAt": "2026-10-24T21:15:31.044Z",
       "posterLocal": "./public/img/posters/lord-all-realms.jpg"
     },
     {
@@ -5441,7 +5440,7 @@
         "https://donghualife.com/season/lord-mysteries"
       ],
       "sourceUrl": "https://donghualife.com/series/lord-mysteries",
-      "updatedAt": "2026-10-24T20:42:13.632Z",
+      "updatedAt": "2026-10-24T21:15:59.050Z",
       "posterLocal": "./public/img/posters/lord-mysteries.jpg"
     },
     {
@@ -5466,7 +5465,7 @@
         "https://donghualife.com/season/lord-xue-ying-3"
       ],
       "sourceUrl": "https://donghualife.com/series/lord-xue-ying",
-      "updatedAt": "2026-10-24T20:41:08.907Z",
+      "updatedAt": "2026-10-24T21:15:09.165Z",
       "posterLocal": "./public/img/posters/lord-xue-ying.jpg"
     },
     {
@@ -5489,7 +5488,7 @@
         "https://donghualife.com/season/los-estragos-del-tiempo-2"
       ],
       "sourceUrl": "https://donghualife.com/series/los-estragos-del-tiempo",
-      "updatedAt": "2026-10-24T20:41:39.050Z",
+      "updatedAt": "2026-10-24T21:15:32.051Z",
       "posterLocal": "./public/img/posters/los-estragos-del-tiempo.jpg"
     },
     {
@@ -5511,7 +5510,7 @@
         "https://donghualife.com/season/los-secretos-de-las-divinas-artes-1"
       ],
       "sourceUrl": "https://donghualife.com/series/los-secretos-de-las-divinas-artes-estelares",
-      "updatedAt": "2026-10-24T20:41:19.536Z",
+      "updatedAt": "2026-10-24T21:15:19.519Z",
       "posterLocal": "./public/img/posters/los-secretos-de-las-divinas-artes-estelares.jpg"
     },
     {
@@ -5534,7 +5533,7 @@
         "https://donghualife.com/season/luz-del-alma-1"
       ],
       "sourceUrl": "https://donghualife.com/series/luz-del-alma",
-      "updatedAt": "2026-10-24T20:41:50.766Z",
+      "updatedAt": "2026-10-24T21:15:41.184Z",
       "posterLocal": "./public/img/posters/luz-del-alma.jpg"
     },
     {
@@ -5555,7 +5554,7 @@
         "https://donghualife.com/season/mad-demon-lord-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mad-demon-lord",
-      "updatedAt": "2026-10-24T20:41:37.746Z",
+      "updatedAt": "2026-10-24T21:15:30.816Z",
       "posterLocal": "./public/img/posters/mad-demon-lord.jpg"
     },
     {
@@ -5578,7 +5577,7 @@
         "https://donghualife.com/season/maestro-de-la-alquimia-1"
       ],
       "sourceUrl": "https://donghualife.com/series/maestro-de-la-alquimia",
-      "updatedAt": "2026-10-24T20:41:20.686Z",
+      "updatedAt": "2026-10-24T21:15:20.594Z",
       "posterLocal": "./public/img/posters/maestro-de-la-alquimia.jpg"
     },
     {
@@ -5598,7 +5597,7 @@
         "https://donghualife.com/season/maestro-de-la-estrella-primaveral-1"
       ],
       "sourceUrl": "https://donghualife.com/series/maestro-de-la-estrella-primaveral",
-      "updatedAt": "2026-10-24T20:41:15.601Z",
+      "updatedAt": "2026-10-24T21:15:15.957Z",
       "posterLocal": "./public/img/posters/maestro-de-la-estrella-primaveral.jpg"
     },
     {
@@ -5621,7 +5620,7 @@
         "https://donghualife.com/season/maestro-todopoderoso-1"
       ],
       "sourceUrl": "https://donghualife.com/series/maestro-todopoderoso",
-      "updatedAt": "2026-10-24T20:42:05.497Z",
+      "updatedAt": "2026-10-24T21:15:52.755Z",
       "posterLocal": "./public/img/posters/maestro-todopoderoso.jpg"
     },
     {
@@ -5643,7 +5642,7 @@
         "https://donghualife.com/season/mago-cuerpo-cuerpo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mago-cuerpo-cuerpo",
-      "updatedAt": "2026-10-24T20:42:05.521Z",
+      "updatedAt": "2026-10-24T21:15:52.780Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:25:03.225Z"
     },
@@ -5669,7 +5668,7 @@
         "https://donghualife.com/season/make-money-be-king-2"
       ],
       "sourceUrl": "https://donghualife.com/series/make-money-be-king",
-      "updatedAt": "2026-10-24T20:41:07.400Z",
+      "updatedAt": "2026-10-24T21:15:07.945Z",
       "posterLocal": "./public/img/posters/make-money-be-king.jpg"
     },
     {
@@ -5692,7 +5691,7 @@
         "https://donghualife.com/season/marcial-renegado-1"
       ],
       "sourceUrl": "https://donghualife.com/series/marcial-renegado",
-      "updatedAt": "2026-10-24T20:41:39.618Z",
+      "updatedAt": "2026-10-24T21:15:32.151Z",
       "posterLocal": "./public/img/posters/marcial-renegado.jpg"
     },
     {
@@ -5716,7 +5715,7 @@
         "https://donghualife.com/season/marques-reencarnado-1"
       ],
       "sourceUrl": "https://donghualife.com/series/marques-reencarnado",
-      "updatedAt": "2026-10-24T20:41:54.546Z",
+      "updatedAt": "2026-10-24T21:15:43.976Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:41.939Z"
     },
@@ -6283,7 +6282,7 @@
         "https://donghualife.com/watch/martial-master-1-694"
       ],
       "sourceUrl": "https://donghualife.com/series/martial-master",
-      "updatedAt": "2026-10-24T20:40:55.626Z",
+      "updatedAt": "2026-10-24T21:14:54.803Z",
       "posterLocal": "./public/img/posters/martial-master.jpg"
     },
     {
@@ -6305,7 +6304,7 @@
         "https://donghualife.com/season/martial-peak-1"
       ],
       "sourceUrl": "https://donghualife.com/series/martial-peak",
-      "updatedAt": "2026-10-24T20:41:16.270Z",
+      "updatedAt": "2026-10-24T21:15:16.275Z",
       "posterLocal": "./public/img/posters/martial-peak.jpg"
     },
     {
@@ -6328,7 +6327,7 @@
         "https://donghualife.com/season/me-reencarne-como-el-monstruo-mas-debil-2"
       ],
       "sourceUrl": "https://donghualife.com/series/me-reencarne-como-el-monstruo-mas-debil",
-      "updatedAt": "2026-10-24T20:41:42.204Z",
+      "updatedAt": "2026-10-24T21:15:34.743Z",
       "posterLocal": "./public/img/posters/me-reencarne-como-el-monstruo-mas-debil.jpg"
     },
     {
@@ -6350,7 +6349,7 @@
         "https://donghualife.com/season/medico-inmortal-urbano-1"
       ],
       "sourceUrl": "https://donghualife.com/series/medico-inmortal-urbano",
-      "updatedAt": "2026-10-24T20:40:59.590Z",
+      "updatedAt": "2026-10-24T21:14:56.504Z",
       "posterLocal": "./public/img/posters/medico-inmortal-urbano.jpg"
     },
     {
@@ -6374,7 +6373,7 @@
         "https://donghualife.com/season/memory-changan-2"
       ],
       "sourceUrl": "https://donghualife.com/series/memory-changan",
-      "updatedAt": "2026-10-24T20:42:02.880Z",
+      "updatedAt": "2026-10-24T21:15:49.933Z",
       "posterLocal": "./public/img/posters/memory-changan.jpg"
     },
     {
@@ -6395,7 +6394,7 @@
         "https://donghualife.com/season/metaverso-1"
       ],
       "sourceUrl": "https://donghualife.com/series/metaverso",
-      "updatedAt": "2026-10-24T20:42:16.779Z",
+      "updatedAt": "2026-10-24T21:16:00.921Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:37.634Z"
     },
@@ -6420,7 +6419,7 @@
         "https://donghualife.com/season/mi-heroico-esposo-2"
       ],
       "sourceUrl": "https://donghualife.com/series/mi-heroico-esposo",
-      "updatedAt": "2026-10-24T20:41:42.179Z",
+      "updatedAt": "2026-10-24T21:15:34.623Z",
       "posterLocal": "./public/img/posters/mi-heroico-esposo.jpg"
     },
     {
@@ -6441,7 +6440,7 @@
         "https://donghualife.com/season/mi-novia-cultivadora-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mi-novia-cultivadora",
-      "updatedAt": "2026-10-24T20:41:48.805Z",
+      "updatedAt": "2026-10-24T21:15:40.031Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:24:41.543Z"
     },
@@ -6464,7 +6463,7 @@
         "https://donghualife.com/season/mi-novia-es-un-fantasma-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mi-novia-es-un-fantasma",
-      "updatedAt": "2026-10-24T20:42:11.236Z",
+      "updatedAt": "2026-10-24T21:15:57.363Z",
       "posterLocal": "./public/img/posters/mi-novia-es-un-fantasma.jpg"
     },
     {
@@ -6486,7 +6485,7 @@
         "https://donghualife.com/season/mi-viaje-un-mundo-alternativo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mi-viaje-un-mundo-alternativo",
-      "updatedAt": "2026-10-24T20:41:34.769Z",
+      "updatedAt": "2026-10-24T21:15:29.343Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:08.372Z"
     },
@@ -6509,7 +6508,7 @@
         "https://donghualife.com/season/mi-webchat-se-conecto-al-palacio-dragon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mi-webchat-se-conecto-al-palacio-dragon",
-      "updatedAt": "2026-10-24T20:41:11.071Z",
+      "updatedAt": "2026-10-24T21:15:11.457Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:25:22.431Z"
     },
@@ -6530,7 +6529,7 @@
         "https://donghualife.com/season/milenio-de-los-estados-combatientes-1"
       ],
       "sourceUrl": "https://donghualife.com/series/milenio-de-los-estados-combatientes",
-      "updatedAt": "2026-10-24T20:41:55.960Z",
+      "updatedAt": "2026-10-24T21:15:45.429Z",
       "posterLocal": "./public/img/posters/milenio-de-los-estados-combatientes.jpg"
     },
     {
@@ -6552,7 +6551,7 @@
         "https://donghualife.com/season/mo-you-ji-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mo-you-ji",
-      "updatedAt": "2026-10-24T20:41:21.729Z",
+      "updatedAt": "2026-10-24T21:15:21.259Z",
       "posterLocal": "./public/img/posters/mo-you-ji.jpg"
     },
     {
@@ -6573,7 +6572,7 @@
         "https://donghualife.com/season/mom-im-sorry-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mom-im-sorry",
-      "updatedAt": "2026-10-24T20:42:10.545Z",
+      "updatedAt": "2026-10-24T21:15:55.790Z",
       "posterLocal": "./public/img/posters/mom-im-sorry.jpg"
     },
     {
@@ -6595,7 +6594,7 @@
         "https://donghualife.com/season/monarca-malvado-de-otro-mundo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/monarca-malvado-de-otro-mundo",
-      "updatedAt": "2026-10-24T20:41:21.366Z",
+      "updatedAt": "2026-10-24T21:15:21.283Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:31:14.222Z"
     },
@@ -6618,7 +6617,7 @@
         "https://donghualife.com/season/mr-stone-feels-lonely-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mr-stone-feels-lonely",
-      "updatedAt": "2026-10-24T20:41:36.409Z",
+      "updatedAt": "2026-10-24T21:15:30.093Z",
       "posterLocal": "./public/img/posters/mr-stone-feels-lonely.jpg"
     },
     {
@@ -6639,7 +6638,7 @@
         "https://donghualife.com/season/my-senior-brother-too-strong-1"
       ],
       "sourceUrl": "https://donghualife.com/series/my-senior-brother-too-strong",
-      "updatedAt": "2026-10-24T20:41:14.948Z",
+      "updatedAt": "2026-10-24T21:15:15.014Z",
       "posterLocal": "./public/img/posters/my-senior-brother-too-strong.jpg"
     },
     {
@@ -6714,7 +6713,7 @@
         "https://donghualife.com/watch/myriad-realms-supreme-1-50"
       ],
       "sourceUrl": "https://donghualife.com/series/myriad-realms-supreme",
-      "updatedAt": "2026-10-24T20:40:58.927Z",
+      "updatedAt": "2026-10-24T21:14:55.835Z",
       "posterLocal": "./public/img/posters/myriad-realms-supreme.jpg"
     },
     {
@@ -6734,7 +6733,7 @@
         "https://donghualife.com/season/mysterious-treasures-1"
       ],
       "sourceUrl": "https://donghualife.com/series/mysterious-treasures",
-      "updatedAt": "2026-10-24T20:41:29.278Z",
+      "updatedAt": "2026-10-24T21:15:25.847Z",
       "posterLocal": "./public/img/posters/mysterious-treasures.jpg"
     },
     {
@@ -6747,7 +6746,7 @@
         "Fantasía"
       ],
       "sourceUrl": "https://donghualife.com/series/necromancer-king-of-the-scourge-ia",
-      "updatedAt": "2026-10-24T20:41:24.317Z",
+      "updatedAt": "2026-10-24T21:15:23.057Z",
       "posterLocal": "./public/img/posters/necromancer-king-of-the-scourge-ia.jpg"
     },
     {
@@ -6772,7 +6771,7 @@
         "https://donghualife.com/season/nine-suns-martial-god-2"
       ],
       "sourceUrl": "https://donghualife.com/series/nine-suns-martial-god",
-      "updatedAt": "2026-10-24T20:41:13.795Z",
+      "updatedAt": "2026-10-24T21:15:14.435Z",
       "posterLocal": "./public/img/posters/nine-suns-martial-god.jpg"
     },
     {
@@ -6796,7 +6795,7 @@
         "https://donghualife.com/season/nirvana-storm-rider-1"
       ],
       "sourceUrl": "https://donghualife.com/series/nirvana-storm-rider",
-      "updatedAt": "2026-10-24T20:41:39.858Z",
+      "updatedAt": "2026-10-24T21:15:32.420Z",
       "posterLocal": "./public/img/posters/nirvana-storm-rider.jpg"
     },
     {
@@ -6818,7 +6817,7 @@
         "https://donghualife.com/season/novoland-eagle-flag-1"
       ],
       "sourceUrl": "https://donghualife.com/series/novoland-eagle-flag",
-      "updatedAt": "2026-10-24T20:41:27.297Z",
+      "updatedAt": "2026-10-24T21:15:24.432Z",
       "posterLocal": "./public/img/posters/novoland-eagle-flag.jpg"
     },
     {
@@ -6840,7 +6839,7 @@
         "https://donghualife.com/season/organizacion-montana-y-mar-operacion-crisis-1"
       ],
       "sourceUrl": "https://donghualife.com/series/organizacion-montana-y-mar-operacion-crisis",
-      "updatedAt": "2026-10-24T20:42:00.111Z",
+      "updatedAt": "2026-10-24T21:15:48.463Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:51.514Z"
     },
@@ -6859,7 +6858,7 @@
         "https://donghualife.com/season/oriental-martial-academy-1"
       ],
       "sourceUrl": "https://donghualife.com/series/oriental-martial-academy",
-      "updatedAt": "2026-10-24T20:41:48.030Z",
+      "updatedAt": "2026-10-24T21:15:38.721Z",
       "posterLocal": "./public/img/posters/oriental-martial-academy.jpg"
     },
     {
@@ -6881,7 +6880,7 @@
         "https://donghualife.com/season/otro-viaje-al-oeste-1"
       ],
       "sourceUrl": "https://donghualife.com/series/otro-viaje-al-oeste",
-      "updatedAt": "2026-10-24T20:41:22.744Z",
+      "updatedAt": "2026-10-24T21:15:21.860Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:57.327Z"
     },
@@ -6904,7 +6903,7 @@
         "https://donghualife.com/season/over-goddess-1"
       ],
       "sourceUrl": "https://donghualife.com/series/over-goddess",
-      "updatedAt": "2026-10-24T20:41:34.132Z",
+      "updatedAt": "2026-10-24T21:15:28.332Z",
       "posterLocal": "./public/img/posters/over-goddess.jpg"
     },
     {
@@ -6927,7 +6926,7 @@
         "https://donghualife.com/season/over-divine-realms-1"
       ],
       "sourceUrl": "https://donghualife.com/series/over-divine-realms",
-      "updatedAt": "2026-10-24T20:42:12.129Z",
+      "updatedAt": "2026-10-24T21:15:57.428Z",
       "posterLocal": "./public/img/posters/over-divine-realms.jpg"
     },
     {
@@ -6952,7 +6951,7 @@
         "https://donghualife.com/season/peak-true-martial-arts-2"
       ],
       "sourceUrl": "https://donghualife.com/series/peak-true-martial-arts",
-      "updatedAt": "2026-10-24T20:41:00.115Z",
+      "updatedAt": "2026-10-24T21:14:57.693Z",
       "posterLocal": "./public/img/posters/peak-true-martial-arts.jpg"
     },
     {
@@ -6975,7 +6974,7 @@
         "https://donghualife.com/season/peerless-battle-spirit-1"
       ],
       "sourceUrl": "https://donghualife.com/series/peerless-battle-spirit",
-      "updatedAt": "2026-10-24T20:40:59.783Z",
+      "updatedAt": "2026-10-24T21:14:56.961Z",
       "posterLocal": "./public/img/posters/peerless-battle-spirit.jpg"
     },
     {
@@ -6998,7 +6997,7 @@
         "https://donghualife.com/season/peerless-divine-emperor-1"
       ],
       "sourceUrl": "https://donghualife.com/series/peerless-divine-emperor",
-      "updatedAt": "2026-10-24T20:41:18.425Z",
+      "updatedAt": "2026-10-24T21:15:18.285Z",
       "posterLocal": "./public/img/posters/peerless-divine-emperor.jpg"
     },
     {
@@ -7019,7 +7018,7 @@
         "https://donghualife.com/season/perder-dinero-para-ser-magnate-1"
       ],
       "sourceUrl": "https://donghualife.com/series/perder-dinero-para-ser-magnate",
-      "updatedAt": "2026-10-24T20:42:16.017Z",
+      "updatedAt": "2026-10-24T21:16:00.647Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:26.448Z"
     },
@@ -7329,7 +7328,7 @@
         "https://donghualife.com/watch/perfect-world-1-287"
       ],
       "sourceUrl": "https://donghualife.com/series/perfect-world",
-      "updatedAt": "2026-10-24T20:40:56.105Z",
+      "updatedAt": "2026-10-24T21:14:52.844Z",
       "posterLocal": "./public/img/posters/perfect-world.jpg"
     },
     {
@@ -7352,7 +7351,7 @@
         "https://donghualife.com/season/perfect-world-cenizas-de-fuego-1"
       ],
       "sourceUrl": "https://donghualife.com/series/perfect-world-cenizas-de-fuego",
-      "updatedAt": "2026-10-24T20:41:26.642Z",
+      "updatedAt": "2026-10-24T21:15:24.313Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:53.806Z"
     },
@@ -7377,7 +7376,7 @@
         "https://donghualife.com/season/proud-swordsman-2"
       ],
       "sourceUrl": "https://donghualife.com/series/proud-swordsman",
-      "updatedAt": "2026-10-24T20:41:09.673Z",
+      "updatedAt": "2026-10-24T21:15:09.458Z",
       "posterLocal": "./public/img/posters/proud-swordsman.jpg"
     },
     {
@@ -7399,7 +7398,7 @@
         "https://donghualife.com/season/puedo-alcanzar-infinitas-iluminaciones-1"
       ],
       "sourceUrl": "https://donghualife.com/series/puedo-alcanzar-infinitas-iluminaciones",
-      "updatedAt": "2026-10-24T20:41:13.641Z",
+      "updatedAt": "2026-10-24T21:15:14.150Z",
       "posterLocal": "./public/img/posters/puedo-alcanzar-infinitas-iluminaciones.jpg"
     },
     {
@@ -7431,7 +7430,7 @@
         "https://donghualife.com/season/quanzhi-fashi-7"
       ],
       "sourceUrl": "https://donghualife.com/series/quanzhi-fashi",
-      "updatedAt": "2026-10-24T20:41:07.155Z",
+      "updatedAt": "2026-10-24T21:15:06.642Z",
       "posterLocal": "./public/img/posters/quanzhi-fashi.jpg"
     },
     {
@@ -7452,7 +7451,7 @@
         "https://donghualife.com/season/queens-legend-1"
       ],
       "sourceUrl": "https://donghualife.com/series/queens-legend",
-      "updatedAt": "2026-10-24T20:42:07.431Z",
+      "updatedAt": "2026-10-24T21:15:53.896Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:29:21.656Z"
     },
@@ -7474,7 +7473,7 @@
         "https://donghualife.com/season/razones-por-las-que-me-enamore-de-una-chica-mayor-que-yo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/razones-por-las-que-me-enamore-de-una-chica-mayor-que-yo",
-      "updatedAt": "2026-10-24T20:42:04.492Z",
+      "updatedAt": "2026-10-24T21:15:51.818Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:31:05.402Z"
     },
@@ -7498,7 +7497,7 @@
         "https://donghualife.com/season/rebirth-sword-patriarch-1"
       ],
       "sourceUrl": "https://donghualife.com/series/rebirth-sword-patriarch",
-      "updatedAt": "2026-10-24T20:41:34.172Z",
+      "updatedAt": "2026-10-24T21:15:28.835Z",
       "posterLocal": "./public/img/posters/rebirth-sword-patriarch.jpg"
     },
     {
@@ -7520,7 +7519,7 @@
         "https://donghualife.com/season/reborn-cat-1"
       ],
       "sourceUrl": "https://donghualife.com/series/reborn-cat",
-      "updatedAt": "2026-10-24T20:41:36.335Z",
+      "updatedAt": "2026-10-24T21:15:30.018Z",
       "posterLocal": "./public/img/posters/reborn-cat.jpg"
     },
     {
@@ -7544,7 +7543,7 @@
         "https://donghualife.com/season/recycling-scrap-celestial-court-1"
       ],
       "sourceUrl": "https://donghualife.com/series/recycling-scrap-celestial-court",
-      "updatedAt": "2026-10-24T20:41:17.967Z",
+      "updatedAt": "2026-10-24T21:15:18.064Z",
       "posterLocal": "./public/img/posters/recycling-scrap-celestial-court.jpg"
     },
     {
@@ -7566,7 +7565,7 @@
         "https://donghualife.com/season/refinador-de-qi-por-3000-anos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/refinador-de-qi-por-3000-anos",
-      "updatedAt": "2026-10-24T20:41:57.683Z",
+      "updatedAt": "2026-10-24T21:15:46.324Z",
       "posterLocal": "./public/img/posters/refinador-de-qi-por-3000-anos.jpg"
     },
     {
@@ -7590,7 +7589,7 @@
         "https://donghualife.com/season/release-witch-1"
       ],
       "sourceUrl": "https://donghualife.com/series/release-witch",
-      "updatedAt": "2026-10-24T20:41:24.566Z",
+      "updatedAt": "2026-10-24T21:15:23.163Z",
       "posterLocal": "./public/img/posters/release-witch.jpg"
     },
     {
@@ -7613,7 +7612,7 @@
         "https://donghualife.com/season/return-immortal-emperor-1"
       ],
       "sourceUrl": "https://donghualife.com/series/return-immortal-emperor",
-      "updatedAt": "2026-10-24T20:42:13.141Z",
+      "updatedAt": "2026-10-24T21:15:58.908Z",
       "posterLocal": "./public/img/posters/return-immortal-emperor.jpg"
     },
     {
@@ -7637,7 +7636,7 @@
         "https://donghualife.com/season/revelation-online-2"
       ],
       "sourceUrl": "https://donghualife.com/series/revelation-online",
-      "updatedAt": "2026-10-24T20:41:58.862Z",
+      "updatedAt": "2026-10-24T21:15:47.769Z",
       "posterLocal": "./public/img/posters/revelation-online.jpg"
     },
     {
@@ -7658,7 +7657,7 @@
         "https://donghualife.com/season/roommates-1"
       ],
       "sourceUrl": "https://donghualife.com/series/roommates",
-      "updatedAt": "2026-10-24T20:41:31.177Z",
+      "updatedAt": "2026-10-24T21:15:26.709Z",
       "posterLocal": "./public/img/posters/roommates.jpg"
     },
     {
@@ -7678,7 +7677,7 @@
         "https://donghualife.com/season/sangre-y-corazon-la-legendaria-vida-de-un-joven-japones-en-china-1"
       ],
       "sourceUrl": "https://donghualife.com/series/sangre-y-corazon-la-legendaria-vida-de-un-joven-japones-en-china",
-      "updatedAt": "2026-10-24T20:41:22.149Z",
+      "updatedAt": "2026-10-24T21:15:21.627Z",
       "posterLocal": "./public/img/posters/sangre-y-corazon-la-legendaria-vida-de-un-joven-japones-en-china.jpg"
     },
     {
@@ -7698,7 +7697,7 @@
         "https://donghualife.com/season/seminario-marcial-1"
       ],
       "sourceUrl": "https://donghualife.com/series/seminario-marcial",
-      "updatedAt": "2026-10-24T20:42:02.738Z",
+      "updatedAt": "2026-10-24T21:15:49.838Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:30:36.383Z"
     },
@@ -7720,7 +7719,7 @@
         "https://donghualife.com/season/shattering-galaxy-1"
       ],
       "sourceUrl": "https://donghualife.com/series/shattering-galaxy",
-      "updatedAt": "2026-10-24T20:41:10.209Z",
+      "updatedAt": "2026-10-24T21:15:11.231Z",
       "posterLocal": "./public/img/posters/shattering-galaxy.jpg"
     },
     {
@@ -7740,7 +7739,7 @@
         "https://donghualife.com/season/shen-long-xing-zhu-1"
       ],
       "sourceUrl": "https://donghualife.com/series/shen-long-xing-zhu",
-      "updatedAt": "2026-10-24T20:41:15.257Z",
+      "updatedAt": "2026-10-24T21:15:15.049Z",
       "posterLocal": "./public/img/posters/shen-long-xing-zhu.jpg"
     },
     {
@@ -7760,7 +7759,7 @@
         "https://donghualife.com/season/sheng-zu-1"
       ],
       "sourceUrl": "https://donghualife.com/series/sheng-zu",
-      "updatedAt": "2026-10-24T20:41:45.031Z",
+      "updatedAt": "2026-10-24T21:15:37.040Z",
       "posterLocal": "./public/img/posters/sheng-zu.jpg"
     },
     {
@@ -7780,7 +7779,7 @@
         "https://donghualife.com/season/shi-shi-chuanshuo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/shi-shi-chuanshuo",
-      "updatedAt": "2026-10-24T20:41:44.778Z",
+      "updatedAt": "2026-10-24T21:15:36.499Z",
       "posterLocal": "./public/img/posters/shi-shi-chuanshuo.jpg"
     },
     {
@@ -7807,7 +7806,7 @@
         "https://donghualife.com/season/shrouding-heavens-4"
       ],
       "sourceUrl": "https://donghualife.com/series/shrouding-heavens",
-      "updatedAt": "2026-10-24T20:41:01.397Z",
+      "updatedAt": "2026-10-24T21:14:58.075Z",
       "posterLocal": "./public/img/posters/shrouding-heavens.jpg"
     },
     {
@@ -7830,7 +7829,7 @@
         "https://donghualife.com/season/sin-dudas-entre-nosotros-2"
       ],
       "sourceUrl": "https://donghualife.com/series/sin-dudas-entre-nosotros",
-      "updatedAt": "2026-10-24T20:41:15.208Z",
+      "updatedAt": "2026-10-24T21:15:15.310Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:29:51.176Z"
     },
@@ -7854,7 +7853,7 @@
         "https://donghualife.com/season/slay-gods-2"
       ],
       "sourceUrl": "https://donghualife.com/series/slay-gods",
-      "updatedAt": "2026-10-24T20:41:40.396Z",
+      "updatedAt": "2026-10-24T21:15:32.993Z",
       "posterLocal": "./public/img/posters/slay-gods.jpg"
     },
     {
@@ -7878,7 +7877,7 @@
         "https://donghualife.com/season/south-sea-tomb-1"
       ],
       "sourceUrl": "https://donghualife.com/series/south-sea-tomb",
-      "updatedAt": "2026-10-24T20:42:12.001Z",
+      "updatedAt": "2026-10-24T21:15:57.447Z",
       "posterLocal": "./public/img/posters/south-sea-tomb.jpg"
     },
     {
@@ -7903,7 +7902,7 @@
         "https://donghualife.com/season/spare-me-great-lord-2"
       ],
       "sourceUrl": "https://donghualife.com/series/spare-me-great-lord",
-      "updatedAt": "2026-10-24T20:41:41.568Z",
+      "updatedAt": "2026-10-24T21:15:33.533Z",
       "posterLocal": "./public/img/posters/spare-me-great-lord.jpg"
     },
     {
@@ -7926,7 +7925,7 @@
         "https://donghualife.com/season/spirit-realm-walker-1"
       ],
       "sourceUrl": "https://donghualife.com/series/spirit-realm-walker",
-      "updatedAt": "2026-10-24T20:41:23.607Z",
+      "updatedAt": "2026-10-24T21:15:22.581Z",
       "posterLocal": "./public/img/posters/spirit-realm-walker.jpg"
     },
     {
@@ -8405,7 +8404,7 @@
         "https://donghualife.com/watch/spirit-sword-sovereing-4-559"
       ],
       "sourceUrl": "https://donghualife.com/series/spirit-sword-sovereing",
-      "updatedAt": "2026-10-24T20:40:56.404Z",
+      "updatedAt": "2026-10-24T21:14:54.515Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:26:21.945Z"
     },
@@ -8430,7 +8429,7 @@
         "https://donghualife.com/season/spy-x-sect-3"
       ],
       "sourceUrl": "https://donghualife.com/series/spy-x-sect",
-      "updatedAt": "2026-10-24T20:41:03.726Z",
+      "updatedAt": "2026-10-24T21:15:00.924Z",
       "posterLocal": "./public/img/posters/spy-x-sect.jpg"
     },
     {
@@ -8452,7 +8451,7 @@
         "https://donghualife.com/season/star-field-forty-thousand-years-1"
       ],
       "sourceUrl": "https://donghualife.com/series/star-field-forty-thousand-years",
-      "updatedAt": "2026-10-24T20:41:57.088Z",
+      "updatedAt": "2026-10-24T21:15:46.151Z",
       "posterLocal": "./public/img/posters/star-field-forty-thousand-years.jpg"
     },
     {
@@ -8473,7 +8472,7 @@
         "https://donghualife.com/season/star-martial-god-techique-2"
       ],
       "sourceUrl": "https://donghualife.com/series/star-martial-god-techique",
-      "updatedAt": "2026-10-24T20:41:08.948Z",
+      "updatedAt": "2026-10-24T21:15:09.251Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:05.387Z"
     },
@@ -8495,7 +8494,7 @@
         "https://donghualife.com/season/start-kings-account-1"
       ],
       "sourceUrl": "https://donghualife.com/series/start-kings-account",
-      "updatedAt": "2026-10-24T20:41:28.217Z",
+      "updatedAt": "2026-10-24T21:15:25.214Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:23:37.055Z"
     },
@@ -8519,7 +8518,7 @@
         "https://donghualife.com/season/stay-low-profile-sect-chief-1-0"
       ],
       "sourceUrl": "https://donghualife.com/series/stay-low-profile-sect-chief",
-      "updatedAt": "2026-10-24T20:41:41.780Z",
+      "updatedAt": "2026-10-24T21:15:33.840Z",
       "posterLocal": "./public/img/posters/stay-low-profile-sect-chief.jpg"
     },
     {
@@ -8549,7 +8548,7 @@
         "https://donghualife.com/season/stellar-transformation-7"
       ],
       "sourceUrl": "https://donghualife.com/series/stellar-transformation",
-      "updatedAt": "2026-10-24T20:41:05.249Z",
+      "updatedAt": "2026-10-24T21:15:03.518Z",
       "posterLocal": "./public/img/posters/stellar-transformation.jpg"
     },
     {
@@ -8569,7 +8568,7 @@
         "https://donghualife.com/season/summer-punch-1"
       ],
       "sourceUrl": "https://donghualife.com/series/summer-punch",
-      "updatedAt": "2026-10-24T20:41:53.948Z",
+      "updatedAt": "2026-10-24T21:15:43.352Z",
       "posterLocal": "./public/img/posters/summer-punch.jpg"
     },
     {
@@ -8591,7 +8590,7 @@
         "https://donghualife.com/season/super-cube-1"
       ],
       "sourceUrl": "https://donghualife.com/series/super-cube",
-      "updatedAt": "2026-10-24T20:41:33.006Z",
+      "updatedAt": "2026-10-24T21:15:28.193Z",
       "posterLocal": "./public/img/posters/super-cube.jpg"
     },
     {
@@ -8611,7 +8610,7 @@
         "https://donghualife.com/season/super-xiang-1"
       ],
       "sourceUrl": "https://donghualife.com/series/super-xiang",
-      "updatedAt": "2026-10-24T20:41:31.558Z",
+      "updatedAt": "2026-10-24T21:15:27.380Z",
       "posterLocal": "./public/img/posters/super-xiang.jpg"
     },
     {
@@ -9110,7 +9109,7 @@
         "https://donghualife.com/watch/supreme-god-emperor-2-579"
       ],
       "sourceUrl": "https://donghualife.com/series/supreme-god-emperor",
-      "updatedAt": "2026-10-24T20:40:57.549Z",
+      "updatedAt": "2026-10-24T21:14:53.448Z",
       "posterLocal": "./public/img/posters/supreme-god-emperor.jpg"
     },
     {
@@ -9128,7 +9127,7 @@
         "https://donghualife.com/season/supremo-dantian-1"
       ],
       "sourceUrl": "https://donghualife.com/series/supremo-dantian",
-      "updatedAt": "2026-10-24T20:41:36.774Z",
+      "updatedAt": "2026-10-24T21:15:30.144Z",
       "posterLocal": "./public/img/posters/supremo-dantian.jpg"
     },
     {
@@ -9151,7 +9150,7 @@
         "https://donghualife.com/season/supremo-lord-de-la-galaxia-2"
       ],
       "sourceUrl": "https://donghualife.com/series/supremo-lord-de-la-galaxia",
-      "updatedAt": "2026-10-24T20:41:03.412Z",
+      "updatedAt": "2026-10-24T21:15:00.794Z",
       "posterLocal": "./public/img/posters/supremo-lord-de-la-galaxia.png"
     },
     {
@@ -9202,7 +9201,7 @@
         "https://donghualife.com/watch/swallowed-star-1-26"
       ],
       "sourceUrl": "https://donghualife.com/series/swallowed-star",
-      "updatedAt": "2026-10-24T20:40:58.280Z",
+      "updatedAt": "2026-10-24T21:14:54.862Z",
       "posterLocal": "./public/img/posters/swallowed-star.jpg"
     },
     {
@@ -9229,7 +9228,7 @@
         "https://donghualife.com/season/swallowing-heavens-1"
       ],
       "sourceUrl": "https://donghualife.com/series/swallowing-heavens",
-      "updatedAt": "2026-10-24T20:41:19.496Z",
+      "updatedAt": "2026-10-24T21:15:19.484Z",
       "posterLocal": "./public/img/posters/swallowing-heavens.jpg"
     },
     {
@@ -9251,7 +9250,7 @@
         "https://donghualife.com/season/sweet-bite-marks-1"
       ],
       "sourceUrl": "https://donghualife.com/series/sweet-bite-marks",
-      "updatedAt": "2026-10-24T20:41:30.175Z",
+      "updatedAt": "2026-10-24T21:15:25.888Z",
       "posterLocal": "./public/img/posters/sweet-bite-marks.jpg"
     },
     {
@@ -9274,7 +9273,7 @@
         "https://donghualife.com/season/sword-dinasty-2"
       ],
       "sourceUrl": "https://donghualife.com/series/sword-dinasty",
-      "updatedAt": "2026-10-24T20:42:00.786Z",
+      "updatedAt": "2026-10-24T21:15:49.131Z",
       "posterLocal": "./public/img/posters/sword-dinasty.jpg"
     },
     {
@@ -9294,7 +9293,7 @@
         "https://donghualife.com/season/tales-demons-and-gods-10"
       ],
       "sourceUrl": "https://donghualife.com/series/tales-demons-and-gods",
-      "updatedAt": "2026-10-24T20:41:04.924Z",
+      "updatedAt": "2026-10-24T21:15:01.447Z",
       "posterLocal": "./public/img/posters/tales-demons-and-gods.jpg"
     },
     {
@@ -9316,7 +9315,7 @@
         "https://donghualife.com/season/tales-exorcism-1"
       ],
       "sourceUrl": "https://donghualife.com/series/tales-exorcism",
-      "updatedAt": "2026-10-24T20:41:48.297Z",
+      "updatedAt": "2026-10-24T21:15:39.310Z",
       "posterLocal": "./public/img/posters/tales-exorcism.jpg"
     },
     {
@@ -9341,7 +9340,7 @@
         "https://donghualife.com/season/tales-herding-gods-2"
       ],
       "sourceUrl": "https://donghualife.com/series/tales-herding-gods",
-      "updatedAt": "2026-10-24T20:41:06.207Z",
+      "updatedAt": "2026-10-24T21:15:03.663Z",
       "posterLocal": "./public/img/posters/tales-herding-gods.jpg"
     },
     {
@@ -9697,7 +9696,7 @@
         "https://donghualife.com/season/alchemist-rise-1"
       ],
       "sourceUrl": "https://donghualife.com/series/alchemist-rise",
-      "updatedAt": "2026-10-24T20:41:28.704Z",
+      "updatedAt": "2026-10-24T21:15:25.331Z",
       "posterLocal": "./public/img/posters/alchemist-rise.jpg"
     },
     {
@@ -9720,7 +9719,7 @@
         "https://donghualife.com/season/all-devouring-whalehomecoming-1"
       ],
       "sourceUrl": "https://donghualife.com/series/all-devouring-whalehomecoming",
-      "updatedAt": "2026-10-24T20:41:31.105Z",
+      "updatedAt": "2026-10-24T21:15:27.020Z",
       "posterLocal": "./public/img/posters/all-devouring-whalehomecoming.jpg"
     },
     {
@@ -9743,7 +9742,7 @@
         "https://donghualife.com/season/blade-master-1"
       ],
       "sourceUrl": "https://donghualife.com/series/blade-master",
-      "updatedAt": "2026-10-24T20:42:13.662Z",
+      "updatedAt": "2026-10-24T21:15:58.986Z",
       "posterLocal": "./public/img/posters/blade-master.jpg"
     },
     {
@@ -9769,7 +9768,7 @@
         "https://donghualife.com/season/demonic-king-who-chases-his-wife-3"
       ],
       "sourceUrl": "https://donghualife.com/series/demonic-king-who-chases-his-wife",
-      "updatedAt": "2026-10-24T20:41:17.406Z",
+      "updatedAt": "2026-10-24T21:15:17.047Z",
       "posterLocal": "./public/img/posters/demonic-king-who-chases-his-wife.jpg"
     },
     {
@@ -9791,7 +9790,7 @@
         "https://donghualife.com/season/devil-ring-1"
       ],
       "sourceUrl": "https://donghualife.com/series/devil-ring",
-      "updatedAt": "2026-10-24T20:41:50.016Z",
+      "updatedAt": "2026-10-24T21:15:40.739Z",
       "posterLocal": "./public/img/posters/devil-ring.jpg"
     },
     {
@@ -9813,7 +9812,7 @@
         "https://donghualife.com/season/divine-manifestation-1"
       ],
       "sourceUrl": "https://donghualife.com/series/divine-manifestation",
-      "updatedAt": "2026-10-24T20:41:43.646Z",
+      "updatedAt": "2026-10-24T21:15:35.858Z",
       "posterLocal": "./public/img/posters/divine-manifestation.jpg"
     },
     {
@@ -9837,7 +9836,7 @@
         "https://donghualife.com/season/reino-wangyou-ovas"
       ],
       "sourceUrl": "https://donghualife.com/series/dragon-spirit",
-      "updatedAt": "2026-10-24T20:41:25.016Z",
+      "updatedAt": "2026-10-24T21:15:23.196Z",
       "posterLocal": "./public/img/posters/dragon-spirit.jpg"
     },
     {
@@ -9852,7 +9851,7 @@
         "Fantasía"
       ],
       "sourceUrl": "https://donghualife.com/series/the-eternal-supreme-li-yunxiao",
-      "updatedAt": "2026-10-24T20:41:39.182Z",
+      "updatedAt": "2026-10-24T21:15:32.121Z",
       "posterLocal": "./public/img/posters/the-eternal-supreme-li-yunxiao.jpg"
     },
     {
@@ -9875,7 +9874,7 @@
         "https://donghualife.com/season/fabulous-sword-god-1"
       ],
       "sourceUrl": "https://donghualife.com/series/fabulous-sword-god",
-      "updatedAt": "2026-10-24T20:41:03.046Z",
+      "updatedAt": "2026-10-24T21:15:00.000Z",
       "posterLocal": "./public/img/posters/fabulous-sword-god.jpg"
     },
     {
@@ -9895,7 +9894,7 @@
         "https://donghualife.com/season/first-inmortal-seven-realms-1"
       ],
       "sourceUrl": "https://donghualife.com/series/first-immortal-seven-realms",
-      "updatedAt": "2026-10-24T20:41:05.838Z",
+      "updatedAt": "2026-10-24T21:15:03.890Z",
       "posterLocal": "./public/img/posters/first-immortal-seven-realms.jpg"
     },
     {
@@ -9917,7 +9916,7 @@
         "https://donghualife.com/season/first-order-1"
       ],
       "sourceUrl": "https://donghualife.com/series/first-order",
-      "updatedAt": "2026-10-24T20:41:52.169Z",
+      "updatedAt": "2026-10-24T21:15:41.889Z",
       "posterLocal": "./public/img/posters/first-order.jpg"
     },
     {
@@ -9940,7 +9939,7 @@
         "https://donghualife.com/season/gate-mystical-realm-1"
       ],
       "sourceUrl": "https://donghualife.com/series/gate-mystical-realm",
-      "updatedAt": "2026-10-24T20:41:43.500Z",
+      "updatedAt": "2026-10-24T21:15:35.837Z",
       "posterLocal": "./public/img/posters/gate-mystical-realm.jpg"
     },
     {
@@ -9960,7 +9959,7 @@
         "https://donghualife.com/season/god-magician-all-realms-1"
       ],
       "sourceUrl": "https://donghualife.com/series/god-magician-all-realms",
-      "updatedAt": "2026-10-24T20:41:12.738Z",
+      "updatedAt": "2026-10-24T21:15:13.337Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:25:46.054Z"
     },
@@ -9983,7 +9982,7 @@
         "https://donghualife.com/season/grand-emperor-destiny-1"
       ],
       "sourceUrl": "https://donghualife.com/series/grand-emperor-destiny",
-      "updatedAt": "2026-10-24T20:41:18.618Z",
+      "updatedAt": "2026-10-24T21:15:18.826Z",
       "posterLocal": "./public/img/posters/grand-emperor-destiny.jpg"
     },
     {
@@ -10010,7 +10009,7 @@
         "https://donghualife.com/season/great-king-tomb-4"
       ],
       "sourceUrl": "https://donghualife.com/series/great-king-tomb",
-      "updatedAt": "2026-10-24T20:41:07.570Z",
+      "updatedAt": "2026-10-24T21:15:08.078Z",
       "posterLocal": "./public/img/posters/great-king-tomb.jpg"
     },
     {
@@ -10029,7 +10028,7 @@
         "https://donghualife.com/season/great-ruler-2"
       ],
       "sourceUrl": "https://donghualife.com/series/great-ruler",
-      "updatedAt": "2026-10-24T20:41:06.524Z",
+      "updatedAt": "2026-10-24T21:15:06.740Z",
       "posterLocal": "./public/img/posters/great-ruler.jpg"
     },
     {
@@ -10044,7 +10043,7 @@
         "Sobrenatural"
       ],
       "sourceUrl": "https://donghualife.com/series/the-guardian-of-daxia",
-      "updatedAt": "2026-10-24T20:41:23.498Z",
+      "updatedAt": "2026-10-24T21:15:22.224Z",
       "posterLocal": "./public/img/posters/the-guardian-of-daxia.jpg"
     },
     {
@@ -10067,7 +10066,7 @@
         "https://donghualife.com/season/guardians-legend-1"
       ],
       "sourceUrl": "https://donghualife.com/series/guardians-legend",
-      "updatedAt": "2026-10-24T20:41:53.547Z",
+      "updatedAt": "2026-10-24T21:15:43.291Z",
       "posterLocal": "./public/img/posters/guardians-legend.jpg"
     },
     {
@@ -10090,7 +10089,7 @@
         "https://donghualife.com/season/immortal-vs-superheroes-1"
       ],
       "sourceUrl": "https://donghualife.com/series/immortal-vs-superheroes",
-      "updatedAt": "2026-10-24T20:41:17.766Z",
+      "updatedAt": "2026-10-24T21:15:18.475Z",
       "posterLocal": "./public/img/posters/immortal-vs-superheroes.jpg"
     },
     {
@@ -10112,7 +10111,7 @@
         "https://donghualife.com/season/infinitors-1"
       ],
       "sourceUrl": "https://donghualife.com/series/infinitors",
-      "updatedAt": "2026-10-24T20:41:58.083Z",
+      "updatedAt": "2026-10-24T21:15:46.794Z",
       "posterLocal": "./public/img/posters/infinitors.jpg"
     },
     {
@@ -10136,7 +10135,7 @@
         "https://donghualife.com/season/island-siliang-2"
       ],
       "sourceUrl": "https://donghualife.com/series/island-siliang",
-      "updatedAt": "2026-10-24T20:41:40.945Z",
+      "updatedAt": "2026-10-24T21:15:33.400Z",
       "posterLocal": "./public/img/posters/island-siliang.jpg"
     },
     {
@@ -10157,7 +10156,7 @@
         "https://donghualife.com/season/last-dynasty-1"
       ],
       "sourceUrl": "https://donghualife.com/series/last-dynasty",
-      "updatedAt": "2026-10-24T20:42:13.434Z",
+      "updatedAt": "2026-10-24T21:15:58.935Z",
       "posterLocal": "./public/img/posters/last-dynasty.jpg"
     },
     {
@@ -10180,7 +10179,7 @@
         "https://donghualife.com/season/legend-princess-chang-ge-1"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-princess-chang-ge",
-      "updatedAt": "2026-10-24T20:41:52.845Z",
+      "updatedAt": "2026-10-24T21:15:42.808Z",
       "posterLocal": "./public/img/posters/legend-princess-chang-ge.jpg"
     },
     {
@@ -10205,7 +10204,7 @@
         "https://donghualife.com/season/legend-sword-domain-3"
       ],
       "sourceUrl": "https://donghualife.com/series/legend-sword-domain",
-      "updatedAt": "2026-10-24T20:41:00.160Z",
+      "updatedAt": "2026-10-24T21:14:57.355Z",
       "posterLocal": "./public/img/posters/legend-sword-domain.jpg"
     },
     {
@@ -10228,7 +10227,7 @@
         "https://donghualife.com/season/magic-chef-1"
       ],
       "sourceUrl": "https://donghualife.com/series/magic-chef",
-      "updatedAt": "2026-10-24T20:41:03.576Z",
+      "updatedAt": "2026-10-24T21:15:00.090Z",
       "posterLocal": "./public/img/posters/magic-chef.jpg"
     },
     {
@@ -10252,7 +10251,7 @@
         "https://donghualife.com/season/mirror-twin-cities-2"
       ],
       "sourceUrl": "https://donghualife.com/series/mirror-twin-cities",
-      "updatedAt": "2026-10-24T20:42:08.561Z",
+      "updatedAt": "2026-10-24T21:15:54.602Z",
       "posterLocal": "./public/img/posters/mirror-twin-cities.jpg"
     },
     {
@@ -10274,7 +10273,7 @@
         "https://donghualife.com/season/peak-martial-god-1"
       ],
       "sourceUrl": "https://donghualife.com/series/peak-martial-god",
-      "updatedAt": "2026-10-24T20:41:50.979Z",
+      "updatedAt": "2026-10-24T21:15:41.265Z",
       "posterLocal": "./public/img/posters/peak-martial-god.jpg"
     },
     {
@@ -10297,7 +10296,7 @@
         "https://donghualife.com/season/ranger-wars-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ranger-wars",
-      "updatedAt": "2026-10-24T20:42:08.425Z",
+      "updatedAt": "2026-10-24T21:15:54.414Z",
       "posterLocal": "./public/img/posters/ranger-wars.jpg"
     },
     {
@@ -10318,7 +10317,7 @@
         "https://donghualife.com/season/ruins-kunlun-linglong-1"
       ],
       "sourceUrl": "https://donghualife.com/series/ruins-kunlun-linglong",
-      "updatedAt": "2026-10-24T20:41:31.302Z",
+      "updatedAt": "2026-10-24T21:15:27.165Z",
       "posterLocal": "./public/img/posters/ruins-kunlun-linglong.jpg"
     },
     {
@@ -10340,7 +10339,7 @@
         "https://donghualife.com/season/shape-wind-siam-era-1"
       ],
       "sourceUrl": "https://donghualife.com/series/shape-wind-siam-era",
-      "updatedAt": "2026-10-24T20:42:07.671Z",
+      "updatedAt": "2026-10-24T21:15:54.089Z",
       "posterLocal": "./public/img/posters/shape-wind-siam-era.jpg"
     },
     {
@@ -10362,7 +10361,7 @@
         "https://donghualife.com/season/strongest-male-protagonist-all-time-1"
       ],
       "sourceUrl": "https://donghualife.com/series/strongest-male-protagonist-all-time",
-      "updatedAt": "2026-10-24T20:41:16.521Z",
+      "updatedAt": "2026-10-24T21:15:17.082Z",
       "posterLocal": "./public/img/posters/strongest-male-protagonist-all-time.jpg"
     },
     {
@@ -10384,7 +10383,7 @@
         "https://donghualife.com/season/strongest-upgrade-1"
       ],
       "sourceUrl": "https://donghualife.com/series/strongest-upgrade",
-      "updatedAt": "2026-10-24T20:41:19.825Z",
+      "updatedAt": "2026-10-24T21:15:19.804Z",
       "posterLocal": "./public/img/posters/strongest-upgrade.jpg"
     },
     {
@@ -10656,7 +10655,7 @@
         "https://donghualife.com/watch/success-empyrean-xuan-emperor-1-247"
       ],
       "sourceUrl": "https://donghualife.com/series/success-empyrean-xuan-emperor",
-      "updatedAt": "2026-10-24T20:40:55.116Z",
+      "updatedAt": "2026-10-24T21:14:53.140Z",
       "posterLocal": "./public/img/posters/success-empyrean-xuan-emperor.jpg"
     },
     {
@@ -10681,7 +10680,7 @@
         "https://donghualife.com/season/supreme-body-refining-master-1"
       ],
       "sourceUrl": "https://donghualife.com/series/supreme-body-refining-master",
-      "updatedAt": "2026-10-24T20:41:17.727Z",
+      "updatedAt": "2026-10-24T21:15:18.218Z",
       "posterLocal": "./public/img/posters/supreme-body-refining-master.jpg"
     },
     {
@@ -10705,7 +10704,7 @@
         "https://donghualife.com/season/sword-immortal-here-2"
       ],
       "sourceUrl": "https://donghualife.com/series/sword-immortal-here",
-      "updatedAt": "2026-10-24T20:41:07.725Z",
+      "updatedAt": "2026-10-24T21:15:08.167Z",
       "posterLocal": "./public/img/posters/sword-immortal-here.jpg"
     },
     {
@@ -10727,7 +10726,7 @@
         "https://donghualife.com/season/war-cards-1"
       ],
       "sourceUrl": "https://donghualife.com/series/war-cards",
-      "updatedAt": "2026-10-24T20:41:27.856Z",
+      "updatedAt": "2026-10-24T21:15:24.876Z",
       "posterLocal": "./public/img/posters/war-cards.jpg"
     },
     {
@@ -10753,7 +10752,7 @@
         "https://donghualife.com/season/westward-5-0"
       ],
       "sourceUrl": "https://donghualife.com/series/westward",
-      "updatedAt": "2026-10-24T20:41:04.881Z",
+      "updatedAt": "2026-10-24T21:15:01.386Z",
       "posterLocal": "./public/img/posters/westward.jpg"
     },
     {
@@ -10774,7 +10773,7 @@
         "https://donghualife.com/season/young-brewmasters-adventure-2"
       ],
       "sourceUrl": "https://donghualife.com/series/young-brewmasters-adventure",
-      "updatedAt": "2026-10-24T20:41:16.455Z",
+      "updatedAt": "2026-10-24T21:15:16.883Z",
       "posterLocal": "./public/img/posters/young-brewmasters-adventure.jpg"
     },
     {
@@ -10797,7 +10796,7 @@
         "https://donghualife.com/season/young-imperial-guards-2"
       ],
       "sourceUrl": "https://donghualife.com/series/young-imperial-guards",
-      "updatedAt": "2026-10-24T20:41:41.744Z",
+      "updatedAt": "2026-10-24T21:15:34.115Z",
       "posterLocal": "./public/img/posters/young-imperial-guards.jpg"
     },
     {
@@ -10821,7 +10820,7 @@
         "https://donghualife.com/season/thirty-six-cavalry-1"
       ],
       "sourceUrl": "https://donghualife.com/series/thirty-six-cavalry",
-      "updatedAt": "2026-10-24T20:41:52.022Z",
+      "updatedAt": "2026-10-24T21:15:41.829Z",
       "posterLocal": "./public/img/posters/thirty-six-cavalry.jpg"
     },
     {
@@ -10844,7 +10843,7 @@
         "https://donghualife.com/season/thousand-autumns-1"
       ],
       "sourceUrl": "https://donghualife.com/series/thousand-autumns",
-      "updatedAt": "2026-10-24T20:41:46.358Z",
+      "updatedAt": "2026-10-24T21:15:37.874Z",
       "posterLocal": "./public/img/posters/thousand-autumns.jpg"
     },
     {
@@ -10868,7 +10867,7 @@
         "https://donghualife.com/season/throne-seal-1"
       ],
       "sourceUrl": "https://donghualife.com/series/throne-seal",
-      "updatedAt": "2026-10-24T20:40:59.933Z",
+      "updatedAt": "2026-10-24T21:14:56.653Z",
       "posterLocal": "./public/img/posters/throne-seal.jpg"
     },
     {
@@ -10891,7 +10890,7 @@
         "https://donghualife.com/season/throne-ten-thousand-swords-1"
       ],
       "sourceUrl": "https://donghualife.com/series/throne-ten-thousand-swords",
-      "updatedAt": "2026-10-24T20:41:19.267Z",
+      "updatedAt": "2026-10-24T21:15:19.420Z",
       "posterLocal": "./public/img/posters/throne-ten-thousand-swords.jpg"
     },
     {
@@ -10914,7 +10913,7 @@
         "https://donghualife.com/season/thrud-grito-de-guerra-espacial-1"
       ],
       "sourceUrl": "https://donghualife.com/series/thrud-grito-de-guerra-espacial",
-      "updatedAt": "2026-10-24T20:41:48.271Z",
+      "updatedAt": "2026-10-24T21:15:39.371Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:28:03.139Z"
     },
@@ -10938,7 +10937,7 @@
         "https://donghualife.com/season/tian-ying-1"
       ],
       "sourceUrl": "https://donghualife.com/series/tian-ying",
-      "updatedAt": "2026-10-24T20:41:59.079Z",
+      "updatedAt": "2026-10-24T21:15:47.875Z",
       "posterLocal": "./public/img/posters/tian-ying.jpg"
     },
     {
@@ -10960,7 +10959,7 @@
         "https://donghualife.com/season/tiger-x-crane-1"
       ],
       "sourceUrl": "https://donghualife.com/series/tiger-x-crane",
-      "updatedAt": "2026-10-24T20:42:00.843Z",
+      "updatedAt": "2026-10-24T21:15:49.158Z",
       "posterLocal": "./public/img/posters/tiger-x-crane.jpg"
     },
     {
@@ -10981,7 +10980,7 @@
         "https://donghualife.com/season/time-prisoner-1"
       ],
       "sourceUrl": "https://donghualife.com/series/time-prisoner",
-      "updatedAt": "2026-10-24T20:42:03.252Z",
+      "updatedAt": "2026-10-24T21:15:50.775Z",
       "posterLocal": "./public/img/posters/time-prisoner.jpg"
     },
     {
@@ -11006,7 +11005,7 @@
         "https://donghualife.com/season/tirando-de-las-montanas-y-rios-xi-zi-1"
       ],
       "sourceUrl": "https://donghualife.com/series/tirando-de-las-montanas-y-rios-xi-zi",
-      "updatedAt": "2026-10-24T20:42:06.155Z",
+      "updatedAt": "2026-10-24T21:15:52.837Z",
       "posterLocal": "./public/img/posters/tirando-de-las-montanas-y-rios-xi-zi.jpg"
     },
     {
@@ -11027,7 +11026,7 @@
         "https://donghualife.com/season/be-hero-x-1"
       ],
       "sourceUrl": "https://donghualife.com/series/be-hero-x",
-      "updatedAt": "2026-10-24T20:42:01.591Z",
+      "updatedAt": "2026-10-24T21:15:49.675Z",
       "posterLocal": "./public/img/posters/be-hero-x.jpg"
     },
     {
@@ -11041,7 +11040,7 @@
         "Romance"
       ],
       "sourceUrl": "https://donghualife.com/series/to-be-winner",
-      "updatedAt": "2026-10-24T20:41:49.249Z",
+      "updatedAt": "2026-10-24T21:15:40.117Z",
       "posterLocal": "./public/img/posters/to-be-winner.jpg"
     },
     {
@@ -11065,7 +11064,7 @@
         "https://donghualife.com/season/tomb-fallen-gods-3"
       ],
       "sourceUrl": "https://donghualife.com/series/tomb-fallen-gods",
-      "updatedAt": "2026-10-24T20:41:06.541Z",
+      "updatedAt": "2026-10-24T21:15:06.517Z",
       "posterLocal": "./public/img/posters/tomb-fallen-gods.jpg"
     },
     {
@@ -11088,7 +11087,7 @@
         "https://donghualife.com/season/tong-ling-fei-2"
       ],
       "sourceUrl": "https://donghualife.com/series/tong-ling-fei",
-      "updatedAt": "2026-10-24T20:41:33.223Z",
+      "updatedAt": "2026-10-24T21:15:28.088Z",
       "posterLocal": "./public/img/posters/tong-ling-fei.jpg"
     },
     {
@@ -11110,7 +11109,7 @@
         "https://donghualife.com/season/transcendent-evolution-1"
       ],
       "sourceUrl": "https://donghualife.com/series/transcendent-evolution",
-      "updatedAt": "2026-10-24T20:41:49.878Z",
+      "updatedAt": "2026-10-24T21:15:40.570Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:23:43.293Z"
     },
@@ -11134,7 +11133,7 @@
         "https://donghualife.com/season/trascendiendo-los-nueve-cielos-1"
       ],
       "sourceUrl": "https://donghualife.com/series/trascendiendo-los-nueve-cielos",
-      "updatedAt": "2026-10-24T20:41:32.187Z",
+      "updatedAt": "2026-10-24T21:15:27.788Z",
       "posterLocal": "./public/img/posters/trascendiendo-los-nueve-cielos.jpg"
     },
     {
@@ -11156,7 +11155,7 @@
         "https://donghualife.com/season/tres-espadachines-media-cara-1"
       ],
       "sourceUrl": "https://donghualife.com/series/tres-espadachines-media-cara",
-      "updatedAt": "2026-10-24T20:41:29.873Z",
+      "updatedAt": "2026-10-24T21:15:26.200Z",
       "posterLocal": "./public/img/posters/tres-espadachines-media-cara.jpg"
     },
     {
@@ -11179,7 +11178,7 @@
         "https://donghualife.com/season/twin-martial-souls-1"
       ],
       "sourceUrl": "https://donghualife.com/series/twin-martial-souls",
-      "updatedAt": "2026-10-24T20:41:10.448Z",
+      "updatedAt": "2026-10-24T21:15:11.092Z",
       "posterLocal": "./public/img/posters/twin-martial-souls.jpg"
     },
     {
@@ -11203,7 +11202,7 @@
         "https://donghualife.com/season/un-mundo-que-vale-la-pena-proteger-1"
       ],
       "sourceUrl": "https://donghualife.com/series/un-mundo-que-vale-la-pena-proteger",
-      "updatedAt": "2026-10-24T20:42:14.970Z",
+      "updatedAt": "2026-10-24T21:15:59.602Z",
       "posterLocal": "./public/img/posters/un-mundo-que-vale-la-pena-proteger.jpg"
     },
     {
@@ -11227,7 +11226,7 @@
         "https://donghualife.com/season/un-paso-hacia-la-libertad-1"
       ],
       "sourceUrl": "https://donghualife.com/series/un-paso-hacia-la-libertad",
-      "updatedAt": "2026-10-24T20:41:07.959Z",
+      "updatedAt": "2026-10-24T21:15:08.139Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:29:44.646Z"
     },
@@ -11252,7 +11251,7 @@
         "https://donghualife.com/season/una-bruja-sin-cerebro-2"
       ],
       "sourceUrl": "https://donghualife.com/series/una-bruja-sin-cerebro",
-      "updatedAt": "2026-10-24T20:41:40.247Z",
+      "updatedAt": "2026-10-24T21:15:32.900Z",
       "posterLocal": "./public/img/posters/una-bruja-sin-cerebro.jpg"
     },
     {
@@ -11275,7 +11274,7 @@
         "https://donghualife.com/season/una-oveja-con-piel-de-lobo-1"
       ],
       "sourceUrl": "https://donghualife.com/series/una-oveja-con-piel-de-lobo",
-      "updatedAt": "2026-10-24T20:41:53.475Z",
+      "updatedAt": "2026-10-24T21:15:43.310Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:29:14.115Z"
     },
@@ -11299,7 +11298,7 @@
         "https://donghualife.com/season/walking-way-all-alone-1"
       ],
       "sourceUrl": "https://donghualife.com/series/walking-way-all-alone",
-      "updatedAt": "2026-10-24T20:42:12.957Z",
+      "updatedAt": "2026-10-24T21:15:58.457Z",
       "posterLocal": "./public/img/posters/walking-way-all-alone.jpg"
     },
     {
@@ -11375,7 +11374,7 @@
         "https://donghualife.com/watch/wan-jie-du-zun-1-209"
       ],
       "sourceUrl": "https://donghualife.com/series/wan-jie-du-zun",
-      "updatedAt": "2026-10-24T20:40:55.682Z",
+      "updatedAt": "2026-10-24T21:14:53.186Z",
       "posterLocal": "./public/img/posters/wan-jie-du-zun.jpg"
     },
     {
@@ -11395,7 +11394,7 @@
         "https://donghualife.com/season/wan-jie-qi-yuan-1"
       ],
       "sourceUrl": "https://donghualife.com/series/wan-jie-qi-yuan",
-      "updatedAt": "2026-10-24T20:41:34.316Z",
+      "updatedAt": "2026-10-24T21:15:29.273Z",
       "posterLocal": "./public/img/posters/wan-jie-qi-yuan.jpg"
     },
     {
@@ -11417,7 +11416,7 @@
         "https://donghualife.com/season/wan-yu-feng-shen-2"
       ],
       "sourceUrl": "https://donghualife.com/series/wan-yu-feng-shen",
-      "updatedAt": "2026-10-24T20:41:09.273Z",
+      "updatedAt": "2026-10-24T21:15:09.287Z",
       "posterLocal": "./public/img/posters/wan-yu-feng-shen.jpg"
     },
     {
@@ -11439,7 +11438,7 @@
         "https://donghualife.com/season/wangzhe-da-shixiong-1"
       ],
       "sourceUrl": "https://donghualife.com/series/wangzhe-da-shixiong",
-      "updatedAt": "2026-10-24T20:41:47.067Z",
+      "updatedAt": "2026-10-24T21:15:38.342Z",
       "posterLocal": "./public/img/posters/wangzhe-da-shixiong.jpg"
     },
     {
@@ -11460,7 +11459,7 @@
         "https://donghualife.com/season/wealth-and-wonder-1"
       ],
       "sourceUrl": "https://donghualife.com/series/wealth-and-wonder",
-      "updatedAt": "2026-10-24T20:41:44.812Z",
+      "updatedAt": "2026-10-24T21:15:36.279Z",
       "posterLocal": "./public/img/posters/wealth-and-wonder.jpg"
     },
     {
@@ -11482,7 +11481,7 @@
         "https://donghualife.com/season/wei-wo-du-shen-1"
       ],
       "sourceUrl": "https://donghualife.com/series/wei-wo-du-shen",
-      "updatedAt": "2026-10-24T20:41:14.292Z",
+      "updatedAt": "2026-10-24T21:15:14.415Z",
       "posterLocal": "./public/img/posters/wei-wo-du-shen.jpg"
     },
     {
@@ -11503,7 +11502,7 @@
         "https://donghualife.com/season/westward-rey-loco-asura-1"
       ],
       "sourceUrl": "https://donghualife.com/series/westward-rey-loco-asura",
-      "updatedAt": "2026-10-24T20:42:16.159Z",
+      "updatedAt": "2026-10-24T21:16:00.902Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:32.565Z"
     },
@@ -11527,7 +11526,7 @@
         "https://donghualife.com/season/white-cat-legend-2"
       ],
       "sourceUrl": "https://donghualife.com/series/white-cat-legend",
-      "updatedAt": "2026-10-24T20:41:46.047Z",
+      "updatedAt": "2026-10-24T21:15:37.499Z",
       "posterLocal": "./public/img/posters/white-cat-legend.jpg"
     },
     {
@@ -11549,7 +11548,7 @@
         "https://donghualife.com/season/word-honor-2"
       ],
       "sourceUrl": "https://donghualife.com/series/word-honor",
-      "updatedAt": "2026-10-24T20:41:12.407Z",
+      "updatedAt": "2026-10-24T21:15:12.744Z",
       "posterLocal": "./public/img/posters/word-honor.jpg"
     },
     {
@@ -11571,7 +11570,7 @@
         "https://donghualife.com/season/world-immortals-1"
       ],
       "sourceUrl": "https://donghualife.com/series/world-immortals",
-      "updatedAt": "2026-10-24T20:41:59.256Z",
+      "updatedAt": "2026-10-24T21:15:47.903Z",
       "posterLocal": "./public/img/posters/world-immortals.jpg"
     },
     {
@@ -11593,7 +11592,7 @@
         "https://donghualife.com/season/worlds-best-martial-artist-1"
       ],
       "sourceUrl": "https://donghualife.com/series/worlds-best-martial-artist",
-      "updatedAt": "2026-10-24T20:42:14.176Z",
+      "updatedAt": "2026-10-24T21:15:59.453Z",
       "posterLocal": "./public/img/posters/worlds-best-martial-artist.jpg"
     },
     {
@@ -11621,7 +11620,7 @@
         "https://donghualife.com/season/wu-dong-qian-kun-6-0"
       ],
       "sourceUrl": "https://donghualife.com/series/wu-dong-qian-kun",
-      "updatedAt": "2026-10-24T20:41:09.690Z",
+      "updatedAt": "2026-10-24T21:15:09.945Z",
       "posterLocal": "./public/img/posters/wu-dong-qian-kun.jpg"
     },
     {
@@ -11646,7 +11645,7 @@
         "https://donghualife.com/season/wu-gengji-4"
       ],
       "sourceUrl": "https://donghualife.com/series/wu-gengji",
-      "updatedAt": "2026-10-24T20:41:03.347Z",
+      "updatedAt": "2026-10-24T21:14:59.831Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:29:32.072Z"
     },
@@ -11671,7 +11670,7 @@
         "https://donghualife.com/season/wu-ying-sanqian-dao-2"
       ],
       "sourceUrl": "https://donghualife.com/series/wu-ying-sanqian-dao",
-      "updatedAt": "2026-10-24T20:41:11.219Z",
+      "updatedAt": "2026-10-24T21:15:11.476Z",
       "posterLocal": "./public/img/posters/wu-ying-sanqian-dao.jpg"
     },
     {
@@ -11694,7 +11693,7 @@
         "https://donghualife.com/season/wuhun-dalu-1"
       ],
       "sourceUrl": "https://donghualife.com/series/wuhun-dalu",
-      "updatedAt": "2026-10-24T20:41:14.576Z",
+      "updatedAt": "2026-10-24T21:15:14.972Z",
       "posterLocal": "./public/img/posters/wuhun-dalu.jpg"
     },
     {
@@ -11717,7 +11716,7 @@
         "https://donghualife.com/season/x-epoch-dragon-1"
       ],
       "sourceUrl": "https://donghualife.com/series/x-epoch-dragon",
-      "updatedAt": "2026-10-24T20:41:44.255Z",
+      "updatedAt": "2026-10-24T21:15:36.218Z",
       "posterLocal": "./public/img/posters/x-epoch-dragon.jpg"
     },
     {
@@ -11740,7 +11739,7 @@
         "https://donghualife.com/season/xian-wu-cang-qiong-1"
       ],
       "sourceUrl": "https://donghualife.com/series/xian-wu-cang-qiong",
-      "updatedAt": "2026-10-24T20:41:15.547Z",
+      "updatedAt": "2026-10-24T21:15:15.809Z",
       "posterLocal": "./public/img/posters/xian-wu-cang-qiong.jpg"
     },
     {
@@ -11762,7 +11761,7 @@
         "https://donghualife.com/season/xun-jian-1"
       ],
       "sourceUrl": "https://donghualife.com/series/xun-jian",
-      "updatedAt": "2026-10-24T20:41:22.584Z",
+      "updatedAt": "2026-10-24T21:15:21.843Z",
       "posterLocal": "./public/img/posters/xun-jian.jpg"
     },
     {
@@ -11786,7 +11785,7 @@
         "https://donghualife.com/season/yang-yao-el-cazador-de-espiritus-1"
       ],
       "sourceUrl": "https://donghualife.com/series/yang-yao-el-cazador-de-espiritus",
-      "updatedAt": "2026-10-24T20:41:22.932Z",
+      "updatedAt": "2026-10-24T21:15:22.329Z",
       "posterFailed": true,
       "posterFailedAt": "2026-09-23T04:27:55.416Z"
     },
@@ -11811,7 +11810,7 @@
         "https://donghualife.com/season/yuan-long-3"
       ],
       "sourceUrl": "https://donghualife.com/series/yuan-long",
-      "updatedAt": "2026-10-24T20:41:15.874Z",
+      "updatedAt": "2026-10-24T21:15:16.197Z",
       "posterLocal": "./public/img/posters/yuan-long.jpg"
     },
     {
@@ -11833,7 +11832,7 @@
         "https://donghualife.com/season/yuan-zun-1"
       ],
       "sourceUrl": "https://donghualife.com/series/yuan-zun",
-      "updatedAt": "2026-10-24T20:41:45.846Z",
+      "updatedAt": "2026-10-24T21:15:37.313Z",
       "posterLocal": "./public/img/posters/yuan-zun.jpg"
     },
     {
@@ -11856,7 +11855,7 @@
         "https://donghualife.com/season/zhen-dao-ge-3"
       ],
       "sourceUrl": "https://donghualife.com/series/zhen-dao-ge",
-      "updatedAt": "2026-10-24T20:41:17.094Z",
+      "updatedAt": "2026-10-24T21:15:17.028Z",
       "posterLocal": "./public/img/posters/zhen-dao-ge.jpg"
     },
     {
@@ -11878,7 +11877,7 @@
         "https://donghualife.com/season/zhu-tian-ji-1"
       ],
       "sourceUrl": "https://donghualife.com/series/zhu-tian-ji",
-      "updatedAt": "2026-10-24T20:41:59.045Z",
+      "updatedAt": "2026-10-24T21:15:47.698Z",
       "posterLocal": "./public/img/posters/zhu-tian-ji.jpg"
     },
     {
@@ -11902,7 +11901,7 @@
         "https://donghualife.com/season/zi-chuan-2"
       ],
       "sourceUrl": "https://donghualife.com/series/zi-chuan",
-      "updatedAt": "2026-10-24T20:41:07.194Z",
+      "updatedAt": "2026-10-24T21:15:06.676Z",
       "posterLocal": "./public/img/posters/zi-chuan.jpg"
     }
   ],
@@ -12293,7 +12292,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-10-24T20:41:30.973Z"
+      "updatedAt": "2026-10-24T21:15:28.261Z"
     },
     {
       "id": "especiales-de-donghualife",
@@ -12483,10 +12482,10 @@
       "number": 2,
       "seriesId": "beyond-timescape",
       "firstEpisodeUrl": "https://donghualife.com/watch/4489ee04-ef64-4401-8ffe-86173736b9b8-temporada-2-1",
-      "updatedAt": "2026-10-18T05:04:33.668Z",
-      "episodeCount": 18,
+      "updatedAt": "2026-10-24T21:15:17.311Z",
+      "episodeCount": 19,
       "minEpisodeFound": 1,
-      "maxEpisodeFound": 18,
+      "maxEpisodeFound": 19,
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": true
@@ -19502,7 +19501,7 @@
       "missingEpisodes": [],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-10-24T20:41:52.624Z"
+      "updatedAt": "2026-10-24T21:15:46.085Z"
     },
     {
       "id": "tales-herding-gods-1",
@@ -20166,7 +20165,7 @@
       ],
       "paginationComplete": true,
       "initialSyncComplete": false,
-      "updatedAt": "2026-10-24T20:41:32.961Z"
+      "updatedAt": "2026-10-24T21:15:39.327Z"
     },
     {
       "id": "westward-1",
@@ -53442,7 +53441,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-1",
-      "updatedAt": "2026-10-24T20:41:28.019Z",
+      "updatedAt": "2026-10-24T21:15:25.204Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 0,
@@ -53486,7 +53485,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-0",
       "nextUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-2",
-      "updatedAt": "2026-10-24T20:41:28.388Z",
+      "updatedAt": "2026-10-24T21:15:25.833Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 1,
@@ -53520,7 +53519,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-1",
       "nextUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-3",
-      "updatedAt": "2026-10-24T20:41:28.692Z",
+      "updatedAt": "2026-10-24T21:15:26.191Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 2,
@@ -53554,7 +53553,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-2",
       "nextUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-5",
-      "updatedAt": "2026-10-24T20:41:29.069Z",
+      "updatedAt": "2026-10-24T21:15:26.658Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 3,
@@ -53568,7 +53567,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:29.792Z",
+      "updatedAt": "2026-10-24T21:15:26.990Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 4,
@@ -53602,7 +53601,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-3",
       "nextUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-8",
-      "updatedAt": "2026-10-24T20:41:30.184Z",
+      "updatedAt": "2026-10-24T21:15:27.371Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 5,
@@ -53616,7 +53615,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:30.467Z",
+      "updatedAt": "2026-10-24T21:15:27.597Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 6,
@@ -53630,7 +53629,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:30.596Z",
+      "updatedAt": "2026-10-24T21:15:27.976Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 7,
@@ -53664,7 +53663,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/anuncios-de-la-web-1-5",
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:30.972Z",
+      "updatedAt": "2026-10-24T21:15:28.261Z",
       "seriesId": "anuncios-de-la-web",
       "seasonId": "anuncios-de-la-web-1",
       "number": 8,
@@ -411480,7 +411479,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-1",
-      "updatedAt": "2026-10-24T20:41:48.586Z",
+      "updatedAt": "2026-10-24T21:15:39.943Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 0,
@@ -411514,7 +411513,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-0",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-2",
-      "updatedAt": "2026-10-24T20:41:48.767Z",
+      "updatedAt": "2026-10-24T21:15:40.557Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 1,
@@ -411548,7 +411547,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-1",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-3",
-      "updatedAt": "2026-10-24T20:41:49.053Z",
+      "updatedAt": "2026-10-24T21:15:41.150Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 2,
@@ -411582,7 +411581,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-2",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-4",
-      "updatedAt": "2026-10-24T20:41:49.234Z",
+      "updatedAt": "2026-10-24T21:15:41.582Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 3,
@@ -411616,7 +411615,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-3",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-5",
-      "updatedAt": "2026-10-24T20:41:49.756Z",
+      "updatedAt": "2026-10-24T21:15:41.816Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 4,
@@ -411650,7 +411649,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-4",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-6",
-      "updatedAt": "2026-10-24T20:41:50.003Z",
+      "updatedAt": "2026-10-24T21:15:42.196Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 5,
@@ -411684,7 +411683,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-5",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-7",
-      "updatedAt": "2026-10-24T20:41:50.268Z",
+      "updatedAt": "2026-10-24T21:15:42.797Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 6,
@@ -411718,7 +411717,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-6",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-8",
-      "updatedAt": "2026-10-24T20:41:50.710Z",
+      "updatedAt": "2026-10-24T21:15:43.225Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 7,
@@ -411752,7 +411751,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-7",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-9",
-      "updatedAt": "2026-10-24T20:41:50.833Z",
+      "updatedAt": "2026-10-24T21:15:43.598Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 8,
@@ -411786,7 +411785,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-8",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-10",
-      "updatedAt": "2026-10-24T20:41:51.133Z",
+      "updatedAt": "2026-10-24T21:15:44.169Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 9,
@@ -411820,7 +411819,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-9",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-11",
-      "updatedAt": "2026-10-24T20:41:51.352Z",
+      "updatedAt": "2026-10-24T21:15:44.443Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 10,
@@ -411854,7 +411853,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-10",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-12",
-      "updatedAt": "2026-10-24T20:41:51.817Z",
+      "updatedAt": "2026-10-24T21:15:44.690Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 11,
@@ -411888,7 +411887,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-11",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-13",
-      "updatedAt": "2026-10-24T20:41:52.155Z",
+      "updatedAt": "2026-10-24T21:15:44.869Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 12,
@@ -411922,7 +411921,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-12",
       "nextUrl": "https://donghualife.com/watch/tales-exorcism-1-14",
-      "updatedAt": "2026-10-24T20:41:52.359Z",
+      "updatedAt": "2026-10-24T21:15:45.283Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 13,
@@ -411956,7 +411955,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/tales-exorcism-1-13",
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:52.624Z",
+      "updatedAt": "2026-10-24T21:15:46.085Z",
       "seriesId": "tales-exorcism",
       "seasonId": "tales-exorcism-1",
       "number": 14,
@@ -450029,7 +450028,7 @@
       "servers": [],
       "previousUrl": null,
       "nextUrl": "https://donghualife.com/watch/westward-5-0-2",
-      "updatedAt": "2026-10-24T20:41:18.905Z",
+      "updatedAt": "2026-10-24T21:15:22.616Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 1,
@@ -450043,7 +450042,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-1",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-3",
-      "updatedAt": "2026-10-24T20:41:19.288Z",
+      "updatedAt": "2026-10-24T21:15:23.175Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 2,
@@ -450057,7 +450056,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-2",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-4",
-      "updatedAt": "2026-10-24T20:41:19.462Z",
+      "updatedAt": "2026-10-24T21:15:23.541Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 3,
@@ -450096,7 +450095,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-3",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-5",
-      "updatedAt": "2026-10-24T20:41:19.676Z",
+      "updatedAt": "2026-10-24T21:15:23.809Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 4,
@@ -450110,7 +450109,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-4",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-6",
-      "updatedAt": "2026-10-24T20:41:19.978Z",
+      "updatedAt": "2026-10-24T21:15:24.448Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 5,
@@ -450144,7 +450143,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-5",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-7",
-      "updatedAt": "2026-10-24T20:41:20.360Z",
+      "updatedAt": "2026-10-24T21:15:24.844Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 6,
@@ -450208,7 +450207,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-6",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-8",
-      "updatedAt": "2026-10-24T20:41:20.816Z",
+      "updatedAt": "2026-10-24T21:15:25.228Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 7,
@@ -450267,7 +450266,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-7",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-9",
-      "updatedAt": "2026-10-24T20:41:21.096Z",
+      "updatedAt": "2026-10-24T21:15:25.828Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 8,
@@ -450306,7 +450305,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-8",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-10",
-      "updatedAt": "2026-10-24T20:41:21.385Z",
+      "updatedAt": "2026-10-24T21:15:26.214Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 9,
@@ -450345,7 +450344,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-9",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-11",
-      "updatedAt": "2026-10-24T20:41:21.750Z",
+      "updatedAt": "2026-10-24T21:15:26.690Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 10,
@@ -450404,7 +450403,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-10",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-12",
-      "updatedAt": "2026-10-24T20:41:22.167Z",
+      "updatedAt": "2026-10-24T21:15:27.005Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 11,
@@ -450443,7 +450442,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-11",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-13",
-      "updatedAt": "2026-10-24T20:41:22.598Z",
+      "updatedAt": "2026-10-24T21:15:27.411Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 12,
@@ -450457,7 +450456,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-12",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-14",
-      "updatedAt": "2026-10-24T20:41:22.898Z",
+      "updatedAt": "2026-10-24T21:15:27.664Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 13,
@@ -450496,7 +450495,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-13",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-15",
-      "updatedAt": "2026-10-24T20:41:23.515Z",
+      "updatedAt": "2026-10-24T21:15:28.060Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 14,
@@ -450530,7 +450529,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-14",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-16",
-      "updatedAt": "2026-10-24T20:41:23.711Z",
+      "updatedAt": "2026-10-24T21:15:28.274Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 15,
@@ -450544,7 +450543,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-15",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-17",
-      "updatedAt": "2026-10-24T20:41:23.942Z",
+      "updatedAt": "2026-10-24T21:15:28.640Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 16,
@@ -450558,7 +450557,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-16",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-18",
-      "updatedAt": "2026-10-24T20:41:24.328Z",
+      "updatedAt": "2026-10-24T21:15:29.317Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 17,
@@ -450572,7 +450571,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-17",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-19",
-      "updatedAt": "2026-10-24T20:41:24.582Z",
+      "updatedAt": "2026-10-24T21:15:29.813Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 18,
@@ -450586,7 +450585,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-18",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-20",
-      "updatedAt": "2026-10-24T20:41:24.819Z",
+      "updatedAt": "2026-10-24T21:15:30.125Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 19,
@@ -450600,7 +450599,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-19",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-21",
-      "updatedAt": "2026-10-24T20:41:25.005Z",
+      "updatedAt": "2026-10-24T21:15:30.364Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 20,
@@ -450614,7 +450613,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-20",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-22",
-      "updatedAt": "2026-10-24T20:41:25.477Z",
+      "updatedAt": "2026-10-24T21:15:30.796Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 21,
@@ -450628,7 +450627,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-21",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-23",
-      "updatedAt": "2026-10-24T20:41:25.700Z",
+      "updatedAt": "2026-10-24T21:15:31.024Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 22,
@@ -450642,7 +450641,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-22",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-24",
-      "updatedAt": "2026-10-24T20:41:26.111Z",
+      "updatedAt": "2026-10-24T21:15:31.322Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 23,
@@ -450656,7 +450655,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-23",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-25",
-      "updatedAt": "2026-10-24T20:41:26.665Z",
+      "updatedAt": "2026-10-24T21:15:32.070Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 24,
@@ -450670,7 +450669,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-24",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-26",
-      "updatedAt": "2026-10-24T20:41:27.221Z",
+      "updatedAt": "2026-10-24T21:15:32.400Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 25,
@@ -450684,7 +450683,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-25",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-27",
-      "updatedAt": "2026-10-24T20:41:28.012Z",
+      "updatedAt": "2026-10-24T21:15:32.746Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 26,
@@ -450698,7 +450697,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-26",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-28",
-      "updatedAt": "2026-10-24T20:41:28.228Z",
+      "updatedAt": "2026-10-24T21:15:32.938Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 27,
@@ -450712,7 +450711,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-27",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-29",
-      "updatedAt": "2026-10-24T20:41:28.515Z",
+      "updatedAt": "2026-10-24T21:15:33.339Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 28,
@@ -450726,7 +450725,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-28",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-30",
-      "updatedAt": "2026-10-24T20:41:28.723Z",
+      "updatedAt": "2026-10-24T21:15:33.736Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 29,
@@ -450740,7 +450739,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-29",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-31",
-      "updatedAt": "2026-10-24T20:41:29.099Z",
+      "updatedAt": "2026-10-24T21:15:34.158Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 30,
@@ -450754,7 +450753,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-30",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-32",
-      "updatedAt": "2026-10-24T20:41:29.845Z",
+      "updatedAt": "2026-10-24T21:15:34.752Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 31,
@@ -450768,7 +450767,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-31",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-33",
-      "updatedAt": "2026-10-24T20:41:30.201Z",
+      "updatedAt": "2026-10-24T21:15:35.272Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 32,
@@ -450782,7 +450781,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-32",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-34",
-      "updatedAt": "2026-10-24T20:41:30.611Z",
+      "updatedAt": "2026-10-24T21:15:35.794Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 33,
@@ -450796,7 +450795,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-33",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-35",
-      "updatedAt": "2026-10-24T20:41:30.986Z",
+      "updatedAt": "2026-10-24T21:15:36.200Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 34,
@@ -450810,7 +450809,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-34",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-36",
-      "updatedAt": "2026-10-24T20:41:31.189Z",
+      "updatedAt": "2026-10-24T21:15:36.481Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 35,
@@ -450824,7 +450823,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-35",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-37",
-      "updatedAt": "2026-10-24T20:41:31.570Z",
+      "updatedAt": "2026-10-24T21:15:37.021Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 36,
@@ -450838,7 +450837,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-36",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-38",
-      "updatedAt": "2026-10-24T20:41:31.748Z",
+      "updatedAt": "2026-10-24T21:15:37.439Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 37,
@@ -450852,7 +450851,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-37",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-39",
-      "updatedAt": "2026-10-24T20:41:31.938Z",
+      "updatedAt": "2026-10-24T21:15:37.726Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 38,
@@ -450866,7 +450865,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-38",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-40",
-      "updatedAt": "2026-10-24T20:41:32.174Z",
+      "updatedAt": "2026-10-24T21:15:38.240Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 39,
@@ -450880,7 +450879,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-39",
       "nextUrl": "https://donghualife.com/watch/westward-5-0-41",
-      "updatedAt": "2026-10-24T20:41:32.444Z",
+      "updatedAt": "2026-10-24T21:15:38.732Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 40,
@@ -450894,7 +450893,7 @@
       "servers": [],
       "previousUrl": "https://donghualife.com/watch/westward-5-0-63",
       "nextUrl": null,
-      "updatedAt": "2026-10-24T20:41:32.961Z",
+      "updatedAt": "2026-10-24T21:15:39.327Z",
       "seriesId": "westward",
       "seasonId": "westward-5-0",
       "number": 64,
@@ -473767,6 +473766,20 @@
       "seriesId": "zi-chuan",
       "seasonId": "zi-chuan-2",
       "number": 52,
+      "releaseDate": null
+    },
+    {
+      "id": "4489ee04-ef64-4401-8ffe-86173736b9b8-temporada-2-19",
+      "slug": "4489ee04-ef64-4401-8ffe-86173736b9b8-temporada-2-19",
+      "title": "Beyond the Timescape - Capítulo 19",
+      "sourceUrl": "https://donghualife.com/watch/4489ee04-ef64-4401-8ffe-86173736b9b8-temporada-2-19",
+      "servers": [],
+      "previousUrl": null,
+      "nextUrl": null,
+      "updatedAt": "2026-10-24T21:15:17.308Z",
+      "seriesId": "beyond-timescape",
+      "seasonId": "4489ee04-ef64-4401-8ffe-86173736b9b8-temporada-2",
+      "number": 19,
       "releaseDate": null
     }
   ],
