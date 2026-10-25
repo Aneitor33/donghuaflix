@@ -71,9 +71,11 @@ jobs:
           MAX_REFRESH: ${{ inputs.max_refresh != '0' && inputs.max_refresh || '999999999' }}
         run: node syncseriesdonghua.js
 
-      - name: Generar índice lite y fichas
+      - name: Generar índice lite + shards
         if: always()
-        run: node split-catalog.js public/data/catalog-donghualife.json
+        # shard-pack (con 'full') genera el index vía split-catalog,
+        # empaqueta las fichas en 64 shards y BORRA las fichas sueltas
+        run: node shard-pack.js catalog-donghualife full
 
       - name: Guardar catálogo
         if: always()
