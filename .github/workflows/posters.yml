@@ -1,10 +1,10 @@
 # ══════════════════════════════════════════════
 #  PORTADAS — descarga pósters de TMDB/AniList
-#  TODOS los catálogos, sin límite de tiempo por
-#  catálogo: cada uno corre en su PROPIO trabajo
-#  (tope real: 6 h por trabajo, máximo de GitHub).
-#  Tras cada pasada regenera el ÍNDICE LITE (lo
-#  que realmente lee la web) y hace commit.
+#  Cada catálogo corre en su PROPIO trabajo.
+#  Tras cada pasada regenera el ÍNDICE LITE y las
+#  fichas (shard-pack para los catálogos con shards:
+#  debe coincidir con SHARDED_CATS de app.js) y hace
+#  commit.
 #  Requiere: secret TMDB_API_KEY (gratis en
 #  themoviedb.org)
 # ══════════════════════════════════════════════
@@ -64,8 +64,19 @@ jobs:
             CATALOG=$CATALOG node poster-sync.js > /tmp/posters-ronda-$round.log 2>&1 || true
             tail -n 40 /tmp/posters-ronda-$round.log
 
-            # Regenerar el ÍNDICE LITE y las fichas (lo que lee la web)
-            node split-catalog.js public/data/catalog-$CATALOG.json
+            # Regenerar el ÍNDICE LITE y las fichas (lo que lee la web).
+            # OJO: los catálogos de SHARDED_CATS (app.js) deben regenerarse
+            # con shard-pack (agrupa en 64 shards y BORRA las fichas sueltas).
+            # Con split-catalog recrearíamos miles de archivos y reventaríamos
+            # el límite de 20.000 archivos de Cloudflare Pages.
+            case "$CATALOG" in
+              donghualife|youtubefilms|pelispedia)
+                node shard-pack.js "$CATALOG" full
+                ;;
+              *)
+                node split-catalog.js "public/data/catalog-$CATALOG.json"
+                ;;
+            esac
 
             git add -A public/data public/img/posters
             if ! git diff --staged --quiet; then
