@@ -1,13 +1,27 @@
 // ══════════════════════════════════════════════════════════
-//  split-catalog.js  —  DonghuaFlix
+//  split-catalog.js  —  DonghuaFlix  (v2: detalles en BATCHES)
 //  Convierte un catálogo gigante en:
-//    <base>-index.json           → índice LITE (grids + búsqueda)
-//    <base>-details/<slug>.json  → ficha completa (sinopsis, temporadas,
-//                                   episodios y servidores) de UN título
+//    <base>-index.json                 → índice LITE (grids + búsqueda)
+//                                         CADA serie lleva "b": nº de batch
+//    <base>-details-batch-000.json     → detalles de ~1,5 MB máx. cada uno
+//    <base>-details-batch-001.json     → (series + temporadas + episodios
+//                                         + servidores de N títulos)
 //
 //  Uso:
-//    node split-catalog.js public/data/catalog-peliculas.json
-//    node split-catalog.js public/data/catalog.json
+//    node split-catalog.js public/data/catalog-donghualife.json
+//
+//  Por qué: Cloudflare Pages limita a 20.000 archivos por deploy.
+//  Con 1 archivo por título, cualquier catálogo grande lo revienta.
+//  Con batches, el total son ~10-25 archivos, inmune al crecimiento.
+//
+//  CAMBIO EN LA WEB (3 líneas):
+//    // antes
+//    const r = await fetch(`${DATA}/${index.detailsBase}/${slug}.json`);
+//    const detail = await r.json();
+//    // después
+//    const row = index.series.find(x => x.s === slug || x.i === slug);
+//    const r = await fetch(`${index.detailsBase}${String(row?.b ?? 0).padStart(3,'0')}.json`);
+//    const detail = (await r.json())[slug];
 //
 //  No toca el JSON original (se mantiene por compatibilidad).
 // ══════════════════════════════════════════════════════════
@@ -38,7 +52,10 @@ if (!series.length) {
 const dir = path.dirname(input);
 const base = path.basename(input, '.json');              // catalog-peliculas
 const indexFile = path.join(dir, `${base}-index.json`);
-const detailsDir = path.join(dir, `${base}-details`);
+const detailsDir = path.join(dir, `${base}-details`);    // legado (se borra)
+
+// Tamaño objetivo por batch (1,5 MB ≈ cómodo de cargar por serie)
+const BATCH_TARGET_BYTES = Number(process.env.SPLIT_BATCH_BYTES || 1_500_000);
 
 // Agrupar temporadas y episodios por serie (una sola pasada)
 const seasonsBySeries = new Map();
@@ -55,9 +72,18 @@ for (const e of episodes) {
   epsBySeries.get(sid).push(e);
 }
 
-// Empezar de cero para no dejar fichas huérfanas de sincronizaciones previas
+/*
+   Limpieza de lo anterior:
+   - la carpeta de fichas sueltas (legado v1)
+   - los batches viejos de corridas anteriores
+   Así no quedan huérfanos que inflen el deploy.
+*/
 fs.rmSync(detailsDir, { recursive: true, force: true });
-fs.mkdirSync(detailsDir, { recursive: true });
+for (const f of fs.readdirSync(dir)) {
+  if (f.startsWith(`${base}-details-batch-`) && f.endsWith('.json')) {
+    fs.rmSync(path.join(dir, f));
+  }
+}
 
 const safe = (s) => String(s || '').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 150);
 const genreList = [];
@@ -68,19 +94,38 @@ const gid = (g) => {
 };
 const IMG_BASE = 'https://image.tmdb.org/t/p/w300';
 const index = [];
-let written = 0;
+
+// ── Construcción de batches por tamaño ──
+const batches = [];            // array de Map<key, payload>
+let current = new Map();
+let currentBytes = 2;          // "{}"
+
+function flushBatch() {
+  if (!current.size) return;
+  batches.push(current);
+  current = new Map();
+  currentBytes = 2;
+}
 
 for (const s of series) {
   const key = safe(s.slug || s.id);
   if (!key) continue;
 
-  // ── Índice LITE: sólo lo que pinta una tarjeta o se usa al buscar ──
-  // Los géneros se guardan como números (diccionario) y el póster sin el
-  // prefijo de TMDB: así el índice pesa una fracción.
-  //
-  // CORREGIDO: se prioriza la portada LOCAL descargada por poster-sync.js
-  // (posterLocal). Si no hay, se usa la remota como antes. Las rutas
-  // locales ('./public/...') viajan tal cual y la app las detecta.
+  const payload = {
+    series: s,
+    seasons: seasonsBySeries.get(s.id) || [],
+    episodes: epsBySeries.get(s.id) || [],
+  };
+  const entry = JSON.stringify(payload);
+
+  // si el batch actual superaría el objetivo, cerrarlo y abrir otro
+  if (current.size > 0 && currentBytes + entry.length + key.length + 5 > BATCH_TARGET_BYTES) {
+    flushBatch();
+  }
+  current.set(key, payload);
+  currentBytes += entry.length + key.length + 5;
+
+  // ── Índice LITE (igual que antes + campo b = nº de batch) ──
   const img = s.posterLocal || s.image || '';
   const row = {
     i: s.id,
@@ -88,8 +133,9 @@ for (const s of series) {
     t: s.title,
     p: img.startsWith(IMG_BASE) ? img.slice(IMG_BASE.length) : img || null,
     g: (s.genres || []).map(gid),
+    b: batches.length,                      // ← batch donde vive su detalle
   };
-  if (s.posterLocal) row.pl = 1;   // marca informativa: portada local
+  if (s.posterLocal) row.pl = 1;
   if (s.status) row.st = s.status;
   if (s.type) row.ty = s.type;
   if (s.year) row.y = s.year;
@@ -97,18 +143,14 @@ for (const s of series) {
   if (s.totalEpisodes != null) row.e = s.totalEpisodes;
   if (s.updatedAt) row.u = s.updatedAt;
   index.push(row);
-
-  // ── Detalle: todo lo pesado, un fichero por título ──
-  fs.writeFileSync(
-    path.join(detailsDir, `${key}.json`),
-    JSON.stringify({
-      series: s,
-      seasons: seasonsBySeries.get(s.id) || [],
-      episodes: epsBySeries.get(s.id) || [],
-    })
-  );
-  written++;
 }
+flushBatch();
+
+// ── Escribir los batches ──
+batches.forEach((map, n) => {
+  const name = `${base}-details-batch-${String(n).padStart(3, '0')}.json`;
+  fs.writeFileSync(path.join(dir, name), JSON.stringify(Object.fromEntries(map)));
+});
 
 fs.writeFileSync(
   indexFile,
@@ -117,7 +159,10 @@ fs.writeFileSync(
     lite: true,
     compact: true,
     imageBase: IMG_BASE,
-    detailsBase: `${base}-details`,
+    detailsMode: 'batch',                              // ← la web lo detecta
+    detailsBase: `${base}-details-batch-`,             // prefijo + 000.json
+    batchCount: batches.length,
+    batchBytes: BATCH_TARGET_BYTES,
     genres: genreList,
     count: index.length,
     series: index,
@@ -127,4 +172,4 @@ fs.writeFileSync(
 const mb = (p) => (fs.statSync(p).size / 1024 / 1024).toFixed(2);
 console.log(`[split] origen : ${input} (${mb(input)} MB, ${series.length} títulos)`);
 console.log(`[split] índice : ${indexFile} (${mb(indexFile)} MB)`);
-console.log(`[split] fichas : ${detailsDir}/ (${written} ficheros)`);
+console.log(`[split] batches: ${batches.length} archivos (~${(BATCH_TARGET_BYTES / 1024 / 1024).toFixed(1)} MB c/u)`);
