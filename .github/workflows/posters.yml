@@ -71,7 +71,7 @@ jobs:
             # el límite de 20.000 archivos de Cloudflare Pages.
             case "$CATALOG" in
               donghualife|youtubefilms|pelispedia)
-                node shard-pack.js "$CATALOG" full
+                node shard-pack.js "catalog-$CATALOG" full
                 ;;
               *)
                 node split-catalog.js "public/data/catalog-$CATALOG.json"
