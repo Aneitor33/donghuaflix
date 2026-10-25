@@ -5366,3 +5366,67 @@ document.addEventListener(
 );
 
 load();
+/* ═══════════════════════════════════════════════════════════
+   HERRAMIENTAS DEL REPRODUCTOR — switch para mostrar/ocultar
+   la lupa (zoom) y el botón de pantalla completa.
+   Pégalo al FINAL de app.js. No toca nada de lo anterior:
+   se auto-instala y vigila los cambios de vista por sí solo.
+   ═══════════════════════════════════════════════════════════ */
+(function () {
+  const KEY = 'donghuaflix_player_tools';
+  const on = () => localStorage.getItem(KEY) === '1';
+
+  // 1) estilos: oculta SOLO los botones del player (la barra queda)
+  const style = document.createElement('style');
+  style.textContent = [
+    'body.hide-tools .pl-ctrl .pl-btn { display:none !important; }',
+    '.ptools-row { display:flex; align-items:center; gap:10px; margin:14px 0 2px;',
+    '  cursor:pointer; font-size:13px; color:#bbb; user-select:none; }',
+    '.ptools-row input { width:17px; height:17px; accent-color:#e50914; cursor:pointer; }'
+  ].join('\n');
+  document.head.appendChild(style);
+
+  // 2) aplica el estado (clase en body)
+  function apply() {
+    document.body.classList.toggle('hide-tools', !on());
+  }
+
+  // 3) inserta el switch debajo de las fuentes (si no está ya)
+  function injectSwitch() {
+    if (document.getElementById('ptoolsSwitch')) return;
+    const anchor = document.getElementById('serverGroups');
+    if (!anchor) return;
+    const label = document.createElement('label');
+    label.className = 'ptools-row';
+    label.id = 'ptoolsSwitch';
+    label.innerHTML =
+      '<input type="checkbox" ' + (on() ? 'checked' : '') + '> ' +
+      '<span>Mostrar zoom y pantalla completa en el reproductor</span>';
+    label.querySelector('input').addEventListener('change', function () {
+      localStorage.setItem(KEY, on() ? '0' : '1');
+      apply();
+      this.checked = on();
+      if (typeof showToast === 'function') {
+        showToast(on() ? 'Herramientas visibles' : 'Herramientas ocultas');
+      }
+    });
+    anchor.insertAdjacentElement('afterend', label);
+  }
+
+  // 4) se re-aplica solo cada vez que cambia la vista (MutationObserver)
+  function boot() {
+    apply();
+    injectSwitch();
+    const app = document.getElementById('app') || document.body;
+    new MutationObserver(function () {
+      apply();
+      injectSwitch();
+    }).observe(app, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
