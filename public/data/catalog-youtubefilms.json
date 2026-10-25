@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-24T20:56:50.293Z",
+    "syncedAt": "2026-10-25T04:52:41.127Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1532,
-      "newInThisSync": 0,
-      "scanned": 45,
+      "movies": 1533,
+      "newInThisSync": 1,
+      "scanned": 46,
       "ignoredByDuration": 45,
       "errors": 0
     },
@@ -32,6 +32,28 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
+      "slug": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
+      "title": "【LLENO】El Dios de la Riqueza del mundo de cultivo superior Temporada 2",
+      "image": "https://i.ytimg.com/vi/van75ZAZCio/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Retorno Diez Mil Veces: Soy el Dios de la Riqueza en el Mundo de Cultivo Superior Temporada 2 🪙 Lu Chen se hizo famoso gracias al sistema de retorno diez mil veces. Destacó en la gran...",
+      "year": 2026,
+      "updatedAt": "2026-10-25T04:00:02Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=van75ZAZCio",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】El Dios de la Riqueza del mundo de cultivo superior Temporada 2",
+      "duration": 12751,
+      "genres": [
+        "Fantasía/Cultivación",
+        "Artes Marciales",
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos",
       "slug": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos",
@@ -31208,6 +31230,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-s1",
+      "seriesId": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos-s1",
       "seriesId": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos",
       "number": 1,
@@ -40401,6 +40429,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-ep-1",
+      "slug": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-ep-1",
+      "seriesId": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
+      "seasonId": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/van75ZAZCio"
+        }
+      ],
+      "updatedAt": "2026-10-25T04:00:02Z"
+    },
     {
       "id": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos-ep-1",
       "slug": "huerfano-domina-arte-prohibido-con-arma-propia-mata-a-todos-sus-enemigos-ep-1",
