@@ -62,7 +62,7 @@ jobs:
 
       - name: Sincronizar SeriesDonghua
         env:
-          OUT_FILE: 'public/data/catalog-seriesdonghua.json'
+          OUT_FILE: 'public/data/catalog-donghualife.json'
           WORKERS: '10'
           FRESH: ${{ inputs.mode == 'fresh' && '1' || '' }}
           REFRESH_SERVERS: ${{ inputs.mode == 'refresh-servers' && '1' || '' }}
@@ -73,14 +73,14 @@ jobs:
 
       - name: Generar índice lite y fichas
         if: always()
-        run: node split-catalog.js public/data/catalog-seriesdonghua.json
+        run: node split-catalog.js public/data/catalog-donghualife.json
 
       - name: Guardar catálogo
         if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A 'public/data/catalog-seriesdonghua*'
+          git add -A 'public/data/catalog-donghualife*'
           git diff --staged --quiet && { echo "Sin cambios"; exit 0; }
           git commit -m "sync(seriesdonghua): actualizar catálogo"
           for i in 1 2 3 4 5 6; do
