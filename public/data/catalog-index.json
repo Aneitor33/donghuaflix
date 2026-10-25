@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-25T11:42:19.116Z",
+  "generatedAt": "2026-10-25T16:31:29.384Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -19,7 +19,7 @@
       "id": "youtubefilms",
       "label": "YouTube Films",
       "index": "catalog-youtubefilms-index.json",
-      "series": 1533
+      "series": 1537
     },
     {
       "id": "donghualife",
@@ -31,7 +31,7 @@
       "id": "donghuasub",
       "label": "DonghuaSub",
       "index": "catalog-donghuasub-index.json",
-      "series": 55
+      "series": 220
     },
     {
       "id": "pelispedia",

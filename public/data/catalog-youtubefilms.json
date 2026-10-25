@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-25T11:42:19.012Z",
+    "syncedAt": "2026-10-25T16:31:29.261Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1533,
-      "newInThisSync": 0,
-      "scanned": 47,
-      "ignoredByDuration": 47,
+      "movies": 1537,
+      "newInThisSync": 4,
+      "scanned": 52,
+      "ignoredByDuration": 48,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,86 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo",
+      "slug": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo",
+      "title": "El Obrero no imaginaba que la Esposa que rescató era la Prometida del CEO",
+      "image": "https://i.ytimg.com/vi/lEN1FsWfcis/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-25T15:30:39Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=lEN1FsWfcis",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] El Obrero no imaginaba que la Esposa que rescató era la Prometida del CEO...",
+      "duration": 8897,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor",
+      "slug": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor",
+      "title": "Años después, la CEO que fue chica pobre se vuelve a enamorar de su Primer Amor",
+      "image": "https://i.ytimg.com/vi/ByMfZD2QNPM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-25T15:00:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=ByMfZD2QNPM",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Años después, la CEO que fue chica pobre se vuelve a enamorar de su Primer Amor...",
+      "duration": 6678,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra",
+      "slug": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra",
+      "title": "Audio Latino - Asesino disfrazado de mago busca venganza, pero sin querer encuentra a su hermano",
+      "image": "https://i.ytimg.com/vi/oEIsWti9QAg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-25T14:30:39Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=oEIsWti9QAg",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Asesino disfrazado de mago busca venganza, pero sin querer encuentra a su hermano.",
+      "duration": 7597,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla",
+      "slug": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla",
+      "title": "Chica pobre traicionada por su padre jugador, solo su primer amor elige creerla",
+      "image": "https://i.ytimg.com/vi/W-x0d15hF_I/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-25T14:30:05Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=W-x0d15hF_I",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica pobre traicionada por su padre jugador, solo su primer amor elige creerla...",
+      "duration": 6331,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
       "slug": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
@@ -31230,6 +31310,30 @@
   ],
   "seasons": [
     {
+      "id": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo-s1",
+      "seriesId": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor-s1",
+      "seriesId": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra-s1",
+      "seriesId": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla-s1",
+      "seriesId": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-s1",
       "seriesId": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2",
       "number": 1,
@@ -40429,6 +40533,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo-ep-1",
+      "slug": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo-ep-1",
+      "seriesId": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo",
+      "seasonId": "el-obrero-no-imaginaba-que-la-esposa-que-rescato-era-la-prometida-del-ceo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/lEN1FsWfcis"
+        }
+      ],
+      "updatedAt": "2026-10-25T15:30:39Z"
+    },
+    {
+      "id": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor-ep-1",
+      "slug": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor-ep-1",
+      "seriesId": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor",
+      "seasonId": "anos-despues-la-ceo-que-fue-chica-pobre-se-vuelve-a-enamorar-de-su-primer-amor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ByMfZD2QNPM"
+        }
+      ],
+      "updatedAt": "2026-10-25T15:00:22Z"
+    },
+    {
+      "id": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra-ep-1",
+      "slug": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra-ep-1",
+      "seriesId": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra",
+      "seasonId": "audio-latino-asesino-disfrazado-de-mago-busca-venganza-pero-sin-querer-encuentra-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/oEIsWti9QAg"
+        }
+      ],
+      "updatedAt": "2026-10-25T14:30:39Z"
+    },
+    {
+      "id": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla-ep-1",
+      "slug": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla-ep-1",
+      "seriesId": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla",
+      "seasonId": "chica-pobre-traicionada-por-su-padre-jugador-solo-su-primer-amor-elige-creerla-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/W-x0d15hF_I"
+        }
+      ],
+      "updatedAt": "2026-10-25T14:30:05Z"
+    },
     {
       "id": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-ep-1",
       "slug": "lleno-el-dios-de-la-riqueza-del-mundo-de-cultivo-superior-temporada-2-ep-1",
