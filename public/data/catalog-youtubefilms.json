@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-26T04:56:42.245Z",
+    "syncedAt": "2026-10-26T13:14:34.757Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1538,
-      "newInThisSync": 0,
-      "scanned": 45,
+      "movies": 1539,
+      "newInThisSync": 1,
+      "scanned": 46,
       "ignoredByDuration": 45,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite",
+      "slug": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite",
+      "title": "【LLENO】Espadachín Sagrado: Cada espadazo aumenta mi ataque ¡Sin límite!",
+      "image": "https://i.ytimg.com/vi/HRmlD2o4yxc/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Ye Wuyá viaja a un mundo de espadas y magia y despierta la legendaria profesión de Espadachín Sagrado. Sin embargo, todos lo subestiman porque le cuesta mucho subir de nivel. Con cada...",
+      "year": 2026,
+      "updatedAt": "2026-10-26T10:00:37Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=HRmlD2o4yxc",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Espadachín Sagrado: Cada espadazo aumenta mi ataque ¡Sin límite!",
+      "duration": 9008,
+      "genres": [
+        "Fantasía/Cultivación",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia",
       "slug": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia",
@@ -31332,6 +31353,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite-s1",
+      "seriesId": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia-s1",
       "seriesId": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia",
       "number": 1,
@@ -40561,6 +40588,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite-ep-1",
+      "slug": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite-ep-1",
+      "seriesId": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite",
+      "seasonId": "lleno-espadachin-sagrado-cada-espadazo-aumenta-mi-ataque-sin-limite-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/HRmlD2o4yxc"
+        }
+      ],
+      "updatedAt": "2026-10-26T10:00:37Z"
+    },
     {
       "id": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia-ep-1",
       "slug": "la-cazadora-de-tumbas-pelicula-de-accion-y-fantasia-ep-1",
