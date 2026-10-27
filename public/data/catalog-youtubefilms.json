@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-27T12:22:38.541Z",
+    "syncedAt": "2026-10-27T22:22:02.086Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1543,
-      "newInThisSync": 1,
-      "scanned": 48,
-      "ignoredByDuration": 47,
+      "movies": 1546,
+      "newInThisSync": 3,
+      "scanned": 51,
+      "ignoredByDuration": 48,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
+      "slug": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
+      "title": "Audio Latino - Joven de familia caída se une a Mendigos para Vengar a su padre asesinado",
+      "image": "https://i.ytimg.com/vi/OjeQ1ezi4Zc/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-27T15:45:34Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=OjeQ1ezi4Zc",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Joven de familia caída se une a Mendigos para Vengar a su padre asesinado.",
+      "duration": 4231,
+      "genres": [
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla",
+      "slug": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla",
+      "title": "Joven viuda no esperaba que su primer amor siguiera soltero 10 años por buscarla",
+      "image": "https://i.ytimg.com/vi/Fwlw8h4CvgY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-27T15:45:28Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Fwlw8h4CvgY",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Joven viuda no esperaba que su primer amor siguiera soltero 10 años por buscarla...",
+      "duration": 13121,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera-",
+      "slug": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera-",
+      "title": "Asesino salva a la Hija de su Enemigo sin querer y Se Enamora de ella a primera vista",
+      "image": "https://i.ytimg.com/vi/tjGVqGeOjMM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-27T15:30:10Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=tjGVqGeOjMM",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Asesino salva a la Hija de su Enemigo sin querer y Se Enamora de ella a primera vista",
+      "duration": 7019,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
       "slug": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
@@ -31434,6 +31494,24 @@
   ],
   "seasons": [
     {
+      "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-s1",
+      "seriesId": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla-s1",
+      "seriesId": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera--s1",
+      "seriesId": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-s1",
       "seriesId": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
       "number": 1,
@@ -40693,6 +40771,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-ep-1",
+      "slug": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-ep-1",
+      "seriesId": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
+      "seasonId": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OjeQ1ezi4Zc"
+        }
+      ],
+      "updatedAt": "2026-10-27T15:45:34Z"
+    },
+    {
+      "id": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla-ep-1",
+      "slug": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla-ep-1",
+      "seriesId": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla",
+      "seasonId": "joven-viuda-no-esperaba-que-su-primer-amor-siguiera-soltero-10-anos-por-buscarla-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Fwlw8h4CvgY"
+        }
+      ],
+      "updatedAt": "2026-10-27T15:45:28Z"
+    },
+    {
+      "id": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera--ep-1",
+      "slug": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera--ep-1",
+      "seriesId": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera-",
+      "seasonId": "asesino-salva-a-la-hija-de-su-enemigo-sin-querer-y-se-enamora-de-ella-a-primera--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tjGVqGeOjMM"
+        }
+      ],
+      "updatedAt": "2026-10-27T15:30:10Z"
+    },
     {
       "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-ep-1",
       "slug": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-ep-1",
