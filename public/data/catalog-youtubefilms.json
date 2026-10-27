@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-27T05:13:58.257Z",
+    "syncedAt": "2026-10-27T12:22:38.541Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1542,
-      "newInThisSync": 0,
-      "scanned": 47,
+      "movies": 1543,
+      "newInThisSync": 1,
+      "scanned": 48,
       "ignoredByDuration": 47,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
+      "slug": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
+      "title": "【LLENO】En un mundo de bestias contratadas, mi pan crea una guerrera dragón",
+      "image": "https://i.ytimg.com/vi/5mwAOC4l7UM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En la ciudad de Aiseth, donde todos contratan bestias mágicas🐍 Ivan solo tiene una serpiente de hierba Grado F y sufre constantes humillaciones de los nobles💥 Hasta que obtiene el si...",
+      "year": 2026,
+      "updatedAt": "2026-10-27T10:00:24Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=5mwAOC4l7UM",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】En un mundo de bestias contratadas, mi pan crea una guerrera dragón",
+      "duration": 7029,
+      "genres": [
+        "Acción",
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro",
       "slug": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro",
@@ -31413,6 +31434,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-s1",
+      "seriesId": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro-s1",
       "seriesId": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro",
       "number": 1,
@@ -40666,6 +40693,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-ep-1",
+      "slug": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-ep-1",
+      "seriesId": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon",
+      "seasonId": "lleno-en-un-mundo-de-bestias-contratadas-mi-pan-crea-una-guerrera-dragon-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/5mwAOC4l7UM"
+        }
+      ],
+      "updatedAt": "2026-10-27T10:00:24Z"
+    },
     {
       "id": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro-ep-1",
       "slug": "ceo-soltero-10-anos-busca-a-su-prometida-pero-al-final-ya-tiene-un-bebe-con-otro-ep-1",
