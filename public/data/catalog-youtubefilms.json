@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-28T05:52:17.837Z",
+    "syncedAt": "2026-10-28T13:07:38.155Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1546,
-      "newInThisSync": 0,
-      "scanned": 47,
+      "movies": 1547,
+      "newInThisSync": 1,
+      "scanned": 48,
       "ignoredByDuration": 47,
       "errors": 0
     },
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
+      "slug": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
+      "title": "【LLENO】Sistema de Suerte Suprema: Bonificación máxima desde el inicio",
+      "image": "https://i.ytimg.com/vi/OI3Ip3brLAY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En un mundo donde todos giran la ruleta para despertar su profesión, yo solo cuento con la ruleta del destino más barata. Todos esperan reírse de mi fracaso, pero me une al Sistema de...",
+      "year": 2026,
+      "updatedAt": "2026-10-28T09:00:33Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=OI3Ip3brLAY",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Sistema de Suerte Suprema: Bonificación máxima desde el inicio",
+      "duration": 8456,
+      "genres": [
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
       "slug": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
@@ -31494,6 +31514,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-s1",
+      "seriesId": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-s1",
       "seriesId": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase",
       "number": 1,
@@ -40771,6 +40797,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-ep-1",
+      "slug": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-ep-1",
+      "seriesId": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
+      "seasonId": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OI3Ip3brLAY"
+        }
+      ],
+      "updatedAt": "2026-10-28T09:00:33Z"
+    },
     {
       "id": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-ep-1",
       "slug": "audio-latino-joven-de-familia-caida-se-une-a-mendigos-para-vengar-a-su-padre-ase-ep-1",
