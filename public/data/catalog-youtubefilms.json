@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-28T13:07:38.155Z",
+    "syncedAt": "2026-10-28T22:40:51.476Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1547,
-      "newInThisSync": 1,
-      "scanned": 48,
+      "movies": 1551,
+      "newInThisSync": 4,
+      "scanned": 51,
       "ignoredByDuration": 47,
       "errors": 0
     },
@@ -32,6 +32,87 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "slug": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "title": "La última apuesta: Batalla en alta mar Película de acción y drama",
+      "image": "https://i.ytimg.com/vi/h-rLrpHIYJQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Sinopsis: La película de acción y drama \"La última apuesta: Batalla en alta mar\" trata sobre un barco de apuestas llamado Bi'an en aguas internacionales donde es un paraíso para los jugadores. Hace...",
+      "year": 2026,
+      "updatedAt": "2026-10-28T16:00:09Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=h-rLrpHIYJQ",
+      "channel": "@moxispanish",
+      "originalTitle": "La última apuesta: Batalla en alta mar | Película de acción y drama | Completa en español HD",
+      "duration": 5596,
+      "genres": [
+        "Acción",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el",
+      "slug": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el",
+      "title": "Tras morir su esposo, la esposa tocó la puerta de su hijastro y tuvo sexo con él",
+      "image": "https://i.ytimg.com/vi/EYSQ6E_Up8M/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-28T15:30:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=EYSQ6E_Up8M",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Tras morir su esposo, la esposa tocó la puerta de su hijastro y tuvo sexo con él...",
+      "duration": 3846,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario",
+      "slug": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario",
+      "title": "El Chico no imaginaba que su Padrastro lo convertiría en Multimillonario",
+      "image": "https://i.ytimg.com/vi/OYJ-LKewzA8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-28T15:30:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=OYJ-LKewzA8",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] El Chico no imaginaba que su Padrastro lo convertiría en Multimillonario...",
+      "duration": 8226,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori",
+      "slug": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori",
+      "title": "Audio Latino - El Capo está por ejecutar al Traidor, sin saber que Él es quien Morirá",
+      "image": "https://i.ytimg.com/vi/WQ4pBEWfwtQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-28T14:30:18Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=WQ4pBEWfwtQ",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - El Capo está por ejecutar al Traidor, sin saber que Él es quien Morirá.",
+      "duration": 4052,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
       "slug": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
@@ -31514,6 +31595,30 @@
   ],
   "seasons": [
     {
+      "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-s1",
+      "seriesId": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el-s1",
+      "seriesId": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario-s1",
+      "seriesId": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori-s1",
+      "seriesId": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-s1",
       "seriesId": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio",
       "number": 1,
@@ -40797,6 +40902,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
+      "slug": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
+      "seriesId": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
+      "seasonId": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/h-rLrpHIYJQ"
+        }
+      ],
+      "updatedAt": "2026-10-28T16:00:09Z"
+    },
+    {
+      "id": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el-ep-1",
+      "slug": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el-ep-1",
+      "seriesId": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el",
+      "seasonId": "tras-morir-su-esposo-la-esposa-toco-la-puerta-de-su-hijastro-y-tuvo-sexo-con-el-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/EYSQ6E_Up8M"
+        }
+      ],
+      "updatedAt": "2026-10-28T15:30:03Z"
+    },
+    {
+      "id": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario-ep-1",
+      "slug": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario-ep-1",
+      "seriesId": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario",
+      "seasonId": "el-chico-no-imaginaba-que-su-padrastro-lo-convertiria-en-multimillonario-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OYJ-LKewzA8"
+        }
+      ],
+      "updatedAt": "2026-10-28T15:30:03Z"
+    },
+    {
+      "id": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori-ep-1",
+      "slug": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori-ep-1",
+      "seriesId": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori",
+      "seasonId": "audio-latino-el-capo-esta-por-ejecutar-al-traidor-sin-saber-que-el-es-quien-mori-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/WQ4pBEWfwtQ"
+        }
+      ],
+      "updatedAt": "2026-10-28T14:30:18Z"
+    },
     {
       "id": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-ep-1",
       "slug": "lleno-sistema-de-suerte-suprema-bonificacion-maxima-desde-el-inicio-ep-1",
