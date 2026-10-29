@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-29T13:13:52.089Z",
+    "syncedAt": "2026-10-29T22:50:06.897Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1552,
-      "newInThisSync": 1,
-      "scanned": 46,
-      "ignoredByDuration": 45,
+      "movies": 1555,
+      "newInThisSync": 3,
+      "scanned": 49,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa",
+      "slug": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa",
+      "title": "Joven lleva a la Rica Ebria al hotel, mientras su Esposo aún la espera en casa",
+      "image": "https://i.ytimg.com/vi/bdznnq6bArI/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-29T15:30:34Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=bdznnq6bArI",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Joven lleva a la Rica Ebria al hotel, mientras su Esposo aún la espera en casa...",
+      "duration": 3664,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde",
+      "slug": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde",
+      "title": "Terroristas al último momento descubren a la Infiltrada, pero Todo es Tarde",
+      "image": "https://i.ytimg.com/vi/Q4R72yiWIts/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-29T15:00:15Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Q4R72yiWIts",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Terroristas al último momento descubren a la Infiltrada, pero Todo es Tarde...",
+      "duration": 5767,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib",
+      "slug": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib",
+      "title": "Audio Latino - Capo sobrevive a una Emboscada de su enemigo, su mejor Sicario recibe orden y actúa",
+      "image": "https://i.ytimg.com/vi/7qW4Lg0WT9U/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-29T14:30:13Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=7qW4Lg0WT9U",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Capo sobrevive a una Emboscada de su enemigo, su mejor Sicario recibe orden y actúa.",
+      "duration": 6342,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
       "slug": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
@@ -31616,6 +31676,24 @@
   ],
   "seasons": [
     {
+      "id": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa-s1",
+      "seriesId": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde-s1",
+      "seriesId": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib-s1",
+      "seriesId": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-s1",
       "seriesId": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
       "number": 1,
@@ -40929,6 +41007,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa-ep-1",
+      "slug": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa-ep-1",
+      "seriesId": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa",
+      "seasonId": "joven-lleva-a-la-rica-ebria-al-hotel-mientras-su-esposo-aun-la-espera-en-casa-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/bdznnq6bArI"
+        }
+      ],
+      "updatedAt": "2026-10-29T15:30:34Z"
+    },
+    {
+      "id": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde-ep-1",
+      "slug": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde-ep-1",
+      "seriesId": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde",
+      "seasonId": "terroristas-al-ultimo-momento-descubren-a-la-infiltrada-pero-todo-es-tarde-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Q4R72yiWIts"
+        }
+      ],
+      "updatedAt": "2026-10-29T15:00:15Z"
+    },
+    {
+      "id": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib-ep-1",
+      "slug": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib-ep-1",
+      "seriesId": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib",
+      "seasonId": "audio-latino-capo-sobrevive-a-una-emboscada-de-su-enemigo-su-mejor-sicario-recib-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7qW4Lg0WT9U"
+        }
+      ],
+      "updatedAt": "2026-10-29T14:30:13Z"
+    },
     {
       "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-ep-1",
       "slug": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-ep-1",
