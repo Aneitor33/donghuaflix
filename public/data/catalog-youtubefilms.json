@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-29T05:56:35.688Z",
+    "syncedAt": "2026-10-29T13:13:52.089Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1551,
-      "newInThisSync": 0,
-      "scanned": 45,
+      "movies": 1552,
+      "newInThisSync": 1,
+      "scanned": 46,
       "ignoredByDuration": 45,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
+      "slug": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
+      "title": "【LLENO】El talento de evolución: mis bestias se transforman en chicas",
+      "image": "https://i.ytimg.com/vi/fh29g3is4rc/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En un mundo paralelo asolado por monstruos, un joven es saboteado durante la ceremonia de despertar y solo consigue como compañero de bestia un gato doméstico de rango más bajo. Sin em...",
+      "year": 2026,
+      "updatedAt": "2026-10-29T09:00:19Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=fh29g3is4rc",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】El talento de evolución: mis bestias se transforman en chicas",
+      "duration": 6686,
+      "genres": [
+        "Artes Marciales",
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
       "slug": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
@@ -31595,6 +31616,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-s1",
+      "seriesId": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-s1",
       "seriesId": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama",
       "number": 1,
@@ -40902,6 +40929,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-ep-1",
+      "slug": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-ep-1",
+      "seriesId": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas",
+      "seasonId": "lleno-el-talento-de-evolucion-mis-bestias-se-transforman-en-chicas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/fh29g3is4rc"
+        }
+      ],
+      "updatedAt": "2026-10-29T09:00:19Z"
+    },
     {
       "id": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
       "slug": "la-ultima-apuesta-batalla-en-alta-mar-pelicula-de-accion-y-drama-ep-1",
