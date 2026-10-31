@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-31T12:44:11.183Z",
+    "syncedAt": "2026-10-31T21:42:19.797Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1559,
-      "newInThisSync": 0,
-      "scanned": 45,
-      "ignoredByDuration": 45,
+      "movies": 1562,
+      "newInThisSync": 3,
+      "scanned": 49,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
+      "slug": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
+      "title": "Chica pobre salva a amnésico al pie del monte; Resulta ser heredero del grupo",
+      "image": "https://i.ytimg.com/vi/_CGHqhGRm9g/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-31T15:30:20Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=_CGHqhGRm9g",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica pobre salva a amnésico al pie del monte; Resulta ser heredero del grupo...",
+      "duration": 5157,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band",
+      "slug": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band",
+      "title": "Tras salir, Hombre que encarcelaron por su Hermano es obligado a volver a la Banda",
+      "image": "https://i.ytimg.com/vi/VmxPJGlWeDk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-10-31T15:00:33Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VmxPJGlWeDk",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Tras salir, Hombre que encarcelaron por su Hermano es obligado a volver a la Banda...",
+      "duration": 4676,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu",
+      "slug": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu",
+      "title": "Audio Latino - Monje Guerrero forzado a usar fuerza para salvar ciudadanos de Samuráis",
+      "image": "https://i.ytimg.com/vi/txf6-VrRhBw/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-10-31T14:30:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=txf6-VrRhBw",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Monje Guerrero forzado a usar fuerza para salvar ciudadanos de Samuráis.",
+      "duration": 5761,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
       "slug": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
@@ -31759,6 +31819,24 @@
   ],
   "seasons": [
     {
+      "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-s1",
+      "seriesId": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band-s1",
+      "seriesId": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu-s1",
+      "seriesId": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-s1",
       "seriesId": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
       "number": 1,
@@ -41114,6 +41192,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-ep-1",
+      "slug": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-ep-1",
+      "seriesId": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
+      "seasonId": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_CGHqhGRm9g"
+        }
+      ],
+      "updatedAt": "2026-10-31T15:30:20Z"
+    },
+    {
+      "id": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band-ep-1",
+      "slug": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band-ep-1",
+      "seriesId": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band",
+      "seasonId": "tras-salir-hombre-que-encarcelaron-por-su-hermano-es-obligado-a-volver-a-la-band-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VmxPJGlWeDk"
+        }
+      ],
+      "updatedAt": "2026-10-31T15:00:33Z"
+    },
+    {
+      "id": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu-ep-1",
+      "slug": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu-ep-1",
+      "seriesId": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu",
+      "seasonId": "audio-latino-monje-guerrero-forzado-a-usar-fuerza-para-salvar-ciudadanos-de-samu-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/txf6-VrRhBw"
+        }
+      ],
+      "updatedAt": "2026-10-31T14:30:22Z"
+    },
     {
       "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-ep-1",
       "slug": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-ep-1",
