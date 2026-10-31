@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-30T22:27:09.432Z",
+    "syncedAt": "2026-10-31T05:54:23.522Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1558,
-      "newInThisSync": 2,
-      "scanned": 48,
-      "ignoredByDuration": 46,
+      "movies": 1559,
+      "newInThisSync": 1,
+      "scanned": 46,
+      "ignoredByDuration": 45,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,28 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
+      "slug": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
+      "title": "【LLENO】¿Un dragón de fuego débil? ¡Arrasaré con el reino secreto devorándolo todo!",
+      "image": "https://i.ytimg.com/vi/KvDcAfKf1Ho/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Tras renacer de forma inesperada, ¡se encuentra transformado en un pequeño y débil dragón de fuego! Cuando todos lo dan por perdido, considerándolo un ser sin futuro, ¡despierta de rep...",
+      "year": 2026,
+      "updatedAt": "2026-10-31T04:00:30Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=KvDcAfKf1Ho",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¿Un dragón de fuego débil? ¡Arrasaré con el reino secreto devorándolo todo!",
+      "duration": 6085,
+      "genres": [
+        "Fantasía/Cultivación",
+        "Histórico",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente",
       "slug": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente",
@@ -31737,6 +31759,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-s1",
+      "seriesId": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente-s1",
       "seriesId": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente",
       "number": 1,
@@ -41086,6 +41114,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-ep-1",
+      "slug": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-ep-1",
+      "seriesId": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo",
+      "seasonId": "lleno-un-dragon-de-fuego-debil-arrasare-con-el-reino-secreto-devorandolo-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KvDcAfKf1Ho"
+        }
+      ],
+      "updatedAt": "2026-10-31T04:00:30Z"
+    },
     {
       "id": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente-ep-1",
       "slug": "se-relajaba-sola-en-una-terma-privada-cuando-el-ceo-entro-de-repente-ep-1",
