@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-10-31T21:42:19.797Z",
+    "syncedAt": "2026-11-01T06:19:19.632Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1562,
-      "newInThisSync": 3,
-      "scanned": 49,
-      "ignoredByDuration": 46,
+      "movies": 1563,
+      "newInThisSync": 1,
+      "scanned": 46,
+      "ignoredByDuration": 45,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,28 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes",
+      "slug": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes",
+      "title": "【LLENO】Sistema de Generales Divinos: ¡Invoco al Gran Sabio para arrasar con las bestias alienígenas!",
+      "image": "https://i.ytimg.com/vi/PObXkTWMXpg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Las bestias campan a sus anchas y el apocalipsis ha llegado: ¡la fuerza lo es todo! El protagonista despierta una poderosa habilidad de rango S, solo para ser traicionado por la famili...",
+      "year": 2026,
+      "updatedAt": "2026-11-01T04:00:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=PObXkTWMXpg",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Sistema de Generales Divinos: ¡Invoco al Gran Sabio para arrasar con las bestias alienígenas!",
+      "duration": 7869,
+      "genres": [
+        "Acción",
+        "Histórico",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
       "slug": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
@@ -31819,6 +31841,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes-s1",
+      "seriesId": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-s1",
       "seriesId": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo",
       "number": 1,
@@ -41192,6 +41220,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes-ep-1",
+      "slug": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes-ep-1",
+      "seriesId": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes",
+      "seasonId": "lleno-sistema-de-generales-divinos-invoco-al-gran-sabio-para-arrasar-con-las-bes-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PObXkTWMXpg"
+        }
+      ],
+      "updatedAt": "2026-11-01T04:00:03Z"
+    },
     {
       "id": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-ep-1",
       "slug": "chica-pobre-salva-a-amnesico-al-pie-del-monte-resulta-ser-heredero-del-grupo-ep-1",
