@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-31T21:42:19.878Z",
+  "generatedAt": "2026-11-01T01:29:32.103Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -37,7 +37,7 @@
       "id": "pelispedia",
       "label": "PelisPedia",
       "index": "catalog-pelispedia-index.json",
-      "series": 19835
+      "series": 19878
     }
   ]
 }
