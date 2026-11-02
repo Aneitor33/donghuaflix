@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-02T06:20:11.372Z",
+    "syncedAt": "2026-11-02T21:45:58.871Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1567,
-      "newInThisSync": 0,
-      "scanned": 45,
-      "ignoredByDuration": 45,
+      "movies": 1571,
+      "newInThisSync": 4,
+      "scanned": 50,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,88 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
+      "slug": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
+      "title": "Chico sobrevive al Desastre de traición. 18 años después, Vengador de la familia",
+      "image": "https://i.ytimg.com/vi/tYn4sR85vj4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-02T15:30:01Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=tYn4sR85vj4",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chico sobrevive al Desastre de traición. 18 años después, Vengador de la familia.",
+      "duration": 6258,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo",
+      "slug": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo",
+      "title": "Mujer sin trabajo no imaginaba que un Buen Gesto suyo le diera el Mejor Trabajo",
+      "image": "https://i.ytimg.com/vi/ufVwN8vOkis/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-02T15:00:34Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=ufVwN8vOkis",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Mujer sin trabajo no imaginaba que un Buen Gesto suyo le diera el Mejor Trabajo...",
+      "duration": 5990,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo",
+      "slug": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo",
+      "title": "Audio Latino - Los terroristas no esperaban que por un superviviente acabaran todos",
+      "image": "https://i.ytimg.com/vi/PWekepzbOk8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-02T14:30:02Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=PWekepzbOk8",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Los terroristas no esperaban que por un superviviente acabaran todos.",
+      "duration": 6254,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos-",
+      "slug": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos-",
+      "title": "【LLENO】¡Una mirada despierta y perspicaz descubre una fortuna valorada en cientos de millones!",
+      "image": "https://i.ytimg.com/vi/Jt8WojT5J38/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En su vida pasada, vivió en la miseria y la desesperación, perdiendo finalmente a su esposa y a su hija en un incendio atroz; una tragedia que lo dejó consumido por un remordimiento et...",
+      "year": 2026,
+      "updatedAt": "2026-11-02T09:00:08Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Jt8WojT5J38",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¡Una mirada despierta y perspicaz descubre una fortuna valorada en cientos de millones!",
+      "duration": 8467,
+      "genres": [
+        "Artes Marciales",
+        "Romance",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig",
       "slug": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig",
@@ -31921,6 +32003,30 @@
   ],
   "seasons": [
     {
+      "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-s1",
+      "seriesId": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo-s1",
+      "seriesId": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo-s1",
+      "seriesId": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos--s1",
+      "seriesId": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig-s1",
       "seriesId": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig",
       "number": 1,
@@ -41324,6 +41430,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-ep-1",
+      "slug": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-ep-1",
+      "seriesId": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
+      "seasonId": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tYn4sR85vj4"
+        }
+      ],
+      "updatedAt": "2026-11-02T15:30:01Z"
+    },
+    {
+      "id": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo-ep-1",
+      "slug": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo-ep-1",
+      "seriesId": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo",
+      "seasonId": "mujer-sin-trabajo-no-imaginaba-que-un-buen-gesto-suyo-le-diera-el-mejor-trabajo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/ufVwN8vOkis"
+        }
+      ],
+      "updatedAt": "2026-11-02T15:00:34Z"
+    },
+    {
+      "id": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo-ep-1",
+      "slug": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo-ep-1",
+      "seriesId": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo",
+      "seasonId": "audio-latino-los-terroristas-no-esperaban-que-por-un-superviviente-acabaran-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/PWekepzbOk8"
+        }
+      ],
+      "updatedAt": "2026-11-02T14:30:02Z"
+    },
+    {
+      "id": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos--ep-1",
+      "slug": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos--ep-1",
+      "seriesId": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos-",
+      "seasonId": "lleno-una-mirada-despierta-y-perspicaz-descubre-una-fortuna-valorada-en-cientos--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Jt8WojT5J38"
+        }
+      ],
+      "updatedAt": "2026-11-02T09:00:08Z"
+    },
     {
       "id": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig-ep-1",
       "slug": "la-borracha-amo-al-ceo-10-anos-al-saber-que-se-casaria-decidio-besarle-ante-amig-ep-1",
