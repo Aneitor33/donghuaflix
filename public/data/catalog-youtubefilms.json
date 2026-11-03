@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-03T06:56:43.519Z",
+    "syncedAt": "2026-11-03T19:34:04.720Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1571,
-      "newInThisSync": 0,
-      "scanned": 45,
-      "ignoredByDuration": 45,
+      "movies": 1575,
+      "newInThisSync": 4,
+      "scanned": 50,
+      "ignoredByDuration": 46,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,87 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas-",
+      "slug": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas-",
+      "title": "Maestro Ciego recoge a niño moribundo y lo convierte en el Asesino Vengador más letal",
+      "image": "https://i.ytimg.com/vi/-XWVz8lbm7E/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-03T15:30:31Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=-XWVz8lbm7E",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Maestro Ciego recoge a niño moribundo y lo convierte en el Asesino Vengador más letal.",
+      "duration": 9322,
+      "genres": [
+        "Artes Marciales",
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s",
+      "slug": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s",
+      "title": "Audio Latino - 18 años después, el Huérfano maltratado se hace Mago y Se Venga en su actuación",
+      "image": "https://i.ytimg.com/vi/hsPYuH6Nock/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-03T15:00:27Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=hsPYuH6Nock",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - 18 años después, el Huérfano maltratado se hace Mago y Se Venga en su actuación.",
+      "duration": 5601,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo",
+      "slug": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo",
+      "title": "Viuda hace venir a Joven Casado a habitación de hotel, luego él cae al Abismo…",
+      "image": "https://i.ytimg.com/vi/2i8d5QyrKgA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-03T15:00:12Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=2i8d5QyrKgA",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Viuda hace venir a Joven Casado a habitación de hotel, luego él cae al Abismo…",
+      "duration": 3984,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre-",
+      "slug": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre-",
+      "title": "【LLENO】¿Una pequeña abeja melífera? ¡Ha despertado un talento de rango SSS: «Enjambre de insectos»!",
+      "image": "https://i.ytimg.com/vi/vIph_bA1luE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】A medida que la humanidad entra en la «Era de los Señores», todos se apresuran a conseguir poderosos tipos de tropas. Sin embargo, un joven solo logra despertar a una abeja de nivel 1,...",
+      "year": 2026,
+      "updatedAt": "2026-11-03T09:00:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=vIph_bA1luE",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¿Una pequeña abeja melífera? ¡Ha despertado un talento de rango SSS: «Enjambre de insectos»!",
+      "duration": 7989,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
       "slug": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
@@ -32003,6 +32084,30 @@
   ],
   "seasons": [
     {
+      "id": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas--s1",
+      "seriesId": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s-s1",
+      "seriesId": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo-s1",
+      "seriesId": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre--s1",
+      "seriesId": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-s1",
       "seriesId": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia",
       "number": 1,
@@ -41430,6 +41535,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas--ep-1",
+      "slug": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas--ep-1",
+      "seriesId": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas-",
+      "seasonId": "maestro-ciego-recoge-a-nino-moribundo-y-lo-convierte-en-el-asesino-vengador-mas--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/-XWVz8lbm7E"
+        }
+      ],
+      "updatedAt": "2026-11-03T15:30:31Z"
+    },
+    {
+      "id": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s-ep-1",
+      "slug": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s-ep-1",
+      "seriesId": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s",
+      "seasonId": "audio-latino-18-anos-despues-el-huerfano-maltratado-se-hace-mago-y-se-venga-en-s-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/hsPYuH6Nock"
+        }
+      ],
+      "updatedAt": "2026-11-03T15:00:27Z"
+    },
+    {
+      "id": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo-ep-1",
+      "slug": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo-ep-1",
+      "seriesId": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo",
+      "seasonId": "viuda-hace-venir-a-joven-casado-a-habitacion-de-hotel-luego-el-cae-al-abismo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/2i8d5QyrKgA"
+        }
+      ],
+      "updatedAt": "2026-11-03T15:00:12Z"
+    },
+    {
+      "id": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre--ep-1",
+      "slug": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre--ep-1",
+      "seriesId": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre-",
+      "seasonId": "lleno-una-pequena-abeja-melifera-ha-despertado-un-talento-de-rango-sss-enjambre--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/vIph_bA1luE"
+        }
+      ],
+      "updatedAt": "2026-11-03T09:00:03Z"
+    },
     {
       "id": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-ep-1",
       "slug": "chico-sobrevive-al-desastre-de-traicion-18-anos-despues-vengador-de-la-familia-ep-1",
