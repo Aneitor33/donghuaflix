@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-04T19:51:25.229Z",
+    "syncedAt": "2026-11-05T06:57:25.110Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1579,
-      "newInThisSync": 4,
-      "scanned": 50,
-      "ignoredByDuration": 46,
+      "movies": 1580,
+      "newInThisSync": 1,
+      "scanned": 46,
+      "ignoredByDuration": 45,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver",
+      "slug": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver",
+      "title": "【LLENO】¿Domador de bestias por linaje? ¡Utiliza su talento para forjar un dragón verdadero!",
+      "image": "https://i.ytimg.com/vi/5YcjrfKet4g/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En un mundo donde se domestican bestias, el talento innato lo determina todo. Sin embargo, Elias despierta un talento de rango SSS: el «Metal» —una habilidad que muchos desestiman— y f...",
+      "year": 2026,
+      "updatedAt": "2026-11-05T04:00:20Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=5YcjrfKet4g",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¿Domador de bestias por linaje? ¡Utiliza su talento para forjar un dragón verdadero!",
+      "duration": 6355,
+      "genres": [
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso",
       "slug": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso",
@@ -32164,6 +32184,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver-s1",
+      "seriesId": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso-s1",
       "seriesId": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso",
       "number": 1,
@@ -41639,6 +41665,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver-ep-1",
+      "slug": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver-ep-1",
+      "seriesId": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver",
+      "seasonId": "lleno-domador-de-bestias-por-linaje-utiliza-su-talento-para-forjar-un-dragon-ver-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/5YcjrfKet4g"
+        }
+      ],
+      "updatedAt": "2026-11-05T04:00:20Z"
+    },
     {
       "id": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso-ep-1",
       "slug": "chico-maldito-baja-por-primera-vez-del-monte-sin-saber-que-ya-es-el-mas-poderoso-ep-1",
