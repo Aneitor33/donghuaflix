@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-05T20:03:14.269Z",
+    "syncedAt": "2026-11-06T06:57:19.248Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1583,
-      "newInThisSync": 3,
-      "scanned": 50,
-      "ignoredByDuration": 47,
+      "movies": 1584,
+      "newInThisSync": 1,
+      "scanned": 49,
+      "ignoredByDuration": 48,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
+      "slug": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
+      "title": "【LLENO】¡La Clase SSS Más Inútil Despierta el Poder de 4 Dragones!",
+      "image": "https://i.ytimg.com/vi/GgCD6_vpQ5U/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Los dragones se extinguieron hace mucho tiempo; ¿acaso no queda ni uno solo en este mundo? El joven Long Chen despierta la clase «Domador de Dragones de rango SSS», un rol del que todo...",
+      "year": 2026,
+      "updatedAt": "2026-11-06T04:00:14Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=GgCD6_vpQ5U",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¡La Clase SSS Más Inútil Despierta el Poder de 4 Dragones!",
+      "duration": 4579,
+      "genres": [
+        "Fantasía/Cultivación",
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes",
       "slug": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes",
@@ -32244,6 +32265,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-s1",
+      "seriesId": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes-s1",
       "seriesId": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes",
       "number": 1,
@@ -41743,6 +41770,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-ep-1",
+      "slug": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-ep-1",
+      "seriesId": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
+      "seasonId": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/GgCD6_vpQ5U"
+        }
+      ],
+      "updatedAt": "2026-11-06T04:00:14Z"
+    },
     {
       "id": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes-ep-1",
       "slug": "los-divorciados-se-reencuentran-en-una-colaboracion-y-sus-hijos-ya-son-grandes-ep-1",
