@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-06T06:57:19.248Z",
+    "syncedAt": "2026-11-06T19:30:02.766Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1584,
-      "newInThisSync": 1,
-      "scanned": 49,
-      "ignoredByDuration": 48,
+      "movies": 1588,
+      "newInThisSync": 4,
+      "scanned": 55,
+      "ignoredByDuration": 51,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,86 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue",
+      "slug": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue",
+      "title": "Audio Latino - Chico practica arte prohibido para salvar a heredera y luego se vuelve líder de secta",
+      "image": "https://i.ytimg.com/vi/NZ6B5oD_2dY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-06T15:30:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=NZ6B5oD_2dY",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Chico practica arte prohibido para salvar a heredera y luego se vuelve líder de secta",
+      "duration": 7534,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios",
+      "slug": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios",
+      "title": "Heredera de la secta está por ser Asesinada, un Humilde derrota a los sicarios",
+      "image": "https://i.ytimg.com/vi/p0jhnDeP9QI/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-06T15:30:15Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=p0jhnDeP9QI",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Heredera de la secta está por ser Asesinada, un Humilde derrota a los sicarios.",
+      "duration": 4326,
+      "genres": [
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor",
+      "slug": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor",
+      "title": "La Borracha despierta y descubre que ya no puede escapar del Chico 10 años menor",
+      "image": "https://i.ytimg.com/vi/7sO2BSuqspE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-06T15:00:23Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=7sO2BSuqspE",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] La Borracha despierta y descubre que ya no puede escapar del Chico 10 años menor...",
+      "duration": 5101,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo",
+      "slug": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo",
+      "title": "Audio Latino - El Preso usa su última Conversación para Asesinar a su Enemigo",
+      "image": "https://i.ytimg.com/vi/Gv7qlPZ--48/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-06T14:30:20Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Gv7qlPZ--48",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - El Preso usa su última Conversación para Asesinar a su Enemigo",
+      "duration": 4620,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
       "slug": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
@@ -32265,6 +32345,30 @@
   ],
   "seasons": [
     {
+      "id": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue-s1",
+      "seriesId": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios-s1",
+      "seriesId": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor-s1",
+      "seriesId": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo-s1",
+      "seriesId": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-s1",
       "seriesId": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones",
       "number": 1,
@@ -41770,6 +41874,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue-ep-1",
+      "slug": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue-ep-1",
+      "seriesId": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue",
+      "seasonId": "audio-latino-chico-practica-arte-prohibido-para-salvar-a-heredera-y-luego-se-vue-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/NZ6B5oD_2dY"
+        }
+      ],
+      "updatedAt": "2026-11-06T15:30:17Z"
+    },
+    {
+      "id": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios-ep-1",
+      "slug": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios-ep-1",
+      "seriesId": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios",
+      "seasonId": "heredera-de-la-secta-esta-por-ser-asesinada-un-humilde-derrota-a-los-sicarios-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/p0jhnDeP9QI"
+        }
+      ],
+      "updatedAt": "2026-11-06T15:30:15Z"
+    },
+    {
+      "id": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor-ep-1",
+      "slug": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor-ep-1",
+      "seriesId": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor",
+      "seasonId": "la-borracha-despierta-y-descubre-que-ya-no-puede-escapar-del-chico-10-anos-menor-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7sO2BSuqspE"
+        }
+      ],
+      "updatedAt": "2026-11-06T15:00:23Z"
+    },
+    {
+      "id": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo-ep-1",
+      "slug": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo-ep-1",
+      "seriesId": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo",
+      "seasonId": "audio-latino-el-preso-usa-su-ultima-conversacion-para-asesinar-a-su-enemigo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Gv7qlPZ--48"
+        }
+      ],
+      "updatedAt": "2026-11-06T14:30:20Z"
+    },
     {
       "id": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-ep-1",
       "slug": "lleno-la-clase-sss-mas-inutil-despierta-el-poder-de-4-dragones-ep-1",
