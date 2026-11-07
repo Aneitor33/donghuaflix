@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-07T06:08:49.072Z",
+  "generatedAt": "2026-11-07T11:34:19.089Z",
   "imageBase": "https://image.tmdb.org/t/p/w300",
   "catalogs": [
     {
@@ -13,7 +13,7 @@
       "id": "doramas",
       "label": "Doramas",
       "index": "catalog-doramas-index.json",
-      "series": 195
+      "series": 196
     },
     {
       "id": "youtubefilms",
