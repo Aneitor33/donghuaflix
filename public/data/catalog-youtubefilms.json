@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-08T13:38:25.683Z",
+    "syncedAt": "2026-11-08T22:14:07.763Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1596,
-      "newInThisSync": 0,
-      "scanned": 60,
-      "ignoredByDuration": 60,
+      "movies": 1600,
+      "newInThisSync": 4,
+      "scanned": 67,
+      "ignoredByDuration": 63,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,86 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas",
+      "slug": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas",
+      "title": "Huérfana criada por sus tres Tíos Bondadosos. Al crecer, ella cambió sus vidas",
+      "image": "https://i.ytimg.com/vi/qyKww7Gsq_c/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-08T15:30:29Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=qyKww7Gsq_c",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Huérfana criada por sus tres Tíos Bondadosos. Al crecer, ella cambió sus vidas...",
+      "duration": 7681,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio",
+      "slug": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio",
+      "title": "Samurái abusa de ciudadanos. Monje Guerrero que pasa decide liberar su restricción",
+      "image": "https://i.ytimg.com/vi/UgWmoHjPjzM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-08T15:00:23Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=UgWmoHjPjzM",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Samurái abusa de ciudadanos. Monje Guerrero que pasa decide liberar su restricción.",
+      "duration": 7647,
+      "genres": [
+        "Artes Marciales"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca",
+      "slug": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca",
+      "title": "El primer día en la empresa, el CEO se enamora a primera vista de Asistente Descalza",
+      "image": "https://i.ytimg.com/vi/e8DWHTnsK-k/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-08T14:30:14Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=e8DWHTnsK-k",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] El primer día en la empresa, el CEO se enamora a primera vista de Asistente Descalza..",
+      "duration": 7114,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en-",
+      "slug": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en-",
+      "title": "Audio Latino - Comando vence al Guerrero más fuerte de la tribu y se convierte en su General",
+      "image": "https://i.ytimg.com/vi/13koDWHuX-s/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-08T14:30:00Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=13koDWHuX-s",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Comando vence al Guerrero más fuerte de la tribu y se convierte en su General",
+      "duration": 7373,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de-",
       "slug": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de-",
@@ -32510,6 +32590,30 @@
   ],
   "seasons": [
     {
+      "id": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas-s1",
+      "seriesId": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio-s1",
+      "seriesId": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca-s1",
+      "seriesId": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en--s1",
+      "seriesId": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de--s1",
       "seriesId": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de-",
       "number": 1,
@@ -42087,6 +42191,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas-ep-1",
+      "slug": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas-ep-1",
+      "seriesId": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas",
+      "seasonId": "huerfana-criada-por-sus-tres-tios-bondadosos-al-crecer-ella-cambio-sus-vidas-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/qyKww7Gsq_c"
+        }
+      ],
+      "updatedAt": "2026-11-08T15:30:29Z"
+    },
+    {
+      "id": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio-ep-1",
+      "slug": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio-ep-1",
+      "seriesId": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio",
+      "seasonId": "samurai-abusa-de-ciudadanos-monje-guerrero-que-pasa-decide-liberar-su-restriccio-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UgWmoHjPjzM"
+        }
+      ],
+      "updatedAt": "2026-11-08T15:00:23Z"
+    },
+    {
+      "id": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca-ep-1",
+      "slug": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca-ep-1",
+      "seriesId": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca",
+      "seasonId": "el-primer-dia-en-la-empresa-el-ceo-se-enamora-a-primera-vista-de-asistente-desca-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/e8DWHTnsK-k"
+        }
+      ],
+      "updatedAt": "2026-11-08T14:30:14Z"
+    },
+    {
+      "id": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en--ep-1",
+      "slug": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en--ep-1",
+      "seriesId": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en-",
+      "seasonId": "audio-latino-comando-vence-al-guerrero-mas-fuerte-de-la-tribu-y-se-convierte-en--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/13koDWHuX-s"
+        }
+      ],
+      "updatedAt": "2026-11-08T14:30:00Z"
+    },
     {
       "id": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de--ep-1",
       "slug": "lleno-talento-mas-alla-del-rango-s-mi-chica-mecha-tiene-una-habilidad-oculta-de--ep-1",
