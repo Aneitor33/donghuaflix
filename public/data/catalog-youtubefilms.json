@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-11T06:39:12.548Z",
+    "syncedAt": "2026-11-11T19:42:01.224Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1610,
-      "newInThisSync": 0,
-      "scanned": 101,
+      "movies": 1615,
+      "newInThisSync": 5,
+      "scanned": 106,
       "ignoredByDuration": 101,
       "errors": 0
     },
@@ -32,6 +32,106 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos",
+      "slug": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos",
+      "title": "Chica no imaginaba que este Rico que conoce hoy la seguía desde hace 20 años",
+      "image": "https://i.ytimg.com/vi/Zi-64MXqa5o/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-11T15:45:01Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Zi-64MXqa5o",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica no imaginaba que este Rico que conoce hoy la seguía desde hace 20 años...",
+      "duration": 5590,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest",
+      "slug": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest",
+      "title": "Mendigo encuentra arma legendaria, y descubre que en verdad es Heredero del Maestro",
+      "image": "https://i.ytimg.com/vi/qjNmBvSsruI/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-11T15:30:16Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=qjNmBvSsruI",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Mendigo encuentra arma legendaria, y descubre que en verdad es Heredero del Maestro.",
+      "duration": 8242,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a",
+      "slug": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a",
+      "title": "Chica Traicionada por amiga y novio no esperaba que encontraría a su Verdadero Amor",
+      "image": "https://i.ytimg.com/vi/huiAWBiW_YI/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-11T15:30:13Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=huiAWBiW_YI",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica Traicionada por amiga y novio no esperaba que encontraría a su Verdadero Amor",
+      "duration": 5107,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en",
+      "slug": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en",
+      "title": "Audio Latino -Organización de Asesinos acoge a chica de familia asesinada y la entrena como Asesina",
+      "image": "https://i.ytimg.com/vi/lmoRyKlZYg4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-11T14:45:18Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=lmoRyKlZYg4",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino -Organización de Asesinos acoge a chica de familia asesinada y la entrena como Asesina.",
+      "duration": 4415,
+      "genres": [
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo",
+      "slug": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo",
+      "title": "【LLENO】Del rango F a la divinidad: El poder de copiarlo todo",
+      "image": "https://i.ytimg.com/vi/oh7nMvme5zw/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】En un mundo futuro devastado por grietas dimensionales e invadido por bestias monstruosas, comencé con una evaluación genética de apenas rango F; sin embargo, desperté inesperadamente...",
+      "year": 2026,
+      "updatedAt": "2026-11-11T11:54:31Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=oh7nMvme5zw",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Del rango F a la divinidad: El poder de copiarlo todo",
+      "duration": 6497,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v",
       "slug": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v",
@@ -32795,6 +32895,36 @@
   ],
   "seasons": [
     {
+      "id": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos-s1",
+      "seriesId": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest-s1",
+      "seriesId": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a-s1",
+      "seriesId": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en-s1",
+      "seriesId": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo-s1",
+      "seriesId": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v-s1",
       "seriesId": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v",
       "number": 1,
@@ -42456,6 +42586,81 @@
     }
   ],
   "episodes": [
+    {
+      "id": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos-ep-1",
+      "slug": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos-ep-1",
+      "seriesId": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos",
+      "seasonId": "chica-no-imaginaba-que-este-rico-que-conoce-hoy-la-seguia-desde-hace-20-anos-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Zi-64MXqa5o"
+        }
+      ],
+      "updatedAt": "2026-11-11T15:45:01Z"
+    },
+    {
+      "id": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest-ep-1",
+      "slug": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest-ep-1",
+      "seriesId": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest",
+      "seasonId": "mendigo-encuentra-arma-legendaria-y-descubre-que-en-verdad-es-heredero-del-maest-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/qjNmBvSsruI"
+        }
+      ],
+      "updatedAt": "2026-11-11T15:30:16Z"
+    },
+    {
+      "id": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a-ep-1",
+      "slug": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a-ep-1",
+      "seriesId": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a",
+      "seasonId": "chica-traicionada-por-amiga-y-novio-no-esperaba-que-encontraria-a-su-verdadero-a-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/huiAWBiW_YI"
+        }
+      ],
+      "updatedAt": "2026-11-11T15:30:13Z"
+    },
+    {
+      "id": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en-ep-1",
+      "slug": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en-ep-1",
+      "seriesId": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en",
+      "seasonId": "audio-latino-organizacion-de-asesinos-acoge-a-chica-de-familia-asesinada-y-la-en-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/lmoRyKlZYg4"
+        }
+      ],
+      "updatedAt": "2026-11-11T14:45:18Z"
+    },
+    {
+      "id": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo-ep-1",
+      "slug": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo-ep-1",
+      "seriesId": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo",
+      "seasonId": "lleno-del-rango-f-a-la-divinidad-el-poder-de-copiarlo-todo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/oh7nMvme5zw"
+        }
+      ],
+      "updatedAt": "2026-11-11T11:54:31Z"
+    },
     {
       "id": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v-ep-1",
       "slug": "audio-latino-el-excomando-obligado-a-ser-guardaespaldas-del-capo-por-fin-puede-v-ep-1",
