@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-12T07:21:54.820Z",
+    "syncedAt": "2026-11-12T20:03:22.631Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1616,
-      "newInThisSync": 1,
-      "scanned": 102,
-      "ignoredByDuration": 101,
+      "movies": 1622,
+      "newInThisSync": 6,
+      "scanned": 110,
+      "ignoredByDuration": 104,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,108 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia",
+      "slug": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia",
+      "title": "Una Historia China de Fantasmas Película Romántica de Amor y Fantasía",
+      "image": "https://i.ytimg.com/vi/bTRKvZb0BL0/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Sinopsis: La película romántica de amor y fantasía \"Una Historia China de Fantasmas\" narra una historia de amor fantasmal entre el zorro hada Nie Xiaoqian y el erudito Ning Caichen. El erudito Ning...",
+      "year": 2026,
+      "updatedAt": "2026-11-12T16:00:20Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=bTRKvZb0BL0",
+      "channel": "@moxispanish",
+      "originalTitle": "Una Historia China de Fantasmas | Película Romántica de Amor y Fantasía | Completa en Español HD",
+      "duration": 4579,
+      "genres": [
+        "Artes Marciales",
+        "Histórico",
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte",
+      "slug": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte",
+      "title": "Chica buena da su único sueldo al anciano hambriento, ¡esto le traerá buena suerte!",
+      "image": "https://i.ytimg.com/vi/tUhHC823h0I/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-12T15:45:00Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=tUhHC823h0I",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Chica buena da su único sueldo al anciano hambriento, ¡esto le traerá buena suerte!",
+      "duration": 6140,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma",
+      "slug": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma",
+      "title": "Soldado esconde identidad y traslada el cuerpo de camarada, pero es obligada a matar",
+      "image": "https://i.ytimg.com/vi/Fp_h6F05Euk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-12T15:30:24Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Fp_h6F05Euk",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Soldado esconde identidad y traslada el cuerpo de camarada, pero es obligada a matar",
+      "duration": 8557,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro",
+      "slug": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro",
+      "title": "Hombre es forzado a criar a una Huérfana y ve a su Primer Amor ser de Otro",
+      "image": "https://i.ytimg.com/vi/uDxE7haPDFA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-12T15:00:06Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=uDxE7haPDFA",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Hombre es forzado a criar a una Huérfana y ve a su Primer Amor ser de Otro...",
+      "duration": 7691,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal",
+      "slug": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal",
+      "title": "Audio Latino - Equipo novato de Francotiradores en su Última Misión dispara la Bala Clave",
+      "image": "https://i.ytimg.com/vi/860Ce2weMKU/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-12T14:30:10Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=860Ce2weMKU",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Equipo novato de Francotiradores en su Última Misión dispara la Bala Clave.",
+      "duration": 6985,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss",
       "slug": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss",
@@ -13127,6 +13229,26 @@
       "duration": 5550,
       "genres": [
         "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime",
+      "slug": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime",
+      "title": "¡Lo Expulsaron por Pobre… y Convirtió un Gusano en un Dragón del Vacío!💕#anime",
+      "image": "https://i.ytimg.com/vi/fqsmT5M8Hrg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Este video cumple con los estándares de EDSA y no representa un escenario real. No imite lo que ve en él. 🤖 Este contenido ha sido generado con asistencia de inteligencia artificial. El guion y lo...",
+      "year": 2026,
+      "updatedAt": "2026-06-21T20:00:37Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=fqsmT5M8Hrg",
+      "channel": "@anime_multiverso",
+      "originalTitle": "¡Lo Expulsaron por Pobre… y Convirtió un Gusano en un Dragón del Vacío!💕#anime",
+      "duration": 7287,
+      "genres": [
+        "Fantasía/Cultivación"
       ],
       "source": "youtube_yt"
     },
@@ -32915,6 +33037,36 @@
   ],
   "seasons": [
     {
+      "id": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia-s1",
+      "seriesId": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte-s1",
+      "seriesId": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma-s1",
+      "seriesId": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro-s1",
+      "seriesId": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal-s1",
+      "seriesId": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss-s1",
       "seriesId": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss",
       "number": 1,
@@ -36769,6 +36921,12 @@
     {
       "id": "audio-latino-cuando-la-francotiradora-toma-la-altura-la-batalla-se-vuelve-una-ma-s1",
       "seriesId": "audio-latino-cuando-la-francotiradora-toma-la-altura-la-batalla-se-vuelve-una-ma",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime-s1",
+      "seriesId": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime",
       "number": 1,
       "title": "Película"
     },
@@ -42612,6 +42770,81 @@
     }
   ],
   "episodes": [
+    {
+      "id": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia-ep-1",
+      "slug": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia-ep-1",
+      "seriesId": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia",
+      "seasonId": "una-historia-china-de-fantasmas-pelicula-romantica-de-amor-y-fantasia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/bTRKvZb0BL0"
+        }
+      ],
+      "updatedAt": "2026-11-12T16:00:20Z"
+    },
+    {
+      "id": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte-ep-1",
+      "slug": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte-ep-1",
+      "seriesId": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte",
+      "seasonId": "chica-buena-da-su-unico-sueldo-al-anciano-hambriento-esto-le-traera-buena-suerte-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/tUhHC823h0I"
+        }
+      ],
+      "updatedAt": "2026-11-12T15:45:00Z"
+    },
+    {
+      "id": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma-ep-1",
+      "slug": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma-ep-1",
+      "seriesId": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma",
+      "seasonId": "soldado-esconde-identidad-y-traslada-el-cuerpo-de-camarada-pero-es-obligada-a-ma-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Fp_h6F05Euk"
+        }
+      ],
+      "updatedAt": "2026-11-12T15:30:24Z"
+    },
+    {
+      "id": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro-ep-1",
+      "slug": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro-ep-1",
+      "seriesId": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro",
+      "seasonId": "hombre-es-forzado-a-criar-a-una-huerfana-y-ve-a-su-primer-amor-ser-de-otro-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/uDxE7haPDFA"
+        }
+      ],
+      "updatedAt": "2026-11-12T15:00:06Z"
+    },
+    {
+      "id": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal-ep-1",
+      "slug": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal-ep-1",
+      "seriesId": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal",
+      "seasonId": "audio-latino-equipo-novato-de-francotiradores-en-su-ultima-mision-dispara-la-bal-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/860Ce2weMKU"
+        }
+      ],
+      "updatedAt": "2026-11-12T14:30:10Z"
+    },
     {
       "id": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss-ep-1",
       "slug": "lleno-me-converti-en-un-rey-demonio-una-clase-suprema-de-rango-sss-ep-1",
@@ -52256,6 +52489,21 @@
         }
       ],
       "updatedAt": "2026-06-22T14:30:20Z"
+    },
+    {
+      "id": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime-ep-1",
+      "slug": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime-ep-1",
+      "seriesId": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime",
+      "seasonId": "lo-expulsaron-por-pobre-y-convirtio-un-gusano-en-un-dragon-del-vacio-anime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/fqsmT5M8Hrg"
+        }
+      ],
+      "updatedAt": "2026-06-21T20:00:37Z"
     },
     {
       "id": "detective-dee-camino-al-inframundo-pelicula-de-accion-y-misterio-ep-1",
