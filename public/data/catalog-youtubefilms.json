@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-13T19:49:55.240Z",
+    "syncedAt": "2026-11-14T06:38:21.916Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1627,
-      "newInThisSync": 4,
-      "scanned": 119,
+      "movies": 1628,
+      "newInThisSync": 1,
+      "scanned": 116,
       "ignoredByDuration": 115,
       "errors": 0
     },
@@ -32,6 +32,27 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max",
+      "slug": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max",
+      "title": "【LLENO】Un mundo de cartas y cambios de clase: comienzo con una mejora al nivel máximo",
+      "image": "https://i.ytimg.com/vi/IjBpHwO4yqY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】Un mundo de cartas y cambios de clase: comienzo con una mejora al nivel máximo Sinopsis: Nacido en una familia humilde y marcado por una enfermedad crónica y pesadas responsabilidades...",
+      "year": 2026,
+      "updatedAt": "2026-11-14T04:00:16Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=IjBpHwO4yqY",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】Un mundo de cartas y cambios de clase: comienzo con una mejora al nivel máximo",
+      "duration": 4604,
+      "genres": [
+        "Acción",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta",
       "slug": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta",
@@ -33139,6 +33160,12 @@
   ],
   "seasons": [
     {
+      "id": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max-s1",
+      "seriesId": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta-s1",
       "seriesId": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta",
       "number": 1,
@@ -42902,6 +42929,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max-ep-1",
+      "slug": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max-ep-1",
+      "seriesId": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max",
+      "seasonId": "lleno-un-mundo-de-cartas-y-cambios-de-clase-comienzo-con-una-mejora-al-nivel-max-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/IjBpHwO4yqY"
+        }
+      ],
+      "updatedAt": "2026-11-14T04:00:16Z"
+    },
     {
       "id": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta-ep-1",
       "slug": "excomando-recoge-a-una-huerfana-18-anos-luego-la-instruye-como-asesina-perfecta-ep-1",
