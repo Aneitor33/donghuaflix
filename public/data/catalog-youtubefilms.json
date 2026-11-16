@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-15T18:57:02.018Z",
+    "syncedAt": "2026-11-16T06:43:48.070Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1637,
-      "newInThisSync": 4,
-      "scanned": 132,
-      "ignoredByDuration": 128,
+      "movies": 1639,
+      "newInThisSync": 2,
+      "scanned": 139,
+      "ignoredByDuration": 137,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,47 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea",
+      "slug": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea",
+      "title": "【LLENO】¡Desperté la Carta Blanca Más Débil, Pero Puedo Ver la Ruta de Fusión y Crear Cartas Míticas!",
+      "image": "https://i.ytimg.com/vi/QoCM55cuzY4/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】¡En una era donde el valor de una persona depende de la calidad de sus cartas, todos creían que mi destino estaba decidido cuando desperté la Carta Blanca más débil! Pero nadie sabía m...",
+      "year": 2026,
+      "updatedAt": "2026-11-16T04:00:13Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=QoCM55cuzY4",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¡Desperté la Carta Blanca Más Débil, Pero Puedo Ver la Ruta de Fusión y Crear Cartas Míticas!",
+      "duration": 8305,
+      "genres": [
+        "Drama",
+        "Histórico"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband",
+      "slug": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband",
+      "title": "【FULL】 Her Memory Returned—The Violin Genius Walked Out on Her Cruel Husband",
+      "image": "https://i.ytimg.com/vi/VBLIA7fX4vQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "When the Music Fades We Say Goodbye All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is prohibit...",
+      "year": 2026,
+      "updatedAt": "2026-11-15T21:00:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VBLIA7fX4vQ",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】 Her Memory Returned—The Violin Genius Walked Out on Her Cruel Husband",
+      "duration": 3844,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales",
       "slug": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales",
@@ -33340,6 +33381,18 @@
   ],
   "seasons": [
     {
+      "id": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea-s1",
+      "seriesId": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband-s1",
+      "seriesId": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales-s1",
       "seriesId": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales",
       "number": 1,
@@ -43163,6 +43216,36 @@
     }
   ],
   "episodes": [
+    {
+      "id": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea-ep-1",
+      "slug": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea-ep-1",
+      "seriesId": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea",
+      "seasonId": "lleno-desperte-la-carta-blanca-mas-debil-pero-puedo-ver-la-ruta-de-fusion-y-crea-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/QoCM55cuzY4"
+        }
+      ],
+      "updatedAt": "2026-11-16T04:00:13Z"
+    },
+    {
+      "id": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband-ep-1",
+      "slug": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband-ep-1",
+      "seriesId": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband",
+      "seasonId": "full-her-memory-returned-the-violin-genius-walked-out-on-her-cruel-husband-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VBLIA7fX4vQ"
+        }
+      ],
+      "updatedAt": "2026-11-15T21:00:17Z"
+    },
     {
       "id": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales-ep-1",
       "slug": "chica-es-perseguida-desde-nacimiento-sin-saber-que-la-protegen-guardias-reales-ep-1",
