@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-16T22:15:41.316Z",
+    "syncedAt": "2026-11-17T08:03:50.830Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1643,
-      "newInThisSync": 4,
-      "scanned": 150,
-      "ignoredByDuration": 146,
+      "movies": 1646,
+      "newInThisSync": 3,
+      "scanned": 157,
+      "ignoredByDuration": 154,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon",
+      "slug": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon",
+      "title": "【FULL】 His New Bodyguard Is a Girl Strong Enough to Lift a Dragon",
+      "image": "https://i.ytimg.com/vi/SDL-cztbB8Q/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "My Bodyguard Can Lift a Dragon All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is prohibited. #...",
+      "year": 2026,
+      "updatedAt": "2026-11-17T06:00:09Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=SDL-cztbB8Q",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】 His New Bodyguard Is a Girl Strong Enough to Lift a Dragon",
+      "duration": 4173,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo",
+      "slug": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo",
+      "title": "【FULL】 She Married a Janitor—He Was Secretly a Trillionaire CEO",
+      "image": "https://i.ytimg.com/vi/jqWgoQC6Gvk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "My Cleaner Husband Is a Trillionaire CEO All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is pro...",
+      "year": 2026,
+      "updatedAt": "2026-11-17T04:00:34Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=jqWgoQC6Gvk",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】 She Married a Janitor—He Was Secretly a Trillionaire CEO",
+      "duration": 4759,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo",
+      "slug": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo",
+      "title": "【LLENO】¿El criador de cerdos? ¡Llámame profeta! ¡Sus bestias salvaron al pueblo!",
+      "image": "https://i.ytimg.com/vi/VMrCxq_13Tk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "【Descripción】¿Lo llaman simple criador de cerdos? ¡Pero sus animales pueden predecir desastres! Tras graduarse de la universidad, Shen Jun regresó a su pueblo para criar animales y fue menospreciad...",
+      "year": 2026,
+      "updatedAt": "2026-11-17T04:00:08Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VMrCxq_13Tk",
+      "channel": "@animaciondesinchew",
+      "originalTitle": "【LLENO】¿El criador de cerdos? ¡Llámame profeta! ¡Sus bestias salvaron al pueblo!",
+      "duration": 8258,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com",
       "slug": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com",
@@ -33461,6 +33521,24 @@
   ],
   "seasons": [
     {
+      "id": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon-s1",
+      "seriesId": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo-s1",
+      "seriesId": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo-s1",
+      "seriesId": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com-s1",
       "seriesId": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com",
       "number": 1,
@@ -43320,6 +43398,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon-ep-1",
+      "slug": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon-ep-1",
+      "seriesId": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon",
+      "seasonId": "full-his-new-bodyguard-is-a-girl-strong-enough-to-lift-a-dragon-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/SDL-cztbB8Q"
+        }
+      ],
+      "updatedAt": "2026-11-17T06:00:09Z"
+    },
+    {
+      "id": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo-ep-1",
+      "slug": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo-ep-1",
+      "seriesId": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo",
+      "seasonId": "full-she-married-a-janitor-he-was-secretly-a-trillionaire-ceo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/jqWgoQC6Gvk"
+        }
+      ],
+      "updatedAt": "2026-11-17T04:00:34Z"
+    },
+    {
+      "id": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo-ep-1",
+      "slug": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo-ep-1",
+      "seriesId": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo",
+      "seasonId": "lleno-el-criador-de-cerdos-llamame-profeta-sus-bestias-salvaron-al-pueblo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VMrCxq_13Tk"
+        }
+      ],
+      "updatedAt": "2026-11-17T04:00:08Z"
+    },
     {
       "id": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com-ep-1",
       "slug": "la-rica-creia-que-hombre-con-nina-se-casaria-con-ella-pero-eligio-otra-chica-com-ep-1",
