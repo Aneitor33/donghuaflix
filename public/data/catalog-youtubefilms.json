@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-18T07:39:36.535Z",
+    "syncedAt": "2026-11-18T20:39:30.896Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1652,
-      "newInThisSync": 2,
-      "scanned": 177,
-      "ignoredByDuration": 175,
+      "movies": 1658,
+      "newInThisSync": 6,
+      "scanned": 196,
+      "ignoredByDuration": 190,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,127 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
+      "slug": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
+      "title": "La Leyenda del Mar Azul Película Romántica de Amor de Sirena",
+      "image": "https://i.ytimg.com/vi/pS1hZXTbcJQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Sinopsis: La película romantica de amor y fantasía \"La Leyenda del Mar Azul\" es el tercer episodio de la serie de películas \"La belleza de la escuela\", que trata sobre historias de amor en el campu...",
+      "year": 2026,
+      "updatedAt": "2026-11-18T16:00:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=pS1hZXTbcJQ",
+      "channel": "@moxispanish",
+      "originalTitle": "La Leyenda del Mar Azul | Película Romántica de Amor de Sirena | Completa en Español HD",
+      "duration": 5981,
+      "genres": [
+        "Romance",
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue",
+      "slug": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue",
+      "title": "Años después, la Chica elige casarse con Hombre Soltero obligado a criar a la huérfana",
+      "image": "https://i.ytimg.com/vi/_UjQtMgXtd8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-18T15:45:23Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=_UjQtMgXtd8",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Años después, la Chica elige casarse con Hombre Soltero obligado a criar a la huérfana",
+      "duration": 7380,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve-",
+      "slug": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve-",
+      "title": "El Despreciado con puños toma el territorio de banda y un año después se vuelve jefe",
+      "image": "https://i.ytimg.com/vi/OnINfAhsZb0/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-18T15:30:11Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=OnINfAhsZb0",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] El Despreciado con puños toma el territorio de banda y un año después se vuelve jefe",
+      "duration": 4721,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora",
+      "slug": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora",
+      "title": "La Rica es usada por Prometido y Mejor Amiga, pero al saberlo todo Empeora",
+      "image": "https://i.ytimg.com/vi/UxnVYiDLKXA/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#中国电视剧#中国电视剧电影版#Chinese Television Dramas#Full Movie#情感#出色中國電視劇#大陸情感劇#中國電影#好看中國電影#出色中國電影#總裁#霸道總裁#chinesedrama#甜寵愛情電影#青春#校園電影#甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-18T15:00:38Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=UxnVYiDLKXA",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] La Rica es usada por Prometido y Mejor Amiga, pero al saberlo todo Empeora...",
+      "duration": 4457,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-they-denied-her-care-she-owns-the-hospital",
+      "slug": "full-they-denied-her-care-she-owns-the-hospital",
+      "title": "【FULL】They Denied Her Care—She Owns the Hospital",
+      "image": "https://i.ytimg.com/vi/KfVhMVBYz4E/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "The Hospital She Owns Refused to Treat Her All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is p...",
+      "year": 2026,
+      "updatedAt": "2026-11-18T15:00:27Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=KfVhMVBYz4E",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】They Denied Her Care—She Owns the Hospital",
+      "duration": 5050,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera-",
+      "slug": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera-",
+      "title": "Audio Latino - Emperador del Boxeo no esperaba que el Último Retador en pie fuera un Don Nadie",
+      "image": "https://i.ytimg.com/vi/7EsrQOCrgOs/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-18T15:00:22Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=7EsrQOCrgOs",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Emperador del Boxeo no esperaba que el Último Retador en pie fuera un Don Nadie",
+      "duration": 4835,
+      "genres": [
+        "Histórico"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back",
       "slug": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back",
@@ -33641,6 +33762,42 @@
   ],
   "seasons": [
     {
+      "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-s1",
+      "seriesId": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue-s1",
+      "seriesId": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve--s1",
+      "seriesId": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora-s1",
+      "seriesId": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-they-denied-her-care-she-owns-the-hospital-s1",
+      "seriesId": "full-they-denied-her-care-she-owns-the-hospital",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera--s1",
+      "seriesId": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back-s1",
       "seriesId": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back",
       "number": 1,
@@ -43554,6 +43711,96 @@
     }
   ],
   "episodes": [
+    {
+      "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-ep-1",
+      "slug": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-ep-1",
+      "seriesId": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
+      "seasonId": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/pS1hZXTbcJQ"
+        }
+      ],
+      "updatedAt": "2026-11-18T16:00:22Z"
+    },
+    {
+      "id": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue-ep-1",
+      "slug": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue-ep-1",
+      "seriesId": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue",
+      "seasonId": "anos-despues-la-chica-elige-casarse-con-hombre-soltero-obligado-a-criar-a-la-hue-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/_UjQtMgXtd8"
+        }
+      ],
+      "updatedAt": "2026-11-18T15:45:23Z"
+    },
+    {
+      "id": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve--ep-1",
+      "slug": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve--ep-1",
+      "seriesId": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve-",
+      "seasonId": "el-despreciado-con-punos-toma-el-territorio-de-banda-y-un-ano-despues-se-vuelve--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OnINfAhsZb0"
+        }
+      ],
+      "updatedAt": "2026-11-18T15:30:11Z"
+    },
+    {
+      "id": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora-ep-1",
+      "slug": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora-ep-1",
+      "seriesId": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora",
+      "seasonId": "la-rica-es-usada-por-prometido-y-mejor-amiga-pero-al-saberlo-todo-empeora-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/UxnVYiDLKXA"
+        }
+      ],
+      "updatedAt": "2026-11-18T15:00:38Z"
+    },
+    {
+      "id": "full-they-denied-her-care-she-owns-the-hospital-ep-1",
+      "slug": "full-they-denied-her-care-she-owns-the-hospital-ep-1",
+      "seriesId": "full-they-denied-her-care-she-owns-the-hospital",
+      "seasonId": "full-they-denied-her-care-she-owns-the-hospital-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/KfVhMVBYz4E"
+        }
+      ],
+      "updatedAt": "2026-11-18T15:00:27Z"
+    },
+    {
+      "id": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera--ep-1",
+      "slug": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera--ep-1",
+      "seriesId": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera-",
+      "seasonId": "audio-latino-emperador-del-boxeo-no-esperaba-que-el-ultimo-retador-en-pie-fuera--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7EsrQOCrgOs"
+        }
+      ],
+      "updatedAt": "2026-11-18T15:00:22Z"
+    },
     {
       "id": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back-ep-1",
       "slug": "full-my-uncle-stole-my-2-million-now-i-m-taking-it-back-ep-1",
