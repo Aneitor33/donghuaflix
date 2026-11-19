@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-18T20:39:30.896Z",
+    "syncedAt": "2026-11-19T07:35:46.490Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1658,
-      "newInThisSync": 6,
-      "scanned": 196,
-      "ignoredByDuration": 190,
+      "movies": 1659,
+      "newInThisSync": 1,
+      "scanned": 200,
+      "ignoredByDuration": 199,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
+      "slug": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
+      "title": "【FULL】Betrayed at 40—The Succubus System Made Me 20 Again",
+      "image": "https://i.ytimg.com/vi/8GoOtyUP5zg/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Midlife Crisis, Succubus System Sent Me Back to Twenty All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-up...",
+      "year": 2026,
+      "updatedAt": "2026-11-19T03:00:15Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=8GoOtyUP5zg",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】Betrayed at 40—The Succubus System Made Me 20 Again",
+      "duration": 5315,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
       "slug": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
@@ -33762,6 +33782,12 @@
   ],
   "seasons": [
     {
+      "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again-s1",
+      "seriesId": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-s1",
       "seriesId": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena",
       "number": 1,
@@ -43711,6 +43737,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again-ep-1",
+      "slug": "full-betrayed-at-40-the-succubus-system-made-me-20-again-ep-1",
+      "seriesId": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
+      "seasonId": "full-betrayed-at-40-the-succubus-system-made-me-20-again-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/8GoOtyUP5zg"
+        }
+      ],
+      "updatedAt": "2026-11-19T03:00:15Z"
+    },
     {
       "id": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-ep-1",
       "slug": "la-leyenda-del-mar-azul-pelicula-romantica-de-amor-de-sirena-ep-1",
