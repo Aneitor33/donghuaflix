@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-19T07:35:46.490Z",
+    "syncedAt": "2026-11-19T20:45:22.211Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1659,
-      "newInThisSync": 1,
-      "scanned": 200,
-      "ignoredByDuration": 199,
+      "movies": 1663,
+      "newInThisSync": 4,
+      "scanned": 206,
+      "ignoredByDuration": 202,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,86 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia",
+      "slug": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia",
+      "title": "Años después, CEO soltero 10 años se enamora otra vez de su Primer Amor ya cambiado",
+      "image": "https://i.ytimg.com/vi/LaJQ9aXxfqQ/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-19T15:45:13Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=LaJQ9aXxfqQ",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Años después, CEO soltero 10 años se enamora otra vez de su Primer Amor ya cambiado...",
+      "duration": 12780,
+      "genres": [
+        "Romance"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo",
+      "slug": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo",
+      "title": "Matón salva a muerte a la heredera y después es Guardaespaldas personal del Capo",
+      "image": "https://i.ytimg.com/vi/MYGW0tYW5nE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-19T15:30:12Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=MYGW0tYW5nE",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Matón salva a muerte a la heredera y después es Guardaespaldas personal del Capo.",
+      "duration": 5699,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti",
+      "slug": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti",
+      "title": "La Pobre solicita ser Sirvienta privada de doña, sin saber que cambiará sus destinos",
+      "image": "https://i.ytimg.com/vi/Br0xKQ1IUpY/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-19T15:00:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=Br0xKQ1IUpY",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] La Pobre solicita ser Sirvienta privada de doña, sin saber que cambiará sus destinos..",
+      "duration": 5064,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com",
+      "slug": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com",
+      "title": "Audio Latino - Mayor Transacción de Banda fracasa por una Sicaria, en la ciudad comienza la Masacre",
+      "image": "https://i.ytimg.com/vi/FnFJAXjMBp8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-19T14:30:04Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=FnFJAXjMBp8",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Mayor Transacción de Banda fracasa por una Sicaria, en la ciudad comienza la Masacre",
+      "duration": 6166,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
       "slug": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
@@ -33782,6 +33862,30 @@
   ],
   "seasons": [
     {
+      "id": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia-s1",
+      "seriesId": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo-s1",
+      "seriesId": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti-s1",
+      "seriesId": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com-s1",
+      "seriesId": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again-s1",
       "seriesId": "full-betrayed-at-40-the-succubus-system-made-me-20-again",
       "number": 1,
@@ -43737,6 +43841,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia-ep-1",
+      "slug": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia-ep-1",
+      "seriesId": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia",
+      "seasonId": "anos-despues-ceo-soltero-10-anos-se-enamora-otra-vez-de-su-primer-amor-ya-cambia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LaJQ9aXxfqQ"
+        }
+      ],
+      "updatedAt": "2026-11-19T15:45:13Z"
+    },
+    {
+      "id": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo-ep-1",
+      "slug": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo-ep-1",
+      "seriesId": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo",
+      "seasonId": "maton-salva-a-muerte-a-la-heredera-y-despues-es-guardaespaldas-personal-del-capo-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/MYGW0tYW5nE"
+        }
+      ],
+      "updatedAt": "2026-11-19T15:30:12Z"
+    },
+    {
+      "id": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti-ep-1",
+      "slug": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti-ep-1",
+      "seriesId": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti",
+      "seasonId": "la-pobre-solicita-ser-sirvienta-privada-de-dona-sin-saber-que-cambiara-sus-desti-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/Br0xKQ1IUpY"
+        }
+      ],
+      "updatedAt": "2026-11-19T15:00:17Z"
+    },
+    {
+      "id": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com-ep-1",
+      "slug": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com-ep-1",
+      "seriesId": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com",
+      "seasonId": "audio-latino-mayor-transaccion-de-banda-fracasa-por-una-sicaria-en-la-ciudad-com-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/FnFJAXjMBp8"
+        }
+      ],
+      "updatedAt": "2026-11-19T14:30:04Z"
+    },
     {
       "id": "full-betrayed-at-40-the-succubus-system-made-me-20-again-ep-1",
       "slug": "full-betrayed-at-40-the-succubus-system-made-me-20-again-ep-1",
