@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-21T07:21:04.598Z",
+    "syncedAt": "2026-11-21T19:25:14.436Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1674,
-      "newInThisSync": 2,
-      "scanned": 210,
-      "ignoredByDuration": 208,
+      "movies": 1680,
+      "newInThisSync": 6,
+      "scanned": 218,
+      "ignoredByDuration": 212,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,129 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league",
+      "slug": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league",
+      "title": "【FULL】Raised by Street Toughs, She Made It to the Ivy League",
+      "image": "https://i.ytimg.com/vi/g0hx2OOvpls/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "The Street Toughs’ Ivy League Daughter All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is prohi...",
+      "year": 2026,
+      "updatedAt": "2026-11-21T16:00:37Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=g0hx2OOvpls",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】Raised by Street Toughs, She Made It to the Ivy League",
+      "duration": 3850,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama",
+      "slug": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama",
+      "title": "Entrenamiento de Azafatas Pelicula de Comedia y Drama",
+      "image": "https://i.ytimg.com/vi/uAmDcCiWb1Q/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Sinopsis: La película de comedia y drama \"Entrenamiento de Azafatas\" cuenta la historia de Zhao Xiaofan (interpretada por Zhao Yihuan), una chica normal con condiciones congénitas extremadamente po...",
+      "year": 2026,
+      "updatedAt": "2026-11-21T16:00:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=uAmDcCiWb1Q",
+      "channel": "@moxispanish",
+      "originalTitle": "Entrenamiento de Azafatas | Pelicula de Comedia y Drama | Completa en Español HD",
+      "duration": 6448,
+      "genres": [
+        "Drama",
+        "Comedia",
+        "Histórico"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru",
+      "slug": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru",
+      "title": "La Banda secuestra a la Idol para Venderla, sin saber que su Hermano es Matón Brutal",
+      "image": "https://i.ytimg.com/vi/zpfK9xXfnRM/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-21T15:30:25Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=zpfK9xXfnRM",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] La Banda secuestra a la Idol para Venderla, sin saber que su Hermano es Matón Brutal.",
+      "duration": 4196,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite",
+      "slug": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite",
+      "title": "¡Para vengar al hermano, ex-púgil se entrena hasta ser sicario de élite!",
+      "image": "https://i.ytimg.com/vi/VLYMKIfofes/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-21T15:00:28Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=VLYMKIfofes",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] ¡Para vengar al hermano, ex-púgil se entrena hasta ser sicario de élite!",
+      "duration": 4687,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana-",
+      "slug": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana-",
+      "title": "Audio Latino - Matón más fuerte sale de prisión, y descubre que su Novia y Hermana son Humilladas",
+      "image": "https://i.ytimg.com/vi/LBjCF6e8LRw/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-21T14:30:17Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=LBjCF6e8LRw",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Matón más fuerte sale de prisión, y descubre que su Novia y Hermana son Humilladas...",
+      "duration": 4419,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime",
+      "slug": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime",
+      "title": "【FULL】Pescador arruinado obtiene sistema marino, halla tesoros y se redime.🔥",
+      "image": "https://i.ytimg.com/vi/OrQCQP60_yE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "｜Te invito a suscribirte al canal y a estar atento al próximo video.｜ Li Jin, un pescador agobiado por las deudas y la bancarrota, es humillado por su novia y un joven amo rico que se alían, y casi...",
+      "year": 2026,
+      "updatedAt": "2026-11-21T14:00:07Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=OrQCQP60_yE",
+      "channel": "@kb025-p4s",
+      "originalTitle": "【FULL】Pescador arruinado obtiene sistema marino, halla tesoros y se redime.🔥",
+      "duration": 6993,
+      "genres": [
+        "Histórico",
+        "Comedia"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire",
       "slug": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire",
@@ -34086,6 +34209,42 @@
   ],
   "seasons": [
     {
+      "id": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league-s1",
+      "seriesId": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama-s1",
+      "seriesId": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru-s1",
+      "seriesId": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite-s1",
+      "seriesId": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana--s1",
+      "seriesId": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana-",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime-s1",
+      "seriesId": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire-s1",
       "seriesId": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire",
       "number": 1,
@@ -44131,6 +44290,96 @@
     }
   ],
   "episodes": [
+    {
+      "id": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league-ep-1",
+      "slug": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league-ep-1",
+      "seriesId": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league",
+      "seasonId": "full-raised-by-street-toughs-she-made-it-to-the-ivy-league-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/g0hx2OOvpls"
+        }
+      ],
+      "updatedAt": "2026-11-21T16:00:37Z"
+    },
+    {
+      "id": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama-ep-1",
+      "slug": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama-ep-1",
+      "seriesId": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama",
+      "seasonId": "entrenamiento-de-azafatas-pelicula-de-comedia-y-drama-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/uAmDcCiWb1Q"
+        }
+      ],
+      "updatedAt": "2026-11-21T16:00:17Z"
+    },
+    {
+      "id": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru-ep-1",
+      "slug": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru-ep-1",
+      "seriesId": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru",
+      "seasonId": "la-banda-secuestra-a-la-idol-para-venderla-sin-saber-que-su-hermano-es-maton-bru-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/zpfK9xXfnRM"
+        }
+      ],
+      "updatedAt": "2026-11-21T15:30:25Z"
+    },
+    {
+      "id": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite-ep-1",
+      "slug": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite-ep-1",
+      "seriesId": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite",
+      "seasonId": "para-vengar-al-hermano-ex-pugil-se-entrena-hasta-ser-sicario-de-elite-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/VLYMKIfofes"
+        }
+      ],
+      "updatedAt": "2026-11-21T15:00:28Z"
+    },
+    {
+      "id": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana--ep-1",
+      "slug": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana--ep-1",
+      "seriesId": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana-",
+      "seasonId": "audio-latino-maton-mas-fuerte-sale-de-prision-y-descubre-que-su-novia-y-hermana--s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/LBjCF6e8LRw"
+        }
+      ],
+      "updatedAt": "2026-11-21T14:30:17Z"
+    },
+    {
+      "id": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime-ep-1",
+      "slug": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime-ep-1",
+      "seriesId": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime",
+      "seasonId": "full-pescador-arruinado-obtiene-sistema-marino-halla-tesoros-y-se-redime-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/OrQCQP60_yE"
+        }
+      ],
+      "updatedAt": "2026-11-21T14:00:07Z"
+    },
     {
       "id": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire-ep-1",
       "slug": "full-dumped-for-driving-a-cab-he-owns-a-mining-empire-ep-1",
