@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-22T19:48:24.098Z",
+    "syncedAt": "2026-11-23T07:50:07.383Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1683,
+      "movies": 1686,
       "newInThisSync": 3,
-      "scanned": 224,
-      "ignoredByDuration": 221,
+      "scanned": 227,
+      "ignoredByDuration": 224,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,66 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "full-reborn-i-chose-millions-over-marrying-the-heir",
+      "slug": "full-reborn-i-chose-millions-over-marrying-the-heir",
+      "title": "【FULL】Reborn, I Chose Millions Over Marrying the Heir",
+      "image": "https://i.ytimg.com/vi/w5OO2GVgNBc/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "Reborn Why Would I Marry the Heir All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is prohibited...",
+      "year": 2026,
+      "updatedAt": "2026-11-22T23:00:20Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=w5OO2GVgNBc",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】Reborn, I Chose Millions Over Marrying the Heir",
+      "duration": 3648,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-the-husband-she-despised-was-the-king-behind-her-success",
+      "slug": "full-the-husband-she-despised-was-the-king-behind-her-success",
+      "title": "【FULL】The Husband She Despised Was the King Behind Her Success",
+      "image": "https://i.ytimg.com/vi/oZmOEo7eKMo/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "You Useless Husband Was Your Real Benefactor All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is...",
+      "year": 2026,
+      "updatedAt": "2026-11-22T21:00:37Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=oZmOEo7eKMo",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】The Husband She Despised Was the King Behind Her Success",
+      "duration": 4999,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king",
+      "slug": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king",
+      "title": "【FULL】They Laughed at My Mosquito—It Evolved into a Dragon King",
+      "image": "https://i.ytimg.com/vi/7rLvwg-RoFI/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "They Mocked My Mosquito All stories are fictional and dramatized for entertainment purposes. All short dramas are officially authorized. Unauthorized copying or re-uploading is prohibited. #ShortDr...",
+      "year": 2026,
+      "updatedAt": "2026-11-22T20:00:12Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=7rLvwg-RoFI",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】They Laughed at My Mosquito—It Evolved into a Dragon King",
+      "duration": 5263,
+      "genres": [
+        "Fantasía/Cultivación"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla",
       "slug": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla",
@@ -34269,6 +34329,24 @@
   ],
   "seasons": [
     {
+      "id": "full-reborn-i-chose-millions-over-marrying-the-heir-s1",
+      "seriesId": "full-reborn-i-chose-millions-over-marrying-the-heir",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-the-husband-she-despised-was-the-king-behind-her-success-s1",
+      "seriesId": "full-the-husband-she-despised-was-the-king-behind-her-success",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king-s1",
+      "seriesId": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla-s1",
       "seriesId": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla",
       "number": 1,
@@ -44368,6 +44446,51 @@
     }
   ],
   "episodes": [
+    {
+      "id": "full-reborn-i-chose-millions-over-marrying-the-heir-ep-1",
+      "slug": "full-reborn-i-chose-millions-over-marrying-the-heir-ep-1",
+      "seriesId": "full-reborn-i-chose-millions-over-marrying-the-heir",
+      "seasonId": "full-reborn-i-chose-millions-over-marrying-the-heir-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/w5OO2GVgNBc"
+        }
+      ],
+      "updatedAt": "2026-11-22T23:00:20Z"
+    },
+    {
+      "id": "full-the-husband-she-despised-was-the-king-behind-her-success-ep-1",
+      "slug": "full-the-husband-she-despised-was-the-king-behind-her-success-ep-1",
+      "seriesId": "full-the-husband-she-despised-was-the-king-behind-her-success",
+      "seasonId": "full-the-husband-she-despised-was-the-king-behind-her-success-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/oZmOEo7eKMo"
+        }
+      ],
+      "updatedAt": "2026-11-22T21:00:37Z"
+    },
+    {
+      "id": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king-ep-1",
+      "slug": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king-ep-1",
+      "seriesId": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king",
+      "seasonId": "full-they-laughed-at-my-mosquito-it-evolved-into-a-dragon-king-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/7rLvwg-RoFI"
+        }
+      ],
+      "updatedAt": "2026-11-22T20:00:12Z"
+    },
     {
       "id": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla-ep-1",
       "slug": "en-tiempos-de-pobreza-sus-tios-renuncian-a-todo-solo-para-criarla-ep-1",
