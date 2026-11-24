@@ -3,13 +3,13 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-24T00:00:08.415Z",
+    "syncedAt": "2026-11-24T10:02:24.914Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1692,
-      "newInThisSync": 6,
-      "scanned": 230,
-      "ignoredByDuration": 224,
+      "movies": 1693,
+      "newInThisSync": 1,
+      "scanned": 231,
+      "ignoredByDuration": 230,
       "errors": 0
     },
     "incremental": true,
@@ -32,6 +32,26 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "full-he-locked-me-up-for-a-9-burger",
+      "slug": "full-he-locked-me-up-for-a-9-burger",
+      "title": "【FULL】He Locked Me Up for a $9 Burger",
+      "image": "https://i.ytimg.com/vi/lcN0hC5icVk/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "He Imprisoned Me Over $9 | English Audio. Edited compilation with dialogue-focused audio.",
+      "year": 2026,
+      "updatedAt": "2026-11-24T09:30:10Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=lcN0hC5icVk",
+      "channel": "@anime_multiverso",
+      "originalTitle": "【FULL】He Locked Me Up for a $9 Burger",
+      "duration": 3670,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro",
       "slug": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro",
@@ -34452,6 +34472,12 @@
   ],
   "seasons": [
     {
+      "id": "full-he-locked-me-up-for-a-9-burger-s1",
+      "seriesId": "full-he-locked-me-up-for-a-9-burger",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro-s1",
       "seriesId": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro",
       "number": 1,
@@ -44605,6 +44631,21 @@
     }
   ],
   "episodes": [
+    {
+      "id": "full-he-locked-me-up-for-a-9-burger-ep-1",
+      "slug": "full-he-locked-me-up-for-a-9-burger-ep-1",
+      "seriesId": "full-he-locked-me-up-for-a-9-burger",
+      "seasonId": "full-he-locked-me-up-for-a-9-burger-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/lcN0hC5icVk"
+        }
+      ],
+      "updatedAt": "2026-11-24T09:30:10Z"
+    },
     {
       "id": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro-ep-1",
       "slug": "full-embarazada-disena-joyas-descubre-su-origen-y-deja-al-marido-avaro-ep-1",
