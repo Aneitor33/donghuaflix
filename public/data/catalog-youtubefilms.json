@@ -3,12 +3,12 @@
     "source": "youtubefilms-youtube",
     "version": 2,
     "lite": false,
-    "syncedAt": "2026-11-27T08:45:17.119Z",
+    "syncedAt": "2026-11-27T21:26:04.208Z",
     "minDurationSeconds": 3600,
     "counts": {
-      "movies": 1709,
-      "newInThisSync": 0,
-      "scanned": 232,
+      "movies": 1713,
+      "newInThisSync": 4,
+      "scanned": 236,
       "ignoredByDuration": 232,
       "errors": 0
     },
@@ -32,6 +32,86 @@
     "Drama"
   ],
   "series": [
+    {
+      "id": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia",
+      "slug": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia",
+      "title": "10 años después, el Tío Mudo recupera el habla, y toda la familia pobre cambia",
+      "image": "https://i.ytimg.com/vi/reGzswfYNLw/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-27T15:30:14Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=reGzswfYNLw",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] 10 años después, el Tío Mudo recupera el habla, y toda la familia pobre cambia",
+      "duration": 5390,
+      "genres": [
+        "Drama"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr",
+      "slug": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr",
+      "title": "Audio Latino - Huérfano vengativo aprende sin querer la Técnica Suprema del Maestro y deja el templo",
+      "image": "https://i.ytimg.com/vi/oJ5sukJMOy8/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-27T15:30:08Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=oJ5sukJMOy8",
+      "channel": "@cine-esp",
+      "originalTitle": "Audio Latino - Huérfano vengativo aprende sin querer la Técnica Suprema del Maestro y deja el templo",
+      "duration": 5161,
+      "genres": [
+        "Artes Marciales"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia",
+      "slug": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia",
+      "title": "Huérfano se convierte en Discípulo del Enemigo solo para Vengar a su familia",
+      "image": "https://i.ytimg.com/vi/fk5aF9X0ADc/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#HuashiTVSeriesChinasEnEspañol #中国电视剧#中国电视剧电影版#Chinese Television Dramas #Full Movie #情感 #出色中國電視劇 #大陸情感劇 #中國電影 #好看中國電影 #出色中國電影 #總裁 #霸道總裁 #chinesedrama #甜寵愛情電影 #青春 #校園電影 #甜寵愛情劇",
+      "year": 2026,
+      "updatedAt": "2026-11-27T15:00:18Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=fk5aF9X0ADc",
+      "channel": "@freshesp",
+      "originalTitle": "[Doblado Esp] Huérfano se convierte en Discípulo del Enemigo solo para Vengar a su familia.",
+      "duration": 4520,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
+    {
+      "id": "pelicula-de-lucha-de-kung-fu-cineesp",
+      "slug": "pelicula-de-lucha-de-kung-fu-cineesp",
+      "title": "Película de lucha de Kung Fu",
+      "image": "https://i.ytimg.com/vi/agaQmK_1ooE/maxresdefault.jpg",
+      "status": "Finalizada",
+      "type": "movie",
+      "contentType": "movie",
+      "synopsis": "#MMAFighterKungFu #特種兵 Subscribe for more Chinese television dramas 订阅频道: / @body-if7hc1yk8u SYWCWX #特战行动#十月围城#中国电视剧#特種兵#抗戰#功夫#武侠#武术#玄幻#中国电视剧2023#Chinese Television Dramas #ChineseKungfu#kickboxing...",
+      "year": 2026,
+      "updatedAt": "2026-11-27T14:38:03Z",
+      "sourceUrl": "https://www.youtube.com/watch?v=agaQmK_1ooE",
+      "channel": "@cine-esp",
+      "originalTitle": "Película de lucha de Kung Fu:",
+      "duration": 4144,
+      "genres": [
+        "Acción"
+      ],
+      "source": "youtube_yt"
+    },
     {
       "id": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse",
       "slug": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse",
@@ -34797,6 +34877,30 @@
   ],
   "seasons": [
     {
+      "id": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia-s1",
+      "seriesId": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr-s1",
+      "seriesId": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia-s1",
+      "seriesId": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia",
+      "number": 1,
+      "title": "Película"
+    },
+    {
+      "id": "pelicula-de-lucha-de-kung-fu-cineesp-s1",
+      "seriesId": "pelicula-de-lucha-de-kung-fu-cineesp",
+      "number": 1,
+      "title": "Película"
+    },
+    {
       "id": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse-s1",
       "seriesId": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse",
       "number": 1,
@@ -45052,6 +45156,66 @@
     }
   ],
   "episodes": [
+    {
+      "id": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia-ep-1",
+      "slug": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia-ep-1",
+      "seriesId": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia",
+      "seasonId": "10-anos-despues-el-tio-mudo-recupera-el-habla-y-toda-la-familia-pobre-cambia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/reGzswfYNLw"
+        }
+      ],
+      "updatedAt": "2026-11-27T15:30:14Z"
+    },
+    {
+      "id": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr-ep-1",
+      "slug": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr-ep-1",
+      "seriesId": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr",
+      "seasonId": "audio-latino-huerfano-vengativo-aprende-sin-querer-la-tecnica-suprema-del-maestr-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/oJ5sukJMOy8"
+        }
+      ],
+      "updatedAt": "2026-11-27T15:30:08Z"
+    },
+    {
+      "id": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia-ep-1",
+      "slug": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia-ep-1",
+      "seriesId": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia",
+      "seasonId": "huerfano-se-convierte-en-discipulo-del-enemigo-solo-para-vengar-a-su-familia-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/fk5aF9X0ADc"
+        }
+      ],
+      "updatedAt": "2026-11-27T15:00:18Z"
+    },
+    {
+      "id": "pelicula-de-lucha-de-kung-fu-cineesp-ep-1",
+      "slug": "pelicula-de-lucha-de-kung-fu-cineesp-ep-1",
+      "seriesId": "pelicula-de-lucha-de-kung-fu-cineesp",
+      "seasonId": "pelicula-de-lucha-de-kung-fu-cineesp-s1",
+      "number": 1,
+      "title": "Ver película",
+      "servers": [
+        {
+          "name": "YouTube",
+          "url": "https://www.youtube-nocookie.com/embed/agaQmK_1ooE"
+        }
+      ],
+      "updatedAt": "2026-11-27T14:38:03Z"
+    },
     {
       "id": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse-ep-1",
       "slug": "maestro-encarcelado-da-su-poder-al-ultimo-talento-que-lo-ve-y-le-ordena-vengarse-ep-1",
